@@ -225,7 +225,7 @@ class EventPage extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF004797), // Blue color
+                        backgroundColor: Color(0xFFE30613), // Blue color
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

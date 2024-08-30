@@ -9,12 +9,12 @@ Widget customButton(
     child: ElevatedButton(
         onPressed: onPressed,
         style: ButtonStyle(
-          foregroundColor: WidgetStateProperty.all<Color>(Color(0xFF004797)),
-          backgroundColor: WidgetStateProperty.all<Color>(Color(0xFF004797)),
+          foregroundColor: WidgetStateProperty.all<Color>(Color(0xFFE30613)),
+          backgroundColor: WidgetStateProperty.all<Color>(Color(0xFFE30613)),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(3),
-              side: BorderSide(color: Color(0xFF004797)),
+              side: BorderSide(color: Color(0xFFE30613)),
             ),
           ),
         ),

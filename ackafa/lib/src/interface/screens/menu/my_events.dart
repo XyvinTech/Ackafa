@@ -147,7 +147,7 @@ class MyEventsPage extends StatelessWidget {
                       // Join event action
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF004797),
+                      backgroundColor: const Color(0xFFE30613),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4), // Adjust the value to make the edge less circular
                       ),

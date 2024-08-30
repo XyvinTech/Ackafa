@@ -1138,7 +1138,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                                 backgroundColor: Colors.white,
                                                 child: Icon(
                                                   Icons.edit,
-                                                  color: Color(0xFF004797),
+                                                  color: Color(0xFFE30613),
                                                   size: 16,
                                                 ),
                                               ),
@@ -1222,13 +1222,13 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 Text(
                                   'Add more',
                                   style: TextStyle(
-                                      color: Color(0xFF004797),
+                                      color: Color(0xFFE30613),
                                       fontWeight: FontWeight.w600,
                                       fontSize: 15),
                                 ),
                                 Icon(
                                   Icons.add,
-                                  color: Color(0xFF004797),
+                                  color: Color(0xFFE30613),
                                   size: 18,
                                 )
                               ],
@@ -1372,7 +1372,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                                 backgroundColor: Colors.white,
                                                 child: Icon(
                                                   Icons.edit,
-                                                  color: Color(0xFF004797),
+                                                  color: Color(0xFFE30613),
                                                   size: 16,
                                                 ),
                                               ),
@@ -1422,7 +1422,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                               maxLines: 3,
                               prefixIcon: const Icon(
                                 Icons.location_city,
-                                color: Color(0xFF004797),
+                                color: Color(0xFFE30613),
                               ),
                             ),
                           ),
@@ -1465,7 +1465,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 textController: personalPhoneController,
                                 labelText: 'Enter phone number',
                                 prefixIcon: const Icon(Icons.phone,
-                                    color: Color(0xFF004797)),
+                                    color: Color(0xFFE30613)),
                               ),
                             ),
                           if (isPhoneNumberVisible && !isLandlineVisible)
@@ -1487,13 +1487,13 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                     Text(
                                       'Add more',
                                       style: TextStyle(
-                                          color: Color(0xFF004797),
+                                          color: Color(0xFFE30613),
                                           fontWeight: FontWeight.w600,
                                           fontSize: 15),
                                     ),
                                     Icon(
                                       Icons.add,
-                                      color: Color(0xFF004797),
+                                      color: Color(0xFFE30613),
                                       size: 18,
                                     ),
                                   ],
@@ -1514,7 +1514,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 textController: landlineController,
                                 labelText: 'Enter landline number',
                                 prefixIcon: const Icon(Icons.phone_in_talk,
-                                    color: Color(0xFF004797)),
+                                    color: Color(0xFFE30613)),
                               ),
                             ),
                           if (isContactDetailsVisible)
@@ -1525,7 +1525,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 textController: emailController,
                                 labelText: 'Enter Email',
                                 prefixIcon: const Icon(Icons.email,
-                                    color: Color(0xFF004797)),
+                                    color: Color(0xFFE30613)),
                               ),
                             ),
                           if (isContactDetailsVisible)
@@ -1538,7 +1538,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 prefixIcon: const SvgIcon(
                                   assetName:
                                       'assets/icons/whatsapp-business.svg',
-                                  color: Color(0xFF004797),
+                                  color: Color(0xFFE30613),
                                   size: 10,
                                 ),
                               ),
@@ -1552,7 +1552,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 labelText: 'Enter Whatsapp',
                                 prefixIcon: const SvgIcon(
                                   assetName: 'assets/icons/whatsapp.svg',
-                                  color: Color(0xFF004797),
+                                  color: Color(0xFFE30613),
                                   size: 13,
                                 ),
                               ),
@@ -1566,7 +1566,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 labelText: 'Enter Address',
                                 maxLines: 3,
                                 prefixIcon: const Icon(Icons.location_on,
-                                    color: Color(0xFF004797)),
+                                    color: Color(0xFFE30613)),
                               ),
                             ),
                           if (isContactDetailsVisible)
@@ -1578,13 +1578,13 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   Text(
                                     'Add more',
                                     style: TextStyle(
-                                        color: Color(0xFF004797),
+                                        color: Color(0xFFE30613),
                                         fontWeight: FontWeight.w600,
                                         fontSize: 15),
                                   ),
                                   Icon(
                                     Icons.add,
-                                    color: Color(0xFF004797),
+                                    color: Color(0xFFE30613),
                                     size: 18,
                                   )
                                 ],
@@ -1626,7 +1626,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 prefixIcon: const SvgIcon(
                                   assetName: 'assets/icons/instagram.svg',
                                   size: 10,
-                                  color: Color(0xFF004797),
+                                  color: Color(0xFFE30613),
                                 ),
                               ),
                             ),
@@ -1639,7 +1639,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 labelText: 'Enter Linkedin',
                                 prefixIcon: const SvgIcon(
                                   assetName: 'assets/icons/linkedin.svg',
-                                  color: Color(0xFF004797),
+                                  color: Color(0xFFE30613),
                                   size: 10,
                                 ),
                               ),
@@ -1653,7 +1653,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 labelText: 'Enter Twitter',
                                 prefixIcon: const SvgIcon(
                                   assetName: 'assets/icons/twitter.svg',
-                                  color: Color(0xFF004797),
+                                  color: Color(0xFFE30613),
                                   size: 13,
                                 ),
                               ),
@@ -1667,7 +1667,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 labelText: 'Enter Facebook',
                                 prefixIcon: const Icon(
                                   Icons.facebook,
-                                  color: Color(0xFF004797),
+                                  color: Color(0xFFE30613),
                                   size: 28,
                                 ),
                               ),
@@ -1681,13 +1681,13 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   Text(
                                     'Add more',
                                     style: TextStyle(
-                                        color: Color(0xFF004797),
+                                        color: Color(0xFFE30613),
                                         fontWeight: FontWeight.w600,
                                         fontSize: 15),
                                   ),
                                   Icon(
                                     Icons.add,
-                                    color: Color(0xFF004797),
+                                    color: Color(0xFFE30613),
                                     size: 18,
                                   )
                                 ],
@@ -1731,7 +1731,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 labelText: 'Enter Website Link',
                                 suffixIcon: const Icon(
                                   Icons.add,
-                                  color: Color(0xFF004797),
+                                  color: Color(0xFFE30613),
                                 ),
                                 onTap: () {
                                   showWlinkorVlinkSheet(
@@ -1787,7 +1787,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 labelText: 'Enter Video Link',
                                 suffixIcon: const Icon(
                                   Icons.add,
-                                  color: Color(0xFF004797),
+                                  color: Color(0xFFE30613),
                                 ),
                               ),
                             ),
@@ -1873,7 +1873,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                       children: [
                                         Icon(
                                           Icons.add,
-                                          color: Color(0xFF004797),
+                                          color: Color(0xFFE30613),
                                         ),
                                         SizedBox(
                                           height: 10,
@@ -1964,7 +1964,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                       children: [
                                         Icon(
                                           Icons.add,
-                                          color: Color(0xFF004797),
+                                          color: Color(0xFFE30613),
                                         ),
                                         SizedBox(
                                           height: 10,
@@ -2046,7 +2046,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                       children: [
                                         Icon(
                                           Icons.add,
-                                          color: Color(0xFF004797),
+                                          color: Color(0xFFE30613),
                                         ),
                                         SizedBox(
                                           height: 10,
@@ -2126,7 +2126,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                       children: [
                                         Icon(
                                           Icons.add,
-                                          color: Color(0xFF004797),
+                                          color: Color(0xFFE30613),
                                         ),
                                         SizedBox(
                                           height: 10,

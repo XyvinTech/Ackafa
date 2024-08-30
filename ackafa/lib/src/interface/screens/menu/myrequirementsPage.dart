@@ -105,7 +105,7 @@ class MyRequirementsPage extends StatelessWidget {
                 Text(
                   messages,
                   style: TextStyle(
-                    color: Color(0xFF004797),
+                    color: Color(0xFFE30613),
                   ),
                 ),
                 Text(

@@ -450,7 +450,7 @@ class _HomePageState extends State<HomePage> {
         //             style: TextStyle(
         //               fontWeight: FontWeight.bold,
         //               fontSize: 18,
-        //               color: Color(0xFF004797),
+        //               color: Color(0xFFE30613),
         //             ),
         //           ),
         //           SizedBox(height: 8),

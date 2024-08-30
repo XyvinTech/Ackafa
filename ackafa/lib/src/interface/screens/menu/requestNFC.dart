@@ -31,7 +31,7 @@ class RequestNFCPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 50,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF004797),
+                color: Color(0xFFE30613),
               ),
             ),
             SizedBox(height: 16),

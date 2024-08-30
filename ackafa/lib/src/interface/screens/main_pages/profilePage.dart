@@ -233,7 +233,7 @@ class ProfilePage extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.phone, color: Color(0xFF004797)),
+                              Icon(Icons.phone, color: Color(0xFFE30613)),
                               SizedBox(width: 10),
                               Text(user.phoneNumbers!.personal.toString()),
                             ],
@@ -241,7 +241,7 @@ class ProfilePage extends StatelessWidget {
                           SizedBox(height: 10),
                           Row(
                             children: [
-                              Icon(Icons.email, color: Color(0xFF004797)),
+                              Icon(Icons.email, color: Color(0xFFE30613)),
                               SizedBox(width: 10),
                               Text(user.email!),
                             ],
@@ -249,7 +249,7 @@ class ProfilePage extends StatelessWidget {
                           SizedBox(height: 10),
                           Row(
                             children: [
-                              Icon(Icons.person, color: Color(0xFF004797)),
+                              Icon(Icons.person, color: Color(0xFFE30613)),
                               SizedBox(width: 10),
                               if (user.socialMedia!.isNotEmpty)
                                 Flexible(
@@ -259,7 +259,7 @@ class ProfilePage extends StatelessWidget {
                           SizedBox(height: 10),
                           Row(
                             children: [
-                              Icon(Icons.location_on, color: Color(0xFF004797)),
+                              Icon(Icons.location_on, color: Color(0xFFE30613)),
                               SizedBox(width: 10),
                               Expanded(
                                 child: Text(

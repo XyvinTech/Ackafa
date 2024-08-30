@@ -132,7 +132,7 @@ class _MainPageState extends State<MainPage> {
                         )
                       : IconResolver(
                           iconPath: _activeIcons[index],
-                          color: Color(0xFF004797),
+                          color: Color(0xFFE30613),
                         ),
                   label: [
                     'Home',
@@ -144,7 +144,7 @@ class _MainPageState extends State<MainPage> {
                 );
               }),
               currentIndex: _selectedIndex,
-              selectedItemColor: Color(0xFF004797),
+              selectedItemColor: Color(0xFFE30613),
               unselectedItemColor: Colors.grey,
               onTap: _onItemTapped,
               showUnselectedLabels: true,

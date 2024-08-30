@@ -223,7 +223,7 @@ class _MyProductPageState extends ConsumerState<MyProductPage> {
                         color: Colors.white,
                         size: 27,
                       ),
-                      backgroundColor: const Color(0xFF004797),
+                      backgroundColor: const Color(0xFFE30613),
                     ),
                   ),
                 ],

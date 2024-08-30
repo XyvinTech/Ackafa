@@ -27,7 +27,7 @@ class AboutPage extends StatelessWidget {
             SizedBox(height: 16),
             Row(
               children: [
-                Icon(Icons.phone, color: Color(0xFF004797)),
+                Icon(Icons.phone, color: Color(0xFFE30613)),
                 SizedBox(width: 10),
                 Text('9425726433', style: TextStyle(fontSize: 16)),
               ],
@@ -35,7 +35,7 @@ class AboutPage extends StatelessWidget {
             SizedBox(height: 10),
             Row(
               children: [
-                Icon(Icons.email, color: Color(0xFF004797)),
+                Icon(Icons.email, color: Color(0xFFE30613)),
                 SizedBox(width: 10),
                 Text('kssia@gmail.com', style: TextStyle(fontSize: 16)),
               ],
@@ -43,7 +43,7 @@ class AboutPage extends StatelessWidget {
             SizedBox(height: 10),
             Row(
               children: [
-                Icon(Icons.location_on, color: Color(0xFF004797)),
+                Icon(Icons.location_on, color: Color(0xFFE30613)),
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(

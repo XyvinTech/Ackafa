@@ -60,7 +60,7 @@ class ProfilePreview extends StatelessWidget {
                         icon: const Icon(
                           size: 18,
                           Icons.edit,
-                          color: Color(0xFF004797),
+                          color: Color(0xFFE30613),
                         ),
                         onPressed: () {},
                       ),
@@ -186,7 +186,7 @@ class ProfilePreview extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Icon(Icons.phone, color: Color(0xFF004797)),
+                        const Icon(Icons.phone, color: Color(0xFFE30613)),
                         const SizedBox(width: 10),
                         Text(user.phoneNumbers!.personal.toString()),
                       ],
@@ -194,7 +194,7 @@ class ProfilePreview extends StatelessWidget {
                     const SizedBox(height: 10),
                     Row(
                       children: [
-                        const Icon(Icons.email, color: Color(0xFF004797)),
+                        const Icon(Icons.email, color: Color(0xFFE30613)),
                         const SizedBox(width: 10),
                         Text(user.email!),
                       ],
@@ -202,7 +202,7 @@ class ProfilePreview extends StatelessWidget {
                     const SizedBox(height: 10),
                     Row(
                       children: [
-                        const Icon(Icons.person, color: Color(0xFF004797)),
+                        const Icon(Icons.person, color: Color(0xFFE30613)),
                         const SizedBox(width: 10),
                         if (user.socialMedia!.isNotEmpty)
                           Flexible(child: Text(user.socialMedia![0].url!)),
@@ -211,7 +211,7 @@ class ProfilePreview extends StatelessWidget {
                     const SizedBox(height: 10),
                     Row(
                       children: [
-                        const Icon(Icons.location_on, color: Color(0xFF004797)),
+                        const Icon(Icons.location_on, color: Color(0xFFE30613)),
                         const SizedBox(width: 10),
                         if (user.bio != null)
                           Expanded(
@@ -549,7 +549,7 @@ class ProfilePreview extends StatelessWidget {
                       height: 42,
                       child: SvgIcon(
                         assetName: svgIcons[index],
-                        color: const Color(0xFF004797),
+                        color: const Color(0xFFE30613),
                       )),
                 ),
               ),

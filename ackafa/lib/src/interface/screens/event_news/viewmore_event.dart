@@ -100,7 +100,7 @@ class ViewMoreEventPage extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.calendar_today, color: Color(0xFF004797)),
+                        Icon(Icons.calendar_today, color: Color(0xFFE30613)),
                         SizedBox(width: 8),
                         Text(
                           date,
@@ -115,7 +115,7 @@ class ViewMoreEventPage extends StatelessWidget {
                     SizedBox(width: 16),
                     Row(
                       children: [
-                        Icon(Icons.access_time, color: Color(0xFF004797)),
+                        Icon(Icons.access_time, color: Color(0xFFE30613)),
                         SizedBox(width: 8),
                         Text(
                           time,

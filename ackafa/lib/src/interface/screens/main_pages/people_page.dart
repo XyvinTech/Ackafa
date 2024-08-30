@@ -5,7 +5,6 @@ import 'package:kssia/src/data/globals.dart';
 import 'package:kssia/src/interface/common/components/app_bar.dart';
 import 'package:kssia/src/interface/common/loading.dart';
 import 'package:kssia/src/interface/screens/feed/feed_view.dart';
-import 'package:kssia/src/interface/screens/feed/product_view.dart';
 import 'package:kssia/src/interface/screens/main_pages/menuPage.dart';
 import 'package:kssia/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:kssia/src/interface/screens/people/chat/chat.dart';
@@ -82,10 +81,10 @@ class PeoplePage extends StatelessWidget {
                     child: TabBar(
                       isScrollable: false, // Disable scroll to center the tabs
                       indicatorColor:
-                          Color(0xFF004797), // Set to AppPalette.kPrimaryColor
+                          Color(0xFFE30613), // Set to AppPalette.kPrimaryColor
                       indicatorWeight: 3.0,
                       indicatorSize: TabBarIndicatorSize.tab,
-                      labelColor: Color(0xFF004797),
+                      labelColor: Color(0xFFE30613),
                       unselectedLabelColor: Colors.grey,
                       labelStyle: TextStyle(
                         fontSize: 12,

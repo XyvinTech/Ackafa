@@ -112,10 +112,10 @@ class NewsPage extends StatelessWidget {
                       ),
                       child: const Row(
                         children: [
-                          Icon(Icons.arrow_back, color: Color(0xFF004797)),
+                          Icon(Icons.arrow_back, color: Color(0xFFE30613)),
                           SizedBox(width: 8),
                           Text('Previous',
-                              style: TextStyle(color: Color(0xFF004797))),
+                              style: TextStyle(color: Color(0xFFE30613))),
                         ],
                       ),
                     ),
@@ -136,9 +136,9 @@ class NewsPage extends StatelessWidget {
                       child: const Row(
                         children: [
                           Text('Next',
-                              style: TextStyle(color: Color(0xFF004797))),
+                              style: TextStyle(color: Color(0xFFE30613))),
                           SizedBox(width: 8),
-                          Icon(Icons.arrow_forward, color: Color(0xFF004797)),
+                          Icon(Icons.arrow_forward, color: Color(0xFFE30613)),
                         ],
                       ),
                     ),

@@ -135,7 +135,7 @@ class _MySubscriptionPageState extends State<MySubscriptionPage> {
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF004797),
+                  backgroundColor: const Color(0xFFE30613),
                   foregroundColor: Colors.white,
                   minimumSize: const Size.fromHeight(50),
                   shape: RoundedRectangleBorder(

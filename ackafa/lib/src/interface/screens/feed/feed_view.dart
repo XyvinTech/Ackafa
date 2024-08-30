@@ -132,7 +132,7 @@ class _FeedViewState extends State<FeedView> {
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () => _openModalSheet(sheet: 'requirement'),
             label: const Text(
-              'Add Requirement/update',
+              'Add Post',
               style: TextStyle(color: Colors.white),
             ),
             icon: const Icon(
@@ -140,7 +140,10 @@ class _FeedViewState extends State<FeedView> {
               color: Colors.white,
               size: 27,
             ),
-            backgroundColor: const Color(0xFF004797),
+            backgroundColor: const Color(0xFFE30613),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
         );
       },

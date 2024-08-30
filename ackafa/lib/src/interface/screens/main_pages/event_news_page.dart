@@ -97,10 +97,10 @@ class _Event_News_PageState extends State<Event_News_Page>
                     child: TabBar(
                       isScrollable: false, // Disable scroll to center the tabs
                       indicatorColor:
-                          Color(0xFF004797), // Set to AppPalette.kPrimaryColor
+                          Color(0xFFE30613), // Set to AppPalette.kPrimaryColor
                       indicatorWeight: 3.0,
                       indicatorSize: TabBarIndicatorSize.tab,
-                      labelColor: Color(0xFF004797),
+                      labelColor: Color(0xFFE30613),
                       unselectedLabelColor: Colors.grey,
                       labelStyle: TextStyle(
                         fontSize: 12,

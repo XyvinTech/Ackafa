@@ -236,7 +236,7 @@ class _ShowEnterAwardtSheetState extends State<ShowEnterAwardtSheet> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(Icons.add,
-                                        size: 27, color: Color(0xFF004797)),
+                                        size: 27, color: Color(0xFFE30613)),
                                     SizedBox(height: 10),
                                     Text(
                                       'Upload Image',
@@ -404,7 +404,7 @@ class _ShowAddCertificateSheetState extends State<ShowAddCertificateSheet> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: const [
                                     Icon(Icons.add,
-                                        size: 27, color: Color(0xFF004797)),
+                                        size: 27, color: Color(0xFFE30613)),
                                     SizedBox(height: 10),
                                     Text(
                                       'Upload Image',
@@ -561,7 +561,7 @@ class _ShowAddBrochureSheetState extends State<ShowAddBrochureSheet> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(Icons.add,
-                                        size: 27, color: Color(0xFF004797)),
+                                        size: 27, color: Color(0xFFE30613)),
                                     SizedBox(height: 10),
                                     Text(
                                       'Upload PDF',
@@ -742,7 +742,7 @@ class _ShowEnterProductsSheetState extends State<ShowEnterProductsSheet> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(Icons.add,
-                                          size: 27, color: Color(0xFF004797)),
+                                          size: 27, color: Color(0xFFE30613)),
                                       SizedBox(height: 10),
                                       Text(
                                         'Upload Image',
@@ -987,7 +987,7 @@ class ShowAddRequirementSheet extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.add, size: 27, color: Color(0xFF004797)),
+                    Icon(Icons.add, size: 27, color: Color(0xFFE30613)),
                     SizedBox(height: 10),
                     Text(
                       'Upload Image',
@@ -1018,13 +1018,13 @@ class ShowAddRequirementSheet extends StatelessWidget {
               },
               style: ButtonStyle(
                 foregroundColor:
-                    WidgetStateProperty.all<Color>(Color(0xFF004797)),
+                    WidgetStateProperty.all<Color>(Color(0xFFE30613)),
                 backgroundColor:
-                    WidgetStateProperty.all<Color>(Color(0xFF004797)),
+                    WidgetStateProperty.all<Color>(Color(0xFFE30613)),
                 shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
-                    side: BorderSide(color: Color(0xFF004797)),
+                    side: BorderSide(color: Color(0xFFE30613)),
                   ),
                 ),
               ),
@@ -1111,7 +1111,7 @@ class _ShowPaymentUploadSheetState extends State<ShowPaymentUploadSheet> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Icon(Icons.add, size: 27, color: Color(0xFF004797)),
+                          Icon(Icons.add, size: 27, color: Color(0xFFE30613)),
                           SizedBox(height: 10),
                           Text(
                             'Upload Image',
