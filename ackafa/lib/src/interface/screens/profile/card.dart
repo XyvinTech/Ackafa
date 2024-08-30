@@ -93,7 +93,7 @@ class ProfileCard extends StatelessWidget {
                     SizedBox(height: 20),
                     Row(
                       children: [
-                        Icon(Icons.phone, color: Colors.blue),
+                        Icon(Icons.phone, color: Color(0xFFAEAAAB)),
                         SizedBox(width: 10),
                         Text('+91 9458652637'),
                       ],
@@ -101,7 +101,7 @@ class ProfileCard extends StatelessWidget {
                     SizedBox(height: 10),
                     Row(
                       children: [
-                        Icon(Icons.email, color: Colors.blue),
+                        Icon(Icons.email, color: Color(0xFFAEAAAB)),
                         SizedBox(width: 10),
                         Text('johndoe@gmail.com'),
                       ],
@@ -109,7 +109,7 @@ class ProfileCard extends StatelessWidget {
                     SizedBox(height: 10),
                     Row(
                       children: [
-                        Icon(Icons.location_on, color: Colors.blue),
+                        Icon(Icons.location_on, color: Color(0xFFAEAAAB)),
                         SizedBox(width: 10),
                         Expanded(
                           child: Text(

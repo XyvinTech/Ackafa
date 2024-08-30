@@ -6,17 +6,18 @@ import 'package:kssia/src/data/models/user_model.dart';
 import 'package:kssia/src/data/providers/user_provider.dart';
 import 'package:kssia/src/interface/common/loading.dart';
 import 'package:kssia/src/interface/screens/main_pages/loginPage.dart';
-import 'package:kssia/src/interface/screens/menu/my_product.dart';
-import 'package:kssia/src/interface/screens/menu/my_reviews.dart';
+// import 'package:kssia/src/interface/screens/menu/my_product.dart';
+// import 'package:kssia/src/interface/screens/menu/my_reviews.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../menu/requestNFC.dart';
-import '../menu/myrequirementsPage.dart';
+// import '../menu/myrequirementsPage.dart';
 import '../menu/terms_and_conditions.dart';
 import '../menu/privacy.dart';
 import '../menu/about.dart';
-import '../menu/my_subscription.dart';
+// import '../menu/my_subscription.dart';
 import '../menu/my_events.dart';
 import '../menu/my_transaction.dart';
+import '../menu/my_post.dart';
 
 void showDeleteAccountDialog(BuildContext context) {
   showDialog(
@@ -331,46 +332,46 @@ class MenuPage extends StatelessWidget {
                           );
                         },
                       ),
-                      Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.subscriptions,
-                        'My subscriptions',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const MySubscriptionPage()),
-                          );
-                        },
-                      ),
-                      Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.shopping_bag,
-                        'My Products',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>  MyProductPage()),
-                          );
-                        },
-                      ),
-                      Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.subscriptions,
-                        'My Reviews',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MyReviewsPage()),
-                          );
-                        },
-                      ),
+                      // Divider(),
+                      // _buildListTile(
+                      //   context,
+                      //   Icons.subscriptions,
+                      //   'My subscriptions',
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) =>
+                      //               const MySubscriptionPage()),
+                      //     );
+                      //   },
+                      // ),
+                      // Divider(),
+                      // _buildListTile(
+                      //   context,
+                      //   Icons.shopping_bag,
+                      //   'My Products',
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) =>  MyProductPage()),
+                      //     );
+                      //   },
+                      // ),
+                      // Divider(),
+                      // _buildListTile(
+                      //   context,
+                      //   Icons.subscriptions,
+                      //   'My Reviews',
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => const MyReviewsPage()),
+                      //     );
+                      //   },
+                      // ),
                       Divider(),
                       _buildListTile(
                         context,
@@ -397,19 +398,34 @@ class MenuPage extends StatelessWidget {
                           );
                         },
                       ),
+                      
                       Divider(),
                       _buildListTile(
                         context,
-                        Icons.notifications,
-                        'My Requirements',
+                        Icons.monetization_on,
+                        'My Posts',
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MyRequirementsPage()),
+                                builder: (context) => MyPostPage()), 
                           );
                         },
                       ),
+
+                      // Divider(),
+                      // _buildListTile(
+                      //   context,
+                      //   Icons.notifications,
+                      //   'My Requirements',
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => MyRequirementsPage()),
+                      //     );
+                      //   },
+                      // ),
                       Divider(),
                       _buildListTile(
                         context,
