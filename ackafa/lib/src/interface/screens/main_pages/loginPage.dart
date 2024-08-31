@@ -80,7 +80,7 @@ class PhoneNumberScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 40),
             Image.asset(
-              'assets/icons/kssiaLogo.png',
+              'assets/icons/ackaf_logo.png',
             ),
             const SizedBox(height: 20),
             const Text(

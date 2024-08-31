@@ -14,6 +14,8 @@ class MyPostPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+
+            
             PostCard(
               imageUrl:
                   'https://via.placeholder.com/400x200', // Replace with your image URL

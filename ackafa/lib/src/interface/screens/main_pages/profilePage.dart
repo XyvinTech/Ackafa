@@ -26,8 +26,8 @@ class ProfilePage extends StatelessWidget {
                       child: Row(
                         children: [
                           Image.asset(
-                            'assets/icons/kssiaLogo.png',
-                            fit: BoxFit.contain,
+                            'assets/icons/ackaf_logo.png',
+                            fit: BoxFit.scaleDown,
                           ),
                           const Spacer(),
                           IconButton(
@@ -95,13 +95,13 @@ class ProfilePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(30.0),
+                      padding: const EdgeInsets.all(50.0),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(2),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
+                            color: const Color.fromARGB(255, 182, 181, 181).withOpacity(0.5),
                             spreadRadius: 0,
                             blurRadius: 1,
                             offset: const Offset(.5, .5),
@@ -287,20 +287,24 @@ class ProfilePage extends StatelessWidget {
                         ],
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            width: 80,
-                            height: 40,
-                            child: Image.asset(
-                              'assets/icons/kssiaLogo.png',
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                          Text(
-                            'Member ID: ${user.membershipId}',
-                            style: TextStyle(
-                              color: Colors.grey,
+                          RichText(
+                            text: TextSpan(
+                              text: 'Member ID: ',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: user.membershipId,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -312,7 +316,7 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         IconButton(
                           icon: Image.asset(
-                              'assets/icons/share_profile_button.png'),
+                              'assets/icons/Button.png'),   //add button.png here
                           iconSize: 50,
                           onPressed: () {
                             // Navigator.push(

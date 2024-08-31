@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                             width: 100,
                             height: 100,
                             child: Image.asset(
-                              'assets/icons/kssiaLogo.png',
+                              'assets/icons/ackaf_logo.png',
                               fit: BoxFit.contain,
                             ),
                           ),
