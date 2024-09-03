@@ -1,565 +1,461 @@
 
-
-class Name {
-  final String? firstName;
-  final String? middleName;
-  final String? lastName;
-
-  Name({
-    this.firstName,
-    this.middleName,
-    this.lastName,
-  });
-
-  factory Name.fromJson(Map<String, dynamic> json) {
-    return Name(
-      firstName: json['first_name'] as String?,
-      middleName: json['middle_name'] as String?,
-      lastName: json['last_name'] as String?,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'first_name': firstName,
-      'middle_name': middleName,
-      'last_name': lastName,
-    };
-  }
-
-  Name copyWith({
-    String? firstName,
-    String? middleName,
-    String? lastName,
-  }) {
-    return Name(
-      firstName: firstName ?? this.firstName,
-      middleName: middleName ?? this.middleName,
-      lastName: lastName ?? this.lastName,
-    );
-  }
-}
-
-class PhoneNumbers {
-  final int? personal;
-  final int? landline;
-  final int? companyPhoneNumber;
-  final int? whatsappNumber;
-  final int? whatsappBusinessNumber;
-
-  PhoneNumbers({
-    this.personal,
-    this.landline,
-    this.companyPhoneNumber,
-    this.whatsappNumber,
-    this.whatsappBusinessNumber,
-  });
-
-  factory PhoneNumbers.fromJson(Map<String, dynamic> json) {
-    return PhoneNumbers(
-      personal: json['personal'] as int?,
-      landline: json['landline'] as int?,
-      companyPhoneNumber: json['company_phone_number'] as int?,
-      whatsappNumber: json['whatsapp_number'] as int?,
-      whatsappBusinessNumber: json['whatsapp_business_number'] as int?,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'personal': personal,
-      'landline': landline,
-      'company_phone_number': companyPhoneNumber,
-      'whatsapp_number': whatsappNumber,
-      'whatsapp_business_number': whatsappBusinessNumber,
-    };
-  }
-
-  PhoneNumbers copyWith({
-    int? personal,
-    int? landline,
-    int? companyPhoneNumber,
-    int? whatsappNumber,
-    int? whatsappBusinessNumber,
-  }) {
-    return PhoneNumbers(
-      personal: personal ?? this.personal,
-      landline: landline ?? this.landline,
-      companyPhoneNumber: companyPhoneNumber ?? this.companyPhoneNumber,
-      whatsappNumber: whatsappNumber ?? this.whatsappNumber,
-      whatsappBusinessNumber:
-          whatsappBusinessNumber ?? this.whatsappBusinessNumber,
-    );
-  }
-}
-
-class Website {
-  final String? name;
-  final String? url;
-
-  Website({
-    this.name,
-    this.url,
-  });
-
-  factory Website.fromJson(Map<String, dynamic> json) {
-    return Website(
-      name: json['name'] as String?,
-      url: json['url'] as String?,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'url': url,
-    };
-  }
-
-  Website copyWith({
-    String? name,
-    String? url,
-  }) {
-    return Website(
-      name: name ?? this.name,
-      url: url ?? this.url,
-    );
-  }
-}
-
-class SocialMedia {
-  final String? platform;
-  final String? url;
-  final String? id;
-
-  SocialMedia({
-    this.platform,
-    this.url,
-    this.id,
-  });
-
-  factory SocialMedia.fromJson(Map<String, dynamic> json) {
-    return SocialMedia(
-      platform: json['platform'] as String?,
-      url: json['url'] as String?,
-      id: json['_id'] as String?,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'platform': platform,
-      'url': url,
-      '_id': id,
-    };
-  }
-
-  SocialMedia copyWith({
-    String? platform,
-    String? url,
-    String? id,
-  }) {
-    return SocialMedia(
-      platform: platform ?? this.platform,
-      url: url ?? this.url,
-      id: id ?? this.id,
-    );
-  }
-}
-
-class Video {
-  final String? name;
-  final String? url;
-
-  Video({
-    required this.name,
-    required this.url,
-  });
-
-  Video copyWith({
-    String? name,
-    String? url,
-  }) {
-    return Video(
-      name: name ?? this.name,
-      url: url ?? this.url,
-    );
-  }
-
-  factory Video.fromJson(Map<String, dynamic> json) {
-    return Video(
-      name: json['name'],
-      url: json['url'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'url': url,
-    };
-  }
-}
-
-class Award {
-  final String? name;
-  final String? url;
-  final String? authorityName;
-
-  Award({required this.name, required this.url, required this.authorityName});
-
-  Award copyWith({String? name, String? url, String? authorityName}) {
-    return Award(
-      name: name ?? this.name,
-      url: url ?? this.url,
-      authorityName: authorityName ?? this.authorityName,
-    );
-  }
-
-  factory Award.fromJson(Map<String, dynamic> json) {
-    return Award(
-      name: json['name'],
-      url: json['url'],
-      authorityName: json['authority_name'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'name': name, 'url': url, 'authority_name': authorityName};
-  }
-}
-
-class Certificate {
-  final String? name;
-  final String? url;
-
-  Certificate({
-    required this.name,
-    required this.url,
-  });
-
-  Certificate copyWith({
-    String? name,
-    String? url,
-  }) {
-    return Certificate(
-      name: name ?? this.name,
-      url: url ?? this.url,
-    );
-  }
-
-  factory Certificate.fromJson(Map<String, dynamic> json) {
-    return Certificate(
-      name: json['name'],
-      url: json['url'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'url': url,
-    };
-  }
-}
-
-class Brochure {
-  final String? name;
-  final String? url;
-
-  Brochure({
-    required this.name,
-    required this.url,
-  });
-
-  Brochure copyWith({
-    String? name,
-    String? url,
-  }) {
-    return Brochure(
-      name: name ?? this.name,
-      url: url ?? this.url,
-    );
-  }
-
-  factory Brochure.fromJson(Map<String, dynamic> json) {
-    return Brochure(
-      name: json['name'],
-      url: json['url'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'url': url,
-    };
-  }
-}
-
 class UserModel {
-  final String? id;
-  final String? membershipId;
   final Name? name;
-  final PhoneNumbers? phoneNumbers;
-  final String? bloodGroup;
+  final String? id;
+  final String? uid;
+  final UserCollege? college;
+  final UserCourse? course;
+  final int? batch;
+  final String? role;
+  final String? image;
   final String? email;
-  final String? designation;
-  final String? companyName;
-  final String? companyEmail;
-  final String? businessCategory;
-  final String? subCategory;
+  final String? phone;
   final String? bio;
-  final String? address;
-  final List<Website>? websites;
   final String? status;
-  final bool? isActive;
-  final bool? isDeleted;
-  final String? selectedTheme;
-  final List<SocialMedia>? socialMedia;
-  final List<Video>? video;
+  final int? otp;
+  final String? address;
+  final Company? company;
+  final List<Link>? social;
+  final List<Link>? websites;
   final List<Award>? awards;
-  final List<Certificate>? certificates;
-  final List<Brochure>? brochure;
-  final List<Review>? reviews; // Added reviews field
-  final String? createdAt;
-  final String? updatedAt;
-  final String? companyAddress;
-  final String? companyLogo;
-  final String? profilePicture;
+  final List<Link>? videos;
+  final List<Link>? certificates;
+  final String? reason;
 
   UserModel({
-    this.id,
-    this.membershipId,
     this.name,
-    this.phoneNumbers,
-    this.bloodGroup,
+    this.id,
+    this.uid,
+    this.college,
+    this.course,
+    this.batch,
+    this.role,
+    this.image,
     this.email,
-    this.designation,
-    this.companyName,
-    this.companyEmail,
-    this.businessCategory,
-    this.subCategory,
+    this.phone,
     this.bio,
-    this.address,
-    this.websites,
     this.status,
-    this.isActive,
-    this.isDeleted,
-    this.selectedTheme,
-    this.socialMedia,
-    this.video,
+    this.otp,
+    this.address,
+    this.company,
+    this.social,
+    this.websites,
     this.awards,
+    this.videos,
     this.certificates,
-    this.brochure,
-    this.reviews, // Initialize reviews
-    this.createdAt,
-    this.updatedAt,
-    this.companyAddress,
-    this.companyLogo,
-    this.profilePicture,
+    this.reason,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['_id'] as String?,
-      membershipId: json['membership_id'] as String?,
       name: json['name'] != null ? Name.fromJson(json['name']) : null,
-      phoneNumbers: json['phone_numbers'] != null
-          ? PhoneNumbers.fromJson(json['phone_numbers'])
+      id: json['_id'],
+      uid: json['uid'],
+      college:
+          json['college'] != null ? UserCollege.fromJson(json['college']) : null,
+      course: json['course'] != null ? UserCourse.fromJson(json['course']) : null,
+      batch: json['batch'],
+      role: json['role'] ?? 'member',
+      image: json['image'],
+      email: json['email'],
+      phone: json['phone'],
+      bio: json['bio'],
+      status: json['status'] ?? 'inactive',
+      otp: json['otp'],
+      address: json['address'],
+      company:
+          json['company'] != null ? Company.fromJson(json['company']) : null,
+      social: json['social'] != null
+          ? (json['social'] as List).map((item) => Link.fromJson(item)).toList()
           : null,
-      bloodGroup: json['blood_group'] as String?,
-      email: json['email'] as String?,
-      designation: json['designation'] as String?,
-      companyName: json['company_name'] as String?,
-      companyEmail: json['company_email'] as String?,
-      businessCategory: json['business_category'] as String?,
-      subCategory: json['sub_category'] as String?,
-      bio: json['bio'] as String?,
-      address: json['address'] as String?,
-      websites: (json['websites'] as List<dynamic>?)
-          ?.map((e) => Website.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      status: json['status'] as String?,
-      isActive: json['is_active'] as bool?,
-      isDeleted: json['is_deleted'] as bool?,
-      selectedTheme: json['selectedTheme'] as String?,
-      socialMedia: (json['social_media'] as List<dynamic>?)
-          ?.map((e) => SocialMedia.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      video: (json['video'] as List<dynamic>?)
-          ?.map((e) => Video.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      awards: (json['awards'] as List<dynamic>?)
-          ?.map((e) => Award.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      certificates: (json['certificates'] as List<dynamic>?)
-          ?.map((e) => Certificate.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      brochure: (json['brochure'] as List<dynamic>?)
-          ?.map((e) => Brochure.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      reviews: (json['reviews'] as List<dynamic>?)
-          ?.map((e) => Review.fromJson(e as Map<String, dynamic>))
-          .toList(), // Parse reviews
-      createdAt: json['createdAt'] as String?,
-      updatedAt: json['updatedAt'] as String?,
-      companyAddress: json['company_address'] as String?,
-      companyLogo: json['company_logo'] as String?,
-      profilePicture: json['profile_picture'] as String?,
-      
+      websites: json['websites'] != null
+          ? (json['websites'] as List)
+              .map((item) => Link.fromJson(item))
+              .toList()
+          : null,
+      awards: json['awards'] != null
+          ? (json['awards'] as List)
+              .map((item) => Award.fromJson(item))
+              .toList()
+          : null,
+      videos: json['videos'] != null
+          ? (json['videos'] as List).map((item) => Link.fromJson(item)).toList()
+          : null,
+      certificates: json['certificates'] != null
+          ? (json['certificates'] as List)
+              .map((item) => Link.fromJson(item))
+              .toList()
+          : null,
+      reason: json['reason'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
-      'membership_id': membershipId,
       'name': name?.toJson(),
-      'phone_numbers': phoneNumbers?.toJson(),
-      'blood_group': bloodGroup,
+      '_id': id?.toString(),
+      'uid': uid,
+      'college': college,
+      'course': college,
+      'batch': batch,
+      'role': role,
+      'image': image,
       'email': email,
-      'designation': designation,
-      'company_name': companyName,
-      'company_email': companyEmail,
-      'business_category': businessCategory,
-      'sub_category': subCategory,
+      'phone': phone,
       'bio': bio,
-      'address': address,
-      'websites': websites?.map((e) => e.toJson()).toList(),
       'status': status,
-      'is_active': isActive,
-      'is_deleted': isDeleted,
-      'selectedTheme': selectedTheme,
-      'social_media': socialMedia?.map((e) => e.toJson()).toList(),
-      'video': video?.map((e) => e.toJson()).toList(),
-      'awards': awards?.map((e) => e.toJson()).toList(),
-      'certificates': certificates?.map((e) => e.toJson()).toList(),
-      'brochure': brochure?.map((e) => e.toJson()).toList(),
-      'reviews': reviews?.map((e) => e.toJson()).toList(), // Serialize reviews
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
-      'company_address': companyAddress,
-      'company_logo': companyLogo,
-      'profile_picture': profilePicture,
-    
+      'otp': otp,
+      'address': address,
+      'company': company?.toJson(),
+      'social': social?.map((item) => item.toJson()).toList(),
+      'websites': websites?.map((item) => item.toJson()).toList(),
+      'awards': awards?.map((item) => item.toJson()).toList(),
+      'videos': videos?.map((item) => item.toJson()).toList(),
+      'certificates': certificates?.map((item) => item.toJson()).toList(),
+      'reason': reason,
     };
   }
 
   UserModel copyWith({
-    String? id,
-    String? membershipId,
     Name? name,
-    PhoneNumbers? phoneNumbers,
-    String? bloodGroup,
+    String? id,
+    String? uid,
+    UserCollege? college,
+    UserCourse? course,
+    int? batch,
+    String? role,
+    String? image,
     String? email,
-    String? designation,
-    String? companyName,
-    String? companyEmail,
-    String? businessCategory,
-    String? subCategory,
+    String? phone,
     String? bio,
-    String? address,
-    List<Website>? websites,
     String? status,
-    bool? isActive,
-    bool? isDeleted,
-    String? selectedTheme,
-    List<SocialMedia>? socialMedia,
-    List<Video>? video,
+    int? otp,
+    String? address,
+    Company? company,
+    List<Link>? social,
+    List<Link>? websites,
     List<Award>? awards,
-    List<Certificate>? certificates,
-    List<Brochure>? brochure,
-    List<Review>? reviews, // Add reviews parameter
-    String? createdAt,
-    String? updatedAt,
-    String? companyAddress,
-    String? companyLogo,
-    String? profilePicture,
-
+    List<Link>? videos,
+    List<Link>? certificates,
+    String? reason,
   }) {
     return UserModel(
-      id: id ?? this.id,
-      membershipId: membershipId ?? this.membershipId,
       name: name ?? this.name,
-      phoneNumbers: phoneNumbers ?? this.phoneNumbers,
-      bloodGroup: bloodGroup ?? this.bloodGroup,
+      id: id ?? this.id,
+      uid: uid ?? this.uid,
+      college: college ?? this.college,
+      course: course ?? this.course,
+      batch: batch ?? this.batch,
+      role: role ?? this.role,
+      image: image ?? this.image,
       email: email ?? this.email,
-      designation: designation ?? this.designation,
-      companyName: companyName ?? this.companyName,
-      companyEmail: companyEmail ?? this.companyEmail,
-      businessCategory: businessCategory ?? this.businessCategory,
-      subCategory: subCategory ?? this.subCategory,
+      phone: phone ?? this.phone,
       bio: bio ?? this.bio,
-      address: address ?? this.address,
-      websites: websites ?? this.websites,
       status: status ?? this.status,
-      isActive: isActive ?? this.isActive,
-      isDeleted: isDeleted ?? this.isDeleted,
-      selectedTheme: selectedTheme ?? this.selectedTheme,
-      socialMedia: socialMedia ?? this.socialMedia,
-      video: video ?? this.video,
+      otp: otp ?? this.otp,
+      address: address ?? this.address,
+      company: company ?? this.company,
+      social: social ?? this.social,
+      websites: websites ?? this.websites,
       awards: awards ?? this.awards,
+      videos: videos ?? this.videos,
       certificates: certificates ?? this.certificates,
-      brochure: brochure ?? this.brochure,
-      reviews: reviews ?? this.reviews, // Assign reviews
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      companyAddress: companyAddress ?? this.companyAddress,
-      companyLogo: companyLogo ?? this.companyLogo,
-      profilePicture: profilePicture ?? this.profilePicture,
+      reason: reason ?? this.reason,
     );
   }
 }
 
-class Review {
-  final String? reviewer;
-  final String? content;
-  final int? rating;
-  final String? id;
-  final String? createdAt;
+class Name {
+  final String? first;
+  final String? middle;
+  final String? last;
 
-  Review({
-    this.reviewer,
-    this.content,
-    this.rating,
-    this.id,
-    this.createdAt,
-  });
+  Name({this.first, this.middle, this.last});
 
-  factory Review.fromJson(Map<String, dynamic> json) {
-    return Review(
-      reviewer: json['reviewer'] as String?,
-      content: json['content'] as String?,
-      rating: json['rating'] as int?,
-      id: json['_id'] as String?,
-      createdAt: json['created_at'] as String?,
+  factory Name.fromJson(Map<String, dynamic> json) {
+    return Name(
+      first: json['first'],
+      middle: json['middle'],
+      last: json['last'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'reviewer': reviewer,
-      'content': content,
-      'rating': rating,
-      '_id': id,
-      'created_at': createdAt,
+      'first': first,
+      'middle': middle,
+      'last': last,
     };
   }
 
-  Review copyWith({
-    String? reviewer,
-    String? content,
-    int? rating,
-    String? id,
-    String? createdAt,
+  Name copyWith({
+    String? first,
+    String? middle,
+    String? last,
   }) {
-    return Review(
-      reviewer: reviewer ?? this.reviewer,
-      content: content ?? this.content,
-      rating: rating ?? this.rating,
+    return Name(
+      first: first ?? this.first,
+      middle: middle ?? this.middle,
+      last: last ?? this.last,
+    );
+  }
+}
+
+class Company {
+  final String? name;
+  final String? designation;
+  final String? phone;
+  final String? address;
+  final String? logo;
+
+  Company({
+    this.name,
+    this.designation,
+    this.phone,
+    this.address,
+    this.logo,
+  });
+
+  factory Company.fromJson(Map<String, dynamic> json) {
+    return Company(
+      name: json['name'],
+      designation: json['designation'],
+      phone: json['phone'],
+      address: json['address'],
+      logo: json['logo'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'designation': designation,
+      'phone': phone,
+      'address': address,
+      'logo': logo
+    };
+  }
+
+  Company copyWith({
+    String? name,
+    String? designation,
+    String? phone,
+    String? address,
+    String? logo,
+  }) {
+    return Company(
+        name: name ?? this.name,
+        designation: designation ?? this.designation,
+        phone: phone ?? this.phone,
+        address: address ?? this.address,
+        logo: logo ?? this.logo);
+  }
+}
+
+class Award {
+  final String? image;
+  final String? name;
+  final String? authority;
+
+  Award({this.image, this.name, this.authority});
+
+  factory Award.fromJson(Map<String, dynamic> json) {
+    return Award(
+      image: json['image'],
+      name: json['name'],
+      authority: json['authority'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'image': image,
+      'name': name,
+      'authority': authority,
+    };
+  }
+
+  Award copyWith({
+    String? image,
+    String? name,
+    String? authority,
+  }) {
+    return Award(
+      image: image ?? this.image,
+      name: name ?? this.name,
+      authority: authority ?? this.authority,
+    );
+  }
+}
+
+class Link {
+  final String? name;
+  final String? link;
+
+  Link({this.name, this.link});
+
+  factory Link.fromJson(Map<String, dynamic> json) {
+    return Link(
+      name: json['name'],
+      link: json['link'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'link': link,
+    };
+  }
+
+  Link copyWith({
+    String? name,
+    String? link,
+  }) {
+    return Link(
+      name: name ?? this.name,
+      link: link ?? this.link,
+    );
+  }
+}
+
+
+class UserCollege {
+  final String? id;
+  final String? collegeName;
+  final int? startYear;
+  final List<int>? batch;
+  final String? country;
+  final String? state;
+  final bool? status;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final int? v;
+  final List<String>? course;
+
+  UserCollege({
+    this.id,
+    this.collegeName,
+    this.startYear,
+    this.batch,
+    this.country,
+    this.state,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
+    this.course,
+  });
+
+  factory UserCollege.fromJson(Map<String, dynamic> json) {
+    return UserCollege(
+      id: json['_id'] as String?,
+      collegeName: json['collegeName'] as String?,
+      startYear: json['startYear'] as int?,
+      batch: (json['batch'] as List<dynamic>?)?.map((e) => e as int).toList(),
+      country: json['country'] as String?,
+      state: json['state'] as String?,
+      status: json['status'] as bool?,
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      v: json['__v'] as int?,
+      course: (json['course'] as List<dynamic>?)?.map((e) => e as String).toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'collegeName': collegeName,
+      'startYear': startYear,
+      'batch': batch,
+      'country': country,
+      'state': state,
+      'status': status,
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
+      '__v': v,
+      'course': course,
+    };
+  }
+
+  UserCollege copyWith({
+    String? id,
+    String? collegeName,
+    int? startYear,
+    List<int>? batch,
+    String? country,
+    String? state,
+    bool? status,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? v,
+    List<String>? course,
+  }) {
+    return UserCollege(
       id: id ?? this.id,
+      collegeName: collegeName ?? this.collegeName,
+      startYear: startYear ?? this.startYear,
+      batch: batch ?? this.batch,
+      country: country ?? this.country,
+      state: state ?? this.state,
+      status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      v: v ?? this.v,
+      course: course ?? this.course,
+    );
+  }
+}
+
+class UserCourse {
+  final String? id;
+  final String? courseName;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final int? v;
+
+  UserCourse({
+    this.id,
+    this.courseName,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
+  });
+
+  factory UserCourse.fromJson(Map<String, dynamic> json) {
+    return UserCourse(
+      id: json['_id'] as String?,
+      courseName: json['courseName'] as String?,
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      v: json['__v'] as int?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'courseName': courseName,
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
+      '__v': v,
+    };
+  }
+
+  UserCourse copyWith({
+    String? id,
+    String? courseName,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? v,
+  }) {
+    return UserCourse(
+      id: id ?? this.id,
+     courseName: courseName ?? this.courseName,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      v: v ?? this.v,
     );
   }
 }

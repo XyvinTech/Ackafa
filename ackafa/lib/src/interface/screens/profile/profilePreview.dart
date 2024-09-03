@@ -4,16 +4,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
-import 'package:ackaf/src/data/services/getRatings.dart';
 import 'package:ackaf/src/interface/common/cards.dart';
 import 'package:ackaf/src/interface/common/components/svg_icon.dart';
 import 'package:ackaf/src/interface/common/customModalsheets.dart';
 import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
-import 'package:ackaf/src/interface/common/custom_video.dart';
-import 'package:ackaf/src/interface/common/loading.dart';
-import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
-import 'package:ackaf/src/interface/screens/profile/card.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -49,9 +44,6 @@ class ProfilePreview extends ConsumerWidget {
     _videoCountController.addListener(() {
       _currentVideo.value = _videoCountController.page!.round();
     });
-    final ratingDistribution = getRatingDistribution(user);
-    final averageRating = getAverageRating(user);
-    final totalReviews = user.reviews!.length;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -109,16 +101,16 @@ class ProfilePreview extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        user.profilePicture != null
+                        user.image != null
                             ? CircleAvatar(
                                 radius: 45,
                                 backgroundImage:
-                                    NetworkImage(user.profilePicture!),
+                                    NetworkImage(user.image!),
                               )
                             : const Icon(Icons.person),
                         const SizedBox(height: 10),
                         Text(
-                          '${user.name!.firstName} ${user.name!.middleName} ${user.name!.lastName}',
+                          '${user.name!.first} ${user.name!.middle} ${user.name!.last}',
                           style: const TextStyle(
                             color: Color(0xFF2C2829),
                             fontSize: 20,
@@ -131,12 +123,12 @@ class ProfilePreview extends ConsumerWidget {
                           children: [
                             Column(
                               children: [
-                                if (user.companyLogo != null &&
-                                    user.companyLogo != '')
+                                if (user.company!.logo != null &&
+                                   user.company!.logo != '')
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(9),
                                     child: Image.network(
-                                      user.companyLogo!,
+                                      user.company!.logo!,
                                       height: 33,
                                       width: 40,
                                       fit: BoxFit.cover,
@@ -149,7 +141,7 @@ class ProfilePreview extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  user.designation!,
+                                  user.company!.designation!,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,
@@ -157,7 +149,7 @@ class ProfilePreview extends ConsumerWidget {
                                   ),
                                 ),
                                 Text(
-                                  user.companyName!,
+                                  user.company!.name!,
                                   style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey,
@@ -190,12 +182,7 @@ class ProfilePreview extends ConsumerWidget {
                               fit: BoxFit.contain,
                             ),
                           ),
-                          Text(
-                            'Member ID: ${user.membershipId}',
-                            style: const TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
+                       
                         ],
                       ),
                     ),
@@ -209,7 +196,7 @@ class ProfilePreview extends ConsumerWidget {
                           children: [
                             const Icon(Icons.phone, color: Color(0xFF004797)),
                             const SizedBox(width: 10),
-                            Text(user.phoneNumbers!.personal.toString()),
+                            Text(user.phone!),
                           ],
                         ),
                         const SizedBox(height: 10),
@@ -223,7 +210,7 @@ class ProfilePreview extends ConsumerWidget {
                         Row(
                           children: [
                             const SizedBox(width: 10),
-                            if (user.socialMedia!.isNotEmpty)
+                            if (user.social!.isNotEmpty)
                               const Column(
                                 children: [
                                   Icon(FontAwesomeIcons.instagram,
@@ -270,61 +257,7 @@ class ProfilePreview extends ConsumerWidget {
                     const SizedBox(
                       height: 50,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ReviewBarChart(
-                        ratingDistribution: ratingDistribution,
-                        averageRating: averageRating,
-                        totalReviews: totalReviews,
-                      ),
-                    ),
-                    if (user.id != id)
-                      Row(
-                        children: [
-                          SizedBox(
-                              width: 100,
-                              child: customButton(
-                                  label: 'Write a Review',
-                                  onPressed: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(20)),
-                                      ),
-                                      builder: (context) =>
-                                          ShowWriteReviewSheet(
-                                        userId: user.id!,
-                                      ),
-                                    );
-                                  },
-                                  fontSize: 15)),
-                        ],
-                      ),
-                    if (user.reviews!.isNotEmpty)
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: reviewsToShow,
-                        itemBuilder: (context, index) {
-                          return ReviewsCard(
-                            review: user.reviews![index],
-                            ratingDistribution: ratingDistribution,
-                            averageRating: averageRating,
-                            totalReviews: totalReviews,
-                          );
-                        },
-                      ),
-                    if (reviewsToShow < user.reviews!.length)
-                      TextButton(
-                        onPressed: () {
-                          ref
-                              .read(reviewsProvider.notifier)
-                              .showMoreReviews(user.reviews!.length);
-                        },
-                        child: Text('View More'),
-                      ),
+                   
                     const Row(
                       children: [
                         Text(
@@ -337,10 +270,10 @@ class ProfilePreview extends ConsumerWidget {
                       ],
                     ),
                     for (int index = 0;
-                        index < user.socialMedia!.length;
+                        index < user.social!.length;
                         index++)
                       customProfilePreviewLinks(index,
-                          social: user.socialMedia![index]),
+                          social: user.social![index]),
                     const Padding(
                       padding: EdgeInsets.only(top: 50),
                       child: Row(
@@ -361,7 +294,7 @@ class ProfilePreview extends ConsumerWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    if (user.video!.isNotEmpty)
+                    if (user.videos!.isNotEmpty)
                       Column(
                         children: [
                           SizedBox(
@@ -369,12 +302,12 @@ class ProfilePreview extends ConsumerWidget {
                             height: 260,
                             child: PageView.builder(
                               controller: _videoCountController,
-                              itemCount: user.video!.length,
+                              itemCount: user.videos!.length,
                               physics: const PageScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return profileVideo(
                                     context: context,
-                                    video: user.video![index]);
+                                    video: user.videos![index]);
                               },
                             ),
                           ),
@@ -383,7 +316,7 @@ class ProfilePreview extends ConsumerWidget {
                             builder: (context, value, child) {
                               return SmoothPageIndicator(
                                 controller: _videoCountController,
-                                count: user.video!.length,
+                                count: user.videos!.length,
                                 effect: const ExpandingDotsEffect(
                                   dotHeight: 8,
                                   dotWidth: 3,
@@ -458,30 +391,8 @@ class ProfilePreview extends ConsumerWidget {
                         );
                       },
                     ),
-                    const Row(
-                      children: [
-                        Text(
-                          'Brochure',
-                          style: TextStyle(
-                              color: Color(0xFF2C2829),
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    ListView.builder(
-                      shrinkWrap:
-                          true, // Let ListView take up only as much space as it needs
-                      physics:
-                          const NeverScrollableScrollPhysics(), // Disable ListView's internal scrolling
-                      itemCount: user.brochure!.length,
-                      itemBuilder: (context, index) {
-                        return BrochureCard(
-                          brochure: user.brochure![index],
-                          // onRemove: () => _removeCertificateCard(index),
-                        );
-                      },
-                    ),
+                  
+                  
                   ]),
                 ),
               ],
@@ -517,8 +428,8 @@ class ProfilePreview extends ConsumerWidget {
     );
   }
 
-  Widget profileVideo({required BuildContext context, required Video video}) {
-    final videoUrl = video.url;
+  Widget profileVideo({required BuildContext context, required Link video}) {
+    final videoUrl = video.link;
 
     final ytController = YoutubePlayerController(
       initialVideoId: YoutubePlayer.convertUrlToId(videoUrl!)!,
@@ -580,7 +491,7 @@ class ProfilePreview extends ConsumerWidget {
   }
 
   Padding customProfilePreviewLinks(int index,
-      {SocialMedia? social, Website? website}) {
+      {Link? social, Link? website}) {
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: Container(
@@ -614,8 +525,8 @@ class ProfilePreview extends ConsumerWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                   child: social != null
-                      ? Text('${social.url}')
-                      : Text('${website!.url}')),
+                      ? Text('${social.link}')
+                      : Text('${website!.link}')),
             ],
           )),
     );
@@ -714,78 +625,5 @@ class ReviewBarChart extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class ReviewsCard extends StatelessWidget {
-  final Map<int, int> ratingDistribution;
-  final double averageRating;
-  final int totalReviews;
-  final Review review;
-
-  const ReviewsCard({
-    super.key,
-    required this.ratingDistribution,
-    required this.averageRating,
-    required this.totalReviews,
-    required this.review,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer(builder: (context, ref, child) {
-      final asyncUser = ref.watch(userProvider);
-      return asyncUser.when(
-        loading: () => Center(child: LoadingAnimation()),
-        error: (error, stackTrace) {
-          // Handle error state
-          return Center(
-            child: Text('Error loading promotions: $error'),
-          );
-        },
-        data: (reviewer) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Column(
-                  children: [
-                    reviewer.profilePicture != null
-                        ? CircleAvatar(
-                            radius: 20,
-                            backgroundImage:
-                                NetworkImage(reviewer.profilePicture!),
-                          )
-                        : const Icon(Icons.person),
-                  ],
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${reviewer.name!.firstName!}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                        color: Color.fromARGB(255, 42, 41, 41),
-                      ),
-                    ),
-                    Text(
-                      review.content!,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    });
   }
 }

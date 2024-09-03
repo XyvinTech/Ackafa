@@ -210,7 +210,7 @@ class _FeedViewState extends State<FeedView> {
                                   errorBuilder: (context, error, stackTrace) {
                                     return Icon(Icons.person);
                                   },
-                                  user.profilePicture!, // Replace with your image URL
+                                  user.image!, // Replace with your image URL
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -226,7 +226,7 @@ class _FeedViewState extends State<FeedView> {
                                       fontSize: 12),
                                 ),
                                 Text(
-                                  user.companyName!,
+                                  user.company!.name!,
                                   style: TextStyle(
                                       color: Colors.grey, fontSize: 12),
                                 ),

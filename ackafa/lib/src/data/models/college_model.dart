@@ -30,18 +30,14 @@ class College {
       id: json['_id'] as String?,
       collegeName: json['collegeName'] as String?,
       startYear: json['startYear'] as int?,
-      batch: (json['batch'] as List?)?.map((e) => e as int).toList(),
+      batch: (json['batch'] as List<dynamic>?)?.map((e) => e as int).toList(),
       country: json['country'] as String?,
       state: json['state'] as String?,
       status: json['status'] as bool?,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'] as String)
-          : null,
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'] as String)
-          : null,
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
       v: json['__v'] as int?,
-      course: (json['course'] as List?)
+      course: (json['course'] as List<dynamic>?)
           ?.map((e) => Course.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -111,12 +107,8 @@ class Course {
     return Course(
       id: json['_id'] as String?,
       courseName: json['courseName'] as String?,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'] as String)
-          : null,
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'] as String)
-          : null,
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
       v: json['__v'] as int?,
     );
   }

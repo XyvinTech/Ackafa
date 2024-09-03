@@ -1,12 +1,12 @@
 
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/screens/main_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
 import 'package:flutter/material.dart';
 
 class ProfileCompletionScreen extends StatelessWidget {
-  final VoidCallback onNext;
 
-  ProfileCompletionScreen({required this.onNext});
+  ProfileCompletionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,9 @@ class ProfileCompletionScreen extends StatelessWidget {
                   height: 50,
                   width: double.infinity,
                   child: customButton(
-                      label: 'Next', onPressed: onNext, fontSize: 16)),
+                      label: 'Next', onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailsPage()));
+                      }, fontSize: 16)),
             ),
             TextButton(
               onPressed: () {

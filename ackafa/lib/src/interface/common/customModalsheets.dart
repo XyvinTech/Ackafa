@@ -81,21 +81,21 @@ void showWlinkorVlinkSheet(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               if (title == 'Add Video Link') {
-                                List<Video> newVideo = [];
-                                newVideo.add(Video(
+                                List<Link> newVideos = [];
+                                newVideos.add(Link(
                                     name: textController1.text,
-                                    url: textController2.text));
+                                    link: textController2.text));
                                 ref
                                     .read(userProvider.notifier)
-                                    .updateVideo(newVideo);
+                                    .updateVideos(newVideos);
                               } else {
-                                List<Website> newWebsite = [];
-                                newWebsite.add(Website(
+                                List<Link> newWebsites = [];
+                                newWebsites.add(Link(
                                     name: textController1.text,
-                                    url: textController2.text));
+                                    link: textController2.text));
                                 ref
                                     .read(userProvider.notifier)
-                                    .updateWebsite(newWebsite);
+                                    .updateWebsite(newWebsites);
                               }
                             }
                             ScaffoldMessenger.of(context).showSnackBar(

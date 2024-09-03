@@ -254,7 +254,7 @@ class MenuPage extends StatelessWidget {
                                   return Image.network(
                                       'https://placehold.co/400');
                                 },
-                                user.profilePicture!,
+                                user.image!,
                                 height: 70,
                                 width: 75,
                                 fit: BoxFit.cover,
@@ -265,13 +265,13 @@ class MenuPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${user.name!.firstName!} ${user.name!.middleName!} ${user.name!.lastName!}',
+                                  '${user.name!.first!} ${user.name!.middle!} ${user.name!.last!}',
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                Text(user.phoneNumbers!.personal.toString()),
+                                Text(user.phone!),
                               ],
                             ),
                             Spacer(),

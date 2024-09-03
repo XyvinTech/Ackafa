@@ -6,7 +6,7 @@ part of 'user_api.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchUserDetailsHash() => r'ba1be280ac55c79e0e4893613d3868ddef219699';
+String _$fetchUserDetailsHash() => r'246f333f1a99069a794c855111f8520f9a08b8d3';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -41,11 +41,9 @@ class FetchUserDetailsFamily extends Family<AsyncValue<UserModel>> {
   /// See also [fetchUserDetails].
   FetchUserDetailsProvider call(
     String token,
-    String userId,
   ) {
     return FetchUserDetailsProvider(
       token,
-      userId,
     );
   }
 
@@ -55,7 +53,6 @@ class FetchUserDetailsFamily extends Family<AsyncValue<UserModel>> {
   ) {
     return call(
       provider.token,
-      provider.userId,
     );
   }
 
@@ -79,12 +76,10 @@ class FetchUserDetailsProvider extends AutoDisposeFutureProvider<UserModel> {
   /// See also [fetchUserDetails].
   FetchUserDetailsProvider(
     String token,
-    String userId,
   ) : this._internal(
           (ref) => fetchUserDetails(
             ref as FetchUserDetailsRef,
             token,
-            userId,
           ),
           from: fetchUserDetailsProvider,
           name: r'fetchUserDetailsProvider',
@@ -96,7 +91,6 @@ class FetchUserDetailsProvider extends AutoDisposeFutureProvider<UserModel> {
           allTransitiveDependencies:
               FetchUserDetailsFamily._allTransitiveDependencies,
           token: token,
-          userId: userId,
         );
 
   FetchUserDetailsProvider._internal(
@@ -107,11 +101,9 @@ class FetchUserDetailsProvider extends AutoDisposeFutureProvider<UserModel> {
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.token,
-    required this.userId,
   }) : super.internal();
 
   final String token;
-  final String userId;
 
   @override
   Override overrideWith(
@@ -127,7 +119,6 @@ class FetchUserDetailsProvider extends AutoDisposeFutureProvider<UserModel> {
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         token: token,
-        userId: userId,
       ),
     );
   }
@@ -139,16 +130,13 @@ class FetchUserDetailsProvider extends AutoDisposeFutureProvider<UserModel> {
 
   @override
   bool operator ==(Object other) {
-    return other is FetchUserDetailsProvider &&
-        other.token == token &&
-        other.userId == userId;
+    return other is FetchUserDetailsProvider && other.token == token;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, token.hashCode);
-    hash = _SystemHash.combine(hash, userId.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -157,9 +145,6 @@ class FetchUserDetailsProvider extends AutoDisposeFutureProvider<UserModel> {
 mixin FetchUserDetailsRef on AutoDisposeFutureProviderRef<UserModel> {
   /// The parameter `token` of this provider.
   String get token;
-
-  /// The parameter `userId` of this provider.
-  String get userId;
 }
 
 class _FetchUserDetailsProviderElement
@@ -169,11 +154,9 @@ class _FetchUserDetailsProviderElement
 
   @override
   String get token => (origin as FetchUserDetailsProvider).token;
-  @override
-  String get userId => (origin as FetchUserDetailsProvider).userId;
 }
 
-String _$fetchUsersHash() => r'6fea100e9626f66bf461c993f0a6b18cfb1927ff';
+String _$fetchUsersHash() => r'aa9fab01523c5489c67302b32c8082ca0d38ea09';
 
 /// See also [fetchUsers].
 @ProviderFor(fetchUsers)

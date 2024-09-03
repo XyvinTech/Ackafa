@@ -11,7 +11,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(user.companyLogo);
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -142,16 +142,16 @@ class ProfilePage extends StatelessWidget {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  user.profilePicture != null
+                                  user.image != null
                                       ? CircleAvatar(
                                           radius: 40,
                                           backgroundImage: NetworkImage(
-                                              user.profilePicture!),
+                                              user.image!),
                                         )
                                       : Icon(Icons.person),
                                   const SizedBox(height: 10),
                                   Text(
-                                    '${user.name!.firstName} ${user.name!.middleName} ${user.name!.lastName}',
+                                    '${user.name!.first} ${user.name!.middle} ${user.name!.last}',
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -172,7 +172,7 @@ class ProfilePage extends StatelessWidget {
                                                 return Image.network(
                                                     'https://placehold.co/400');
                                               },
-                                              user.companyLogo!,
+                                              user.company!.logo?? 'https://placehold.co/400',
                                               height: 33,
                                               width: 40,
                                               fit: BoxFit.cover,
@@ -186,7 +186,7 @@ class ProfilePage extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            user.designation!,
+                                            user.company!.designation??'',
                                             style: const TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16,
@@ -195,7 +195,7 @@ class ProfilePage extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            user.companyName!,
+                                            user.company!.name!,
                                             style: TextStyle(
                                               fontSize: 14,
                                               color: Colors.grey,
@@ -236,7 +236,7 @@ class ProfilePage extends StatelessWidget {
                             children: [
                               Icon(Icons.phone, color: Color(0xFFE30613)),
                               SizedBox(width: 10),
-                              Text(user.phoneNumbers!.personal.toString()),
+                              Text(user.phone!),
                             ],
                           ),
                           SizedBox(height: 10),
@@ -252,9 +252,9 @@ class ProfilePage extends StatelessWidget {
                             children: [
                               Icon(Icons.person, color: Color(0xFFE30613)),
                               SizedBox(width: 10),
-                              if (user.socialMedia!.isNotEmpty)
+                              if (user.social!.isNotEmpty)
                                 Flexible(
-                                    child: Text(user.socialMedia![0].url!)),
+                                    child: Text(user.social![0].link!)),
                             ],
                           ),
                           SizedBox(height: 10),
@@ -290,24 +290,24 @@ class ProfilePage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          RichText(
-                            text: TextSpan(
-                              text: 'Member ID: ',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                              ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: user.membershipId,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          // RichText(
+                          //   text: TextSpan(
+                          //     text: 'Member ID: ',
+                          //     style: TextStyle(
+                          //       color: Colors.black,
+                          //       fontWeight: FontWeight.normal,
+                          //     ),
+                          //     children: <TextSpan>[
+                          //       TextSpan(
+                          //         text: user.m,
+                          //         style: TextStyle(
+                          //           fontWeight: FontWeight.bold,
+                          //           color: Colors.black,
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

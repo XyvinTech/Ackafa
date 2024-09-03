@@ -1,5 +1,6 @@
 import 'package:ackaf/firebase_options.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -31,7 +32,7 @@ class MainApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (context) => UserInactivePage(),
+          '/': (context) => LoginPage(),
           '/login_screen': (context) => LoginPage(),
           '/mainpage': (context) => MainPage(),
         });

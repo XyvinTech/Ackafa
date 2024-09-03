@@ -43,28 +43,28 @@ class ApiRoutes {
   //   }
   // }
 
-  Future<List<dynamic>> verifyUser(String mobile, String otp, context) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/user/verify'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"otp": int.parse(otp), "phone": mobile}),
-    );
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseBody = jsonDecode(response.body);
-      print(responseBody['message']);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Success')));
-      return responseBody['data'];
-    } else if (response.statusCode == 400) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Invalid OTP')));
-      return [];
-    } else {
-      final Map<String, dynamic> responseBody = jsonDecode(response.body);
-      print(responseBody['message']);
-      return [];
-    }
-  }
+  // Future<List<dynamic>> verifyUser(String mobile, String otp, context) async {
+  //   final response = await http.post(
+  //     Uri.parse('$baseUrl/user/verify'),
+  //     headers: {"Content-Type": "application/json"},
+  //     body: jsonEncode({"otp": int.parse(otp), "phone": mobile}),
+  //   );
+  //   if (response.statusCode == 200) {
+  //     final Map<String, dynamic> responseBody = jsonDecode(response.body);
+  //     print(responseBody['message']);
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text('Success')));
+  //     return responseBody['data'];
+  //   } else if (response.statusCode == 400) {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text('Invalid OTP')));
+  //     return [];
+  //   } else {
+  //     final Map<String, dynamic> responseBody = jsonDecode(response.body);
+  //     print(responseBody['message']);
+  //     return [];
+  //   }
+  // }
 
   Future<bool> updateUser(
       {required String token,
@@ -78,8 +78,6 @@ class ApiRoutes {
       required String? course,
       required context}) async {
     final url = Uri.parse('http://3.108.205.101:3000/api/v1/user/update');
-    const String token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmQ0OTJlY2FiNmViMDA5NTRmMzE3YjkiLCJpYXQiOjE3MjUyNjQyNzN9.iA02JhzCHKHepzAjlIRVfrWv0GOuKipK5KqIV0ieQ9A';
 
     final response = await http.patch(
       url,
@@ -92,9 +90,9 @@ class ApiRoutes {
         "name": {"first": firstName, "middle": middleName, "last": lastName},
         "image": profileUrl,
         "email": emailId,
-        "college": "66cef851d3cbe59728a7d474",
-        "course": "66d49a7386abf500d2fa848b",
-        "batch": 2020,
+        "college": college,
+        "course": course.toString(),
+        "batch": batch,
       }),
     );
 
@@ -140,7 +138,7 @@ class ApiRoutes {
     return completer.future;
   }
 
-  Future<void> verifyOTP(String verificationId, String smsCode) async {
+  Future<String> verifyOTP(String verificationId, String smsCode) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verificationId,
@@ -148,19 +146,48 @@ class ApiRoutes {
     );
 
     try {
-      // Sign in the user with the provided OTP
       UserCredential userCredential =
           await auth.signInWithCredential(credential);
-      print("User signed in successfully");
+      User? user = userCredential.user;
+      if (user != null) {
+        String? idToken = await user.getIdToken();
+        log("ID Token: $idToken");
+        final token = await verifyUserDB(idToken!, context);
+        return token;
+      } else {
+        print("User signed in, but no user information was found.");
+        return '';
+      }
     } catch (e) {
       print("Failed to sign in: ${e.toString()}");
+      return '';
+    }
+  }
+
+  Future<String> verifyUserDB(String idToken, context) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/user/login'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"clientToken": idToken}),
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      print(responseBody['message']);
+
+      return responseBody['data'];
+    } else if (response.statusCode == 400) {
+      return '';
+    } else {
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      print(responseBody['message']);
+      return '';
     }
   }
 
   Future<void> editUser(Map<String, dynamic> profileData) async {
-    final url = Uri.parse('$baseUrl/user/edit/$id');
+    final url = Uri.parse('$baseUrl/user/update');
 
-    final response = await http.put(
+    final response = await http.patch(
       url,
       headers: {
         'Content-type': 'application/json',
@@ -296,7 +323,6 @@ class ApiRoutes {
           'Failed to mark notification as read. Status code: ${response.statusCode}');
     }
   }
-
 
   Future<String?> uploadRequirement(
     String token,
@@ -436,12 +462,12 @@ Future<void> markEventAsRSVP(String eventId) async {
   }
 }
 
-const String baseUrl = 'http://43.205.89.79/api/v1';
+const String baseUrl = 'http://3.108.205.101:3000/api/v1';
 
 @riverpod
 Future<UserModel> fetchUserDetails(
-    FetchUserDetailsRef ref, String token, String userId) async {
-  final url = Uri.parse('$baseUrl/user/$userId');
+    FetchUserDetailsRef ref, String token) async {
+  final url = Uri.parse('$baseUrl/user');
   print('Requesting URL: $url');
   final response = await http.get(
     url,
@@ -466,7 +492,7 @@ Future<UserModel> fetchUserDetails(
 
 @riverpod
 Future<List<UserModel>> fetchUsers(FetchUsersRef ref, String token) async {
-  final url = Uri.parse('$baseUrl/admin/users');
+  final url = Uri.parse('$baseUrl/user');
   print('Requesting URL: $url');
   final response = await http.get(
     url,

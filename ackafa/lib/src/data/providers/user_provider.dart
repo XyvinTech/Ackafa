@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
@@ -12,9 +14,12 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   }
   Future<void> _initializeUser() async {
     try {
-      final user = await ref.read(fetchUserDetailsProvider(token, id).future);
+      final user = await ref.read(fetchUserDetailsProvider(token).future);
+      log('im in user details registration');
       state = AsyncValue.data(user ?? UserModel());
     } catch (e, stackTrace) {
+      log(e.toString());
+         log(stackTrace.toString());
       state = AsyncValue.error(e, stackTrace);
     }
   }
@@ -26,76 +31,38 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   }) {
     state = state.whenData((user) {
       final newName = user.name?.copyWith(
-            firstName: firstName ?? user.name?.firstName,
-            middleName: middleName ?? user.name?.middleName,
-            lastName: lastName ?? user.name?.lastName,
+            first: firstName ?? user.name?.first,
+            middle: middleName ?? user.name?.middle,
+            last: lastName ?? user.name?.last,
           ) ??
           Name(
-            firstName: firstName,
-            middleName: middleName,
-            lastName: lastName,
+            first: firstName,
+            middle: middleName,
+            last: lastName,
           );
       return user.copyWith(name: newName);
     });
   }
 
-  void updatePhoneNumbers({
-    int? personal,
-    int? landline,
-    int? companyPhoneNumber,
-    int? whatsappNumber,
-    int? whatsappBusinessNumber,
-  }) {
-    state = state.whenData((user) {
-      final newPhoneNumbers = user.phoneNumbers?.copyWith(
-            personal: personal ?? user.phoneNumbers?.personal,
-            landline: landline ?? user.phoneNumbers?.landline,
-            companyPhoneNumber:
-                companyPhoneNumber ?? user.phoneNumbers?.companyPhoneNumber,
-            whatsappNumber: whatsappNumber ?? user.phoneNumbers?.whatsappNumber,
-            whatsappBusinessNumber: whatsappBusinessNumber ??
-                user.phoneNumbers?.whatsappBusinessNumber,
-          ) ??
-          PhoneNumbers(
-            personal: personal,
-            landline: landline,
-            companyPhoneNumber: companyPhoneNumber,
-            whatsappNumber: whatsappNumber,
-            whatsappBusinessNumber: whatsappBusinessNumber,
-          );
-      return user.copyWith(phoneNumbers: newPhoneNumbers);
-    });
-  }
-
-  void updateBloodGroup(String? bloodGroup) {
-    state = state.whenData((user) => user.copyWith(bloodGroup: bloodGroup));
+  void updateCompany(Company? company) {
+    state = state.whenData((user) => user.copyWith(
+            company: Company(
+          designation: company?.designation ?? user.company?.designation,
+          address: company?.address ?? user.company?.address,
+          name: company?.name ?? user.company?.name,
+          phone: company?.phone ?? user.company?.designation,
+        )));
   }
 
   void updateEmail(String? email) {
     state = state.whenData((user) => user.copyWith(email: email));
   }
-
-  void updateDesignation(String? designation) {
-    state = state.whenData((user) => user.copyWith(designation: designation));
+  void updateCollege(String? college) {
+    state = state.whenData((user) => user.copyWith(college: UserCollege(collegeName:college )));
   }
-
-  void updateCompanyName(String? companyName) {
-    state = state.whenData((user) => user.copyWith(companyName: companyName));
+    void updateBatch(int? batch) {
+    state = state.whenData((user) => user.copyWith(batch:batch ));
   }
-
-  void updateCompanyEmail(String? companyEmail) {
-    state = state.whenData((user) => user.copyWith(companyEmail: companyEmail));
-  }
-
-  void updateBusinessCategory(String? businessCategory) {
-    state = state
-        .whenData((user) => user.copyWith(businessCategory: businessCategory));
-  }
-
-  void updateSubCategory(String? subCategory) {
-    state = state.whenData((user) => user.copyWith(subCategory: subCategory));
-  }
-
   void updateBio(String? bio) {
     state = state.whenData((user) => user.copyWith(bio: bio));
   }
@@ -104,77 +71,56 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
     state = state.whenData((user) => user.copyWith(address: address));
   }
 
-  void updateIsActive(bool? isActive) {
-    state = state.whenData((user) => user.copyWith(isActive: isActive));
-  }
-
-  void updateIsDeleted(bool? isDeleted) {
-    state = state.whenData((user) => user.copyWith(isDeleted: isDeleted));
-  }
-
-  void updateSelectedTheme(String? selectedTheme) {
-    state =
-        state.whenData((user) => user.copyWith(selectedTheme: selectedTheme));
-  }
-
-  void updateCreatedAt(String? createdAt) {
-    state = state.whenData((user) => user.copyWith(createdAt: createdAt));
-  }
-
-  void updateUpdatedAt(String? updatedAt) {
-    state = state.whenData((user) => user.copyWith(updatedAt: updatedAt));
-  }
-
-  void updateCompanyAddress(String? companyAddress) {
-    state =
-        state.whenData((user) => user.copyWith(companyAddress: companyAddress));
-  }
-
-  void updateCompanyLogo(String? companyLogo) {
-    state = state.whenData((user) => user.copyWith(companyLogo: companyLogo));
-  }
-
   void updateProfilePicture(String? profilePicture) {
-    state =
-        state.whenData((user) => user.copyWith(profilePicture: profilePicture));
+    state = state.whenData((user) => user.copyWith(image: profilePicture));
   }
 
   void updateAwards(List<Award> awards) {
     state = state.whenData((user) => user.copyWith(awards: awards));
   }
 
-  void updateBrochure(List<Brochure> brochure) {
-    state = state.whenData((user) => user.copyWith(brochure: brochure));
-  }
-
-  void updateCertificate(List<Certificate> certificates) {
+  void updateCertificate(List<Link> certificates) {
     state = state.whenData((user) => user.copyWith(certificates: certificates));
   }
 
+  // void updateSocialMedia(List<Link> social) {
+  //   state = state.whenData((user) => user.copyWith(social: social));
+  // }
+  void updateCompanyLogo(String? companyLogo) {
+    state = state.whenData((user) => user.copyWith(company: Company(logo: companyLogo)));
+  }
+
   void updateSocialMedia(
-      List<SocialMedia> socialmedias, String platform, String newUrl) {
-    final index = socialmedias.indexWhere((item) => item.platform == platform);
-    if (index != -1) {
-      final updatedSocialMedia = socialmedias[index].copyWith(url: newUrl);
-      socialmedias[index] = updatedSocialMedia;
-      state =
-          state.whenData((user) => user.copyWith(socialMedia: socialmedias));
+      List<Link> socialmedias, String platform, String newUrl) {
+    if (platform != '') {
+      final index = socialmedias.indexWhere((item) => item.name == platform);
+
+      if (index != -1) {
+        final updatedSocialMedia = socialmedias[index].copyWith(link: newUrl);
+        socialmedias[index] = updatedSocialMedia;
+      } else {
+        final newSocialMedia = Link(name: platform, link: newUrl);
+        socialmedias.add(newSocialMedia);
+      }
+
+      state = state.whenData((user) => user.copyWith(social: socialmedias));
+    } else {
+      state = state.whenData((user) => user.copyWith(social: []));
     }
+    log('Updated Social Media $socialmedias');
   }
 
-  void updateVideo(
-    List<Video> videos,
-  ) {
-    state = state.whenData(
-      (user) => user.copyWith(video: videos),
-    );
+  void updateVideos(List<Link> videos) {
+    state = state.whenData((user) => user.copyWith(videos: videos));
   }
 
-  void updateWebsite(
-    List<Website> website,
-  ) {
+  void updateWebsite(List<Link> websites) {
+    state = state.whenData((user) => user.copyWith(websites: websites));
+  }
+
+  void updatePhone(String phone) {
     state = state.whenData(
-      (user) => user.copyWith(websites: website),
+      (user) => user.copyWith(phone: phone),
     );
   }
 
@@ -186,16 +132,7 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
     });
   }
 
-  void removeBrochure(Brochure brochureToRemove) {
-    state = state.whenData((user) {
-      final updatedBrochures = user.brochure!
-          .where((brochure) => brochure != brochureToRemove)
-          .toList();
-      return user.copyWith(brochure: updatedBrochures);
-    });
-  }
-
-  void removeCertificate(Certificate certificateToRemove) {
+  void removeCertificate(Link certificateToRemove) {
     state = state.whenData((user) {
       final updatedCertificate = user.certificates!
           .where((certificate) => certificate != certificateToRemove)

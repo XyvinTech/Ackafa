@@ -35,7 +35,7 @@ class MembersPage extends StatelessWidget {
                 width: 40,
                 child: ClipOval(
                   child: Image.network(
-                    users[index].profilePicture ??
+                    users[index].image ??
                         'https://placehold.co/600x400/png',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
@@ -47,8 +47,8 @@ class MembersPage extends StatelessWidget {
                   ),
                 ),
               ),
-              title: Text('${users[index].name!.firstName}'),
-              subtitle: Text(users[index].designation!),
+              title: Text('${users[index].name!.first}'),
+              subtitle: Text(users[index].company!.designation!),
               trailing: IconButton(
                 icon: Icon(Icons.chat),
                 onPressed: () {},

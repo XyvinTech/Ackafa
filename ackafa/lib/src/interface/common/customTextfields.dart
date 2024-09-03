@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:ackaf/src/data/models/college_model.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -83,55 +84,79 @@ class CustomTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        final user = ref.watch(userProvider);
         return TextFormField(
           onChanged: (value) {
             switch (labelText) {
-              case 'Enter your Full name':
-                List<String> nameParts = textController!.text.split(' ');
-
-                String firstName = nameParts[0];
-                String middleName = nameParts.length > 2 ? nameParts[1] : ' ';
-                String lastName = nameParts.length > 1 ? nameParts.last : ' ';
+              case 'Enter your First name':
                 ref.read(userProvider.notifier).updateName(
-                    firstName: firstName,
-                    middleName: middleName,
-                    lastName: lastName);
+                    firstName: textController!.text,
+                    middleName: null,
+                    lastName: null);
                 break;
-              case 'Designation':
+              case 'Enter your Middle name':
+                ref.read(userProvider.notifier).updateName(
+                    firstName: textController!.text,
+                    middleName: null,
+                    lastName: null);
+                break;
+              case 'Enter your Last name':
+                ref.read(userProvider.notifier).updateName(
+                    firstName: textController!.text,
+                    middleName: null,
+                    lastName: null);
+                break;
+              case 'Enter Your Phone':
                 ref
                     .read(userProvider.notifier)
-                    .updateDesignation(textController!.text);
+                    .updatePhone(textController!.text);
+                break;
+              case 'Select Your College':
+                ref
+                    .read(userProvider.notifier)
+                    .updateCollege(textController!.text);
+                break;
+              case 'Enter Personal Address':
+                ref
+                    .read(userProvider.notifier)
+                    .updateAddress(textController!.text);
+                break;
+
+              case 'Enter Company Designation':
+                ref
+                    .read(userProvider.notifier)
+                    .updateCompany(Company(designation: textController!.text));
               case 'Bio':
                 ref.read(userProvider.notifier).updateBio(textController!.text);
               case 'Enter Company Name':
                 ref
                     .read(userProvider.notifier)
-                    .updateCompanyName(textController!.text);
+                    .updateCompany(Company(name: textController!.text));
+              case 'Enter Company Phone':
+                ref
+                    .read(userProvider.notifier)
+                    .updateCompany(Company(phone: textController!.text));
               case 'Enter Company Address':
                 ref
                     .read(userProvider.notifier)
-                    .updateCompanyAddress(textController!.text);
+                    .updateCompany(Company(address: textController!.text));
               case 'Enter phone number':
-                ref.read(userProvider.notifier).updatePhoneNumbers(
-                    personal: int.parse(textController!.text));
-              case 'Enter landline number':
-                ref.read(userProvider.notifier).updatePhoneNumbers(
-                    landline: int.parse(textController!.text));
+                ref
+                    .read(userProvider.notifier)
+                    .updatePhone(textController!.text);
               case 'Enter Ig':
                 ref.read(userProvider.notifier).updateSocialMedia(
-                    [...?ref.read(userProvider).value?.socialMedia],
+                    [...?ref.read(userProvider).value?.social],
                     'instagram',
                     textController!.text);
 
               case 'Enter Linkedin':
                 ref.read(userProvider.notifier).updateSocialMedia(
-                    [...?ref.read(userProvider).value?.socialMedia],
+                    [...?ref.read(userProvider).value?.social],
                     'linkedin',
                     textController!.text);
               case 'Enter Twitter':
                 ref.read(userProvider.notifier).updateSocialMedia(
-                    [...?ref.read(userProvider).value?.socialMedia],
+                    [...?ref.read(userProvider).value?.social],
                     'twitter',
                     textController!.text);
 
@@ -354,6 +379,7 @@ class CustomTextFormField2 extends StatelessWidget {
     );
   }
 }
+
 class CustomDropdownButton<T> extends StatelessWidget {
   final String labelText;
   final List<DropdownMenuItem<T>> items;
@@ -388,8 +414,7 @@ class CustomDropdownButton<T> extends StatelessWidget {
         elevation: 8,
       ),
       menuItemStyleData: MenuItemStyleData(
-        customHeights: List<double>.filled(
-            items.length, 48.0),
+        customHeights: List<double>.filled(items.length, 48.0),
         selectedMenuItemBuilder: (context, child) => Container(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
@@ -408,23 +433,23 @@ class CustomDropdownButton<T> extends StatelessWidget {
         filled: true,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
-          borderSide: const BorderSide(
-              color: Color.fromARGB(255, 212, 209, 209)),
+          borderSide:
+              const BorderSide(color: Color.fromARGB(255, 212, 209, 209)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
-          borderSide: const BorderSide(
-              color: Color.fromARGB(255, 223, 220, 220)),
+          borderSide:
+              const BorderSide(color: Color.fromARGB(255, 223, 220, 220)),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
-          borderSide: const BorderSide(
-              color: Color.fromARGB(255, 212, 209, 209)),
+          borderSide:
+              const BorderSide(color: Color.fromARGB(255, 212, 209, 209)),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
-          borderSide: const BorderSide(
-              color: Color.fromARGB(255, 223, 220, 220)),
+          borderSide:
+              const BorderSide(color: Color.fromARGB(255, 223, 220, 220)),
         ),
       ),
     );

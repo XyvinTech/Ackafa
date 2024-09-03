@@ -78,14 +78,14 @@ class _MainPageState extends State<MainPage> {
     _inactiveIcons = [
       'assets/icons/home_inactive.svg',
       'assets/icons/feed_inactive.svg',
-      user.profilePicture!,
+      user.image!,
       'assets/icons/news_inactive.svg',
       'assets/icons/people_inactive.svg',
     ];
     _activeIcons = [
       'assets/icons/home_active.svg',
       'assets/icons/feed_active.svg',
-      user.profilePicture!,
+      user.image!,
       'assets/icons/news_active.svg',
       'assets/icons/people_active.svg',
     ];
@@ -103,7 +103,7 @@ class _MainPageState extends State<MainPage> {
           );
         },
         data: (user) {
-          print(user.profilePicture);
+          print(user.image);
           _initialize(user: user);
           return Scaffold(
             body: Center(
@@ -115,7 +115,7 @@ class _MainPageState extends State<MainPage> {
                   backgroundColor: Colors.white,
                   icon: index == 2 // Assuming profile is the third item
                       ? CircleAvatar(
-                          backgroundImage: NetworkImage(user.profilePicture!),
+                          backgroundImage: NetworkImage(user.id!),
                           radius: 15,
                         )
                       : IconResolver(
@@ -126,7 +126,7 @@ class _MainPageState extends State<MainPage> {
                         ),
                   activeIcon: index == 2
                       ? CircleAvatar(
-                          backgroundImage: NetworkImage(user.profilePicture!),
+                          backgroundImage: NetworkImage(user.image!),
                           radius: 15,
                         )
                       : IconResolver(
