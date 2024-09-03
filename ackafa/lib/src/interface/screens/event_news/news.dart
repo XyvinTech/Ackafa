@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kssia/src/data/services/api_routes/news_api.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/models/news_model.dart';
+import 'package:ackaf/src/data/services/api_routes/news_api.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/news_model.dart';
 
 final currentIndexProvider = StateProvider<int>((ref) => 0);
 

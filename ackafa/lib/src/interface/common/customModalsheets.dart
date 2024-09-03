@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/models/user_model.dart';
-import 'package:kssia/src/data/providers/user_provider.dart';
-import 'package:kssia/src/data/services/api_routes/user_api.dart';
-import 'package:kssia/src/interface/common/customTextfields.dart';
-import 'package:kssia/src/interface/common/custom_button.dart';
-import 'package:kssia/src/interface/common/loading.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
+import 'package:ackaf/src/interface/common/customTextfields.dart';
+import 'package:ackaf/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 
 void showWlinkorVlinkSheet(
     {required String title,
@@ -1151,6 +1151,114 @@ class _ShowPaymentUploadSheetState extends State<ShowPaymentUploadSheet> {
                 Navigator.pop(context);
               },
               fontSize: 16)
+        ],
+      ),
+    );
+  }
+}
+
+class ShowWriteReviewSheet extends StatefulWidget {
+  final String userId;
+  ShowWriteReviewSheet({
+    super.key,
+    required this.userId,
+  });
+
+  @override
+  State<ShowWriteReviewSheet> createState() => _ShowWriteReviewSheetState();
+}
+
+class _ShowWriteReviewSheetState extends State<ShowWriteReviewSheet> {
+  TextEditingController feedbackController = TextEditingController();
+  int selectedRating = 0;
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: 16,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'How is your Experience with this Member?',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(5, (index) {
+              return IconButton(
+                icon: Icon(
+                  Icons.star,
+                  color: index < selectedRating ? Colors.amber : Colors.grey,
+                ),
+                onPressed: () {
+                  setState(() {
+                    selectedRating = index + 1;
+                  });
+                },
+              );
+            }),
+          ),
+          SizedBox(height: 20),
+          TextField(
+            controller: feedbackController,
+            decoration: InputDecoration(
+              hintText: 'Leave Your Feedback here',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 4,
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('CANCEL'),
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    return ElevatedButton(
+                      onPressed: () async {
+                        ApiRoutes userApi = ApiRoutes();
+                        // await userApi
+                        //     .postReview(widget.userId, feedbackController.text,
+                        //         selectedRating, context)
+                        //     .then(
+                        //   (value) {
+                        //     ref.invalidate(userProvider);
+                        //   },
+                        // );
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('SUBMIT'),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/models/transaction_model.dart';
-import 'package:kssia/src/data/services/api_routes/transactions_api.dart';
-import 'package:kssia/src/interface/common/loading.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/transaction_model.dart';
+import 'package:ackaf/src/data/services/api_routes/transactions_api.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 
 class MyTransactionsPage extends StatefulWidget {
   const MyTransactionsPage({Key? key}) : super(key: key);

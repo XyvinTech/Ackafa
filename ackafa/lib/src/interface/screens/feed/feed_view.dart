@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kssia/src/data/services/api_routes/requirement_api.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/models/requirement_model.dart';
-import 'package:kssia/src/data/providers/user_provider.dart';
-import 'package:kssia/src/data/services/api_routes/user_api.dart';
-import 'package:kssia/src/interface/common/customModalsheets.dart';
-import 'package:kssia/src/interface/common/loading.dart';
+import 'package:ackaf/src/data/services/api_routes/requirement_api.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/requirement_model.dart';
+import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
+import 'package:ackaf/src/interface/common/customModalsheets.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 
 class FeedView extends StatefulWidget {
   FeedView({super.key});
@@ -41,6 +41,7 @@ class _FeedViewState extends State<FeedView> {
       });
       return _requirementImage;
     }
+    return null;
   }
 
   void _openModalSheet({required String sheet}) {
@@ -69,7 +70,7 @@ class _FeedViewState extends State<FeedView> {
             error: (error, stackTrace) {
               // Handle error state
               return Center(
-                child: Text('Error loading promotions: $error'),
+                child: Text('No Requirements'),
               );
             },
             data: (requirements) {
@@ -132,7 +133,7 @@ class _FeedViewState extends State<FeedView> {
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () => _openModalSheet(sheet: 'requirement'),
             label: const Text(
-              'Add Post',
+              'Add Requirement/update',
               style: TextStyle(color: Colors.white),
             ),
             icon: const Icon(
@@ -140,10 +141,7 @@ class _FeedViewState extends State<FeedView> {
               color: Colors.white,
               size: 27,
             ),
-            backgroundColor: const Color(0xFFE30613),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            backgroundColor: const Color(0xFF004797),
           ),
         );
       },
@@ -173,75 +171,82 @@ class _FeedViewState extends State<FeedView> {
               },
               data: (user) {
                 print(user);
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (withImage) ...[
+                if (requirement.author != null)
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (withImage) ...[
+                          SizedBox(height: 16),
+                          Container(
+                            height: 200,
+                            width: double.infinity,
+                            child: Image.network(
+                              fit: BoxFit.cover,
+                              requirement.image!,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.network(
+                                    fit: BoxFit.cover,
+                                    'https://placehold.co/600x400');
+                              },
+                            ),
+                          )
+                        ],
                         SizedBox(height: 16),
-                        Container(
-                          height: 200,
-                          width: double.infinity,
-                          child: Image.network(
-                            fit: BoxFit.cover,
-                            requirement.image!,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.network(
+                        Text(
+                          requirement.content!,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        SizedBox(height: 16),
+                        Row(
+                          children: [
+                            ClipOval(
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                color: const Color.fromARGB(255, 255, 255, 255),
+                                child: Image.network(
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(Icons.person);
+                                  },
+                                  user.profilePicture!, // Replace with your image URL
                                   fit: BoxFit.cover,
-                                  'https://placehold.co/600x400');
-                            },
-                          ),
-                        )
-                      ],
-                      SizedBox(height: 16),
-                      Text(
-                        requirement.content!,
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      SizedBox(height: 16),
-                      Row(
-                        children: [
-                          ClipOval(
-                            child: Container(
-                              width: 30,
-                              height: 30,
-                              color: const Color.fromARGB(255, 255, 255, 255),
-                              child: Image.network(
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Icon(Icons.person);
-                                },
-                                user.profilePicture!, // Replace with your image URL
-                                fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(width: 8),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${requirement.author!.name!.firstName} ${requirement.author!.name!.middleName} ${requirement.author!.name!.lastName}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 12),
-                              ),
-                              Text(
-                                user.companyName!,
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          Spacer(),
-                          Text(
-                            requirement.createdAt.toString(),
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
+                            SizedBox(width: 8),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${requirement.author!.name!.firstName} ${requirement.author!.name!.middleName} ${requirement.author!.name!.lastName}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12),
+                                ),
+                                Text(
+                                  user.companyName!,
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            Spacer(),
+                            Text(
+                              requirement.createdAt.toString(),
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                else
+                  return Center(
+                    child: Text('No requirements'),
+                  );
               },
             ));
       },

@@ -1,20 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kssia/src/data/models/user_model.dart';
-import 'package:kssia/src/data/providers/user_provider.dart';
-import 'package:kssia/src/data/services/getRatings.dart';
-import 'package:kssia/src/interface/common/cards.dart';
-import 'package:kssia/src/interface/common/components/svg_icon.dart';
-import 'package:kssia/src/interface/common/customTextfields.dart';
-import 'package:kssia/src/interface/common/custom_video.dart';
-import 'package:kssia/src/interface/common/loading.dart';
-import 'package:kssia/src/interface/screens/main_pages/menuPage.dart';
-import 'package:kssia/src/interface/screens/profile/card.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/data/services/getRatings.dart';
+import 'package:ackaf/src/interface/common/cards.dart';
+import 'package:ackaf/src/interface/common/components/svg_icon.dart';
+import 'package:ackaf/src/interface/common/customModalsheets.dart';
+import 'package:ackaf/src/interface/common/customTextfields.dart';
+import 'package:ackaf/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/interface/common/custom_video.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
+import 'package:ackaf/src/interface/screens/profile/card.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class ProfilePreview extends StatelessWidget {
-  final User user;
+class ReviewsState extends StateNotifier<int> {
+  ReviewsState() : super(2);
+
+  void showMoreReviews(int totalReviews) {
+    state = (state + 2).clamp(0, totalReviews);
+  }
+}
+
+final reviewsProvider = StateNotifierProvider<ReviewsState, int>((ref) {
+  return ReviewsState();
+});
+
+class ProfilePreview extends ConsumerWidget {
+  final UserModel user;
   ProfilePreview({Key? key, required this.user}) : super(key: key);
 
   final List<String> svgIcons = [
@@ -26,7 +42,8 @@ class ProfilePreview extends StatelessWidget {
   final ValueNotifier<int> _currentVideo = ValueNotifier<int>(0);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final reviewsToShow = ref.watch(reviewsProvider);
     PageController _videoCountController = PageController();
 
     _videoCountController.addListener(() {
@@ -38,424 +55,464 @@ class ProfilePreview extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          color: const Color(0xFFF2F2F2),
-                          borderRadius: BorderRadius.circular(30)),
-                      child: IconButton(
-                        icon: const Icon(
-                          size: 18,
-                          Icons.edit,
-                          color: Color(0xFFE30613),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              color: const Color(0xFFF2F2F2),
+                              borderRadius: BorderRadius.circular(30)),
+                          child: IconButton(
+                            icon: const Icon(
+                              size: 18,
+                              Icons.edit,
+                              color: Color(0xFF004797),
+                            ),
+                            onPressed: () {},
+                          ),
                         ),
-                        onPressed: () {},
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              color: const Color(0xFFF2F2F2),
+                              borderRadius: BorderRadius.circular(30)),
+                          child: IconButton(
+                            icon: const Icon(
+                              size: 20,
+                              Icons.close,
+                            ),
+                            onPressed: () {
+                              ref.invalidate(reviewsProvider);
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        user.profilePicture != null
+                            ? CircleAvatar(
+                                radius: 45,
+                                backgroundImage:
+                                    NetworkImage(user.profilePicture!),
+                              )
+                            : const Icon(Icons.person),
+                        const SizedBox(height: 10),
+                        Text(
+                          '${user.name!.firstName} ${user.name!.middleName} ${user.name!.lastName}',
+                          style: const TextStyle(
+                            color: Color(0xFF2C2829),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                if (user.companyLogo != null &&
+                                    user.companyLogo != '')
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(9),
+                                    child: Image.network(
+                                      user.companyLogo!,
+                                      height: 33,
+                                      width: 40,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  user.designation!,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    color: Color.fromARGB(255, 42, 41, 41),
+                                  ),
+                                ),
+                                Text(
+                                  user.companyName!,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              color: const Color.fromARGB(255, 234, 226, 226))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 80,
+                            height: 40,
+                            child: Image.asset(
+                              'assets/icons/ackaf_logo.png',
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          Text(
+                            'Member ID: ${user.membershipId}',
+                            style: const TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(
-                      width: 10,
+                      height: 20,
                     ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          color: const Color(0xFFF2F2F2),
-                          borderRadius: BorderRadius.circular(30)),
-                      child: IconButton(
-                        icon: const Icon(
-                          size: 20,
-                          Icons.close,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    user.profilePicture != null
-                        ? CircleAvatar(
-                            radius: 45,
-                            backgroundImage: NetworkImage(user.profilePicture!),
-                          )
-                        : Icon(Icons.person),
-                    const SizedBox(height: 10),
-                    Text(
-                      '${user.name!.firstName} ${user.name!.middleName} ${user.name!.lastName}',
-                      style: const TextStyle(
-                        color: Color(0xFF2C2829),
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Column(
                       children: [
-                        Column(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            if (user.companyLogo != null &&
-                                user.companyLogo != '')
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(9),
-                                child: Image.network(
-                                  user.companyLogo!,
-                                  height: 33,
-                                  width: 40,
-                                  fit: BoxFit.cover,
-                                ),
+                            const Icon(Icons.phone, color: Color(0xFF004797)),
+                            const SizedBox(width: 10),
+                            Text(user.phoneNumbers!.personal.toString()),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            const Icon(Icons.email, color: Color(0xFF004797)),
+                            const SizedBox(width: 10),
+                            Text(user.email!),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const SizedBox(width: 10),
+                            if (user.socialMedia!.isNotEmpty)
+                              const Column(
+                                children: [
+                                  Icon(FontAwesomeIcons.instagram,
+                                      color: Color(0xFF004797)),
+                                  // Flexible(child: Text(user.socialMedia![0].url!)),
+                                ],
                               ),
                           ],
                         ),
-                        const SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        const SizedBox(height: 10),
+                        Row(
                           children: [
-                            Text(
-                              user.designation!,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: Color.fromARGB(255, 42, 41, 41),
-                              ),
-                            ),
-                            Text(
-                              user.companyName!,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
-                            ),
+                            const Icon(Icons.location_on,
+                                color: Color(0xFF004797)),
+                            const SizedBox(width: 10),
+                            if (user.address != null)
+                              Expanded(
+                                child: Text(
+                                  user.address!,
+                                ),
+                              )
                           ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                          color: const Color.fromARGB(255, 234, 226, 226))),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 80,
-                        height: 40,
-                        child: Image.asset(
-                          'assets/icons/kssiaLogo.png',
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      Text(
-                        'Member ID: ${user.membershipId}',
-                        style: const TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Column(
-                  children: [
+                    const SizedBox(height: 60),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Icon(Icons.phone, color: Color(0xFFE30613)),
-                        const SizedBox(width: 10),
-                        Text(user.phoneNumbers!.personal.toString()),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset('assets/icons/qoutes.png'),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        const Icon(Icons.email, color: Color(0xFFE30613)),
-                        const SizedBox(width: 10),
-                        Text(user.email!),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        const Icon(Icons.person, color: Color(0xFFE30613)),
-                        const SizedBox(width: 10),
-                        if (user.socialMedia!.isNotEmpty)
-                          Flexible(child: Text(user.socialMedia![0].url!)),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        const Icon(Icons.location_on, color: Color(0xFFE30613)),
-                        const SizedBox(width: 10),
-                        if (user.bio != null)
-                          Expanded(
-                            child: Text(
-                              user.bio!,
-                            ),
-                          )
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 60),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Image.asset('assets/icons/qoutes.png'),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Flexible(child: Text('''${user.bio}''')),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ReviewBarChart(
-                    ratingDistribution: ratingDistribution,
-                    averageRating: averageRating,
-                    totalReviews: totalReviews,
-                  ),
-                ),
-                SizedBox(
-                  height: 100,
-                  child: ListView.builder(
-                    itemCount: user.reviews!.length,
-                    itemBuilder: (context, index) {
-                      return ReviewsCard(
-                          review: user.reviews![index],
-                          ratingDistribution: ratingDistribution,
-                          averageRating: averageRating,
-                          totalReviews: totalReviews);
-                    },
-                  ),
-                ),
-                const Row(
-                  children: [
-                    Text(
-                      'Social Media',
-                      style: TextStyle(
-                          color: Color(0xFF2C2829),
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                for (int index = 0; index < user.socialMedia!.length; index++)
-                  customProfilePreviewLinks(index,
-                      social: user.socialMedia![index]),
-                const Padding(
-                  padding: EdgeInsets.only(top: 50),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Websites & Links',
-                        style: TextStyle(
-                            color: Color(0xFF2C2829),
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500),
+                      child: Row(
+                        children: [
+                          Flexible(child: Text('''${user.bio}''')),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                for (int index = 0; index < user.websites!.length; index++)
-                  customProfilePreviewLinks(index,
-                      website: user.websites![index]),
-                const SizedBox(
-                  height: 30,
-                ),
-                if (user.video!.isNotEmpty)
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: 500,
-                        height: 260,
-                        child: PageView.builder(
-                          controller: _videoCountController,
-                          itemCount: user.video!.length,
-                          physics: const PageScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return profileVideo(
-                                context: context, video: user.video![index]);
-                          },
-                        ),
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ReviewBarChart(
+                        ratingDistribution: ratingDistribution,
+                        averageRating: averageRating,
+                        totalReviews: totalReviews,
                       ),
-                      ValueListenableBuilder<int>(
-                        valueListenable: _currentVideo,
-                        builder: (context, value, child) {
-                          return SmoothPageIndicator(
-                            controller: _videoCountController,
-                            count: user.video!.length,
-                            effect: const ExpandingDotsEffect(
-                              dotHeight: 8,
-                              dotWidth: 3,
-                              activeDotColor: Colors.black,
-                              dotColor: Colors.grey,
-                            ),
+                    ),
+                    if (user.id != id)
+                      Row(
+                        children: [
+                          SizedBox(
+                              width: 100,
+                              child: customButton(
+                                  label: 'Write a Review',
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20)),
+                                      ),
+                                      builder: (context) =>
+                                          ShowWriteReviewSheet(
+                                        userId: user.id!,
+                                      ),
+                                    );
+                                  },
+                                  fontSize: 15)),
+                        ],
+                      ),
+                    if (user.reviews!.isNotEmpty)
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: reviewsToShow,
+                        itemBuilder: (context, index) {
+                          return ReviewsCard(
+                            review: user.reviews![index],
+                            ratingDistribution: ratingDistribution,
+                            averageRating: averageRating,
+                            totalReviews: totalReviews,
                           );
                         },
                       ),
-                    ],
-                  ),
-                const SizedBox(
-                  height: 40,
-                ),
-                const Row(
-                  children: [
-                    Text(
-                      'Products',
-                      style: TextStyle(
-                          color: Color(0xFF2C2829),
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                if (user.products != null)
-                  GridView.builder(
-                    shrinkWrap:
-                        true, // Let GridView take up only as much space as it needs
-                    physics:
-                        const NeverScrollableScrollPhysics(), // Disable GridView's internal scrolling
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // Number of columns
-                      crossAxisSpacing: 1.0, // Space between columns
-                      mainAxisSpacing: 2.0, // Space between rows
-                      childAspectRatio: .943, // Aspect ratio for the cards
-                    ),
-                    itemCount: user.products!.length,
-                    itemBuilder: (context, index) {
-                      return ProductCard(
-                        product: user.products![index],
-                        onRemove: null,
-                      );
-                    },
-                  ),
-                const SizedBox(
-                  height: 50,
-                ),
-                const Row(
-                  children: [
-                    Text(
-                      'Certificates',
-                      style: TextStyle(
-                          color: Color(0xFF2C2829),
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                ListView.builder(
-                  shrinkWrap:
-                      true, // Let ListView take up only as much space as it needs
-                  physics:
-                      const NeverScrollableScrollPhysics(), // Disable ListView's internal scrolling
-                  itemCount: user.certificates!.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 4.0), // Space between items
-                      child: CertificateCard(
-                        certificate: user.certificates![index],
-                        onRemove: null,
+                    if (reviewsToShow < user.reviews!.length)
+                      TextButton(
+                        onPressed: () {
+                          ref
+                              .read(reviewsProvider.notifier)
+                              .showMoreReviews(user.reviews!.length);
+                        },
+                        child: Text('View More'),
                       ),
-                    );
-                  },
-                ),
-                const Row(
-                  children: [
-                    Text(
-                      'Awards',
-                      style: TextStyle(
-                          color: Color(0xFF2C2829),
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500),
+                    const Row(
+                      children: [
+                        Text(
+                          'Social Media',
+                          style: TextStyle(
+                              color: Color(0xFF2C2829),
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                GridView.builder(
-                  shrinkWrap:
-                      true, // Let GridView take up only as much space as it needs
-                  physics:
-                      const NeverScrollableScrollPhysics(), // Disable GridView's internal scrolling
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Number of columns
-                    crossAxisSpacing: 8.0, // Space between columns
-                    mainAxisSpacing: 8.0, // Space between rows
-                    childAspectRatio: .9, // Aspect ratio for the cards
-                  ),
-                  itemCount: user.awards!.length,
-                  itemBuilder: (context, index) {
-                    return AwardCard(
-                      award: user.awards![index],
-                      onRemove: null,
-                    );
-                  },
-                ),
-                const Row(
-                  children: [
-                    Text(
-                      'Brochure',
-                      style: TextStyle(
-                          color: Color(0xFF2C2829),
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500),
+                    for (int index = 0;
+                        index < user.socialMedia!.length;
+                        index++)
+                      customProfilePreviewLinks(index,
+                          social: user.socialMedia![index]),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 50),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Websites & Links',
+                            style: TextStyle(
+                                color: Color(0xFF2C2829),
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
+                    for (int index = 0; index < user.websites!.length; index++)
+                      customProfilePreviewLinks(index,
+                          website: user.websites![index]),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    if (user.video!.isNotEmpty)
+                      Column(
+                        children: [
+                          SizedBox(
+                            width: 500,
+                            height: 260,
+                            child: PageView.builder(
+                              controller: _videoCountController,
+                              itemCount: user.video!.length,
+                              physics: const PageScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return profileVideo(
+                                    context: context,
+                                    video: user.video![index]);
+                              },
+                            ),
+                          ),
+                          ValueListenableBuilder<int>(
+                            valueListenable: _currentVideo,
+                            builder: (context, value, child) {
+                              return SmoothPageIndicator(
+                                controller: _videoCountController,
+                                count: user.video!.length,
+                                effect: const ExpandingDotsEffect(
+                                  dotHeight: 8,
+                                  dotWidth: 3,
+                                  activeDotColor: Colors.black,
+                                  dotColor: Colors.grey,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                   
+                    const Row(
+                      children: [
+                        Text(
+                          'Certificates',
+                          style: TextStyle(
+                              color: Color(0xFF2C2829),
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                    ListView.builder(
+                      shrinkWrap:
+                          true, // Let ListView take up only as much space as it needs
+                      physics:
+                          const NeverScrollableScrollPhysics(), // Disable ListView's internal scrolling
+                      itemCount: user.certificates!.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 4.0), // Space between items
+                          child: CertificateCard(
+                            certificate: user.certificates![index],
+                            onRemove: null,
+                          ),
+                        );
+                      },
+                    ),
+                    const Row(
+                      children: [
+                        Text(
+                          'Awards',
+                          style: TextStyle(
+                              color: Color(0xFF2C2829),
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                    GridView.builder(
+                      shrinkWrap:
+                          true, // Let GridView take up only as much space as it needs
+                      physics:
+                          const NeverScrollableScrollPhysics(), // Disable GridView's internal scrolling
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, // Number of columns
+                        crossAxisSpacing: 8.0, // Space between columns
+                        mainAxisSpacing: 8.0, // Space between rows
+                        childAspectRatio: .9, // Aspect ratio for the cards
+                      ),
+                      itemCount: user.awards!.length,
+                      itemBuilder: (context, index) {
+                        return AwardCard(
+                          award: user.awards![index],
+                          onRemove: null,
+                        );
+                      },
+                    ),
+                    const Row(
+                      children: [
+                        Text(
+                          'Brochure',
+                          style: TextStyle(
+                              color: Color(0xFF2C2829),
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                    ListView.builder(
+                      shrinkWrap:
+                          true, // Let ListView take up only as much space as it needs
+                      physics:
+                          const NeverScrollableScrollPhysics(), // Disable ListView's internal scrolling
+                      itemCount: user.brochure!.length,
+                      itemBuilder: (context, index) {
+                        return BrochureCard(
+                          brochure: user.brochure![index],
+                          // onRemove: () => _removeCertificateCard(index),
+                        );
+                      },
+                    ),
+                  ]),
                 ),
-                ListView.builder(
-                  shrinkWrap:
-                      true, // Let ListView take up only as much space as it needs
-                  physics:
-                      const NeverScrollableScrollPhysics(), // Disable ListView's internal scrolling
-                  itemCount: user.brochure!.length,
-                  itemBuilder: (context, index) {
-                    return BrochureCard(
-                      brochure: user.brochure![index],
-                      // onRemove: () => _removeCertificateCard(index),
-                    );
-                  },
-                ),
-              ]),
+              ],
             ),
-          ],
-        ),
+          ),
+          if (user.id != id)
+            Positioned(
+                bottom: 20,
+                left: 20,
+                right: 20,
+                child: SizedBox(
+                    height: 50,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Flexible(
+                          child: customButton(
+                              fontSize: 16, label: 'SAY HI', onPressed: () {}),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Flexible(
+                          child: customButton(
+                              fontSize: 16,
+                              label: 'SAVE CONTACT',
+                              onPressed: () {}),
+                        ),
+                      ],
+                    ))),
+        ],
       ),
     );
   }
@@ -549,7 +606,7 @@ class ProfilePreview extends StatelessWidget {
                       height: 42,
                       child: SvgIcon(
                         assetName: svgIcons[index],
-                        color: const Color(0xFFE30613),
+                        color: const Color(0xFF004797),
                       )),
                 ),
               ),
@@ -586,7 +643,7 @@ class ReviewBarChart extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Row(
@@ -594,15 +651,15 @@ class ReviewBarChart extends StatelessWidget {
                 Container(
                   height: 60,
                   width: 80,
-                  color: Color(0xFFFFFCF2),
+                  color: const Color(0xFFFFFCF2),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.star, color: Color(0xFFF5B358)),
-                      SizedBox(width: 4),
+                      const Icon(Icons.star, color: Color(0xFFF5B358)),
+                      const SizedBox(width: 4),
                       Text(
                         averageRating.toStringAsFixed(1),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Color(0xFFF5B358),
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
@@ -612,14 +669,14 @@ class ReviewBarChart extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               '$totalReviews Reviews',
-              style: TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey),
             ),
           ],
         ),
-        SizedBox(width: 16), // Space between left and right side
+        const SizedBox(width: 16), // Space between left and right side
 
         // Right side: Rating bars
         Expanded(
@@ -634,7 +691,7 @@ class ReviewBarChart extends StatelessWidget {
 
                 return Row(
                   children: [
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: LinearProgressIndicator(
                         minHeight: 4.5,
@@ -644,10 +701,10 @@ class ReviewBarChart extends StatelessWidget {
                         color: Colors.amber,
                       ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       '$starCount',
-                      style: TextStyle(color: Colors.grey),
+                      style: const TextStyle(color: Colors.grey),
                     ),
                   ],
                 );
@@ -687,42 +744,45 @@ class ReviewsCard extends StatelessWidget {
           );
         },
         data: (reviewer) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Column(
-                children: [
-                  reviewer.profilePicture != null
-                      ? CircleAvatar(
-                          radius: 20,
-                          backgroundImage:
-                              NetworkImage(reviewer.profilePicture!),
-                        )
-                      : Icon(Icons.person),
-                ],
-              ),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${reviewer.name!.firstName!}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: Color.fromARGB(255, 42, 41, 41),
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Column(
+                  children: [
+                    reviewer.profilePicture != null
+                        ? CircleAvatar(
+                            radius: 20,
+                            backgroundImage:
+                                NetworkImage(reviewer.profilePicture!),
+                          )
+                        : const Icon(Icons.person),
+                  ],
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${reviewer.name!.firstName!}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: Color.fromARGB(255, 42, 41, 41),
+                      ),
                     ),
-                  ),
-                  Text(
-                    review.content!,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
+                    Text(
+                      review.content!,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           );
         },
       );

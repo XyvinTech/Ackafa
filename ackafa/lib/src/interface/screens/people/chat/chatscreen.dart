@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/providers/chat_providers.dart';
-import 'package:kssia/src/interface/common/OwnMessageCard.dart';
-import 'package:kssia/src/interface/common/ReplyCard.dart';
-import 'package:kssia/src/data/models/chat_model.dart';
-import 'package:kssia/src/data/models/msg_model.dart';
-import 'package:kssia/src/data/services/api_routes/chat_api.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/providers/chat_providers.dart';
+import 'package:ackaf/src/interface/common/OwnMessageCard.dart';
+import 'package:ackaf/src/interface/common/ReplyCard.dart';
+import 'package:ackaf/src/data/models/chat_model.dart';
+import 'package:ackaf/src/data/models/msg_model.dart';
+import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
 
 class IndividualPage extends ConsumerStatefulWidget {
   IndividualPage({required this.chatModel, required this.sourchat, super.key});

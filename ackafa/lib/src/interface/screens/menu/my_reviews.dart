@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:kssia/src/data/models/user_model.dart';
-import 'package:kssia/src/data/providers/user_provider.dart';
-import 'package:kssia/src/data/services/getRatings.dart';
-import 'package:kssia/src/interface/common/loading.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/data/services/getRatings.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 
 class MyReviewsPage extends StatelessWidget {
   const MyReviewsPage({Key? key}) : super(key: key);

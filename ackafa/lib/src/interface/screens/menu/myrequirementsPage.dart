@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/services/api_routes/user_api.dart';
-import 'package:kssia/src/interface/common/loading.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 
 class MyRequirementsPage extends StatelessWidget {
   @override

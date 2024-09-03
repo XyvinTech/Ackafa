@@ -1,12 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kssia/src/data/services/api_routes/user_api.dart';
-import 'package:kssia/src/data/models/product_model.dart';
-import 'package:kssia/src/data/models/user_model.dart';
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
 
 import '../globals.dart';
 
-class UserNotifier extends StateNotifier<AsyncValue<User>> {
-  final StateNotifierProviderRef<UserNotifier, AsyncValue<User>> ref;
+class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
+  final StateNotifierProviderRef<UserNotifier, AsyncValue<UserModel>> ref;
 
   UserNotifier(this.ref) : super(const AsyncValue.loading()) {
     _initializeUser();
@@ -14,7 +13,7 @@ class UserNotifier extends StateNotifier<AsyncValue<User>> {
   Future<void> _initializeUser() async {
     try {
       final user = await ref.read(fetchUserDetailsProvider(token, id).future);
-      state = AsyncValue.data(user ?? User());
+      state = AsyncValue.data(user ?? UserModel());
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);
     }
@@ -152,10 +151,6 @@ class UserNotifier extends StateNotifier<AsyncValue<User>> {
     state = state.whenData((user) => user.copyWith(certificates: certificates));
   }
 
-  void updateProduct(List<Product> products) {
-    state = state.whenData((user) => user.copyWith(products: products));
-  }
-
   void updateSocialMedia(
       List<SocialMedia> socialmedias, String platform, String newUrl) {
     final index = socialmedias.indexWhere((item) => item.platform == platform);
@@ -208,18 +203,9 @@ class UserNotifier extends StateNotifier<AsyncValue<User>> {
       return user.copyWith(certificates: updatedCertificate);
     });
   }
-
-  void removeProduct(Product productToRemove) {
-    state = state.whenData((user) {
-      final updatedProducts = user.products!
-          .where((product) => product != productToRemove)
-          .toList();
-      return user.copyWith(products: updatedProducts);
-    });
-  }
 }
 
 final userProvider =
-    StateNotifierProvider<UserNotifier, AsyncValue<User>>((ref) {
+    StateNotifierProvider<UserNotifier, AsyncValue<UserModel>>((ref) {
   return UserNotifier(ref);
 });

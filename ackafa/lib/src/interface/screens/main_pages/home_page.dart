@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kssia/src/data/services/api_routes/products_api.dart';
-import 'package:kssia/src/data/services/api_routes/promotions_api.dart';
-import 'package:kssia/src/data/services/api_routes/user_api.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/models/promotions_model.dart';
-import 'package:kssia/src/interface/common/custom_video.dart';
-import 'package:kssia/src/interface/common/loading.dart';
-import 'package:kssia/src/interface/screens/main_pages/menuPage.dart';
-import 'package:kssia/src/interface/screens/main_pages/notificationPage.dart';
-import 'package:kssia/src/data/providers/user_provider.dart';
+
+import 'package:ackaf/src/data/services/api_routes/promotions_api.dart';
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/promotions_model.dart';
+import 'package:ackaf/src/interface/common/custom_video.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
+import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../main_page.dart';
@@ -35,7 +35,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-     
         final asyncPromotions = ref.watch(fetchPromotionsProvider(token));
 
         return Scaffold(
@@ -446,7 +445,7 @@ class _HomePageState extends State<HomePage> {
         //         crossAxisAlignment: CrossAxisAlignment.start,
         //         children: const [
         //           Text(
-        //             'KSSIA Membership',
+        //             'ackaf Membership',
         //             style: TextStyle(
         //               fontWeight: FontWeight.bold,
         //               fontSize: 18,

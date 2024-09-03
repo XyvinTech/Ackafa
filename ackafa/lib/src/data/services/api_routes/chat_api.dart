@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/models/chat_model.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:kssia/src/data/models/msg_model.dart';
+import 'package:ackaf/src/data/models/msg_model.dart';
 
 part 'chat_api.g.dart';
 

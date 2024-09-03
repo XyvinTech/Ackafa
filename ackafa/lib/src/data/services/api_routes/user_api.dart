@@ -1,50 +1,53 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/models/product_model.dart';
-import 'package:kssia/src/data/models/user_model.dart';
-import 'package:kssia/src/data/models/user_requirement_model.dart';
+import 'package:ackaf/src/data/globals.dart';
+
+import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:ackaf/src/data/models/user_requirement_model.dart';
 import 'package:path/path.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_api.g.dart';
 
 class ApiRoutes {
-  final String baseUrl = 'http://43.205.89.79/api/v1';
-  Future<String?> sendOtp(String mobile, context) async {
-    print(mobile);
-    final response = await http.get(
-      Uri.parse('$baseUrl/user/login/$mobile'),
-      headers: {"Content-Type": "application/json"},
-    );
-    final Map<String, dynamic> responseBody = jsonDecode(response.body);
-    if (response.statusCode == 200) {
-      print(responseBody['message']);
-      print(responseBody['data']);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Success')));
-      return responseBody['message'];
-    } else if (response.statusCode == 400) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Invalid Mobile Number')));
-      return null;
-    } else {
-      final Map<String, dynamic> responseBody = jsonDecode(response.body);
-      print(responseBody['message']);
-      return null;
-    }
-  }
+  final String baseUrl = 'http://3.108.205.101:3000/api/v1';
+  // Future<String?> sendOtp(String mobile, context) async {
+  //   print(mobile);
+  //   final response = await http.post(
+  //     Uri.parse('$baseUrl/user/send-otp'),
+  //     headers: {"Content-Type": "application/json"},
+  //     body: jsonEncode({"phone": mobile}),
+  //   );
+  //   final Map<String, dynamic> responseBody = jsonDecode(response.body);
+  //   if (response.statusCode == 200) {
+  //     print(responseBody['message']);
+  //     print(responseBody['data']);
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text('Success')));
+  //     return responseBody['message'];
+  //   } else if (response.statusCode == 400) {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text('Invalid Mobile Number')));
+  //     return null;
+  //   } else {
+  //     final Map<String, dynamic> responseBody = jsonDecode(response.body);
+  //     print(responseBody['message']);
+  //     return null;
+  //   }
+  // }
 
   Future<List<dynamic>> verifyUser(String mobile, String otp, context) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/user/login'),
+      Uri.parse('$baseUrl/user/verify'),
       headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"otp": int.parse(otp), "mobile": mobile}),
+      body: jsonEncode({"otp": int.parse(otp), "phone": mobile}),
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
@@ -60,6 +63,97 @@ class ApiRoutes {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
       print(responseBody['message']);
       return [];
+    }
+  }
+
+  Future<bool> updateUser(
+      {required String token,
+      required String? profileUrl,
+      required String? firstName,
+      required String? middleName,
+      required String? lastName,
+      required String? emailId,
+      required String? college,
+      required String? batch,
+      required String? course,
+      required context}) async {
+    final url = Uri.parse('http://3.108.205.101:3000/api/v1/user/update');
+    const String token =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmQ0OTJlY2FiNmViMDA5NTRmMzE3YjkiLCJpYXQiOjE3MjUyNjQyNzN9.iA02JhzCHKHepzAjlIRVfrWv0GOuKipK5KqIV0ieQ9A';
+
+    final response = await http.patch(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'accept': '*/*',
+      },
+      body: jsonEncode({
+        "name": {"first": firstName, "middle": middleName, "last": lastName},
+        "image": profileUrl,
+        "email": emailId,
+        "college": "66cef851d3cbe59728a7d474",
+        "course": "66d49a7386abf500d2fa848b",
+        "batch": 2020,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('User updated successfully');
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Request Sent Successfully')));
+      return true;
+    } else {
+      print('Failed to update user: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to send request')));
+      return false;
+    }
+  }
+
+  Future<String> submitPhoneNumber(BuildContext context, String phone) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    Completer<String> completer = Completer<String>();
+
+    await auth.verifyPhoneNumber(
+      phoneNumber: '+91$phone',
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        // Handle automatic verification completion if needed
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        print(e.message.toString());
+        completer.complete(''); // Verification failed
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        log(verificationId);
+
+        completer.complete(verificationId); // Code sent successfully
+      },
+      codeAutoRetrievalTimeout: (String verificationID) {
+        if (!completer.isCompleted) {
+          completer.complete(''); // Timeout without sending code
+        }
+      },
+    );
+
+    return completer.future;
+  }
+
+  Future<void> verifyOTP(String verificationId, String smsCode) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: smsCode,
+    );
+
+    try {
+      // Sign in the user with the provided OTP
+      UserCredential userCredential =
+          await auth.signInWithCredential(credential);
+      print("User signed in successfully");
+    } catch (e) {
+      print("Failed to sign in: ${e.toString()}");
     }
   }
 
@@ -132,7 +226,7 @@ class ApiRoutes {
   }
 
   String removeBaseUrl(String url) {
-    String baseUrl = 'https://kssia.s3.ap-south-1.amazonaws.com/';
+    String baseUrl = 'https://ackaf.s3.ap-south-1.amazonaws.com/';
     return url.replaceFirst(baseUrl, '');
   }
 
@@ -157,8 +251,9 @@ class ApiRoutes {
       print('Failed to delete image: ${response.statusCode}');
     }
   }
-    Future<void> deleteRequirement(String token, String requirementId,context) async {
 
+  Future<void> deleteRequirement(
+      String token, String requirementId, context) async {
     final url = Uri.parse('$baseUrl/requirements/$requirementId');
     print('requesting url:$url');
     final response = await http.delete(
@@ -170,11 +265,11 @@ class ApiRoutes {
     );
 
     if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Requirement Deleted Successfully')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Requirement Deleted Successfully')));
     } else {
       final jsonResponse = json.decode(response.body);
-            ScaffoldMessenger.of(context)
+      ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(jsonResponse['message'])));
       print(jsonResponse['message']);
       print('Failed to delete image: ${response.statusCode}');
@@ -202,83 +297,6 @@ class ApiRoutes {
     }
   }
 
-  Future<Product?> uploadProduct(
-      String token,
-      String name,
-      String price,
-      String description,
-      String moq,
-      File productImage,
-      String sellerId) async {
-    final url = Uri.parse('$baseUrl/products');
-
-    // Create a multipart request
-    var request = http.MultipartRequest('POST', url);
-
-    // Add headers
-    request.headers.addAll({
-      'accept': 'application/json',
-      'Authorization': 'Bearer $token',
-      'Content-Type': 'multipart/form-data',
-    });
-
-    // Add fields
-    request.fields['name'] = name;
-    request.fields['price'] = price;
-    request.fields['offer_price'] = price;
-    request.fields['description'] = description;
-    request.fields['moq'] = moq;
-    request.fields['seller_id'] = sellerId;
-
-    // Add the image file
-    var stream = http.ByteStream(productImage.openRead());
-    stream.cast();
-    var length = await productImage.length();
-    var multipartFile = http.MultipartFile(
-      'image',
-      stream,
-      length,
-      filename: basename(productImage.path),
-      contentType: MediaType('image', 'png'),
-    );
-
-    request.files.add(multipartFile);
-
-    // Send the request
-    var response = await request.send();
-
-    if (response.statusCode == 201) {
-      print('Product uploaded successfully');
-      final responseData = await response.stream.bytesToString();
-      final jsonResponse = json.decode(responseData);
-      print(jsonResponse['message']);
-      final Product product = Product.fromJson(jsonResponse['data']);
-
-      return product;
-    } else {
-      final responseData = await response.stream.bytesToString();
-      final jsonResponse = json.decode(responseData);
-      print(jsonResponse['message']);
-      print('Failed to upload product: ${response.statusCode}');
-      return null;
-    }
-  }
-
-  Map<String, dynamic> _handleResponse(http.Response response) {
-    final Map<String, dynamic> responseBody = jsonDecode(response.body);
-    if (response.statusCode == 200) {
-      print(responseBody['message']);
-      print(responseBody['data']);
-      return {"status": true, "data": responseBody};
-    } else {
-      print(responseBody['message']);
-
-      return {
-        "status": false,
-        "message": responseBody['message'] ?? 'Unknown error'
-      };
-    }
-  }
 
   Future<String?> uploadRequirement(
     String token,
@@ -421,7 +439,7 @@ Future<void> markEventAsRSVP(String eventId) async {
 const String baseUrl = 'http://43.205.89.79/api/v1';
 
 @riverpod
-Future<User> fetchUserDetails(
+Future<UserModel> fetchUserDetails(
     FetchUserDetailsRef ref, String token, String userId) async {
   final url = Uri.parse('$baseUrl/user/$userId');
   print('Requesting URL: $url');
@@ -438,7 +456,7 @@ Future<User> fetchUserDetails(
     final dynamic data = json.decode(response.body)['data'];
     print(data['products']);
 
-    return User.fromJson(data);
+    return UserModel.fromJson(data);
   } else {
     print(json.decode(response.body)['message']);
 
@@ -447,7 +465,7 @@ Future<User> fetchUserDetails(
 }
 
 @riverpod
-Future<List<User>> fetchUsers(FetchUsersRef ref, String token) async {
+Future<List<UserModel>> fetchUsers(FetchUsersRef ref, String token) async {
   final url = Uri.parse('$baseUrl/admin/users');
   print('Requesting URL: $url');
   final response = await http.get(
@@ -462,10 +480,10 @@ Future<List<User>> fetchUsers(FetchUsersRef ref, String token) async {
   if (response.statusCode == 200) {
     final List<dynamic> data = json.decode(response.body)['data'];
     print(response.body);
-    List<User> events = [];
+    List<UserModel> events = [];
 
     for (var item in data) {
-      events.add(User.fromJson(item));
+      events.add(UserModel.fromJson(item));
     }
     print(events);
     return events;
@@ -477,13 +495,14 @@ Future<List<User>> fetchUsers(FetchUsersRef ref, String token) async {
 }
 
 @riverpod
-Future<List<UserRequirementModel>> fetchUserRequirements(FetchUserRequirementsRef ref, String token) async {
+Future<List<UserRequirementModel>> fetchUserRequirements(
+    FetchUserRequirementsRef ref, String token) async {
   final url = Uri.parse('$baseUrl/requirements/$id');
   print('Requesting URL: $url');
   final response = await http.get(
     url,
     headers: {
-      "Content-Type": "application/json", 
+      "Content-Type": "application/json",
       "Authorization": "Bearer $token"
     },
   );

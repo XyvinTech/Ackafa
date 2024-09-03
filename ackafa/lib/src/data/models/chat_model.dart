@@ -1,4 +1,4 @@
-import 'package:kssia/src/data/globals.dart' as globals;
+import 'package:ackaf/src/data/globals.dart' as globals;
 
 class ChatModel {
   String name;

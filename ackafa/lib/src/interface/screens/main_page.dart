@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kssia/src/data/models/user_model.dart';
-import 'package:kssia/src/data/providers/user_provider.dart';
-import 'package:kssia/src/interface/common/loading.dart';
-import 'package:kssia/src/interface/screens/main_pages/event_news_page.dart';
-import 'package:kssia/src/interface/screens/main_pages/feed_page.dart';
-import 'package:kssia/src/interface/screens/main_pages/home_page.dart';
-import 'package:kssia/src/interface/screens/main_pages/people_page.dart';
-import 'package:kssia/src/interface/screens/main_pages/profilePage.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/main_pages/event_news_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/feed_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/home_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/people_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/profilePage.dart';
 
 class IconResolver extends StatelessWidget {
   final String iconPath;
@@ -67,7 +67,7 @@ class _MainPageState extends State<MainPage> {
 
   List<String> _inactiveIcons = [];
   List<String> _activeIcons = [];
-  void _initialize({required User user}) {
+  void _initialize({required UserModel user}) {
     _widgetOptions = <Widget>[
       HomePage(),
       FeedPage(),
@@ -106,7 +106,6 @@ class _MainPageState extends State<MainPage> {
           print(user.profilePicture);
           _initialize(user: user);
           return Scaffold(
-         
             body: Center(
               child: _widgetOptions.elementAt(_selectedIndex),
             ),

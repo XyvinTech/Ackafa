@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kssia/src/data/services/api_routes/user_api.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/models/user_model.dart';
-import 'package:kssia/src/interface/screens/profile/profilePreview.dart';
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:ackaf/src/interface/screens/profile/profilePreview.dart';
 
 class MembersPage extends StatelessWidget {
-  final List<User> users;
+  final List<UserModel> users;
   const MembersPage({super.key, required this.users});
 
   // final List<Member> members = [

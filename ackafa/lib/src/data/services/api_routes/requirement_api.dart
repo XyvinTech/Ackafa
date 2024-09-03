@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:kssia/src/data/models/events_model.dart';
-import 'package:kssia/src/data/models/requirement_model.dart';
+import 'package:ackaf/src/data/models/events_model.dart';
+import 'package:ackaf/src/data/models/requirement_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'requirement_api.g.dart';
 

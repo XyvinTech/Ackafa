@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kssia/src/interface/screens/feed/feed_view.dart';
-import 'package:kssia/src/interface/screens/main_pages/menuPage.dart';
-import 'package:kssia/src/interface/screens/main_pages/notificationPage.dart';
+import 'package:ackaf/src/interface/screens/feed/feed_view.dart';
+import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 
 class FeedPage extends StatelessWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -26,7 +26,6 @@ class FeedPage extends StatelessWidget {
             ),
           ),
         ),
-        
         actions: [
           IconButton(
             icon: Icon(
@@ -36,8 +35,7 @@ class FeedPage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => NotificationPage()),
+                MaterialPageRoute(builder: (context) => NotificationPage()),
               );
             },
           ),
@@ -49,16 +47,13 @@ class FeedPage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => MenuPage()),
+                MaterialPageRoute(builder: (context) => MenuPage()),
               );
             },
           ),
         ],
       ),
       body: FeedView(),
-      
-     
     );
   }
 }

@@ -1,22 +1,21 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:ackaf/src/data/models/college_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
-import 'package:kssia/src/data/models/product_model.dart';
-import 'package:path/path.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-part 'products_api.g.dart';
-const String baseUrl = 'http://43.205.89.79/api/v1';
+part 'college_api.g.dart';
+
+const String baseUrl = 'http://3.108.205.101:3000/api/v1';
 
 @riverpod
-Future<List<Product>> fetchProducts(FetchProductsRef ref, String token) async {
-  final url = Uri.parse('$baseUrl/products');
+Future<List<College>> fetchColleges(FetchCollegesRef ref, String token) async {
+  final url = Uri.parse('$baseUrl/college/dropdown');
   print('Requesting URL: $url');
   final response = await http.get(
     url,
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer $token"
+      "Authorization":
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmQ0OTJlY2FiNmViMDA5NTRmMzE3YjkiLCJpYXQiOjE3MjUyNjQyNzN9.iA02JhzCHKHepzAjlIRVfrWv0GOuKipK5KqIV0ieQ9A"
     },
   );
   print('hello');
@@ -24,18 +23,16 @@ Future<List<Product>> fetchProducts(FetchProductsRef ref, String token) async {
   if (response.statusCode == 200) {
     final List<dynamic> data = json.decode(response.body)['data'];
     print(response.body);
-    List<Product> products = [];
+    List<College> colleges = [];
 
     for (var item in data) {
-      products.add(Product.fromJson(item));
+      colleges.add(College.fromJson(item));
     }
-    print(products);
-    return products;
+    print(colleges);
+    return colleges;
   } else {
     print(json.decode(response.body)['message']);
 
     throw Exception(json.decode(response.body)['message']);
   }
 }
-
-

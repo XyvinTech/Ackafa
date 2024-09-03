@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/models/events_model.dart';
-import 'package:kssia/src/data/models/notification_model.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/events_model.dart';
+import 'package:ackaf/src/data/models/notification_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'notification_api.g.dart';
+
 const String baseUrl = 'http://43.205.89.79/api/v1';
 
 @riverpod
-Future<List<NotificationModel>> fetchUnreadNotifications(FetchUnreadNotificationsRef ref, String token) async {
+Future<List<NotificationModel>> fetchUnreadNotifications(
+    FetchUnreadNotificationsRef ref, String token) async {
   final url = Uri.parse('$baseUrl/notification/in-app/unread/$id');
   print('Requesting URL: $url');
   final response = await http.get(
@@ -38,9 +40,9 @@ Future<List<NotificationModel>> fetchUnreadNotifications(FetchUnreadNotification
   }
 }
 
-
 @riverpod
-Future<List<NotificationModel>> fetchreadNotifications(FetchreadNotificationsRef ref, String token) async {
+Future<List<NotificationModel>> fetchreadNotifications(
+    FetchreadNotificationsRef ref, String token) async {
   final url = Uri.parse('$baseUrl/notification/in-app/read/$id');
   print('Requesting URL: $url');
   final response = await http.get(

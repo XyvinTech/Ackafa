@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/models/events_model.dart';
-import 'package:kssia/src/data/models/transaction_model.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/events_model.dart';
+import 'package:ackaf/src/data/models/transaction_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'transactions_api.g.dart';
 

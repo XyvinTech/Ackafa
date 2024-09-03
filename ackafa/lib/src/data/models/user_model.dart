@@ -1,5 +1,4 @@
-import 'package:flutter/foundation.dart';
-import 'package:kssia/src/data/models/product_model.dart';
+
 
 class Name {
   final String? firstName;
@@ -298,7 +297,7 @@ class Brochure {
   }
 }
 
-class User {
+class UserModel {
   final String? id;
   final String? membershipId;
   final Name? name;
@@ -328,9 +327,8 @@ class User {
   final String? companyAddress;
   final String? companyLogo;
   final String? profilePicture;
-  final List<Product>? products;
 
-  User({
+  UserModel({
     this.id,
     this.membershipId,
     this.name,
@@ -360,11 +358,10 @@ class User {
     this.companyAddress,
     this.companyLogo,
     this.profilePicture,
-    this.products,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
       id: json['_id'] as String?,
       membershipId: json['membership_id'] as String?,
       name: json['name'] != null ? Name.fromJson(json['name']) : null,
@@ -410,11 +407,7 @@ class User {
       companyAddress: json['company_address'] as String?,
       companyLogo: json['company_logo'] as String?,
       profilePicture: json['profile_picture'] as String?,
-      products: json['products'] == 'Seller has no products'
-          ? []
-          : (json['products'] as List<dynamic>?)
-              ?.map((e) => Product.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      
     );
   }
 
@@ -449,11 +442,11 @@ class User {
       'company_address': companyAddress,
       'company_logo': companyLogo,
       'profile_picture': profilePicture,
-      'products': products?.map((e) => e.toJson()).toList(),
+    
     };
   }
 
-  User copyWith({
+  UserModel copyWith({
     String? id,
     String? membershipId,
     Name? name,
@@ -483,9 +476,9 @@ class User {
     String? companyAddress,
     String? companyLogo,
     String? profilePicture,
-    List<Product>? products,
+
   }) {
-    return User(
+    return UserModel(
       id: id ?? this.id,
       membershipId: membershipId ?? this.membershipId,
       name: name ?? this.name,
@@ -515,7 +508,6 @@ class User {
       companyAddress: companyAddress ?? this.companyAddress,
       companyLogo: companyLogo ?? this.companyLogo,
       profilePicture: profilePicture ?? this.profilePicture,
-      products: products ?? this.products,
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -8,7 +7,7 @@ class AboutPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('About'),
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -37,7 +36,7 @@ class AboutPage extends StatelessWidget {
               children: [
                 Icon(Icons.email, color: Color(0xFFE30613)),
                 SizedBox(width: 10),
-                Text('kssia@gmail.com', style: TextStyle(fontSize: 16)),
+                Text('ackaf@gmail.com', style: TextStyle(fontSize: 16)),
               ],
             ),
             SizedBox(height: 10),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kssia/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/interface/common/custom_button.dart';
 
 class RequestNFCPage extends StatelessWidget {
   @override

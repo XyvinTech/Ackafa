@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:kssia/src/data/services/api_routes/events_api.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/models/events_model.dart';
-import 'package:kssia/src/interface/screens/event_news/viewmore_event.dart'; // Import the ViewMoreEventPage
+import 'package:ackaf/src/data/services/api_routes/events_api.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/events_model.dart';
+import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart'; // Import the ViewMoreEventPage
 
 class EventPage extends StatelessWidget {
   final List<Event> events;

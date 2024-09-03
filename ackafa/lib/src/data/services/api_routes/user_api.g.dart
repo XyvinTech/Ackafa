@@ -6,7 +6,7 @@ part of 'user_api.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchUserDetailsHash() => r'c964d17907640cfd4702c1cfff60a63f2d9ada06';
+String _$fetchUserDetailsHash() => r'ba1be280ac55c79e0e4893613d3868ddef219699';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -34,7 +34,7 @@ class _SystemHash {
 const fetchUserDetailsProvider = FetchUserDetailsFamily();
 
 /// See also [fetchUserDetails].
-class FetchUserDetailsFamily extends Family<AsyncValue<User>> {
+class FetchUserDetailsFamily extends Family<AsyncValue<UserModel>> {
   /// See also [fetchUserDetails].
   const FetchUserDetailsFamily();
 
@@ -75,7 +75,7 @@ class FetchUserDetailsFamily extends Family<AsyncValue<User>> {
 }
 
 /// See also [fetchUserDetails].
-class FetchUserDetailsProvider extends AutoDisposeFutureProvider<User> {
+class FetchUserDetailsProvider extends AutoDisposeFutureProvider<UserModel> {
   /// See also [fetchUserDetails].
   FetchUserDetailsProvider(
     String token,
@@ -115,7 +115,7 @@ class FetchUserDetailsProvider extends AutoDisposeFutureProvider<User> {
 
   @override
   Override overrideWith(
-    FutureOr<User> Function(FetchUserDetailsRef provider) create,
+    FutureOr<UserModel> Function(FetchUserDetailsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -133,7 +133,7 @@ class FetchUserDetailsProvider extends AutoDisposeFutureProvider<User> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<User> createElement() {
+  AutoDisposeFutureProviderElement<UserModel> createElement() {
     return _FetchUserDetailsProviderElement(this);
   }
 
@@ -154,7 +154,7 @@ class FetchUserDetailsProvider extends AutoDisposeFutureProvider<User> {
   }
 }
 
-mixin FetchUserDetailsRef on AutoDisposeFutureProviderRef<User> {
+mixin FetchUserDetailsRef on AutoDisposeFutureProviderRef<UserModel> {
   /// The parameter `token` of this provider.
   String get token;
 
@@ -163,7 +163,8 @@ mixin FetchUserDetailsRef on AutoDisposeFutureProviderRef<User> {
 }
 
 class _FetchUserDetailsProviderElement
-    extends AutoDisposeFutureProviderElement<User> with FetchUserDetailsRef {
+    extends AutoDisposeFutureProviderElement<UserModel>
+    with FetchUserDetailsRef {
   _FetchUserDetailsProviderElement(super.provider);
 
   @override
@@ -172,14 +173,14 @@ class _FetchUserDetailsProviderElement
   String get userId => (origin as FetchUserDetailsProvider).userId;
 }
 
-String _$fetchUsersHash() => r'f5a07218f5a0232c1357d37eec2fe1fa57179bc1';
+String _$fetchUsersHash() => r'6fea100e9626f66bf461c993f0a6b18cfb1927ff';
 
 /// See also [fetchUsers].
 @ProviderFor(fetchUsers)
 const fetchUsersProvider = FetchUsersFamily();
 
 /// See also [fetchUsers].
-class FetchUsersFamily extends Family<AsyncValue<List<User>>> {
+class FetchUsersFamily extends Family<AsyncValue<List<UserModel>>> {
   /// See also [fetchUsers].
   const FetchUsersFamily();
 
@@ -217,7 +218,7 @@ class FetchUsersFamily extends Family<AsyncValue<List<User>>> {
 }
 
 /// See also [fetchUsers].
-class FetchUsersProvider extends AutoDisposeFutureProvider<List<User>> {
+class FetchUsersProvider extends AutoDisposeFutureProvider<List<UserModel>> {
   /// See also [fetchUsers].
   FetchUsersProvider(
     String token,
@@ -252,7 +253,7 @@ class FetchUsersProvider extends AutoDisposeFutureProvider<List<User>> {
 
   @override
   Override overrideWith(
-    FutureOr<List<User>> Function(FetchUsersRef provider) create,
+    FutureOr<List<UserModel>> Function(FetchUsersRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -269,7 +270,7 @@ class FetchUsersProvider extends AutoDisposeFutureProvider<List<User>> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<User>> createElement() {
+  AutoDisposeFutureProviderElement<List<UserModel>> createElement() {
     return _FetchUsersProviderElement(this);
   }
 
@@ -287,13 +288,14 @@ class FetchUsersProvider extends AutoDisposeFutureProvider<List<User>> {
   }
 }
 
-mixin FetchUsersRef on AutoDisposeFutureProviderRef<List<User>> {
+mixin FetchUsersRef on AutoDisposeFutureProviderRef<List<UserModel>> {
   /// The parameter `token` of this provider.
   String get token;
 }
 
 class _FetchUsersProviderElement
-    extends AutoDisposeFutureProviderElement<List<User>> with FetchUsersRef {
+    extends AutoDisposeFutureProviderElement<List<UserModel>>
+    with FetchUsersRef {
   _FetchUsersProviderElement(super.provider);
 
   @override

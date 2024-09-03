@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kssia/src/data/services/api_routes/events_api.dart';
-import 'package:kssia/src/data/services/api_routes/news_api.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/interface/common/loading.dart';
-import 'package:kssia/src/interface/screens/event_news/event.dart';
-import 'package:kssia/src/interface/screens/event_news/news.dart';
-import 'package:kssia/src/interface/screens/main_pages/menuPage.dart';
-import 'package:kssia/src/interface/screens/main_pages/notificationPage.dart';
-
+import 'package:ackaf/src/data/services/api_routes/events_api.dart';
+import 'package:ackaf/src/data/services/api_routes/news_api.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/event_news/event.dart';
+import 'package:ackaf/src/interface/screens/event_news/news.dart';
+import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 
 class Event_News_Page extends StatefulWidget {
   @override

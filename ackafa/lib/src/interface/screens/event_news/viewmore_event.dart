@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kssia/src/data/models/events_model.dart';
-import 'package:kssia/src/data/services/api_routes/user_api.dart';
-import 'package:kssia/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/data/models/events_model.dart';
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
+import 'package:ackaf/src/interface/common/custom_button.dart';
 
 import 'package:flutter/material.dart';
 

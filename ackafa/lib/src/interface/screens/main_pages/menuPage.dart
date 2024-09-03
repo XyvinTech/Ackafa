@@ -1,13 +1,14 @@
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/models/user_model.dart';
-import 'package:kssia/src/data/providers/user_provider.dart';
-import 'package:kssia/src/interface/common/loading.dart';
-import 'package:kssia/src/interface/screens/main_pages/loginPage.dart';
-// import 'package:kssia/src/interface/screens/menu/my_product.dart';
-// import 'package:kssia/src/interface/screens/menu/my_reviews.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
+// import 'package:ackaf/src/interface/screens/menu/my_product.dart';
+// import 'package:ackaf/src/interface/screens/menu/my_reviews.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../menu/requestNFC.dart';
 // import '../menu/myrequirementsPage.dart';
@@ -398,7 +399,7 @@ class MenuPage extends StatelessWidget {
                           );
                         },
                       ),
-                      
+
                       Divider(),
                       _buildListTile(
                         context,
@@ -408,7 +409,7 @@ class MenuPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MyPostPage()), 
+                                builder: (context) => MyPostPage()),
                           );
                         },
                       ),

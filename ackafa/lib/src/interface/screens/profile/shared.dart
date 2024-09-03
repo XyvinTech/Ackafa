@@ -5,7 +5,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/icons/kssia_logo.png', height: 30),
+        title: Image.asset('assets/icons/ackaf_logo.png', height: 30),
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
         actions: [
@@ -50,7 +50,8 @@ class ProfilePage extends StatelessWidget {
                         Align(
                           alignment: Alignment.topRight,
                           child: IconButton(
-                            icon: Image.asset('assets/icons/show_hide_button.png'),
+                            icon: Image.asset(
+                                'assets/icons/show_hide_button.png'),
                             onPressed: () {
                               // Handle show/hide button pressed
                             },
@@ -62,7 +63,8 @@ class ProfilePage extends StatelessWidget {
                               radius: 40,
                               backgroundImage: NetworkImage(
                                   'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'),
-                              onBackgroundImageError: (_, __) => AssetImage('assets/icons/default_avatar.png'),
+                              onBackgroundImageError: (_, __) =>
+                                  AssetImage('assets/icons/default_avatar.png'),
                             ),
                             SizedBox(height: 10),
                             Text(
@@ -148,7 +150,8 @@ class ProfilePage extends StatelessWidget {
                     child: Text('SHARE'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                     ),
                   ),
                   SizedBox(width: 20),
@@ -159,7 +162,8 @@ class ProfilePage extends StatelessWidget {
                     child: Text('DOWNLOAD QR'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey[200],
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       foregroundColor: Colors.black,
                     ),
                   ),

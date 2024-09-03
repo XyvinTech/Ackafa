@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:kssia/src/data/models/events_model.dart';
+import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'events_api.g.dart';
+
 const String baseUrl = 'http://43.205.89.79/api/v1';
 
 @riverpod

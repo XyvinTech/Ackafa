@@ -9,8 +9,8 @@
 //   Widget build(BuildContext context) {
 //     return AppBar(
 //       leading:SvgPicture.asset(
-//   'assets/icons/kssiaLogo.svg',
-//   semanticsLabel: 'Kssia Logo'
+//   'assets/icons/ackafLogo.svg',
+//   semanticsLabel: 'ackaf Logo'
 // ),
 //       actions: [
 //         IconButton(
@@ -34,8 +34,8 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:kssia/src/interface/screens/main_pages/menuPage.dart';
-import 'package:kssia/src/interface/screens/main_pages/notificationPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 
 class App_bar extends StatelessWidget implements PreferredSizeWidget {
   const App_bar({

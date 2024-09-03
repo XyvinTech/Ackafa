@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:kssia/src/data/models/user_model.dart';
-import 'package:kssia/src/interface/screens/main_pages/menuPage.dart';
-import 'package:kssia/src/interface/screens/main_pages/notificationPage.dart';
-import 'package:kssia/src/interface/screens/profile/card.dart';
-import 'package:kssia/src/interface/screens/profile/profilePreview.dart'; // Import the XCard widget
+import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
+import 'package:ackaf/src/interface/screens/profile/card.dart';
+import 'package:ackaf/src/interface/screens/profile/profilePreview.dart'; // Import the XCard widget
 
 class ProfilePage extends StatelessWidget {
-  final User user;
+  final UserModel user;
   const ProfilePage({super.key, required this.user});
 
   @override
@@ -101,7 +101,8 @@ class ProfilePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(2),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color.fromARGB(255, 182, 181, 181).withOpacity(0.5),
+                            color: const Color.fromARGB(255, 182, 181, 181)
+                                .withOpacity(0.5),
                             spreadRadius: 0,
                             blurRadius: 1,
                             offset: const Offset(.5, .5),
@@ -316,7 +317,7 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         IconButton(
                           icon: Image.asset(
-                              'assets/icons/Button.png'),   //add button.png here
+                              'assets/icons/Button.png'), //add button.png here
                           iconSize: 50,
                           onPressed: () {
                             // Navigator.push(

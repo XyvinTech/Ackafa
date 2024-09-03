@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'products_api.dart';
+part of 'college_api.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchProductsHash() => r'db49508765242d1f16be03b49e207ab9eead216f';
+String _$fetchCollegesHash() => r'a169d6bbd9b0300025e7282165862e75cf0a19bf';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,27 +29,27 @@ class _SystemHash {
   }
 }
 
-/// See also [fetchProducts].
-@ProviderFor(fetchProducts)
-const fetchProductsProvider = FetchProductsFamily();
+/// See also [fetchColleges].
+@ProviderFor(fetchColleges)
+const fetchCollegesProvider = FetchCollegesFamily();
 
-/// See also [fetchProducts].
-class FetchProductsFamily extends Family<AsyncValue<List<Product>>> {
-  /// See also [fetchProducts].
-  const FetchProductsFamily();
+/// See also [fetchColleges].
+class FetchCollegesFamily extends Family<AsyncValue<List<College>>> {
+  /// See also [fetchColleges].
+  const FetchCollegesFamily();
 
-  /// See also [fetchProducts].
-  FetchProductsProvider call(
+  /// See also [fetchColleges].
+  FetchCollegesProvider call(
     String token,
   ) {
-    return FetchProductsProvider(
+    return FetchCollegesProvider(
       token,
     );
   }
 
   @override
-  FetchProductsProvider getProviderOverride(
-    covariant FetchProductsProvider provider,
+  FetchCollegesProvider getProviderOverride(
+    covariant FetchCollegesProvider provider,
   ) {
     return call(
       provider.token,
@@ -68,32 +68,32 @@ class FetchProductsFamily extends Family<AsyncValue<List<Product>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'fetchProductsProvider';
+  String? get name => r'fetchCollegesProvider';
 }
 
-/// See also [fetchProducts].
-class FetchProductsProvider extends AutoDisposeFutureProvider<List<Product>> {
-  /// See also [fetchProducts].
-  FetchProductsProvider(
+/// See also [fetchColleges].
+class FetchCollegesProvider extends AutoDisposeFutureProvider<List<College>> {
+  /// See also [fetchColleges].
+  FetchCollegesProvider(
     String token,
   ) : this._internal(
-          (ref) => fetchProducts(
-            ref as FetchProductsRef,
+          (ref) => fetchColleges(
+            ref as FetchCollegesRef,
             token,
           ),
-          from: fetchProductsProvider,
-          name: r'fetchProductsProvider',
+          from: fetchCollegesProvider,
+          name: r'fetchCollegesProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$fetchProductsHash,
-          dependencies: FetchProductsFamily._dependencies,
+                  : _$fetchCollegesHash,
+          dependencies: FetchCollegesFamily._dependencies,
           allTransitiveDependencies:
-              FetchProductsFamily._allTransitiveDependencies,
+              FetchCollegesFamily._allTransitiveDependencies,
           token: token,
         );
 
-  FetchProductsProvider._internal(
+  FetchCollegesProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -107,12 +107,12 @@ class FetchProductsProvider extends AutoDisposeFutureProvider<List<Product>> {
 
   @override
   Override overrideWith(
-    FutureOr<List<Product>> Function(FetchProductsRef provider) create,
+    FutureOr<List<College>> Function(FetchCollegesRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: FetchProductsProvider._internal(
-        (ref) => create(ref as FetchProductsRef),
+      override: FetchCollegesProvider._internal(
+        (ref) => create(ref as FetchCollegesRef),
         from: from,
         name: null,
         dependencies: null,
@@ -124,13 +124,13 @@ class FetchProductsProvider extends AutoDisposeFutureProvider<List<Product>> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<Product>> createElement() {
-    return _FetchProductsProviderElement(this);
+  AutoDisposeFutureProviderElement<List<College>> createElement() {
+    return _FetchCollegesProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is FetchProductsProvider && other.token == token;
+    return other is FetchCollegesProvider && other.token == token;
   }
 
   @override
@@ -142,18 +142,18 @@ class FetchProductsProvider extends AutoDisposeFutureProvider<List<Product>> {
   }
 }
 
-mixin FetchProductsRef on AutoDisposeFutureProviderRef<List<Product>> {
+mixin FetchCollegesRef on AutoDisposeFutureProviderRef<List<College>> {
   /// The parameter `token` of this provider.
   String get token;
 }
 
-class _FetchProductsProviderElement
-    extends AutoDisposeFutureProviderElement<List<Product>>
-    with FetchProductsRef {
-  _FetchProductsProviderElement(super.provider);
+class _FetchCollegesProviderElement
+    extends AutoDisposeFutureProviderElement<List<College>>
+    with FetchCollegesRef {
+  _FetchCollegesProviderElement(super.provider);
 
   @override
-  String get token => (origin as FetchProductsProvider).token;
+  String get token => (origin as FetchCollegesProvider).token;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

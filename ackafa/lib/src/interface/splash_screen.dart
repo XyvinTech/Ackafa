@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kssia/src/data/globals.dart';
+import 'package:ackaf/src/data/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -32,7 +32,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? savedtoken = preferences.getString('token');
     String? savedId = preferences.getString('id');
-    if (savedtoken != null && savedtoken.isNotEmpty && savedId!=null) {
+    if (savedtoken != null && savedtoken.isNotEmpty && savedId != null) {
       setState(() {
         LoggedIn = true;
         token = savedtoken;
@@ -47,8 +47,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       backgroundColor: Colors.white,
       body: Center(
         child: Image.asset(
-          'assets/icons/kssiaLogo.png',
-          scale: 0.5,
+          'assets/icons/ackaf_logo.png',
+          scale: 0.7,
         ),
       ),
     );
