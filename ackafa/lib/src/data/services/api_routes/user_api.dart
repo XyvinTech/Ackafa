@@ -110,10 +110,11 @@ class ApiRoutes {
     }
   }
 
-  Future<String> submitPhoneNumber(BuildContext context, String phone) async {
+  Future<Map<String, String>> submitPhoneNumber(
+      BuildContext context, String phone) async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    Completer<String> completer = Completer<String>();
-
+    Completer<String> verificationIdcompleter = Completer<String>();
+    Completer<String> resendTokencompleter = Completer<String>();
     await auth.verifyPhoneNumber(
       phoneNumber: '+91$phone',
       verificationCompleted: (PhoneAuthCredential credential) async {
@@ -121,21 +122,50 @@ class ApiRoutes {
       },
       verificationFailed: (FirebaseAuthException e) {
         print(e.message.toString());
-        completer.complete(''); // Verification failed
+        verificationIdcompleter.complete(''); // Verification failed
+        resendTokencompleter.complete('');
       },
       codeSent: (String verificationId, int? resendToken) {
         log(verificationId);
 
-        completer.complete(verificationId); // Code sent successfully
+        verificationIdcompleter.complete(verificationId);
+        resendTokencompleter.complete(resendToken.toString());
       },
       codeAutoRetrievalTimeout: (String verificationID) {
-        if (!completer.isCompleted) {
-          completer.complete(''); // Timeout without sending code
+        if (!verificationIdcompleter.isCompleted) {
+          verificationIdcompleter.complete(''); // Timeout without sending code
         }
       },
     );
 
-    return completer.future;
+    return {
+      "verificationId": await verificationIdcompleter.future,
+      "resendToken": await resendTokencompleter.future
+    };
+  }
+
+  void resendOTP(
+      String phoneNumber, String verificationId, String resendToken) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    auth.verifyPhoneNumber(
+      phoneNumber: '+91$phoneNumber',
+      forceResendingToken: int.parse(resendToken),
+      timeout: const Duration(seconds: 60),
+      verificationCompleted: (PhoneAuthCredential credential) {
+        // Auto-retrieval or instant verification
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        // Handle error
+        print("Resend verification failed: ${e.message}");
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        resendToken = resendToken;
+        print("Resend verification Sucess");
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        verificationId = verificationId;
+      },
+    );
   }
 
   Future<String> verifyOTP(String verificationId, String smsCode) async {
@@ -465,8 +495,7 @@ Future<void> markEventAsRSVP(String eventId) async {
 const String baseUrl = 'http://3.108.205.101:3000/api/v1';
 
 @riverpod
-Future<UserModel> fetchUserDetails(
-    FetchUserDetailsRef ref, String token) async {
+Future<UserModel> fetchUserDetails(FetchUserDetailsRef ref) async {
   final url = Uri.parse('$baseUrl/user');
   print('Requesting URL: $url');
   final response = await http.get(
@@ -477,10 +506,9 @@ Future<UserModel> fetchUserDetails(
     },
   );
   print('hello');
-  print(response.body);
+  log(response.body);
   if (response.statusCode == 200) {
     final dynamic data = json.decode(response.body)['data'];
-    print(data['products']);
 
     return UserModel.fromJson(data);
   } else {

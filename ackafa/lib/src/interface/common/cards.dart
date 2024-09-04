@@ -28,7 +28,7 @@ class AwardCard extends StatelessWidget {
               children: [
                 // Upper part: Image fitted to the card
                 Container(
-                  height: 120.0, // Adjusted height to fit within the 150px card
+                  height: 100.0, // Adjusted height to fit within the 150px card
                   width: double.infinity,
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -101,7 +101,6 @@ class AwardCard extends StatelessWidget {
     );
   }
 }
-
 
 class CertificateCard extends StatelessWidget {
   final VoidCallback? onRemove;
@@ -182,8 +181,6 @@ class CertificateCard extends StatelessWidget {
     );
   }
 }
-
-
 
 class DropDownMenu extends StatelessWidget {
   final VoidCallback onRemove;

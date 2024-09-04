@@ -49,9 +49,7 @@ class _LoginPageState extends State<LoginPage> {
         physics: const NeverScrollableScrollPhysics(), // Disable swiping
         children: [
           PhoneNumberScreen(onNext: _nextPage),
-          UserDetailsScreen(),
           ProfileCompletionScreen(),
-          const DetailsPage(),
         ],
       ),
     );
@@ -207,14 +205,19 @@ class PhoneNumberScreen extends ConsumerWidget {
         );
       } else {
         ApiRoutes userApi = ApiRoutes();
-        final verificationId =
+        final data =
             await userApi.submitPhoneNumber(context, _mobileController.text);
-
-        if (verificationId.isNotEmpty) {
+        final verificationId = data['verificationId'];
+        final resendToken = data['resendToken'];
+        if (verificationId != null && verificationId.isNotEmpty) {
           log('Otp Sent successfully');
           onNext();
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => OTPScreen(verificationId: verificationId),
+            builder: (context) => OTPScreen(phone: _mobileController.text,
+              verificationId: verificationId,
+              resendToken: resendToken ?? '',
+
+            ),
           ));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -234,8 +237,10 @@ class PhoneNumberScreen extends ConsumerWidget {
 
 class OTPScreen extends ConsumerStatefulWidget {
   final String verificationId;
-
-  const OTPScreen({
+  final String resendToken;
+  final String phone;
+  const OTPScreen( {required this.phone,
+    required this.resendToken,
     super.key,
     required this.verificationId,
   });
@@ -276,7 +281,8 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
 
   void resendCode() {
     startTimer();
-    // Add your resend code logic here
+    ApiRoutes userApi = ApiRoutes();
+    userApi.resendOTP(widget.phone,widget.verificationId, widget.resendToken);
   }
 
   @override
@@ -435,7 +441,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
       if (savedToken.isNotEmpty) {
         final SharedPreferences preferences =
             await SharedPreferences.getInstance();
-        preferences.setString('token', savedToken);
+        await preferences.setString('token', savedToken);
         token = savedToken;
         log('savedToken: $savedToken');
         Navigator.of(context)

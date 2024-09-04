@@ -1,5 +1,6 @@
 import 'package:ackaf/src/data/services/api_routes/image_upload.dart';
 import 'package:ackaf/src/interface/common/cards.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/demopage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
@@ -136,7 +137,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                   _companyImageFile!.path)
               .then((url) {
             String companyUrl = url;
-            ref.read(userProvider.notifier).updateCompanyLogo(companyUrl);
+            ref.read(userProvider.notifier).updateCompany(Company(logo: url));
             final user = ref.watch(userProvider);
             user.whenData(
               (value) {
@@ -165,7 +166,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   // }
 
   void _addNewAward() async {
-    await api.createFileUrl(file: _awardImageFIle!, token: token).then((url) {
+    imageUpload(Path.basename(_awardImageFIle!.path), _awardImageFIle!.path)
+        .then((url) {
       final String awardUrl = url;
       final newAward = Award(
         name: awardNameController.text,
@@ -190,8 +192,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   }
 
   void _addNewCertificate() async {
-    await api
-        .createFileUrl(file: _certificateImageFIle!, token: token)
+    imageUpload(Path.basename(_certificateImageFIle!.path),
+            _certificateImageFIle!.path)
         .then((url) {
       final String certificateUrl = url;
       final newCertificate =
@@ -244,16 +246,14 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
 
     final Map<String, dynamic> profileData = {
       "name": {
-        "first_name": firstName,
-        "middle_name": middleName,
-        "last_name": lastName,
+        "first": firstName,
+        "middle": middleName,
+        "last": lastName,
       },
       "email": user.email,
       "image": user.image,
-      "college": {"collegeName": "ABC College", "batch": user.batch},
-      "course": {
-        "courseName": user.course,
-      },
+      "college": user.college?.id,
+      "course": user.course?.id,
       "address": user.address,
       "bio": user.bio,
       "company": {
@@ -261,22 +261,23 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
         "designation": user.company!.designation ?? '',
         "phone": user.company!.phone ?? '',
         "address": user.company!.address ?? '',
+        "logo":user.company!.logo??'',
       },
-      "social_media": [
-        for (var i in user.social!) {"platform": "${i.name}", "url": i.link}
+      "social": [
+        for (var i in user.social!) {"name": "${i.name}", "link": i.link}
       ],
       "websites": [
-        for (var i in user.websites!) {"name": i.name.toString(), "url": i.link}
+        for (var i in user.websites!) {"name": i.name.toString(), "link": i.link}
       ],
-      "video": [
-        for (var i in user.videos!) {"name": i.name, "url": i.link}
+      "videos": [
+        for (var i in user.videos!) {"name": i.name, "link": i.link}
       ],
       "awards": [
         for (var i in user.awards!)
-          {"name": i.name, "url": i.image, "authority_name": i.authority}
+          {"name": i.name, "image": i.image, "authority_name": i.authority}
       ],
       "certificates": [
-        for (var i in user.certificates!) {"name": i.name, "url": i.link}
+        for (var i in user.certificates!) {"name": i.name, "link": i.link}
       ],
     };
     await api.editUser(profileData);
@@ -392,7 +393,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
               );
             },
             data: (user) {
-              print(user.awards);
+              print(user.name?.first);
               firstNameController.text = user.name!.first!;
               middleNameController.text = user.name!.middle ?? '';
               lastNameController.text = user.name!.last!;
@@ -495,7 +496,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (BuildContext context) =>
-                                                MainPage()));
+                                                DemoPage()));
                                   },
                                   child: const Text(
                                     'Skip',
@@ -616,12 +617,12 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 CustomTextFormField(
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please Enter Your Middle Name';
+                                      return 'Please Enter Your First Name';
                                     }
                                     return null;
                                   },
                                   textController: firstNameController,
-                                  labelText: 'Enter your Full name',
+                                  labelText: 'Enter your First name',
                                 ),
                                 const SizedBox(height: 20.0),
                                 CustomTextFormField(
@@ -1343,7 +1344,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              MainPage()));
+                                              DemoPage()));
                                 }
                               }))),
                 ],

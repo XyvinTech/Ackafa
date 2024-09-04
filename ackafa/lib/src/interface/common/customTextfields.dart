@@ -121,7 +121,7 @@ class CustomTextFormField extends StatelessWidget {
                     .updateAddress(textController!.text);
                 break;
 
-              case 'Enter Company Designation':
+              case 'Enter Company designation':
                 ref
                     .read(userProvider.notifier)
                     .updateCompany(Company(designation: textController!.text));

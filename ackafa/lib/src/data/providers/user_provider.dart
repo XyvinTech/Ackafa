@@ -4,8 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 
-import '../globals.dart';
-
 class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   final StateNotifierProviderRef<UserNotifier, AsyncValue<UserModel>> ref;
 
@@ -14,12 +12,12 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   }
   Future<void> _initializeUser() async {
     try {
-      final user = await ref.read(fetchUserDetailsProvider(token).future);
-      log('im in user details registration');
+      final user = await ref.read(fetchUserDetailsProvider.future);
+
       state = AsyncValue.data(user ?? UserModel());
     } catch (e, stackTrace) {
       log(e.toString());
-         log(stackTrace.toString());
+      log(stackTrace.toString());
       state = AsyncValue.error(e, stackTrace);
     }
   }
@@ -46,23 +44,27 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
 
   void updateCompany(Company? company) {
     state = state.whenData((user) => user.copyWith(
-            company: Company(
-          designation: company?.designation ?? user.company?.designation,
-          address: company?.address ?? user.company?.address,
-          name: company?.name ?? user.company?.name,
-          phone: company?.phone ?? user.company?.designation,
-        )));
+        company: Company(
+            designation: company?.designation ?? user.company?.designation,
+            address: company?.address ?? user.company?.address,
+            name: company?.name ?? user.company?.name,
+            phone: company?.phone ?? user.company?.designation,
+            logo: company?.logo ?? user.company?.logo)));
   }
 
   void updateEmail(String? email) {
     state = state.whenData((user) => user.copyWith(email: email));
   }
+
   void updateCollege(String? college) {
-    state = state.whenData((user) => user.copyWith(college: UserCollege(collegeName:college )));
+    state = state.whenData(
+        (user) => user.copyWith(college: UserCollege(collegeName: college)));
   }
-    void updateBatch(int? batch) {
-    state = state.whenData((user) => user.copyWith(batch:batch ));
+
+  void updateBatch(int? batch) {
+    state = state.whenData((user) => user.copyWith(batch: batch));
   }
+
   void updateBio(String? bio) {
     state = state.whenData((user) => user.copyWith(bio: bio));
   }
@@ -86,9 +88,18 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   // void updateSocialMedia(List<Link> social) {
   //   state = state.whenData((user) => user.copyWith(social: social));
   // }
-  void updateCompanyLogo(String? companyLogo) {
-    state = state.whenData((user) => user.copyWith(company: Company(logo: companyLogo)));
-  }
+  // void updateCompanyLogo(String? companyLogo) {
+  //   state = state.whenData((user) => user.copyWith(company: Company(logo: companyLogo)));
+  // }
+  //   void updateCompanyDesignation(String? designation) {
+  //   state = state.whenData((user) => user.copyWith(company: Company(designation: designation)));
+  // }
+  //   void updateCompanyLogo(String? companyLogo) {
+  //   state = state.whenData((user) => user.copyWith(company: Company(logo: companyLogo)));
+  // }
+  //   void updateCompanyLogo(String? companyLogo) {
+  //   state = state.whenData((user) => user.copyWith(company: Company(logo: companyLogo)));
+  // }
 
   void updateSocialMedia(
       List<Link> socialmedias, String platform, String newUrl) {

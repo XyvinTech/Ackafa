@@ -6,7 +6,22 @@ part of 'user_api.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchUserDetailsHash() => r'246f333f1a99069a794c855111f8520f9a08b8d3';
+String _$fetchUserDetailsHash() => r'c1741d24e9b37bbf9e00a340b52f0d35297ab9bc';
+
+/// See also [fetchUserDetails].
+@ProviderFor(fetchUserDetails)
+final fetchUserDetailsProvider = AutoDisposeFutureProvider<UserModel>.internal(
+  fetchUserDetails,
+  name: r'fetchUserDetailsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$fetchUserDetailsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FetchUserDetailsRef = AutoDisposeFutureProviderRef<UserModel>;
+String _$fetchUsersHash() => r'aa9fab01523c5489c67302b32c8082ca0d38ea09';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -28,135 +43,6 @@ class _SystemHash {
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
-
-/// See also [fetchUserDetails].
-@ProviderFor(fetchUserDetails)
-const fetchUserDetailsProvider = FetchUserDetailsFamily();
-
-/// See also [fetchUserDetails].
-class FetchUserDetailsFamily extends Family<AsyncValue<UserModel>> {
-  /// See also [fetchUserDetails].
-  const FetchUserDetailsFamily();
-
-  /// See also [fetchUserDetails].
-  FetchUserDetailsProvider call(
-    String token,
-  ) {
-    return FetchUserDetailsProvider(
-      token,
-    );
-  }
-
-  @override
-  FetchUserDetailsProvider getProviderOverride(
-    covariant FetchUserDetailsProvider provider,
-  ) {
-    return call(
-      provider.token,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'fetchUserDetailsProvider';
-}
-
-/// See also [fetchUserDetails].
-class FetchUserDetailsProvider extends AutoDisposeFutureProvider<UserModel> {
-  /// See also [fetchUserDetails].
-  FetchUserDetailsProvider(
-    String token,
-  ) : this._internal(
-          (ref) => fetchUserDetails(
-            ref as FetchUserDetailsRef,
-            token,
-          ),
-          from: fetchUserDetailsProvider,
-          name: r'fetchUserDetailsProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$fetchUserDetailsHash,
-          dependencies: FetchUserDetailsFamily._dependencies,
-          allTransitiveDependencies:
-              FetchUserDetailsFamily._allTransitiveDependencies,
-          token: token,
-        );
-
-  FetchUserDetailsProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.token,
-  }) : super.internal();
-
-  final String token;
-
-  @override
-  Override overrideWith(
-    FutureOr<UserModel> Function(FetchUserDetailsRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: FetchUserDetailsProvider._internal(
-        (ref) => create(ref as FetchUserDetailsRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        token: token,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<UserModel> createElement() {
-    return _FetchUserDetailsProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is FetchUserDetailsProvider && other.token == token;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, token.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-mixin FetchUserDetailsRef on AutoDisposeFutureProviderRef<UserModel> {
-  /// The parameter `token` of this provider.
-  String get token;
-}
-
-class _FetchUserDetailsProviderElement
-    extends AutoDisposeFutureProviderElement<UserModel>
-    with FetchUserDetailsRef {
-  _FetchUserDetailsProviderElement(super.provider);
-
-  @override
-  String get token => (origin as FetchUserDetailsProvider).token;
-}
-
-String _$fetchUsersHash() => r'aa9fab01523c5489c67302b32c8082ca0d38ea09';
 
 /// See also [fetchUsers].
 @ProviderFor(fetchUsers)
