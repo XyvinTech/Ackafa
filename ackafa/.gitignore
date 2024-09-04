@@ -1,6 +1,6 @@
 #secret files
-ackafa/.env
-ackafa/*.env
+.env
+*.env
 
 # Miscellaneous
 *.class
