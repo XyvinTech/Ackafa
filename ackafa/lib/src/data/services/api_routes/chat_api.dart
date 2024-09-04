@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/chat_model.dart';
@@ -167,7 +166,7 @@ Future<List<ChatModel>> fetchChatThread(
     log('Response data: $data');
     final List<ChatModel> chats =
         await data.map<ChatModel>((item) => ChatModel.fromJson(item)).toList();
-    final chat = chats[0].id!;
+    final chat = chats[0].id;
     log('Response chat: ${chat}');
 
     return chats;

@@ -33,7 +33,7 @@ class MainApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (context) => LoginPage(),
+          '/': (context) => SplashScreen(),
           '/login_screen': (context) => LoginPage(),
           '/userReg': (context) => UserRegistrationScreen(),
         });

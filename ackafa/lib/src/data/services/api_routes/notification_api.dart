@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ackaf/src/data/globals.dart';
-import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:ackaf/src/data/models/notification_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'notification_api.g.dart';

@@ -39,6 +39,7 @@ dependencies:
   firebase_auth: ^4.16.0
   flutter_dotenv: ^5.1.0
   minio_flutter: ^0.0.1
+  flutter_upgrade_version: ^1.1.6
   
 
 dev_dependencies:
