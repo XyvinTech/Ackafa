@@ -49,7 +49,6 @@ class _LoginPageState extends State<LoginPage> {
         physics: const NeverScrollableScrollPhysics(), // Disable swiping
         children: [
           PhoneNumberScreen(onNext: _nextPage),
-          ProfileCompletionScreen(),
         ],
       ),
     );

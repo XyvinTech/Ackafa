@@ -576,10 +576,19 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
 
                                                   if (response) {
                                                     showCustomDialog(context);
-                                                    Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ProfileCompletionScreen()));
+                                                    log('user status: ${user.status}');
+                                                    if (user.status ==
+                                                        'approved')
+                                                      Navigator.of(context).push(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ProfileCompletionScreen()));
+                                                    else {
+                                                      Navigator.of(context).push(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  UserInactivePage()));
+                                                    }
                                                   }
                                                 } catch (e) {
                                                   ScaffoldMessenger.of(context)
@@ -604,9 +613,12 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                   },
                 ),
               );
-            } else if (user.status == 'accepted') {
-              return DetailsPage();
-            } else {
+              // } else if (user.status == 'accepted') {
+              //   return DetailsPage();
+            } else if(user.status=='approved'){
+              return  ProfileCompletionScreen();
+            }
+             else {
               return const UserInactivePage();
             }
           },
