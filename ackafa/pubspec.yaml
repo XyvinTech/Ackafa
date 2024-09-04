@@ -61,6 +61,6 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icons/ackaf_logo.png"
+  image_path: "assets/icons/akcaf_icon.png"
 
    
