@@ -300,200 +300,149 @@ class MenuPage extends StatelessWidget {
                       // Account Section Label
 
                       SizedBox(height: 13),
-                      Container(
-                        height: 50,
-                        width: double.infinity,
-                        color: Color(0xFFF2F2F2),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                'ACCOUNT',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
 
-                      // Menu List
-                      _buildListTile(
-                        context,
-                        Icons.credit_card,
-                        'Request NFC',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => RequestNFCPage()),
-                          );
-                        },
-                      ),
+                      // Container(
+                      //   height: 50,
+                      //   width: double.infinity,
+                      //   color: Color(0xFFF2F2F2),
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.only(left: 16.0),
+                      //     child: Row(
+                      //       children: [
+                      //         Text(
+                      //           'ACCOUNT',
+                      //           style: TextStyle(
+                      //             fontWeight: FontWeight.bold,
+                      //             color: Colors.grey,
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+
+                      // // Menu List
+                      // _buildListTile(
+                      //   context,
+                      //   Icons.credit_card,
+                      //   'Request NFC',
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => RequestNFCPage()),
+                      //     );
+                      //   },
+                      // ),
+
                       // Divider(),
                       // _buildListTile(
                       //   context,
                       //   Icons.subscriptions,
-                      //   'My subscriptions',
+                      //   'My Events',
                       //   onTap: () {
                       //     Navigator.push(
                       //       context,
                       //       MaterialPageRoute(
-                      //           builder: (context) =>
-                      //               const MySubscriptionPage()),
+                      //           builder: (context) => const MyEventsPage()),
                       //     );
                       //   },
                       // ),
                       // Divider(),
                       // _buildListTile(
                       //   context,
-                      //   Icons.shopping_bag,
-                      //   'My Products',
+                      //   Icons.monetization_on,
+                      //   'My Transactions',
                       //   onTap: () {
                       //     Navigator.push(
                       //       context,
                       //       MaterialPageRoute(
-                      //           builder: (context) =>  MyProductPage()),
+                      //           builder: (context) => MyTransactionsPage()),
+                      //     );
+                      //   },
+                      // ),
+
+                      // Divider(),
+                      // _buildListTile(
+                      //   context,
+                      //   Icons.monetization_on,
+                      //   'My Posts',
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => MyPostPage()),
+                      //     );
+                      //   },
+                      // ),
+
+                      // Divider(),
+                      // _buildListTile(
+                      //   context,
+                      //   Icons.info,
+                      //   'About us',
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => AboutPage()),
                       //     );
                       //   },
                       // ),
                       // Divider(),
                       // _buildListTile(
                       //   context,
-                      //   Icons.subscriptions,
-                      //   'My Reviews',
+                      //   Icons.privacy_tip,
+                      //   'Privacy policy',
                       //   onTap: () {
                       //     Navigator.push(
                       //       context,
                       //       MaterialPageRoute(
-                      //           builder: (context) => const MyReviewsPage()),
+                      //           builder: (context) => PrivacyPolicyPage()),
                       //     );
                       //   },
                       // ),
-                      Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.subscriptions,
-                        'My Events',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MyEventsPage()),
-                          );
-                        },
-                      ),
-                      Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.monetization_on,
-                        'My Transactions',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MyTransactionsPage()),
-                          );
-                        },
-                      ),
-
-                      Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.monetization_on,
-                        'My Posts',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MyPostPage()),
-                          );
-                        },
-                      ),
-
                       // Divider(),
                       // _buildListTile(
                       //   context,
-                      //   Icons.notifications,
-                      //   'My Requirements',
+                      //   Icons.rule,
+                      //   'Terms & condition',
                       //   onTap: () {
                       //     Navigator.push(
                       //       context,
                       //       MaterialPageRoute(
-                      //           builder: (context) => MyRequirementsPage()),
+                      //           builder: (context) => TermsAndConditionsPage()),
                       //     );
                       //   },
                       // ),
-                      Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.info,
-                        'About us',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AboutPage()),
-                          );
-                        },
-                      ),
-                      Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.privacy_tip,
-                        'Privacy policy',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PrivacyPolicyPage()),
-                          );
-                        },
-                      ),
-                      Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.rule,
-                        'Terms & condition',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TermsAndConditionsPage()),
-                          );
-                        },
-                      ),
 
-                      // Spacing before Logout and Delete
-                      Container(color: Color(0xFFF2F2F2), height: 15),
+                      // // Spacing before Logout and Delete
+                      // Container(color: Color(0xFFF2F2F2), height: 15),
 
-                      // Logout and Delete Account
-                      _buildListTile(
-                        context,
-                        Icons.logout,
-                        'Logout',
-                        textColor: Colors.black,
-                        onTap: () => showLogoutDialog(context),
-                      ),
-                      Container(color: Color(0xFFF2F2F2), height: 15),
+                      // // Logout and Delete Account
+                      // _buildListTile(
+                      //   context,
+                      //   Icons.logout,
+                      //   'Logout',
+                      //   textColor: Colors.black,
+                      //   onTap: () => showLogoutDialog(context),
+                      // ),
+                      // Container(color: Color(0xFFF2F2F2), height: 15),
 
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(),
-                            child: _buildListTile(
-                              context,
-                              Icons.delete,
-                              'Delete account',
-                              textColor: Colors.red,
-                              onTap: () => showDeleteAccountDialog(context),
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Column(
+                      //   children: [
+                      //     Padding(
+                      //       padding: const EdgeInsets.symmetric(),
+                      //       child: _buildListTile(
+                      //         context,
+                      //         Icons.delete,
+                      //         'Delete account',
+                      //         textColor: Colors.red,
+                      //         onTap: () => showDeleteAccountDialog(context),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
 
                       Container(color: Color(0xFFF2F2F2), height: 20),
 
@@ -501,7 +450,7 @@ class MenuPage extends StatelessWidget {
                         color: Color(0xFFF2F2F2),
                         child: Center(
                           child: Text(
-                            'Version 1.32\nRate us on Playstore',
+                            'Version 1.0\nRate us on Playstore',
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.grey),
                           ),

@@ -12,6 +12,7 @@ import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/custom_dialog.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_completetion_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
@@ -23,14 +24,14 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
-class UserDetailsScreen extends StatefulWidget {
-  const UserDetailsScreen({super.key});
+class UserRegistrationScreen extends StatefulWidget {
+  const UserRegistrationScreen({super.key});
 
   @override
-  State<UserDetailsScreen> createState() => _UserDetailsScreenState();
+  State<UserRegistrationScreen> createState() => _UserRegistrationScreenState();
 }
 
-class _UserDetailsScreenState extends State<UserDetailsScreen> {
+class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
   File? _profileImageFile;
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
@@ -117,7 +118,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
         final asyncUser = ref.watch(userProvider);
         return asyncUser.when(
           data: (user) {
-            if (user.email == null) {
+            if (user.course == null) {
               return SafeArea(
                 child: Consumer(
                   builder: (context, ref, child) {
@@ -577,8 +578,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                                   if (response) {
                                                     showCustomDialog(context);
                                                     log('user status: ${user.status}');
-                                                    if (user.status ==
-                                                        'approved')
+                                                    if (user.status == 'active')
                                                       Navigator.of(context).push(
                                                           MaterialPageRoute(
                                                               builder: (context) =>
@@ -615,19 +615,16 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
               );
               // } else if (user.status == 'accepted') {
               //   return DetailsPage();
-            } else if(user.status=='approved'){
-              return  ProfileCompletionScreen();
-            }
-             else {
+            } else if (user.status == 'active') {
+              return ProfileCompletionScreen();
+            } else {
               return const UserInactivePage();
             }
           },
           loading: () => Center(child: LoadingAnimation()),
           error: (error, stackTrace) {
             // Handle error state
-            return Center(
-              child: Text('Error loading : $error'),
-            );
+            return LoginPage();
           },
         );
       },

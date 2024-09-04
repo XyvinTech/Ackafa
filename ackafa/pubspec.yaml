@@ -39,15 +39,15 @@ dependencies:
   firebase_auth: ^4.16.0
   flutter_dotenv: ^5.1.0
   minio_flutter: ^0.0.1
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
-  riverpod_generator: ^2.4.0
-  build_runner: ^2.4.11
   custom_lint: ^0.6.4
   riverpod_lint: ^2.3.10
+  flutter_launcher_icons: ^0.13.1
 
 
 flutter:
@@ -57,6 +57,10 @@ flutter:
     - assets/
     - assets/icons/
     - .env
-    
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/ackaf_logo.png"
 
    

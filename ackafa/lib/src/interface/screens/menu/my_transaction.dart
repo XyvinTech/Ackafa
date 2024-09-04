@@ -62,8 +62,8 @@ class _MyTransactionsPageState extends State<MyTransactionsPage>
               },
               data: (transactions) {
                 print(transactions);
-                final approved = transactions
-                    .where((transaction) => transaction.status == 'approved')
+                final active = transactions
+                    .where((transaction) => transaction.status == 'active')
                     .toList();
                 final pending = transactions
                     .where((transaction) => transaction.status == 'pending')
@@ -75,7 +75,7 @@ class _MyTransactionsPageState extends State<MyTransactionsPage>
                   controller: _tabController,
                   children: [
                     _transactionList('All', transactions),
-                    _transactionList('Approved', approved),
+                    _transactionList('Approved', active),
                     _transactionList('Pending', pending),
                     _transactionList('Rejected', rejected),
                   ],

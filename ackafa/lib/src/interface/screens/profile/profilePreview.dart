@@ -12,18 +12,6 @@ import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class ReviewsState extends StateNotifier<int> {
-  ReviewsState() : super(2);
-
-  void showMoreReviews(int totalReviews) {
-    state = (state + 2).clamp(0, totalReviews);
-  }
-}
-
-final reviewsProvider = StateNotifierProvider<ReviewsState, int>((ref) {
-  return ReviewsState();
-});
-
 class ProfilePreview extends ConsumerWidget {
   final UserModel user;
   ProfilePreview({Key? key, required this.user}) : super(key: key);
@@ -32,13 +20,13 @@ class ProfilePreview extends ConsumerWidget {
     'assets/icons/instagram.svg',
     'assets/icons/linkedin.svg',
     'assets/icons/twitter.svg'
+        'assets/icons/facebook.svg'
   ];
 
   final ValueNotifier<int> _currentVideo = ValueNotifier<int>(0);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final reviewsToShow = ref.watch(reviewsProvider);
     PageController _videoCountController = PageController();
 
     _videoCountController.addListener(() {
@@ -56,7 +44,7 @@ class ProfilePreview extends ConsumerWidget {
                   padding: const EdgeInsets.all(10),
                   child: Column(children: [
                     const SizedBox(
-                      height: 20,
+                      height: 40,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -91,7 +79,6 @@ class ProfilePreview extends ConsumerWidget {
                               Icons.close,
                             ),
                             onPressed: () {
-                              ref.invalidate(reviewsProvider);
                               Navigator.pop(context);
                             },
                           ),
@@ -104,8 +91,7 @@ class ProfilePreview extends ConsumerWidget {
                         user.image != null
                             ? CircleAvatar(
                                 radius: 45,
-                                backgroundImage:
-                                    NetworkImage(user.image!),
+                                backgroundImage: NetworkImage(user.image!),
                               )
                             : const Icon(Icons.person),
                         const SizedBox(height: 10),
@@ -124,7 +110,7 @@ class ProfilePreview extends ConsumerWidget {
                             Column(
                               children: [
                                 if (user.company!.logo != null &&
-                                   user.company!.logo != '')
+                                    user.company!.logo != '')
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(9),
                                     child: Image.network(
@@ -182,7 +168,6 @@ class ProfilePreview extends ConsumerWidget {
                               fit: BoxFit.contain,
                             ),
                           ),
-                       
                         ],
                       ),
                     ),
@@ -205,19 +190,6 @@ class ProfilePreview extends ConsumerWidget {
                             const Icon(Icons.email, color: Color(0xFF004797)),
                             const SizedBox(width: 10),
                             Text(user.email!),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const SizedBox(width: 10),
-                            if (user.social!.isNotEmpty)
-                              const Column(
-                                children: [
-                                  Icon(FontAwesomeIcons.instagram,
-                                      color: Color(0xFF004797)),
-                                  // Flexible(child: Text(user.socialMedia![0].url!)),
-                                ],
-                              ),
                           ],
                         ),
                         const SizedBox(height: 10),
@@ -257,43 +229,40 @@ class ProfilePreview extends ConsumerWidget {
                     const SizedBox(
                       height: 50,
                     ),
-                   
-                    const Row(
-                      children: [
-                        Text(
-                          'Social Media',
-                          style: TextStyle(
-                              color: Color(0xFF2C2829),
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    for (int index = 0;
-                        index < user.social!.length;
-                        index++)
-                      customProfilePreviewLinks(index,
-                          social: user.social![index]),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 50),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Websites & Links',
-                            style: TextStyle(
-                                color: Color(0xFF2C2829),
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      ),
-                    ),
-                    for (int index = 0; index < user.websites!.length; index++)
-                      customProfilePreviewLinks(index,
-                          website: user.websites![index]),
-                    const SizedBox(
-                      height: 30,
-                    ),
+                    // const Row(
+                    //   children: [
+                    //     Text(
+                    //       'Social Media',
+                    //       style: TextStyle(
+                    //           color: Color(0xFF2C2829),
+                    //           fontSize: 17,
+                    //           fontWeight: FontWeight.w500),
+                    //     ),
+                    //   ],
+                    // ),
+                    // for (int index = 0; index < user.social!.length; index++)
+                    //   customProfilePreviewLinks(index,
+                    //       social: user.social![index]),
+                    // const Padding(
+                    //   padding: EdgeInsets.only(top: 50),
+                    //   child: Row(
+                    //     children: [
+                    //       Text(
+                    //         'Websites & Links',
+                    //         style: TextStyle(
+                    //             color: Color(0xFF2C2829),
+                    //             fontSize: 17,
+                    //             fontWeight: FontWeight.w500),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // for (int index = 0; index < user.websites!.length; index++)
+                    //   customProfilePreviewLinks(index,
+                    //       website: user.websites![index]),
+                    // const SizedBox(
+                    //   height: 30,
+                    // ),
                     if (user.videos!.isNotEmpty)
                       Column(
                         children: [
@@ -331,7 +300,6 @@ class ProfilePreview extends ConsumerWidget {
                     const SizedBox(
                       height: 40,
                     ),
-                   
                     const Row(
                       children: [
                         Text(
@@ -360,6 +328,7 @@ class ProfilePreview extends ConsumerWidget {
                         );
                       },
                     ),
+
                     const Row(
                       children: [
                         Text(
@@ -391,38 +360,36 @@ class ProfilePreview extends ConsumerWidget {
                         );
                       },
                     ),
-                  
-                  
                   ]),
                 ),
               ],
             ),
           ),
-          if (user.id != id)
-            Positioned(
-                bottom: 20,
-                left: 20,
-                right: 20,
-                child: SizedBox(
-                    height: 50,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Flexible(
-                          child: customButton(
-                              fontSize: 16, label: 'SAY HI', onPressed: () {}),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Flexible(
-                          child: customButton(
-                              fontSize: 16,
-                              label: 'SAVE CONTACT',
-                              onPressed: () {}),
-                        ),
-                      ],
-                    ))),
+          // if (user.id != id)
+          //   Positioned(
+          //       bottom: 20,
+          //       left: 20,
+          //       right: 20,
+          //       child: SizedBox(
+          //           height: 50,
+          //           child: Row(
+          //             mainAxisSize: MainAxisSize.max,
+          //             children: [
+          //               Flexible(
+          //                 child: customButton(
+          //                     fontSize: 16, label: 'SAY HI', onPressed: () {}),
+          //               ),
+          //               const SizedBox(
+          //                 width: 10,
+          //               ),
+          //               Flexible(
+          //                 child: customButton(
+          //                     fontSize: 16,
+          //                     label: 'SAVE CONTACT',
+          //                     onPressed: () {}),
+          //               ),
+          //             ],
+          //           ))),
         ],
       ),
     );
@@ -490,8 +457,7 @@ class ProfilePreview extends ConsumerWidget {
     );
   }
 
-  Padding customProfilePreviewLinks(int index,
-      {Link? social, Link? website}) {
+  Padding customProfilePreviewLinks(int index, {Link? social, Link? website}) {
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: Container(
@@ -515,10 +481,12 @@ class ProfilePreview extends ConsumerWidget {
                       ),
                       width: 42,
                       height: 42,
-                      child: SvgIcon(
-                        assetName: svgIcons[index],
-                        color: const Color(0xFF004797),
-                      )),
+                      child: social != null
+                          ? SvgIcon(
+                              assetName: svgIcons[index],
+                              color: const Color(0xFF004797),
+                            )
+                          : Icon(Icons.web)),
                 ),
               ),
               Padding(

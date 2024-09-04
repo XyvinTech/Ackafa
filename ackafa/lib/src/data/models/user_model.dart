@@ -1,4 +1,3 @@
-
 class UserModel {
   final Name? name;
   final String? id;
@@ -21,6 +20,7 @@ class UserModel {
   final List<Link>? videos;
   final List<Link>? certificates;
   final String? reason;
+  final String? profileCompletion;
 
   UserModel({
     this.name,
@@ -44,6 +44,7 @@ class UserModel {
     this.videos,
     this.certificates,
     this.reason,
+    this.profileCompletion,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -51,9 +52,11 @@ class UserModel {
       name: json['name'] != null ? Name.fromJson(json['name']) : null,
       id: json['_id'],
       uid: json['uid'],
-      college:
-          json['college'] != null ? UserCollege.fromJson(json['college']) : null,
-      course: json['course'] != null ? UserCourse.fromJson(json['course']) : null,
+      college: json['college'] != null
+          ? UserCollege.fromJson(json['college'])
+          : null,
+      course:
+          json['course'] != null ? UserCourse.fromJson(json['course']) : null,
       batch: json['batch'],
       role: json['role'] ?? 'member',
       image: json['image'],
@@ -87,6 +90,7 @@ class UserModel {
               .toList()
           : null,
       reason: json['reason'],
+      profileCompletion: json['profileCompletion'] as String?,
     );
   }
 
@@ -113,6 +117,7 @@ class UserModel {
       'videos': videos?.map((item) => item.toJson()).toList(),
       'certificates': certificates?.map((item) => item.toJson()).toList(),
       'reason': reason,
+      'profileCompletion': profileCompletion,
     };
   }
 
@@ -138,6 +143,7 @@ class UserModel {
     List<Link>? videos,
     List<Link>? certificates,
     String? reason,
+    String? profileCompletion,
   }) {
     return UserModel(
       name: name ?? this.name,
@@ -161,6 +167,7 @@ class UserModel {
       videos: videos ?? this.videos,
       certificates: certificates ?? this.certificates,
       reason: reason ?? this.reason,
+      profileCompletion: profileCompletion ?? this.profileCompletion,
     );
   }
 }
@@ -319,7 +326,6 @@ class Link {
   }
 }
 
-
 class UserCollege {
   final String? id;
   final String? collegeName;
@@ -356,10 +362,13 @@ class UserCollege {
       country: json['country'] as String?,
       state: json['state'] as String?,
       status: json['status'] as bool?,
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
       v: json['__v'] as int?,
-      course: (json['course'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      course:
+          (json['course'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
   }
 
@@ -427,8 +436,10 @@ class UserCourse {
     return UserCourse(
       id: json['_id'] as String?,
       courseName: json['courseName'] as String?,
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
       v: json['__v'] as int?,
     );
   }
@@ -452,7 +463,7 @@ class UserCourse {
   }) {
     return UserCourse(
       id: id ?? this.id,
-     courseName: courseName ?? this.courseName,
+      courseName: courseName ?? this.courseName,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       v: v ?? this.v,

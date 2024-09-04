@@ -15,7 +15,7 @@ Future<List<Promotion>> fetchPromotions(
     url,
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer $token"
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmQ2YWVhYTA1NDQwMDZiMTc2MmZiMTIiLCJpYXQiOjE3MjU0NDA2MjV9.v8C3WQKoq25Kr4ZN6W8WT0cu--f9ioor_4g-nppG4GI"
     },
   );
 

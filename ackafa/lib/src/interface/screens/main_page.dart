@@ -1,3 +1,5 @@
+import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/demopage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -55,7 +57,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
 
   static List<Widget> _widgetOptions = <Widget>[];
 
@@ -69,11 +71,15 @@ class _MainPageState extends State<MainPage> {
   List<String> _activeIcons = [];
   void _initialize({required UserModel user}) {
     _widgetOptions = <Widget>[
-      HomePage(),
-      FeedPage(),
+      // HomePage(),
+      // FeedPage(),
+      DemoPage(),
+      DemoPage(),
       ProfilePage(user: user),
-      Event_News_Page(),
-      PeoplePage(),
+      DemoPage(),
+      DemoPage(),
+      // Event_News_Page(),
+      // PeoplePage(),
     ];
     _inactiveIcons = [
       'assets/icons/home_inactive.svg',
@@ -98,9 +104,7 @@ class _MainPageState extends State<MainPage> {
       return asyncUser.when(
         loading: () => Center(child: LoadingAnimation()),
         error: (error, stackTrace) {
-          return Center(
-            child: Text('Error loading promotions: $error'),
-          );
+          return LoginPage();
         },
         data: (user) {
           print(user.image);

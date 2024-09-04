@@ -11,7 +11,6 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -26,6 +25,7 @@ class ProfilePage extends StatelessWidget {
                       child: Row(
                         children: [
                           Image.asset(
+                            scale: 1.5,
                             'assets/icons/ackaf_logo.png',
                             fit: BoxFit.scaleDown,
                           ),
@@ -145,8 +145,8 @@ class ProfilePage extends StatelessWidget {
                                   user.image != null
                                       ? CircleAvatar(
                                           radius: 40,
-                                          backgroundImage: NetworkImage(
-                                              user.image!),
+                                          backgroundImage:
+                                              NetworkImage(user.image!),
                                         )
                                       : Icon(Icons.person),
                                   const SizedBox(height: 10),
@@ -172,7 +172,8 @@ class ProfilePage extends StatelessWidget {
                                                 return Image.network(
                                                     'https://placehold.co/400');
                                               },
-                                              user.company!.logo?? 'https://placehold.co/400',
+                                              user.company!.logo ??
+                                                  'https://placehold.co/400',
                                               height: 33,
                                               width: 40,
                                               fit: BoxFit.cover,
@@ -186,7 +187,7 @@ class ProfilePage extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            user.company!.designation??'',
+                                            user.company!.designation ?? '',
                                             style: const TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16,
@@ -217,7 +218,7 @@ class ProfilePage extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.only(
-                          left: 35, right: 130, top: 25, bottom: 35),
+                          left: 35, right: 30, top: 25, bottom: 35),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(5),
@@ -245,16 +246,6 @@ class ProfilePage extends StatelessWidget {
                               Icon(Icons.email, color: Color(0xFFE30613)),
                               SizedBox(width: 10),
                               Text(user.email!),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Icon(Icons.person, color: Color(0xFFE30613)),
-                              SizedBox(width: 10),
-                              if (user.social!.isNotEmpty)
-                                Flexible(
-                                    child: Text(user.social![0].link!)),
                             ],
                           ),
                           SizedBox(height: 10),
@@ -334,13 +325,13 @@ class ProfilePage extends StatelessWidget {
                           icon: Image.asset('assets/icons/qr_button.png'),
                           iconSize: 50,
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ProfileCard(), // Navigate to CardPage
-                              ),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //         ProfileCard(), // Navigate to CardPage
+                            //   ),
+                            // );
                           },
                         ),
                       ],

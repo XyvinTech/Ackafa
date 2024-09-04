@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/data/globals.dart';
@@ -23,7 +24,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     Timer(Duration(seconds: 2), () {
       print('logged in : $LoggedIn');
       if (LoggedIn) {
-        Navigator.pushReplacementNamed(context, '/mainpage');
+        ref.invalidate(userProvider);
+        Navigator.pushReplacementNamed(context, '/userReg');
       } else {
         Navigator.pushReplacementNamed(context, '/login_screen');
       }

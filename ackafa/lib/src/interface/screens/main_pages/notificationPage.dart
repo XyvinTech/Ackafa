@@ -33,58 +33,58 @@ class NotificationPage extends StatelessWidget {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  asyncUnreadNotification.when(
-                    data: (unreadNotifications) {
-                      return ListView.builder(
-                        shrinkWrap: true, // Added this line
-                        physics:
-                            NeverScrollableScrollPhysics(), // Prevents scrolling within the ListView
-                        itemCount: unreadNotifications.length,
-                        itemBuilder: (context, index) {
-                          bool readed = false;
-                          return _buildNotificationCard(
-                            readed: readed,
-                            subject: unreadNotifications[index].subject!,
-                            content: unreadNotifications[index].content!,
-                            dateTime: unreadNotifications[index].updatedAt!,
-                          );
-                        },
-                        padding: EdgeInsets.all(0.0),
-                      );
-                    },
-                    loading: () => Center(child: LoadingAnimation()),
-                    error: (error, stackTrace) {
-                      return Center(
-                        child: Text('Error loading promotions: $error'),
-                      );
-                    },
-                  ),
-                  asyncreadNotification.when(
-                    data: (readNotifications) {
-                      return ListView.builder(
-                        shrinkWrap: true, // Added this line
-                        physics:
-                            NeverScrollableScrollPhysics(), // Prevents scrolling within the ListView
-                        itemCount: readNotifications.length,
-                        itemBuilder: (context, index) {
-                          bool readed = true;
-                          return _buildNotificationCard(
-                            readed: readed,
-                            subject: readNotifications[index].subject!,
-                            content: readNotifications[index].content!,
-                            dateTime: readNotifications[index].updatedAt!,
-                          );
-                        },
-                        padding: EdgeInsets.all(0.0),
-                      );
-                    },
-                    loading: () => Center(child: LoadingAnimation()),
-                    error: (error, stackTrace) {
-                      return Center(
-                        child: Text('Error loading promotions: $error'),
-                      );
-                    },
-                  ),
+                  // asyncUnreadNotification.when(
+                  //   data: (unreadNotifications) {
+                  //     return ListView.builder(
+                  //       shrinkWrap: true, // Added this line
+                  //       physics:
+                  //           NeverScrollableScrollPhysics(), // Prevents scrolling within the ListView
+                  //       itemCount: unreadNotifications.length,
+                  //       itemBuilder: (context, index) {
+                  //         bool readed = false;
+                  //         return _buildNotificationCard(
+                  //           readed: readed,
+                  //           subject: unreadNotifications[index].subject!,
+                  //           content: unreadNotifications[index].content!,
+                  //           dateTime: unreadNotifications[index].updatedAt!,
+                  //         );
+                  //       },
+                  //       padding: EdgeInsets.all(0.0),
+                  //     );
+                  //   },
+                  //   loading: () => Center(child: LoadingAnimation()),
+                  //   error: (error, stackTrace) {
+                  //     return Center(
+                  //       child: Text('Error loading promotions: $error'),
+                  //     );
+                  //   },
+                  // ),
+                  // asyncreadNotification.when(
+                  //   data: (readNotifications) {
+                  //     return ListView.builder(
+                  //       shrinkWrap: true, // Added this line
+                  //       physics:
+                  //           NeverScrollableScrollPhysics(), // Prevents scrolling within the ListView
+                  //       itemCount: readNotifications.length,
+                  //       itemBuilder: (context, index) {
+                  //         bool readed = true;
+                  //         return _buildNotificationCard(
+                  //           readed: readed,
+                  //           subject: readNotifications[index].subject!,
+                  //           content: readNotifications[index].content!,
+                  //           dateTime: readNotifications[index].updatedAt!,
+                  //         );
+                  //       },
+                  //       padding: EdgeInsets.all(0.0),
+                  //     );
+                  //   },
+                  //   loading: () => Center(child: LoadingAnimation()),
+                  //   error: (error, stackTrace) {
+                  //     return Center(
+                  //       child: Text('Error loading promotions: $error'),
+                  //     );
+                  //   },
+                  // ),
                 ],
               ),
             ),

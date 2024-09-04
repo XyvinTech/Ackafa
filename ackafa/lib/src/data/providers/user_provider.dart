@@ -48,7 +48,7 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
             designation: company?.designation ?? user.company?.designation,
             address: company?.address ?? user.company?.address,
             name: company?.name ?? user.company?.name,
-            phone: company?.phone ?? user.company?.designation,
+            phone: company?.phone ?? user.company?.phone,
             logo: company?.logo ?? user.company?.logo)));
   }
 

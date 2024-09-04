@@ -1,10 +1,11 @@
 import 'dart:io';
 
+import 'package:ackaf/src/interface/validatelinks.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
@@ -13,13 +14,15 @@ import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 
-void showWlinkorVlinkSheet(
-    {required String title,
-    required String fieldName,
-    required BuildContext context,
-    required TextEditingController textController1,
-    required TextEditingController textController2}) {
+void showWlinkorVlinkSheet({
+  required String title,
+  required String fieldName,
+  required BuildContext context,
+  required TextEditingController textController1,
+  required TextEditingController textController2,
+}) {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   showModalBottomSheet(
     isScrollControlled: true,
     context: context,
@@ -52,63 +55,69 @@ void showWlinkorVlinkSheet(
                   ),
                   const SizedBox(height: 20),
                   ModalSheetTextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'This is a required field';
-                        }
-                        return null;
-                      },
-                      label: 'Add name',
-                      textController: textController1),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  ModalSheetTextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'This is a required field';
                       }
                       return null;
                     },
-                    label: fieldName,
-                    textController: textController2,
+                    label: 'Add name',
+                    textController: textController1,
                   ),
+                  const SizedBox(height: 10),
+                  fieldName == 'Add Youtube Link'
+                      ? ModalSheetTextFormField(
+                          validator: (value) => validateYouTubeUrl(value),
+                          label: fieldName,
+                          textController: textController2,
+                        )
+                      : ModalSheetTextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'This is a required field';
+                            }
+                            return null;
+                          },
+                          label: fieldName,
+                          textController: textController2,
+                        ),
                   const SizedBox(height: 10),
                   Consumer(
                     builder: (context, ref, child) {
                       return customButton(
-                          label: 'SAVE',
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              if (title == 'Add Video Link') {
-                                List<Link> newVideos = [];
-                                newVideos.add(Link(
-                                    name: textController1.text,
-                                    link: textController2.text));
-                                ref
-                                    .read(userProvider.notifier)
-                                    .updateVideos(newVideos);
-                              } else {
-                                List<Link> newWebsites = [];
-                                newWebsites.add(Link(
-                                    name: textController1.text,
-                                    link: textController2.text));
-                                ref
-                                    .read(userProvider.notifier)
-                                    .updateWebsite(newWebsites);
-                              }
+                        label: 'SAVE',
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            if (title == 'Add Video Link') {
+                              List<Link> newVideos = [];
+                              newVideos.add(Link(
+                                name: textController1.text,
+                                link: textController2.text,
+                              ));
+                              ref
+                                  .read(userProvider.notifier)
+                                  .updateVideos(newVideos);
+                            } else {
+                              List<Link> newWebsites = [];
+                              newWebsites.add(Link(
+                                name: textController1.text,
+                                link: textController2.text,
+                              ));
+                              ref
+                                  .read(userProvider.notifier)
+                                  .updateWebsite(newWebsites);
                             }
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Saved')),
                             );
                             Navigator.pop(context);
-                          },
-                          fontSize: 16);
+                          }
+                        },
+                        fontSize: 16,
+                      );
                     },
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),

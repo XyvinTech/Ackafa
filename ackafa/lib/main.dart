@@ -1,4 +1,5 @@
 import 'package:ackaf/firebase_options.dart';
+import 'package:ackaf/src/interface/screens/main_pages/home_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,9 +11,9 @@ import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 import 'package:ackaf/src/interface/splash_screen.dart';
 
 Future<void> main() async {
-   WidgetsFlutterBinding.ensureInitialized();
-     await dotenv.load(fileName: ".env");
-    await Firebase.initializeApp(
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(ProviderScope(child: MainApp()));
@@ -32,9 +33,9 @@ class MainApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (context) => SplashScreen(),
+          '/': (context) => LoginPage(),
           '/login_screen': (context) => LoginPage(),
-          '/mainpage': (context) => UserDetailsScreen(),
+          '/userReg': (context) => UserRegistrationScreen(),
         });
   }
 }

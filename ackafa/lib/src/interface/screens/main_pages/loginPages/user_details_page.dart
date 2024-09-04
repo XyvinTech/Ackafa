@@ -243,6 +243,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     String firstName = nameParts[0];
     String middleName = nameParts.length > 2 ? nameParts[1] : ' ';
     String lastName = nameParts.length > 1 ? nameParts.last : ' ';
+    log('company logo:${user.company!.logo!}');
 
     final Map<String, dynamic> profileData = {
       "name": {
@@ -261,20 +262,21 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
         "designation": user.company!.designation ?? '',
         "phone": user.company!.phone ?? '',
         "address": user.company!.address ?? '',
-        "logo":user.company!.logo??'',
+        "logo": user.company!.logo ?? '',
       },
       "social": [
         for (var i in user.social!) {"name": "${i.name}", "link": i.link}
       ],
       "websites": [
-        for (var i in user.websites!) {"name": i.name.toString(), "link": i.link}
+        for (var i in user.websites!)
+          {"name": i.name.toString(), "link": i.link}
       ],
       "videos": [
         for (var i in user.videos!) {"name": i.name, "link": i.link}
       ],
       "awards": [
         for (var i in user.awards!)
-          {"name": i.name, "image": i.image, "authority_name": i.authority}
+          {"name": i.name, "image": i.image, "authority": i.authority}
       ],
       "certificates": [
         for (var i in user.certificates!) {"name": i.name, "link": i.link}
@@ -401,6 +403,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
               batchController.text = user.batch.toString() ?? '';
               designationController.text = user.company?.designation ?? '';
               bioController.text = user.bio ?? '';
+              companyPhoneController.text = user.company?.phone ?? '';
               companyNameController.text = user.company?.name ?? '';
               companyAddressController.text = user.company?.address ?? '';
               personalPhoneController.text = user.phone ?? '';
@@ -496,7 +499,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (BuildContext context) =>
-                                                DemoPage()));
+                                                MainPage()));
                                   },
                                   child: const Text(
                                     'Skip',
@@ -884,7 +887,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                             child: CustomTextFormField(
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please Enter Your Company Name';
+                                    return 'Please Enter Your Company Designation';
                                   }
                                   return null;
                                 },
@@ -897,7 +900,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                             child: CustomTextFormField(
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please Enter Company designation';
+                                    return 'Please Enter Company Name';
                                   }
                                   return null;
                                 },
@@ -1344,7 +1347,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              DemoPage()));
+                                              MainPage()));
                                 }
                               }))),
                 ],

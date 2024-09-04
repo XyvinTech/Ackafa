@@ -139,10 +139,7 @@ class CustomTextFormField extends StatelessWidget {
                 ref
                     .read(userProvider.notifier)
                     .updateCompany(Company(address: textController!.text));
-              case 'Enter phone number':
-                ref
-                    .read(userProvider.notifier)
-                    .updatePhone(textController!.text);
+            
               case 'Enter Ig':
                 ref.read(userProvider.notifier).updateSocialMedia(
                     [...?ref.read(userProvider).value?.social],
@@ -158,6 +155,11 @@ class CustomTextFormField extends StatelessWidget {
                 ref.read(userProvider.notifier).updateSocialMedia(
                     [...?ref.read(userProvider).value?.social],
                     'twitter',
+                    textController!.text);
+              case 'Enter Facebook':
+                ref.read(userProvider.notifier).updateSocialMedia(
+                    [...?ref.read(userProvider).value?.social],
+                    'facebook',
                     textController!.text);
 
               default:

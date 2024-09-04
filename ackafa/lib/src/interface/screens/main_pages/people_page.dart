@@ -2,16 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/data/globals.dart';
-import 'package:ackaf/src/interface/common/components/app_bar.dart';
-import 'package:ackaf/src/interface/common/loading.dart';
-import 'package:ackaf/src/interface/screens/feed/feed_view.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chat.dart';
 import 'package:ackaf/src/interface/screens/people/members.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PeoplePage extends StatelessWidget {
   const PeoplePage({super.key});

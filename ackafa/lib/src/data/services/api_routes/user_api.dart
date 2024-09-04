@@ -246,9 +246,8 @@ class ApiRoutes {
       mimeType = 'image/png';
     } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
       mimeType = 'image/jpeg';
-    } else if (fileName.endsWith('.pdf')) {
-      mimeType = 'application/pdf';
-    } else {
+    } 
+    else {
       return null; // Return null if the file type is unsupported
     }
 

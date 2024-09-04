@@ -112,7 +112,7 @@ class _FeedViewState extends State<FeedView> {
                     itemCount: requirements.length,
                     itemBuilder: (context, index) {
                       final requirement = requirements[index];
-                      if (requirement.status == 'approved') {
+                      if (requirement.status == 'active') {
                         return _buildPost(
                           withImage: requirement.image != null &&
                               requirement.image!.isNotEmpty,

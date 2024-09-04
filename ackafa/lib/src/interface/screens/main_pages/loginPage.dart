@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/college_model.dart';
 import 'package:ackaf/src/data/providers/loading_notifier.dart';
+import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/college_api.dart';
 import 'package:ackaf/src/interface/common/custom_dialog.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_completetion_page.dart';
@@ -212,10 +213,10 @@ class PhoneNumberScreen extends ConsumerWidget {
           log('Otp Sent successfully');
           onNext();
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => OTPScreen(phone: _mobileController.text,
+            builder: (context) => OTPScreen(
+              phone: _mobileController.text,
               verificationId: verificationId,
               resendToken: resendToken ?? '',
-
             ),
           ));
         } else {
@@ -238,7 +239,8 @@ class OTPScreen extends ConsumerStatefulWidget {
   final String verificationId;
   final String resendToken;
   final String phone;
-  const OTPScreen( {required this.phone,
+  const OTPScreen({
+    required this.phone,
     required this.resendToken,
     super.key,
     required this.verificationId,
@@ -281,7 +283,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   void resendCode() {
     startTimer();
     ApiRoutes userApi = ApiRoutes();
-    userApi.resendOTP(widget.phone,widget.verificationId, widget.resendToken);
+    userApi.resendOTP(widget.phone, widget.verificationId, widget.resendToken);
   }
 
   @override
@@ -443,8 +445,9 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
         await preferences.setString('token', savedToken);
         token = savedToken;
         log('savedToken: $savedToken');
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => UserDetailsScreen()));
+        ref.invalidate(userProvider);
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => UserRegistrationScreen()));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Wrong OTP')),
