@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/demopage.dart';
+import 'package:ackaf/src/interface/screens/people/chat/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -57,7 +60,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[];
 
@@ -73,11 +76,11 @@ class _MainPageState extends State<MainPage> {
     _widgetOptions = <Widget>[
       // HomePage(),
       // FeedPage(),
-      DemoPage(),
-      DemoPage(),
+      HomePage(),
+      FeedPage(),
       ProfilePage(user: user),
-      DemoPage(),
-      DemoPage(),
+      Event_News_Page(),
+      PeoplePage(),
       // Event_News_Page(),
       // PeoplePage(),
     ];
@@ -107,7 +110,7 @@ class _MainPageState extends State<MainPage> {
           return LoginPage();
         },
         data: (user) {
-          print(user.image);
+          log(user.image.toString());
           _initialize(user: user);
           return Scaffold(
             body: Center(
@@ -119,7 +122,7 @@ class _MainPageState extends State<MainPage> {
                   backgroundColor: Colors.white,
                   icon: index == 2 // Assuming profile is the third item
                       ? CircleAvatar(
-                          backgroundImage: NetworkImage(user.id!),
+                          backgroundImage: NetworkImage(user.image!),
                           radius: 15,
                         )
                       : IconResolver(

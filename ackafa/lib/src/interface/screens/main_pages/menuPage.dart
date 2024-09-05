@@ -17,7 +17,6 @@ import '../menu/privacy.dart';
 import '../menu/about.dart';
 // import '../menu/my_subscription.dart';
 import '../menu/my_events.dart';
-import '../menu/my_transaction.dart';
 import '../menu/my_post.dart';
 
 void showDeleteAccountDialog(BuildContext context) {

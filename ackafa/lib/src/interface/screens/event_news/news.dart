@@ -48,8 +48,8 @@ class NewsPage extends StatelessWidget {
                                       fit: BoxFit.cover,
                                       'https://placehold.co/600x400/png');
                                 },
-                                news[currentIndex]
-                                    .image, // Replace with your image URL
+                                news[currentIndex].media ??
+                                    'https://placehold.co/600x400/png', // Replace with your image URL
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -59,14 +59,14 @@ class NewsPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    news[currentIndex].category,
+                                    news[currentIndex].category ?? '',
                                     style: const TextStyle(
                                         color: Colors.green,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    news[currentIndex].title,
+                                    news[currentIndex].title ?? '',
                                     style: const TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),

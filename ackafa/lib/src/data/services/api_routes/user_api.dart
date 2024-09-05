@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:ackaf/src/data/models/feed_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -18,53 +19,6 @@ part 'user_api.g.dart';
 
 class ApiRoutes {
   final String baseUrl = 'http://3.108.205.101:3000/api/v1';
-  // Future<String?> sendOtp(String mobile, context) async {
-  //   print(mobile);
-  //   final response = await http.post(
-  //     Uri.parse('$baseUrl/user/send-otp'),
-  //     headers: {"Content-Type": "application/json"},
-  //     body: jsonEncode({"phone": mobile}),
-  //   );
-  //   final Map<String, dynamic> responseBody = jsonDecode(response.body);
-  //   if (response.statusCode == 200) {
-  //     print(responseBody['message']);
-  //     print(responseBody['data']);
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(SnackBar(content: Text('Success')));
-  //     return responseBody['message'];
-  //   } else if (response.statusCode == 400) {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(SnackBar(content: Text('Invalid Mobile Number')));
-  //     return null;
-  //   } else {
-  //     final Map<String, dynamic> responseBody = jsonDecode(response.body);
-  //     print(responseBody['message']);
-  //     return null;
-  //   }
-  // }
-
-  // Future<List<dynamic>> verifyUser(String mobile, String otp, context) async {
-  //   final response = await http.post(
-  //     Uri.parse('$baseUrl/user/verify'),
-  //     headers: {"Content-Type": "application/json"},
-  //     body: jsonEncode({"otp": int.parse(otp), "phone": mobile}),
-  //   );
-  //   if (response.statusCode == 200) {
-  //     final Map<String, dynamic> responseBody = jsonDecode(response.body);
-  //     print(responseBody['message']);
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(SnackBar(content: Text('Success')));
-  //     return responseBody['data'];
-  //   } else if (response.statusCode == 400) {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(SnackBar(content: Text('Invalid OTP')));
-  //     return [];
-  //   } else {
-  //     final Map<String, dynamic> responseBody = jsonDecode(response.body);
-  //     print(responseBody['message']);
-  //     return [];
-  //   }
-  // }
 
   Future<bool> updateUser(
       {required String token,
@@ -246,8 +200,7 @@ class ApiRoutes {
       mimeType = 'image/png';
     } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
       mimeType = 'image/jpeg';
-    } 
-    else {
+    } else {
       return null; // Return null if the file type is unsupported
     }
 
@@ -332,7 +285,7 @@ class ApiRoutes {
     }
   }
 
-  Future<void> markNotificationAsRead(String notificationId) async {
+  Future<void> markNotificationAsRead(String notificationId, String id) async {
     final url = Uri.parse(
         'http://43.205.89.79/api/v1/notification/in-app/$notificationId/read/$id');
 
@@ -517,40 +470,33 @@ Future<UserModel> fetchUserDetails(FetchUserDetailsRef ref) async {
   }
 }
 
+//list of users
 @riverpod
-Future<List<UserModel>> fetchUsers(FetchUsersRef ref, String token) async {
-  final url = Uri.parse('$baseUrl/user');
-  print('Requesting URL: $url');
+Future<List<UserModel>> fetchUsers(FetchUsersRef ref,
+    {int pageNo = 1, int limit = 10}) async {
   final response = await http.get(
-    url,
+    Uri.parse('$baseUrl/user/list?pageNo=$pageNo&limit=$limit'),
     headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token"
     },
   );
-  print('hello');
-  print(json.decode(response.body)['status']);
+
   if (response.statusCode == 200) {
-    final List<dynamic> data = json.decode(response.body)['data'];
-    print(response.body);
-    List<UserModel> events = [];
+    final data = json.decode(response.body);
+    final usersJson = data['data'] as List<dynamic>? ?? [];
 
-    for (var item in data) {
-      events.add(UserModel.fromJson(item));
-    }
-    print(events);
-    return events;
+    return usersJson.map((user) => UserModel.fromJson(user)).toList();
   } else {
-    print(json.decode(response.body)['message']);
-
-    throw Exception(json.decode(response.body)['message']);
+    final data = json.decode(response.body);
+    log(data['message']);
+    throw Exception('Failed to load users');
   }
 }
 
 @riverpod
-Future<List<UserRequirementModel>> fetchUserRequirements(
-    FetchUserRequirementsRef ref, String token) async {
-  final url = Uri.parse('$baseUrl/requirements/$id');
+Future<UserModel> fetchUserById(FetchUserByIdRef ref, String id) async {
+  final url = Uri.parse('$baseUrl/user/single/$id');
   print('Requesting URL: $url');
   final response = await http.get(
     url,
@@ -560,17 +506,11 @@ Future<List<UserRequirementModel>> fetchUserRequirements(
     },
   );
   print('hello');
-  print(json.decode(response.body)['status']);
+  log(response.body);
   if (response.statusCode == 200) {
-    final List<dynamic> data = json.decode(response.body)['data'];
-    print(response.body);
-    List<UserRequirementModel> userRequirements = [];
+    final dynamic data = json.decode(response.body)['data'];
 
-    for (var item in data) {
-      userRequirements.add(UserRequirementModel.fromJson(item));
-    }
-    print(userRequirements);
-    return userRequirements;
+    return UserModel.fromJson(data);
   } else {
     print(json.decode(response.body)['message']);
 

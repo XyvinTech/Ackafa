@@ -109,17 +109,21 @@ class ProfilePreview extends ConsumerWidget {
                           children: [
                             Column(
                               children: [
-                                if (user.company!.logo != null &&
-                                    user.company!.logo != '')
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(9),
-                                    child: Image.network(
-                                      user.company!.logo!,
-                                      height: 33,
-                                      width: 40,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                                user.company?.logo != null &&
+                                        user.company?.logo != ''
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(9),
+                                        child: Image.network(
+                                          user.company!.logo!,
+                                          height: 33,
+                                          width: 40,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius: BorderRadius.circular(9),
+                                        child:
+                                            Icon(FontAwesomeIcons.buildingUser))
                               ],
                             ),
                             const SizedBox(width: 10),
@@ -127,7 +131,7 @@ class ProfilePreview extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  user.company!.designation!,
+                                  user.company?.designation ?? '',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,
@@ -135,7 +139,7 @@ class ProfilePreview extends ConsumerWidget {
                                   ),
                                 ),
                                 Text(
-                                  user.company!.name!,
+                                  user.company?.name ?? '',
                                   style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey,

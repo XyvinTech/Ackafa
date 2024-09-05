@@ -25,8 +25,8 @@ Future<void> checkAppVersion(context) async {
 Future<void> checkForUpdate(AppVersionResponse response, context) async {
   PackageInfo packageInfo = await PackageManager.getPackageInfo();
   final currentVersion = int.parse(packageInfo.version.split('.').join());
-  log('current version:${ currentVersion.toString()}');
-    log('current version:${ response.version.toString()}');
+  log('current version:${currentVersion.toString()}');
+  log('new version:${response.version.toString()}');
   if (currentVersion < response.version && response.force) {
     showUpdateDialog(response, context);
   }

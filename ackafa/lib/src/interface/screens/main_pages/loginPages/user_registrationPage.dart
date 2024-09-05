@@ -23,6 +23,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRegistrationScreen extends StatefulWidget {
   const UserRegistrationScreen({super.key});
@@ -114,7 +115,6 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        log('im in userregistraion $token');
         final asyncUser = ref.watch(userProvider);
         return asyncUser.when(
           data: (user) {
@@ -578,12 +578,19 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                   if (response) {
                                                     showCustomDialog(context);
                                                     log('user status: ${user.status}');
-                                                    if (user.status == 'active')
+                                                    if (user.status ==
+                                                        'active') {
+                                                      SharedPreferences
+                                                          preferences =
+                                                          await SharedPreferences
+                                                              .getInstance();
+                                                      preferences.setString(
+                                                          'id', id);
                                                       Navigator.of(context).push(
                                                           MaterialPageRoute(
                                                               builder: (context) =>
                                                                   ProfileCompletionScreen()));
-                                                    else {
+                                                    } else {
                                                       Navigator.of(context).push(
                                                           MaterialPageRoute(
                                                               builder: (context) =>

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ackaf/src/data/services/api_routes/requirement_api.dart';
+import 'package:ackaf/src/data/services/api_routes/feed_api.dart';
 import 'package:ackaf/src/data/globals.dart';
-import 'package:ackaf/src/data/models/requirement_model.dart';
+import 'package:ackaf/src/data/models/feed_model.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/customModalsheets.dart';
@@ -19,10 +19,10 @@ class FeedView extends StatefulWidget {
 }
 
 class _FeedViewState extends State<FeedView> {
-  final TextEditingController requirementContentController =
+  final TextEditingController feedContentController =
       TextEditingController();
 
-  File? _requirementImage;
+  File? _feedImage;
   ApiRoutes api = ApiRoutes();
 
   Future<File?> _pickFile({required String imageType}) async {
@@ -37,9 +37,9 @@ class _FeedViewState extends State<FeedView> {
 
     if (result != null) {
       setState(() {
-        _requirementImage = File(result.files.single.path!);
+        _feedImage = File(result.files.single.path!);
       });
-      return _requirementImage;
+      return _feedImage;
     }
     return null;
   }
@@ -52,9 +52,9 @@ class _FeedViewState extends State<FeedView> {
           return ShowAddRequirementSheet(
             pickImage: _pickFile,
             context1: context,
-            textController: requirementContentController,
+            textController: feedContentController,
             imageType: 'requirement',
-            requirementImage: _requirementImage,
+            requirementImage: _feedImage,
           );
         });
   }
@@ -63,9 +63,9 @@ class _FeedViewState extends State<FeedView> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        final asyncRequirements = ref.watch(fetchRequirementsProvider(token));
+        final asyncFeed = ref.watch(fetchFeedsProvider(token));
         return Scaffold(
-          body: asyncRequirements.when(
+          body: asyncFeed.when(
             loading: () => Center(child: LoadingAnimation()),
             error: (error, stackTrace) {
               // Handle error state
@@ -73,8 +73,8 @@ class _FeedViewState extends State<FeedView> {
                 child: Text('No Requirements'),
               );
             },
-            data: (requirements) {
-              print(requirements);
+            data: (feeds) {
+              print(feeds);
               return ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
@@ -109,14 +109,14 @@ class _FeedViewState extends State<FeedView> {
                   ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: requirements.length,
+                    itemCount: feeds.length,
                     itemBuilder: (context, index) {
-                      final requirement = requirements[index];
-                      if (requirement.status == 'active') {
+                      final feed = feeds[index];
+                      if (feed.status == 'published') {
                         return _buildPost(
-                          withImage: requirement.image != null &&
-                              requirement.image!.isNotEmpty,
-                          requirement: requirement,
+                          withImage: feed.media != null &&
+                              feed.media!.isNotEmpty,
+                          feed: feed,
                         );
                       } else {
                         return SizedBox.shrink();
@@ -149,10 +149,10 @@ class _FeedViewState extends State<FeedView> {
   }
 
   Widget _buildPost(
-      {bool withImage = false, required Requirement requirement}) {
+      {bool withImage = false, required Feed feed}) {
     return Consumer(
       builder: (context, ref, child) {
-        final asyncUser = ref.watch(userProvider);
+        final asyncUser = ref.watch(fetchUserByIdProvider(feed.author!));
         return Card(
             color: Colors.white,
             elevation: 0,
@@ -171,7 +171,7 @@ class _FeedViewState extends State<FeedView> {
               },
               data: (user) {
                 print(user);
-                if (requirement.author != null)
+                if (feed.author != null) {
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -184,18 +184,14 @@ class _FeedViewState extends State<FeedView> {
                             width: double.infinity,
                             child: Image.network(
                               fit: BoxFit.cover,
-                              requirement.image!,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Image.network(
-                                    fit: BoxFit.cover,
-                                    'https://placehold.co/600x400');
-                              },
+                              feed.media??'https://placehold.co/600x400',
+                            
                             ),
                           )
                         ],
                         SizedBox(height: 16),
                         Text(
-                          requirement.content!,
+                          feed.content!,
                           style: TextStyle(fontSize: 14),
                         ),
                         SizedBox(height: 16),
@@ -220,11 +216,12 @@ class _FeedViewState extends State<FeedView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${requirement.author!.name!.firstName} ${requirement.author!.name!.middleName} ${requirement.author!.name!.lastName}',
+                                  '${user.name?.first} ${user.name?.middle} ${user.name?.last}',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12),
                                 ),
+                                if(user.company?.name!=null)
                                 Text(
                                   user.company!.name!,
                                   style: TextStyle(
@@ -234,7 +231,7 @@ class _FeedViewState extends State<FeedView> {
                             ),
                             Spacer(),
                             Text(
-                              requirement.createdAt.toString(),
+                              feed.createdAt.toString(),
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 12),
                             ),
@@ -243,10 +240,11 @@ class _FeedViewState extends State<FeedView> {
                       ],
                     ),
                   );
-                else
+                } else {
                   return Center(
                     child: Text('No requirements'),
                   );
+                }
               },
             ));
       },

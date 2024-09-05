@@ -3,7 +3,8 @@ import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:ackaf/src/interface/screens/profile/card.dart';
-import 'package:ackaf/src/interface/screens/profile/profilePreview.dart'; // Import the XCard widget
+import 'package:ackaf/src/interface/screens/profile/profilePreview.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Import the XCard widget
 
 class ProfilePage extends StatelessWidget {
   final UserModel user;
@@ -164,21 +165,19 @@ class ProfilePage extends StatelessWidget {
                                       Column(
                                         children: [
                                           ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(9),
-                                            child: Image.network(
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return Image.network(
-                                                    'https://placehold.co/400');
-                                              },
-                                              user.company!.logo ??
-                                                  'https://placehold.co/400',
-                                              height: 33,
-                                              width: 40,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
+                                              borderRadius:
+                                                  BorderRadius.circular(9),
+                                              child: user.company?.logo !=
+                                                          null &&
+                                                      user.company?.logo != ''
+                                                  ? Image.network(
+                                                      user.company!.logo!,
+                                                      height: 33,
+                                                      width: 40,
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : Icon(FontAwesomeIcons
+                                                      .building)),
                                         ],
                                       ),
                                       const SizedBox(width: 10),
@@ -187,7 +186,7 @@ class ProfilePage extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            user.company!.designation ?? '',
+                                            user.company?.designation ?? '',
                                             style: const TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16,
@@ -196,7 +195,7 @@ class ProfilePage extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            user.company!.name!,
+                                            user.company?.name ?? '',
                                             style: TextStyle(
                                               fontSize: 14,
                                               color: Colors.grey,
@@ -255,7 +254,7 @@ class ProfilePage extends StatelessWidget {
                               SizedBox(width: 10),
                               Expanded(
                                 child: Text(
-                                  user.bio!,
+                                  user.bio ?? '',
                                 ),
                               ),
                             ],

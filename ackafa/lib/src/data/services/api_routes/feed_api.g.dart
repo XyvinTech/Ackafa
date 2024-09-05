@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'transactions_api.dart';
+part of 'feed_api.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchTransactionsHash() => r'cedc2ea05da9133b6c4d63541eba77e76eac5d9b';
+String _$fetchFeedsHash() => r'a450d462cc72a6ea75d4d86237054207f47c3f19';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,27 +29,27 @@ class _SystemHash {
   }
 }
 
-/// See also [fetchTransactions].
-@ProviderFor(fetchTransactions)
-const fetchTransactionsProvider = FetchTransactionsFamily();
+/// See also [fetchFeeds].
+@ProviderFor(fetchFeeds)
+const fetchFeedsProvider = FetchFeedsFamily();
 
-/// See also [fetchTransactions].
-class FetchTransactionsFamily extends Family<AsyncValue<List<Transaction>>> {
-  /// See also [fetchTransactions].
-  const FetchTransactionsFamily();
+/// See also [fetchFeeds].
+class FetchFeedsFamily extends Family<AsyncValue<List<Feed>>> {
+  /// See also [fetchFeeds].
+  const FetchFeedsFamily();
 
-  /// See also [fetchTransactions].
-  FetchTransactionsProvider call(
+  /// See also [fetchFeeds].
+  FetchFeedsProvider call(
     String token,
   ) {
-    return FetchTransactionsProvider(
+    return FetchFeedsProvider(
       token,
     );
   }
 
   @override
-  FetchTransactionsProvider getProviderOverride(
-    covariant FetchTransactionsProvider provider,
+  FetchFeedsProvider getProviderOverride(
+    covariant FetchFeedsProvider provider,
   ) {
     return call(
       provider.token,
@@ -68,33 +68,32 @@ class FetchTransactionsFamily extends Family<AsyncValue<List<Transaction>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'fetchTransactionsProvider';
+  String? get name => r'fetchFeedsProvider';
 }
 
-/// See also [fetchTransactions].
-class FetchTransactionsProvider
-    extends AutoDisposeFutureProvider<List<Transaction>> {
-  /// See also [fetchTransactions].
-  FetchTransactionsProvider(
+/// See also [fetchFeeds].
+class FetchFeedsProvider extends AutoDisposeFutureProvider<List<Feed>> {
+  /// See also [fetchFeeds].
+  FetchFeedsProvider(
     String token,
   ) : this._internal(
-          (ref) => fetchTransactions(
-            ref as FetchTransactionsRef,
+          (ref) => fetchFeeds(
+            ref as FetchFeedsRef,
             token,
           ),
-          from: fetchTransactionsProvider,
-          name: r'fetchTransactionsProvider',
+          from: fetchFeedsProvider,
+          name: r'fetchFeedsProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$fetchTransactionsHash,
-          dependencies: FetchTransactionsFamily._dependencies,
+                  : _$fetchFeedsHash,
+          dependencies: FetchFeedsFamily._dependencies,
           allTransitiveDependencies:
-              FetchTransactionsFamily._allTransitiveDependencies,
+              FetchFeedsFamily._allTransitiveDependencies,
           token: token,
         );
 
-  FetchTransactionsProvider._internal(
+  FetchFeedsProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -108,12 +107,12 @@ class FetchTransactionsProvider
 
   @override
   Override overrideWith(
-    FutureOr<List<Transaction>> Function(FetchTransactionsRef provider) create,
+    FutureOr<List<Feed>> Function(FetchFeedsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: FetchTransactionsProvider._internal(
-        (ref) => create(ref as FetchTransactionsRef),
+      override: FetchFeedsProvider._internal(
+        (ref) => create(ref as FetchFeedsRef),
         from: from,
         name: null,
         dependencies: null,
@@ -125,13 +124,13 @@ class FetchTransactionsProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<Transaction>> createElement() {
-    return _FetchTransactionsProviderElement(this);
+  AutoDisposeFutureProviderElement<List<Feed>> createElement() {
+    return _FetchFeedsProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is FetchTransactionsProvider && other.token == token;
+    return other is FetchFeedsProvider && other.token == token;
   }
 
   @override
@@ -143,18 +142,17 @@ class FetchTransactionsProvider
   }
 }
 
-mixin FetchTransactionsRef on AutoDisposeFutureProviderRef<List<Transaction>> {
+mixin FetchFeedsRef on AutoDisposeFutureProviderRef<List<Feed>> {
   /// The parameter `token` of this provider.
   String get token;
 }
 
-class _FetchTransactionsProviderElement
-    extends AutoDisposeFutureProviderElement<List<Transaction>>
-    with FetchTransactionsRef {
-  _FetchTransactionsProviderElement(super.provider);
+class _FetchFeedsProviderElement
+    extends AutoDisposeFutureProviderElement<List<Feed>> with FetchFeedsRef {
+  _FetchFeedsProviderElement(super.provider);
 
   @override
-  String get token => (origin as FetchTransactionsProvider).token;
+  String get token => (origin as FetchFeedsProvider).token;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

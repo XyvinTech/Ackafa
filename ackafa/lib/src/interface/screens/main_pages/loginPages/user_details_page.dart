@@ -182,13 +182,9 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   }
 
   void _removeAward(int index) async {
-    await api
-        .deleteFile(token, ref.read(userProvider).value!.awards![index].image!)
-        .then(
-          (value) => ref
-              .read(userProvider.notifier)
-              .removeAward(ref.read(userProvider).value!.awards![index]),
-        );
+    ref
+        .read(userProvider.notifier)
+        .removeAward(ref.read(userProvider).value!.awards![index]);
   }
 
   void _addNewCertificate() async {
@@ -205,11 +201,9 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   }
 
   void _removeCertificate(int index) async {
-    await api
-        .deleteFile(
-            token, ref.read(userProvider).value!.certificates![index].link!)
-        .then((value) => ref.read(userProvider.notifier).removeCertificate(
-            ref.read(userProvider).value!.certificates![index]));
+    ref
+        .read(userProvider.notifier)
+        .removeCertificate(ref.read(userProvider).value!.certificates![index]);
   }
 
   @override

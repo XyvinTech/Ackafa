@@ -4,16 +4,14 @@ import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 
-import 'package:flutter/material.dart';
-
 class ViewMoreEventPage extends StatelessWidget {
   final Event event;
   const ViewMoreEventPage({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
-    String time = DateFormat('hh:mm a').format(event.date!);
-    String date = DateFormat('yyyy-MM-dd').format(event.date!);
+    String time = DateFormat('hh:mm a').format(event.startTime!);
+    String date = DateFormat('yyyy-MM-dd').format(event.startDate!);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -62,11 +60,11 @@ class ViewMoreEventPage extends StatelessWidget {
                           color: Color(0xFFE4483E), // Red background color
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: event.activate!
+                        child: event.status != null && event.status != ''
                             ? Row(
                                 children: [
                                   Text(
-                                    'LIVE',
+                                    event.status!,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -88,7 +86,7 @@ class ViewMoreEventPage extends StatelessWidget {
                 SizedBox(height: 16),
                 // Event Title
                 Text(
-                  event.name!,
+                  event.eventName!,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -153,9 +151,9 @@ class ViewMoreEventPage extends StatelessWidget {
                   itemCount: event.speakers!.length,
                   itemBuilder: (context, index) {
                     return _buildSpeakerCard(
-                        event.speakers![index].speakerImage,
-                        event.speakers![index].speakerName!,
-                        event.speakers![index].speakerDesignation!);
+                        event.speakers![index].image,
+                        event.speakers![index].name!,
+                        event.speakers![index].designation!);
                   },
                 ),
                 SizedBox(height: 24),
@@ -220,7 +218,7 @@ class ViewMoreEventPage extends StatelessWidget {
             imagePath.toString(),
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
-              return Icon(Icons.error, size: 40);
+              return Icon(Icons.person, size: 40);
             },
           ),
         ),

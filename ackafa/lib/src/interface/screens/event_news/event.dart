@@ -49,8 +49,8 @@ class EventPage extends StatelessWidget {
       {bool withImage = false,
       required BuildContext context,
       required Event event}) {
-    String time = DateFormat('hh:mm a').format(event.date!);
-    String date = DateFormat('yyyy-MM-dd').format(event.date!);
+    String time = DateFormat('hh:mm a').format(event.startTime!);
+    String date = DateFormat('yyyy-MM-dd').format(event.startDate!);
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
       shape: RoundedRectangleBorder(
@@ -111,9 +111,9 @@ class EventPage extends StatelessWidget {
                             0xFFA9F3C7), // Greenish background for LIVE label
                         borderRadius: BorderRadius.circular(3),
                       ),
-                      child: event.activate!
-                          ? const Text(
-                              'LIVE',
+                      child: event.status!=null && event.status!=''
+                          ?  Text(
+                              event.status!,
                               style: TextStyle(
                                 color:
                                     Color(0xFF0F7036), // Darker green for text
@@ -196,7 +196,7 @@ class EventPage extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    event.name!,
+                    event.eventName!,
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
