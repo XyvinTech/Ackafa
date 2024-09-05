@@ -1,4 +1,5 @@
 import 'package:ackaf/src/data/notifires/people_notifier.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
@@ -41,14 +42,14 @@ class _MembersPageState extends ConsumerState<MembersPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: users.isEmpty
-          ? Center(child: CircularProgressIndicator()) // Show loader when no data
+          ? Center(child: Text('NO MEMBERS YET')) // Show loader when no data
           : ListView.builder(
               controller: _scrollController,
               itemCount: users.length + 1, // Add 1 for the loading indicator
               itemBuilder: (context, index) {
                 if (index == users.length) {
                   return isLoading
-                      ? Center(child: CircularProgressIndicator()) // Show loading when fetching more users
+                      ? Center(child: LoadingAnimation()) // Show loading when fetching more users
                       : SizedBox.shrink(); // Hide when done
                 }
 

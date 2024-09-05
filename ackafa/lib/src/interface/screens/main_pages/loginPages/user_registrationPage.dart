@@ -11,6 +11,7 @@ import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/custom_dialog.dart';
+import 'package:ackaf/src/interface/common/custom_dropdowns/custom_dropdowns.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_completetion_page.dart';
@@ -580,12 +581,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                     log('user status: ${user.status}');
                                                     if (user.status ==
                                                         'active') {
-                                                      SharedPreferences
-                                                          preferences =
-                                                          await SharedPreferences
-                                                              .getInstance();
-                                                      preferences.setString(
-                                                          'id', id);
+                                            
                                                       Navigator.of(context).push(
                                                           MaterialPageRoute(
                                                               builder: (context) =>

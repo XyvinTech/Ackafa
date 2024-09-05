@@ -21,7 +21,7 @@ final fetchUserDetailsProvider = AutoDisposeFutureProvider<UserModel>.internal(
 );
 
 typedef FetchUserDetailsRef = AutoDisposeFutureProviderRef<UserModel>;
-String _$fetchUsersHash() => r'a625743c8b215c1cf89767be106cd0d11eaadf31';
+String _$fetchUsersHash() => r'f752c46c3ac5369674b752ecc0680f253d4f6634';
 
 /// Copied from Dart SDK
 class _SystemHash {

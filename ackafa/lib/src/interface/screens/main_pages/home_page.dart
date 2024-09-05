@@ -92,8 +92,7 @@ class _HomePageState extends State<HomePage> {
     return Consumer(
       builder: (context, ref, child) {
         final asyncPromotions = ref.watch(fetchPromotionsProvider(token));
-        var screenWidth = MediaQuery.sizeOf(context).width;
-        var screenHeight = MediaQuery.sizeOf(context).height;
+
         return Scaffold(
           backgroundColor: Colors.white,
           body: asyncPromotions.when(
@@ -118,11 +117,13 @@ class _HomePageState extends State<HomePage> {
                     _currentBannerIndex = 0;
                   }
                   final itemWidth = _getItemWidth(_bannerKey);
-                  _bannerScrollController.animateTo(
-                    _currentBannerIndex * itemWidth,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                  );
+                  if (_bannerScrollController.hasClients) {
+                    _bannerScrollController.animateTo(
+                      _currentBannerIndex * itemWidth,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  }
                 });
               }
 
@@ -133,29 +134,32 @@ class _HomePageState extends State<HomePage> {
                   if (_currentNoticeIndex >= notices.length) {
                     _currentNoticeIndex = 0;
                   }
-                  final itemWidth = _getItemWidth(_noticeKey);
-                  _noticeScrollController.animateTo(
-                    _currentNoticeIndex * itemWidth,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                  );
+                  if (_noticeScrollController.hasClients) {
+                    final itemWidth = _getItemWidth(_noticeKey);
+                    _noticeScrollController.animateTo(
+                      _currentNoticeIndex * itemWidth,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  }
                 });
               }
 
               if (posters.isNotEmpty) {
-                
                 _posterScrollTimer =
                     Timer.periodic(Duration(seconds: 5), (timer) {
                   _currentPosterIndex++;
                   if (_currentPosterIndex >= posters.length) {
                     _currentPosterIndex = 0;
                   }
-                  final itemWidth = _getItemWidth(_bannerKey);
-                  _posterScrollController.animateTo(
-                    _currentPosterIndex * itemWidth,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                  );
+                  if (_posterScrollController.hasClients) {
+                    final itemWidth = _getItemWidth(_bannerKey);
+                    _posterScrollController.animateTo(
+                      _currentPosterIndex * itemWidth,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  }
                 });
               }
 

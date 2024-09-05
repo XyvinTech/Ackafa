@@ -1,3 +1,4 @@
+import 'package:ackaf/src/data/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ackaf/src/data/models/events_model.dart';
@@ -12,7 +13,7 @@ class ViewMoreEventPage extends StatelessWidget {
   Widget build(BuildContext context) {
     String time = DateFormat('hh:mm a').format(event.startTime!);
     String date = DateFormat('yyyy-MM-dd').format(event.startDate!);
-
+    bool registered= event.rsvp?.contains(id)?? false;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -190,7 +191,8 @@ class ViewMoreEventPage extends StatelessWidget {
             child: customButton(
               label: 'REGISTER EVENT',
               onPressed: () {
-                markEventAsRSVP(event.id!);
+                ApiRoutes userApi = ApiRoutes();
+                userApi.markEventAsRSVP(event.id!);
               },
               fontSize: 16,
             ),

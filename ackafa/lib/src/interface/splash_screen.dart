@@ -38,11 +38,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   Future<void> checktoken() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? savedtoken = preferences.getString('token');
+    String? savedId = preferences.getString('id');
     log('splashScreen: $savedtoken');
     if (savedtoken != null && savedtoken.isNotEmpty) {
       setState(() {
         LoggedIn = true;
         token = savedtoken;
+        id = savedId??'';
       });
     }
   }

@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:ackaf/src/data/notifires/feed_notifier.dart';
+import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,16 +14,34 @@ import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/customModalsheets.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 
-class FeedView extends StatefulWidget {
+class FeedView extends ConsumerStatefulWidget {
   FeedView({super.key});
 
   @override
-  State<FeedView> createState() => _FeedViewState();
+  ConsumerState<FeedView> createState() => _FeedViewState();
 }
 
-class _FeedViewState extends State<FeedView> {
-  final TextEditingController feedContentController =
-      TextEditingController();
+class _FeedViewState extends ConsumerState<FeedView> {
+  final TextEditingController feedContentController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    _fetchInitialUsers();
+  }
+
+  Future<void> _fetchInitialUsers() async {
+    await ref.read(feedNotifierProvider.notifier).fetchMoreFeed();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      ref.read(feedNotifierProvider.notifier).fetchMoreFeed();
+    }
+  }
 
   File? _feedImage;
   ApiRoutes api = ApiRoutes();
@@ -49,107 +70,147 @@ class _FeedViewState extends State<FeedView> {
         isScrollControlled: true,
         context: context,
         builder: (context) {
-          return ShowAddRequirementSheet(
+          return ShowAddPostSheet(
             pickImage: _pickFile,
-            context1: context,
             textController: feedContentController,
-            imageType: 'requirement',
-            requirementImage: _feedImage,
+            imageType: sheet,
+            postImage: _feedImage,
           );
         });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, child) {
-        final asyncFeed = ref.watch(fetchFeedsProvider(token));
-        return Scaffold(
-          body: asyncFeed.when(
-            loading: () => Center(child: LoadingAnimation()),
-            error: (error, stackTrace) {
-              // Handle error state
-              return Center(
-                child: Text('No Requirements'),
+    final feeds = ref.watch(feedNotifierProvider);
+    final isLoading = ref.read(feedNotifierProvider.notifier).isLoading;
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 40.0,
+        backgroundColor: Colors.white,
+        scrolledUnderElevation: 0,
+        leadingWidth: 100,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: SizedBox(
+            width: 100,
+            height: 100,
+            child: Image.asset(
+              'assets/icons/ackaf_logo.png',
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.notifications_none_outlined,
+              size: 21,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationPage()),
               );
             },
-            data: (feeds) {
-              print(feeds);
-              return ListView(
-                padding: const EdgeInsets.all(16.0),
-                children: [
-                  Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          prefixIcon: Icon(Icons.search),
-                          hintText: 'Search your requirements',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            borderSide: BorderSide(
-                              color: Color.fromARGB(255, 216, 211, 211),
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            borderSide: BorderSide(
-                              color: Color.fromARGB(255, 216, 211, 211),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            borderSide: BorderSide(
-                              color: Color.fromARGB(255, 216, 211, 211),
-                            ),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.menu,
+              size: 21,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MenuPage()), // Navigate to MenuPage
+              );
+            },
+          ),
+        ],
+      ),
+      body: feeds.isEmpty
+          ? Center(
+              child: Text('No FEEDS'),
+            )
+          : ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        prefixIcon: Icon(Icons.search),
+                        hintText: 'Search your requirements',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 216, 211, 211),
                           ),
                         ),
-                      )),
-                  SizedBox(height: 16),
-                  ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: feeds.length,
-                    itemBuilder: (context, index) {
-                      final feed = feeds[index];
-                      if (feed.status == 'published') {
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 216, 211, 211),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 216, 211, 211),
+                          ),
+                        ),
+                      ),
+                    )),
+                SizedBox(height: 16),
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  controller: _scrollController,
+                  itemCount: feeds.length + 1, // Ad
+                  itemBuilder: (context, index) {
+                    if (index == feeds.length) {
+                      return isLoading
+                          ? Center(
+                              child:
+                                  LoadingAnimation()) // Show loading when fetching more users
+                          : SizedBox.shrink(); // Hide when done
+                    }
+
+                    final feed = feeds[index];
+                       if (feed.status == 'published') {
                         return _buildPost(
-                          withImage: feed.media != null &&
-                              feed.media!.isNotEmpty,
+                          withImage:
+                              feed.media != null && feed.media!.isNotEmpty,
                           feed: feed,
                         );
                       } else {
                         return SizedBox.shrink();
                       }
-                    },
-                  ),
-                  SizedBox(
-                    height: 40,
-                  )
-                ],
-              );
-            },
-          ),
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () => _openModalSheet(sheet: 'requirement'),
-            label: const Text(
-              'Add Requirement/update',
-              style: TextStyle(color: Colors.white),
+                  },
+                ),
+                SizedBox(
+                  height: 40,
+                )
+              ],
             ),
-            icon: const Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 27,
-            ),
-            backgroundColor: const Color(0xFF004797),
-          ),
-        );
-      },
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _openModalSheet(sheet: 'post'),
+        label: const Text(
+          'Add Post',
+          style: TextStyle(color: Colors.white),
+        ),
+        icon: const Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 27,
+        ),
+        backgroundColor: Color(0xFFE30613),
+      ),
     );
   }
 
-  Widget _buildPost(
-      {bool withImage = false, required Feed feed}) {
+  Widget _buildPost({bool withImage = false, required Feed feed}) {
     return Consumer(
       builder: (context, ref, child) {
         final asyncUser = ref.watch(fetchUserByIdProvider(feed.author!));
@@ -184,8 +245,7 @@ class _FeedViewState extends State<FeedView> {
                             width: double.infinity,
                             child: Image.network(
                               fit: BoxFit.cover,
-                              feed.media??'https://placehold.co/600x400',
-                            
+                              feed.media ?? 'https://placehold.co/600x400',
                             ),
                           )
                         ],
@@ -221,12 +281,12 @@ class _FeedViewState extends State<FeedView> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12),
                                 ),
-                                if(user.company?.name!=null)
-                                Text(
-                                  user.company!.name!,
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 12),
-                                ),
+                                if (user.company?.name != null)
+                                  Text(
+                                    user.company!.name!,
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 12),
+                                  ),
                               ],
                             ),
                             Spacer(),

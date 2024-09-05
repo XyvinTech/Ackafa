@@ -1,8 +1,8 @@
 import 'dart:developer';
 
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/interface/screens/main_pages/feed_view.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
-import 'package:ackaf/src/interface/screens/main_pages/loginPages/demopage.dart';
-import 'package:ackaf/src/interface/screens/people/chat/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,10 +10,11 @@ import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/main_pages/event_news_page.dart';
-import 'package:ackaf/src/interface/screens/main_pages/feed_page.dart';
+
 import 'package:ackaf/src/interface/screens/main_pages/home_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/people_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/profilePage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IconResolver extends StatelessWidget {
   final String iconPath;
@@ -72,12 +73,12 @@ class _MainPageState extends State<MainPage> {
 
   List<String> _inactiveIcons = [];
   List<String> _activeIcons = [];
-  void _initialize({required UserModel user}) {
+  Future<void> _initialize({required UserModel user}) async {
     _widgetOptions = <Widget>[
       // HomePage(),
       // FeedPage(),
       HomePage(),
-      FeedPage(),
+      FeedView(),
       ProfilePage(user: user),
       Event_News_Page(),
       PeoplePage(),
@@ -98,6 +99,9 @@ class _MainPageState extends State<MainPage> {
       'assets/icons/news_active.svg',
       'assets/icons/people_active.svg',
     ];
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('id', user.id ?? '');
+    log('main page user id:$id');
   }
 
   @override

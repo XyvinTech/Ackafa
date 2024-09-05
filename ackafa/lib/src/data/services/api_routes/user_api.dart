@@ -12,7 +12,6 @@ import 'package:http_parser/http_parser.dart';
 import 'package:ackaf/src/data/globals.dart';
 
 import 'package:ackaf/src/data/models/user_model.dart';
-import 'package:ackaf/src/data/models/user_requirement_model.dart';
 import 'package:path/path.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_api.g.dart';
@@ -190,49 +189,6 @@ class ApiRoutes {
     }
   }
 
-  Future<dynamic> createFileUrl({required File file, required token}) async {
-    final url = Uri.parse('$baseUrl/files/upload');
-
-    // Determine MIME type
-    String fileName = file.path.split('/').last;
-    String? mimeType;
-    if (fileName.endsWith('.png')) {
-      mimeType = 'image/png';
-    } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
-      mimeType = 'image/jpeg';
-    } else {
-      return null; // Return null if the file type is unsupported
-    }
-
-    // Create multipart request
-    final request = http.MultipartRequest('PUT', url)
-      ..headers['Authorization'] = 'Bearer $token'
-      ..headers['accept'] = 'application/json'
-      ..headers['Content-Type'] = 'multipart/form-data'
-      ..files.add(await http.MultipartFile.fromPath(
-        'file',
-        file.path,
-        contentType: MediaType.parse(mimeType),
-      ));
-
-    try {
-      final response = await request.send();
-
-      if (response.statusCode == 200) {
-        final responseData = await response.stream.bytesToString();
-        final jsonResponse = json.decode(responseData);
-
-        return jsonResponse['data']; // Return the data part of the response
-      } else {
-        final responseBody = await response.stream.bytesToString();
-        print('Error Response Body: $responseBody');
-        return null; // Return null or an error message
-      }
-    } catch (e) {
-      print(e);
-      return null; // Return null or an error message in case of an exception
-    }
-  }
 
   String removeBaseUrl(String url) {
     String baseUrl = 'https://ackaf.s3.ap-south-1.amazonaws.com/';
@@ -258,6 +214,39 @@ class ApiRoutes {
       final jsonResponse = json.decode(response.body);
       print(jsonResponse['message']);
       print('Failed to delete image: ${response.statusCode}');
+    }
+  }
+
+   Future<void> uploaPost({required String type,required String media,required String content}) async {
+    final url = Uri.parse('$baseUrl/feeds');
+
+    final headers = {
+      'accept': '*/*',
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'type': type,
+      'media': media,
+      'content': content,
+    });
+
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 201) {
+        print('Feed created successfully');
+      } else {
+        print('Failed to create feed: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
@@ -306,141 +295,32 @@ class ApiRoutes {
     }
   }
 
-  Future<String?> uploadRequirement(
-    String token,
-    String author,
-    String content,
-    String status,
-    File file,
-  ) async {
-    const String url = 'http://43.205.89.79/api/v1/requirements';
 
-    // Create a multipart request
-    var request = http.MultipartRequest('POST', Uri.parse(url));
+  Future<void> markEventAsRSVP(String eventId) async {
+    final String url = '$baseUrl/event/single/$eventId/rsvp';
 
-    // Add headers
-    request.headers.addAll({
-      'accept': 'application/json',
-      'Authorization': 'Bearer $token',
-      'Content-Type': 'multipart/form-data',
-    });
+    try {
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
 
-    // Add fields
-    request.fields['author'] = author;
-    request.fields['content'] = content;
-    request.fields['status'] = status;
+      if (response.statusCode == 200) {
+        // Success
 
-    // Add the file
-    var stream = http.ByteStream(file.openRead());
-    stream.cast();
-    var length = await file.length();
-    var multipartFile = http.MultipartFile(
-      'invoice_url',
-      stream,
-      length,
-      filename: basename(file.path),
-      contentType: MediaType('image', 'png'),
-    );
-
-    request.files.add(multipartFile);
-
-    // Send the request
-    var response = await request.send();
-
-    if (response.statusCode == 201) {
-      print('Requirement submitted successfully');
-      final responseData = await response.stream.bytesToString();
-      final jsonResponse = json.decode(responseData);
-
-      return jsonResponse['message'];
-    } else {
-      final responseData = await response.stream.bytesToString();
-      final jsonResponse = json.decode(responseData);
-      print(jsonResponse['message']);
-      print('Failed to submit requirement: ${response.statusCode}');
-      return null;
+        print('RSVP marked successfully');
+      } else {
+        // Handle error
+        final dynamic data = json.decode(response.body)['message'];
+        print('Failed to mark RSVP: ${data}');
+      }
+    } catch (e) {
+      // Handle exceptions
+      print('An error occurred: $e');
     }
-  }
-
-  Future<String?> uploadPayment(
-    String token,
-    String category,
-    String remarks,
-    File file,
-  ) async {
-    const String url = 'http://43.205.89.79/api/v1/payments/user';
-
-    // Create a multipart request
-    var request = http.MultipartRequest('POST', Uri.parse(url));
-
-    // Add headers
-    request.headers.addAll({
-      'accept': 'application/json',
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJJZCI6IjY2YzM4ZTRkYjlhYTE0N2MyMzAzMzliZiJ9LCJpYXQiOjE3MjQ0MDE4ODh9.lcLy_lfd606IwPduyoW7geWYsHBjtAtmNcSshQV0eHM',
-      'Content-Type': 'multipart/form-data',
-    });
-
-    // Add fields
-    request.fields['category'] = category;
-    request.fields['remarks'] = remarks;
-
-    // Add the file
-    var stream = http.ByteStream(file.openRead());
-    stream.cast();
-    var length = await file.length();
-    var multipartFile = http.MultipartFile(
-      'file',
-      stream,
-      length,
-      filename: basename(file.path),
-      contentType: MediaType('image', 'png'),
-    );
-
-    request.files.add(multipartFile);
-
-    // Send the request
-    var response = await request.send();
-
-    if (response.statusCode == 201) {
-      print('Payment submitted successfully');
-      final responseData = await response.stream.bytesToString();
-      final jsonResponse = json.decode(responseData);
-
-      return jsonResponse['message'];
-    } else {
-      final responseData = await response.stream.bytesToString();
-      final jsonResponse = json.decode(responseData);
-      print(jsonResponse['message']);
-      print('Failed to submit Payment: ${response.statusCode}');
-      return 'Failed';
-    }
-  }
-}
-
-Future<void> markEventAsRSVP(String eventId) async {
-  final String url = 'http://43.205.89.79/api/v1/events/rsvp/$eventId/mark';
-  final String bearerToken = '$token';
-
-  try {
-    final response = await http.put(
-      Uri.parse(url),
-      headers: {
-        'accept': 'application/json',
-        'Authorization': 'Bearer $bearerToken',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      // Success
-      print('RSVP marked successfully');
-    } else {
-      // Handle error
-      print('Failed to mark RSVP: ${response.statusCode}');
-    }
-  } catch (e) {
-    // Handle exceptions
-    print('An error occurred: $e');
   }
 }
 

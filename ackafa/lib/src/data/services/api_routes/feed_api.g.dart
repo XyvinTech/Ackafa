@@ -6,7 +6,7 @@ part of 'feed_api.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchFeedsHash() => r'a450d462cc72a6ea75d4d86237054207f47c3f19';
+String _$fetchFeedsHash() => r'e07b386d80e4b8ac93dfbcf95f9a8efaccc20354';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -39,11 +39,13 @@ class FetchFeedsFamily extends Family<AsyncValue<List<Feed>>> {
   const FetchFeedsFamily();
 
   /// See also [fetchFeeds].
-  FetchFeedsProvider call(
-    String token,
-  ) {
+  FetchFeedsProvider call({
+    int pageNo = 1,
+    int limit = 10,
+  }) {
     return FetchFeedsProvider(
-      token,
+      pageNo: pageNo,
+      limit: limit,
     );
   }
 
@@ -52,7 +54,8 @@ class FetchFeedsFamily extends Family<AsyncValue<List<Feed>>> {
     covariant FetchFeedsProvider provider,
   ) {
     return call(
-      provider.token,
+      pageNo: provider.pageNo,
+      limit: provider.limit,
     );
   }
 
@@ -74,12 +77,14 @@ class FetchFeedsFamily extends Family<AsyncValue<List<Feed>>> {
 /// See also [fetchFeeds].
 class FetchFeedsProvider extends AutoDisposeFutureProvider<List<Feed>> {
   /// See also [fetchFeeds].
-  FetchFeedsProvider(
-    String token,
-  ) : this._internal(
+  FetchFeedsProvider({
+    int pageNo = 1,
+    int limit = 10,
+  }) : this._internal(
           (ref) => fetchFeeds(
             ref as FetchFeedsRef,
-            token,
+            pageNo: pageNo,
+            limit: limit,
           ),
           from: fetchFeedsProvider,
           name: r'fetchFeedsProvider',
@@ -90,7 +95,8 @@ class FetchFeedsProvider extends AutoDisposeFutureProvider<List<Feed>> {
           dependencies: FetchFeedsFamily._dependencies,
           allTransitiveDependencies:
               FetchFeedsFamily._allTransitiveDependencies,
-          token: token,
+          pageNo: pageNo,
+          limit: limit,
         );
 
   FetchFeedsProvider._internal(
@@ -100,10 +106,12 @@ class FetchFeedsProvider extends AutoDisposeFutureProvider<List<Feed>> {
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.token,
+    required this.pageNo,
+    required this.limit,
   }) : super.internal();
 
-  final String token;
+  final int pageNo;
+  final int limit;
 
   @override
   Override overrideWith(
@@ -118,7 +126,8 @@ class FetchFeedsProvider extends AutoDisposeFutureProvider<List<Feed>> {
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        token: token,
+        pageNo: pageNo,
+        limit: limit,
       ),
     );
   }
@@ -130,21 +139,27 @@ class FetchFeedsProvider extends AutoDisposeFutureProvider<List<Feed>> {
 
   @override
   bool operator ==(Object other) {
-    return other is FetchFeedsProvider && other.token == token;
+    return other is FetchFeedsProvider &&
+        other.pageNo == pageNo &&
+        other.limit == limit;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, token.hashCode);
+    hash = _SystemHash.combine(hash, pageNo.hashCode);
+    hash = _SystemHash.combine(hash, limit.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
 mixin FetchFeedsRef on AutoDisposeFutureProviderRef<List<Feed>> {
-  /// The parameter `token` of this provider.
-  String get token;
+  /// The parameter `pageNo` of this provider.
+  int get pageNo;
+
+  /// The parameter `limit` of this provider.
+  int get limit;
 }
 
 class _FetchFeedsProviderElement
@@ -152,7 +167,9 @@ class _FetchFeedsProviderElement
   _FetchFeedsProviderElement(super.provider);
 
   @override
-  String get token => (origin as FetchFeedsProvider).token;
+  int get pageNo => (origin as FetchFeedsProvider).pageNo;
+  @override
+  int get limit => (origin as FetchFeedsProvider).limit;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
