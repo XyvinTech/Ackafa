@@ -1,18 +1,14 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/promotions_model.dart';
 import 'package:ackaf/src/data/services/api_routes/promotions_api.dart';
 import 'package:ackaf/src/interface/common/custom_video.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
-import 'package:ackaf/src/interface/screens/main_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:http/http.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
@@ -74,6 +70,33 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  double _calculateDynamicHeight(List<Promotion> notices) {
+    double maxHeight = 0.0;
+
+    for (var notice in notices) {
+      // Estimate height based on the length of title and description
+      final double titleHeight =
+          _estimateTextHeight(notice.title!, 18.0); // Font size 18 for title
+      final double descriptionHeight = _estimateTextHeight(
+          notice.description!, 14.0); // Font size 14 for description
+
+      final double itemHeight =
+          titleHeight + descriptionHeight - 40; // Adding padding
+      if (itemHeight > maxHeight) {
+        maxHeight = itemHeight;
+      }
+    }
+    return maxHeight;
+  }
+
+  double _estimateTextHeight(String text, double fontSize) {
+    // Estimate text height based on string length, font size, and max width
+    final double screenWidth =
+        MediaQuery.sizeOf(context).width; // Adjust based on available space
+    final int numLines = (text.length / (screenWidth / fontSize)).ceil();
+    return numLines * fontSize * 1.2; // Multiplying by 1.2 for line height
+  }
+
   @override
   void dispose() {
     _bannerScrollController.dispose();
@@ -111,7 +134,7 @@ class _HomePageState extends State<HomePage> {
 
               if (banners.isNotEmpty) {
                 _bannerScrollTimer =
-                    Timer.periodic(Duration(seconds: 3), (timer) {
+                    Timer.periodic(Duration(seconds: 5), (timer) {
                   _currentBannerIndex++;
                   if (_currentBannerIndex >= banners.length) {
                     _currentBannerIndex = 0;
@@ -129,7 +152,7 @@ class _HomePageState extends State<HomePage> {
 
               if (notices.isNotEmpty) {
                 _noticeScrollTimer =
-                    Timer.periodic(Duration(seconds: 4), (timer) {
+                    Timer.periodic(Duration(seconds: 6), (timer) {
                   _currentNoticeIndex++;
                   if (_currentNoticeIndex >= notices.length) {
                     _currentNoticeIndex = 0;
@@ -224,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                       height: 20,
                     ),
                     promotions.isEmpty
-                        ? Center(
+                        ? const Center(
                             child: Text(
                               'No Promotions Yet',
                               style: TextStyle(
@@ -281,10 +304,9 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     const SizedBox(height: 16),
-
                     if (notices.isNotEmpty)
                       SizedBox(
-                        height: 150,
+                        height: _calculateDynamicHeight(notices),
                         child: ListView.builder(
                           key: _noticeKey,
                           controller: _noticeScrollController,
@@ -367,71 +389,11 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Image.network(
                 width: double.infinity,
-                banner.link ?? 'https://placehold.co/600x400/png',
-                fit: BoxFit.cover,
+                banner.media ?? 'https://placehold.co/600x400/png',
+                fit: BoxFit.fill,
               ),
-              // child: Padding(
-              //   padding: EdgeInsets.all(8.0),
-              //   child: Row(
-              //     children: [
-              //       SizedBox(width: 100),
-              //       SizedBox(width: 40),
-              //       Flexible(
-              //         child: Column(
-              //           crossAxisAlignment: CrossAxisAlignment.start,
-              //           children: [
-              //             SizedBox(
-              //               height: 20,
-              //             ),
-              //             Container(
-              //               decoration: BoxDecoration(
-              //                   color: Colors.white,
-              //                   borderRadius: BorderRadius.circular(10)),
-              //               child: const Padding(
-              //                 padding: EdgeInsets.only(left: 8, right: 8),
-              //                 child: Text(
-              //                   'Lorem ipsum dolor sit amet',
-              //                   style: TextStyle(
-              //                     fontWeight: FontWeight.w500,
-              //                     fontSize: 13,
-              //                   ),
-              //                 ),
-              //               ),
-              //             ),
-              //             Row(
-              //               children: [
-              //                 SizedBox(
-              //                   width: 10,
-              //                 ),
-              //                 Flexible(
-              //                   child: Text(
-              //                     'Lorem ipsum dolor sit amet',
-              //                     style: TextStyle(
-              //                         fontSize: 16, fontWeight: FontWeight.bold),
-              //                   ),
-              //                 ),
-              //               ],
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
             ),
           ),
-          // Positioned(
-          //   left: -10,
-          //   bottom: -10, // Make this value more negative to move the image up
-          //   child: SizedBox(
-          //     width: 240, // Adjust the width of the image
-          //     height: 240, // Adjust the height of the image
-          //     child: Image.asset(
-          //       'assets/homegirl.png',
-          //       fit: BoxFit.cover,
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
@@ -442,82 +404,6 @@ class _HomePageState extends State<HomePage> {
     return Padding(
       padding: const EdgeInsets.symmetric(
           horizontal: 16), // Adjust spacing between notices
-      child: Container(
-        width: MediaQuery.of(context).size.width -
-            32, // Notice width matches screen width
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [
-              Color.fromARGB(41, 249, 180, 6),
-              Color.fromARGB(113, 249, 180, 6),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/posterside_logo.svg', // Ensure this path is correct
-                  width: 40,
-                  height: 40,
-                ),
-                const SizedBox(width: 15),
-              ],
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              poster.title ?? '',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            if (poster.description != null)
-              Text(
-                poster.description!,
-              ),
-            const SizedBox(height: 8),
-            TextButton(
-              onPressed: () => poster.link!.contains('http')
-                  ? _launchUrl(url: poster.link)
-                  : null,
-              child: const Row(
-                children: [
-                  Text(
-                    'Know More',
-                    style: TextStyle(
-                      color: Color(0xFF040F4F), // Change the color here
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward,
-                    color: Color(0xFF040F4F), // Change the icon color here
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget customNotice(
-      {required BuildContext context, required Promotion notice}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 16), // Adjust spacing between posters
       child: Container(
         width: MediaQuery.of(context).size.width -
             32, // Poster width matches screen width
@@ -531,46 +417,63 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         child: Image.network(
-          notice.media ?? 'https://placehold.co/600x400/png',
-          fit: BoxFit.cover,
+          poster.media ?? 'https://placehold.co/600x400/png',
+          fit: BoxFit.fill,
           errorBuilder: (context, error, stackTrace) {
             return Image.network(
-                fit: BoxFit.cover, 'https://placehold.co/600x400/png');
+                fit: BoxFit.fill, 'https://placehold.co/600x400/png');
           },
         ),
-        // child: Row(
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: [
-        //     SvgPicture.asset(
-        //       'assets/icons/membership_logo.svg',
-        //       width: 40,
-        //       height: 40,
-        //     ),
-        //     const SizedBox(width: 8),
-        //     Expanded(
-        //       child: Column(
-        //         crossAxisAlignment: CrossAxisAlignment.start,
-        //         children: const [
-        //           Text(
-        //             'KSSIA Membership',
-        //             style: TextStyle(
-        //               fontWeight: FontWeight.bold,
-        //               fontSize: 18,
-        //               color: Color(0xFF004797),
-        //             ),
-        //           ),
-        //           SizedBox(height: 8),
-        //           Text(
-        //             'Lorem ipsum dolor sit amet consectetur. Eget velit sagittis sapien in vitae ut. Lorem cursus sed nunc diam ullamcorper elit.',
-        //             style: TextStyle(
-        //               color: Color.fromRGBO(0, 0, 0, 1),
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //   ],
-        // ),
+      ),
+    );
+  }
+
+  Widget customNotice(
+      {required BuildContext context, required Promotion notice}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          horizontal: 16), // Adjust spacing between posters
+      child: Container(
+        width: MediaQuery.of(context).size.width - 32,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white, // Set the background color to white
+          borderRadius: BorderRadius.circular(8.0),
+          border: Border.all(
+            color: const Color.fromARGB(
+                255, 225, 231, 236), // Set the border color to blue
+            width: 2.0, // Adjust the width as needed
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    notice.title!,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Color(0xFF004797), // Set the font color to blue
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    notice.description!,
+                    style: TextStyle(
+                      color: Color.fromRGBO(
+                          0, 0, 0, 1), // Set the font color to blue
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

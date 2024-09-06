@@ -324,13 +324,13 @@ class ProfilePage extends StatelessWidget {
                           icon: Image.asset('assets/icons/qr_button.png'),
                           iconSize: 50,
                           onPressed: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>
-                            //         ProfileCard(), // Navigate to CardPage
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ProfileCard(), // Navigate to CardPage
+                              ),
+                            );
                           },
                         ),
                       ],

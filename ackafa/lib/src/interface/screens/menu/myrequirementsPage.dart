@@ -1,3 +1,5 @@
+// import 'package:ackaf/src/data/notifires/feed_notifier.dart';
+// import 'package:ackaf/src/data/services/api_routes/feed_api.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,7 +14,7 @@
 //     return Consumer(
 //       builder: (context, ref, child) {
 //         final asyncUserRequirments =
-//             ref.watch(fetchUserRequirementsProvider(token));
+//             ref.watch(feedNotifierProvider);
 //         return Scaffold(
 //             appBar: AppBar(
 //               title: Text('My requirements'),

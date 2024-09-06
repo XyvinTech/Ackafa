@@ -1,16 +1,15 @@
 class Feed {
-  final String? id;
-  final String? type;
-  final String? media;
-  final String? link;
-  final String? content;
-  final List<dynamic>? like;
-  final List<dynamic>? comment;
-  final String? status;
-  final String? author; // Added author field
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final int? v;
+  String? id;
+  String? type;
+  String? media;
+  String? link;
+  String? content;
+  String? author;
+  List<String>? likes;
+  String? status;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  List<Comment>? comments;
 
   Feed({
     this.id,
@@ -18,16 +17,15 @@ class Feed {
     this.media,
     this.link,
     this.content,
-    this.like,
-    this.comment,
+    this.author,
+    this.likes,
     this.status,
-    this.author, // Initialize author
     this.createdAt,
     this.updatedAt,
-    this.v,
+    this.comments,
   });
 
-  // fromJson
+  // fromJson method to parse JSON data
   factory Feed.fromJson(Map<String, dynamic> json) {
     return Feed(
       id: json['_id'] as String?,
@@ -35,17 +33,22 @@ class Feed {
       media: json['media'] as String?,
       link: json['link'] as String?,
       content: json['content'] as String?,
-      like: json['like'] != null ? List<dynamic>.from(json['like']) : [],
-      comment: json['comment'] != null ? List<dynamic>.from(json['comment']) : [],
+      author: json['author'] as String?,
+      likes: (json['like'] as List?)?.map((item) => item as String).toList(),
       status: json['status'] as String?,
-      author: json['author'] as String?, // Parse author
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
-      v: json['__v'] as int?,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
+          : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'] as String)
+          : null,
+      comments: (json['comment'] as List?)
+          ?.map((item) => Comment.fromJson(item))
+          .toList(),
     );
   }
 
-  // toJson
+  // toJson method to convert object to JSON format
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
@@ -53,44 +56,84 @@ class Feed {
       'media': media,
       'link': link,
       'content': content,
-      'like': like ?? [],
-      'comment': comment ?? [],
+      'author': author,
+      'like': likes,
       'status': status,
-      'author': author, // Add author to JSON
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
-      '__v': v,
+      'comment': comments?.map((item) => item.toJson()).toList(),
     };
   }
+}
 
-  // copyWith
-  Feed copyWith({
-    String? id,
-    String? type,
-    String? media,
-    String? link,
-    String? content,
-    List<dynamic>? like,
-    List<dynamic>? comment,
-    String? status,
-    String? author, // Include author in copyWith
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    int? v,
-  }) {
-    return Feed(
-      id: id ?? this.id,
-      type: type ?? this.type,
-      media: media ?? this.media,
-      link: link ?? this.link,
-      content: content ?? this.content,
-      like: like ?? this.like,
-      comment: comment ?? this.comment,
-      status: status ?? this.status,
-      author: author ?? this.author, // Add author to copyWith
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      v: v ?? this.v,
+// Comment model with fromJson and toJson methods
+class Comment {
+  FeedUser? user;
+  String? comment;
+
+  Comment({this.user, this.comment});
+
+  factory Comment.fromJson(Map<String, dynamic> json) {
+    return Comment(
+      user: json['user'] != null ? FeedUser.fromJson(json['user']) : null,
+      comment: json['comment'] as String?,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'user': user?.toJson(),
+      'comment': comment,
+    };
+  }
+}
+
+// User model with fromJson and toJson methods
+class FeedUser {
+  String? id;
+  String? image;
+  Name? name;
+
+  FeedUser({this.id, this.image, this.name});
+
+  factory FeedUser.fromJson(Map<String, dynamic> json) {
+    return FeedUser(
+      id: json['_id'] as String?,
+      image: json['image'] as String?,
+      name: json['name'] != null ? Name.fromJson(json['name']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'image': image,
+      'name': name?.toJson(),
+    };
+  }
+}
+
+// Name model with fromJson and toJson methods
+class Name {
+  String? first;
+  String? middle;
+  String? last;
+
+  Name({this.first, this.middle, this.last});
+
+  factory Name.fromJson(Map<String, dynamic> json) {
+    return Name(
+      first: json['first'] as String?,
+      middle: json['middle'] as String?,
+      last: json['last'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'first': first,
+      'middle': middle,
+      'last': last,
+    };
   }
 }

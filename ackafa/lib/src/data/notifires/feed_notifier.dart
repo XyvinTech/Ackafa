@@ -26,15 +26,34 @@ class FeedNotifier extends _$FeedNotifier {
     isLoading = true;
 
     try {
-      final newUsers = await ref
+      final newFeeds = await ref
           .read(fetchFeedsProvider(pageNo: pageNo, limit: limit).future);
-      feeds = [...feeds, ...newUsers];
+      feeds = [...feeds, ...newFeeds];
       pageNo++;
-      hasMore = feeds.length == limit;
+      hasMore = newFeeds.length == limit;
       state = feeds;
     } catch (e, stackTrace) {
       log(e.toString());
+      log(stackTrace.toString());
+    } finally {
+      isLoading = false;
+    }
+  }
 
+  Future<void> refreshFeed() async {
+    if (isLoading) return;
+
+    isLoading = true;
+
+    try {
+      pageNo = 1;
+      final refreshedFeeds = await ref
+          .read(fetchFeedsProvider(pageNo: pageNo, limit: limit).future);
+      feeds = refreshedFeeds;
+      hasMore = refreshedFeeds.length == limit;
+      state = feeds;  // Update the state with the refreshed feed
+    } catch (e, stackTrace) {
+      log(e.toString());
       log(stackTrace.toString());
     } finally {
       isLoading = false;

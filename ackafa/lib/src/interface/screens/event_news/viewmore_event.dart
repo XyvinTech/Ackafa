@@ -23,9 +23,9 @@ class ViewMoreEventPage extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('Event Details'),
+        title: const Text('Event Details'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -38,32 +38,31 @@ class ViewMoreEventPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Image Placeholder with LIVE text
                 Stack(
                   children: [
                     Container(
+                      width: double.infinity,
                       height: 200,
                       color: Colors.grey[300],
-                      child: Center(
-                        child: Image.network(
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.network(
-                                fit: BoxFit.cover,
-                                'https://placehold.co/600x400/png');
-                          },
-                          event.image!, // Replace with your image URL
-                          fit: BoxFit.cover,
-                        ),
+                      child: Image.network(
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.network(
+                              fit: BoxFit.fill,
+                              'https://placehold.co/600x400/png');
+                        },
+                        event.image!, // Replace with your image URL
+                        fit: BoxFit.fill,
                       ),
                     ),
                     Positioned(
                       top: 8,
                       right: 8,
                       child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Color(0xFFE4483E), // Red background color
+                          color:
+                              const Color(0xFFE4483E), // Red background color
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: event.status != null && event.status != ''
@@ -71,13 +70,13 @@ class ViewMoreEventPage extends StatelessWidget {
                                 children: [
                                   Text(
                                     event.status!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(width: 4),
-                                  Icon(
+                                  const SizedBox(width: 4),
+                                  const Icon(
                                     Icons.circle,
                                     color: Colors.white,
                                     size: 8,
@@ -89,26 +88,27 @@ class ViewMoreEventPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 // Event Title
                 Text(
                   event.eventName!,
-                  style: TextStyle(
-                    fontSize: 24,
+                  style: const TextStyle(
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 // Date and Time
                 Row(
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.calendar_today, color: Color(0xFFE30613)),
-                        SizedBox(width: 8),
+                        const Icon(Icons.calendar_today,
+                            color: Color(0xFFE30613)),
+                        const SizedBox(width: 8),
                         Text(
                           date,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
                             fontWeight: FontWeight.w400,
@@ -116,14 +116,14 @@ class ViewMoreEventPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Row(
                       children: [
-                        Icon(Icons.access_time, color: Color(0xFFE30613)),
-                        SizedBox(width: 8),
+                        const Icon(Icons.access_time, color: Color(0xFFE30613)),
+                        const SizedBox(width: 8),
                         Text(
                           time,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
                             fontWeight: FontWeight.w400,
@@ -133,27 +133,35 @@ class ViewMoreEventPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
-                Divider(color: Color.fromARGB(255, 192, 188, 188)),
-                // Event Description
+                const SizedBox(height: 16),
+                const Divider(color: Color.fromARGB(255, 192, 188, 188)),
+                const Text('Organiser'),
                 Text(
+                  event.organiser ?? '',
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text(
                   'Lorem ipsum dolor sit amet consectetur. Nunc vivamus vel aliquet lacinia. '
                   'Ultricies mauris vulputate amet sagittis diam sit neque enim enim.',
                   style: TextStyle(fontSize: 16, color: Colors.black87),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 // Speakers Section
-                Text(
+                const Text(
                   'Speakers',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 ListView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: event.speakers!.length,
                   itemBuilder: (context, index) {
                     return _buildSpeakerCard(
@@ -162,16 +170,16 @@ class ViewMoreEventPage extends StatelessWidget {
                         event.speakers![index].designation!);
                   },
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 // Venue Section
-                Text(
+                const Text(
                   'Venue',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 // Map Placeholder
                 Container(
                   width: double.infinity,
@@ -184,7 +192,7 @@ class ViewMoreEventPage extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                     height: 50), // Add spacing to avoid overlap with the button
               ],
             ),
@@ -236,20 +244,20 @@ class ViewMoreEventPage extends StatelessWidget {
             imagePath.toString(),
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
-              return Icon(Icons.person, size: 40);
+              return const Icon(Icons.person, size: 40);
             },
           ),
         ),
         title: Text(
           name,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),
         subtitle: Text(
           role,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             color: Colors.grey,
           ),

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:ackaf/src/data/models/user_model.dart';
@@ -17,6 +18,7 @@ import 'package:ackaf/src/interface/common/customModalsheets.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pinput/pinput.dart';
 
 class FeedView extends ConsumerStatefulWidget {
   FeedView({super.key});
@@ -216,6 +218,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
   Widget _buildPost({bool withImage = false, required Feed feed}) {
     return Consumer(
       builder: (context, ref, child) {
+        ApiRoutes userApi = ApiRoutes();
         final asyncUser = ref.watch(fetchUserByIdProvider(feed.author!));
         return asyncUser.when(
           data: (user) {
@@ -223,8 +226,11 @@ class _FeedViewState extends ConsumerState<FeedView> {
                 withImage: feed.media != null ? true : false,
                 feed: feed,
                 user: user,
-                onLike: () {},
-                onComment: () {},
+                onLike: () async {
+                  await userApi.likeFeed(feed.id!);
+                  await ref.read(feedNotifierProvider.notifier).refreshFeed();
+                },
+                onComment: () async {},
                 onShare: () {});
           },
           loading: () => Center(child: LoadingAnimation()),
@@ -239,7 +245,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
   }
 }
 
-class ReusableFeedPost extends StatefulWidget {
+class ReusableFeedPost extends ConsumerStatefulWidget {
   final Feed feed;
   final bool withImage;
   final UserModel user;
@@ -261,26 +267,32 @@ class ReusableFeedPost extends StatefulWidget {
   _ReusableFeedPostState createState() => _ReusableFeedPostState();
 }
 
-class _ReusableFeedPostState extends State<ReusableFeedPost>
+class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
     with SingleTickerProviderStateMixin {
   bool isLiked = false;
   bool showHeartAnimation = false;
   late AnimationController _animationController;
+  TextEditingController commentController = TextEditingController();
 
   @override
   void initState() {
+    super.initState();
+
+    if (widget.feed.likes!.contains(widget.user.id)) {
+      isLiked = true;
+    }
+
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    super.initState();
   }
 
   void _toggleLike() {
     setState(() {
       isLiked = !isLiked;
       showHeartAnimation = true;
-      widget.onLike(); // Call external like handler
+      widget.onLike();
     });
     _animationController.forward().then((_) {
       _animationController.reset();
@@ -291,6 +303,7 @@ class _ReusableFeedPostState extends State<ReusableFeedPost>
   }
 
   void _openCommentModal() {
+    log('comments: ${widget.feed.comments?.length}');
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
@@ -315,15 +328,33 @@ class _ReusableFeedPostState extends State<ReusableFeedPost>
                 children: [
                   Expanded(
                     child: ListView.builder(
-                      itemCount: 10, // Example comments count
+                      itemCount: widget.feed.comments?.length ?? 0,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.grey[300],
-                            child: Icon(Icons.person),
-                          ),
-                          title: Text('User $index'),
-                          subtitle: Text('This is a comment $index.'),
+                        return Consumer(
+                          builder: (context, ref, child) {
+                            return ListTile(
+                              leading: ClipOval(
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255),
+                                  child: widget.feed.comments?[index].user
+                                              ?.image !=
+                                          null
+                                      ? Image.network(
+                                          fit: BoxFit.fill,
+                                          widget.feed.comments![index].user!
+                                              .image!)
+                                      : Icon(Icons.person),
+                                ),
+                              ),
+                              title: Text(widget
+                                  .feed.comments![index].user!.name!.first!),
+                              subtitle: Text(
+                                  widget.feed.comments![index].comment ?? ''),
+                            );
+                          },
                         );
                       },
                     ),
@@ -345,6 +376,7 @@ class _ReusableFeedPostState extends State<ReusableFeedPost>
         children: [
           Expanded(
             child: TextField(
+              controller: commentController,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                 hintText: "Add a comment...",
@@ -360,9 +392,19 @@ class _ReusableFeedPostState extends State<ReusableFeedPost>
           SizedBox(width: 8),
           CupertinoButton(
             padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Text('Post'),
-            onPressed: () {
-              // Handle posting comment
+            child: Text(
+              'Post',
+              style: TextStyle(color: Colors.red),
+            ),
+            onPressed: () async {
+              if (commentController.text != '') {
+                ApiRoutes userApi = ApiRoutes();
+                await userApi.postComment(
+                    feedId: widget.feed.id!, comment: commentController.text);
+                await ref.read(feedNotifierProvider.notifier).refreshFeed();
+                commentController.clear();
+                Navigator.pop(context);
+              }
             },
           )
         ],
@@ -410,12 +452,15 @@ class _ReusableFeedPostState extends State<ReusableFeedPost>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Container(
+          SizedBox(
             height: 200,
             width: double.infinity,
             child: Image.network(
+              errorBuilder: (context, error, stackTrace) {
+                return SizedBox.shrink();
+              },
               widget.feed.media ?? 'https://placehold.co/600x400',
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
             ),
           ),
           if (showHeartAnimation)
@@ -493,7 +538,9 @@ class _ReusableFeedPostState extends State<ReusableFeedPost>
             ),
           ],
         ),
-        Text('10 Likes')
+        Text(widget.feed.likes!.isNotEmpty
+            ? '${widget.feed.likes!.length.toString()} Likes'
+            : '')
       ],
     );
   }

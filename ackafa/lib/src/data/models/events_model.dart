@@ -54,6 +54,7 @@ class Event {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final int? v;
+  final String? organiser;
 
   Event({
     this.id,
@@ -73,6 +74,7 @@ class Event {
     this.createdAt,
     this.updatedAt,
     this.v,
+    this.organiser
   });
 
   // fromJson
@@ -82,8 +84,10 @@ class Event {
       eventName: json['eventName'] as String?,
       type: json['type'] as String?,
       image: json['image'] as String?,
-      startDate: json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
-      startTime: json['startTime'] != null ? DateTime.parse(json['startTime']) : null,
+      startDate:
+          json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
+      startTime:
+          json['startTime'] != null ? DateTime.parse(json['startTime']) : null,
       endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
       endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null,
       platform: json['platform'] as String?,
@@ -94,9 +98,12 @@ class Event {
           : [],
       status: json['status'] as String?,
       rsvp: json['rsvp'] != null ? List<dynamic>.from(json['rsvp']) : [],
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
       v: json['__v'] as int?,
+      organiser: json['organiserName'] as String?,
     );
   }
 
@@ -120,6 +127,7 @@ class Event {
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
       '__v': v,
+      'organiserName': organiser
     };
   }
 
@@ -142,6 +150,7 @@ class Event {
     DateTime? createdAt,
     DateTime? updatedAt,
     int? v,
+    String? organiser,
   }) {
     return Event(
       id: id ?? this.id,
@@ -161,6 +170,7 @@ class Event {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       v: v ?? this.v,
+      organiser: organiser??this.organiser
     );
   }
 }

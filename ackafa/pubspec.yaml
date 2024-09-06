@@ -41,7 +41,7 @@ dependencies:
   minio_flutter: ^0.0.1
   flutter_upgrade_version: ^1.1.6
   flutter_animate: ^4.5.0
-  firebase_messaging: ^14.6.3
+
   
 
 dev_dependencies:
