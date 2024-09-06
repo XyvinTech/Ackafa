@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/notifires/feed_notifier.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/data/services/api_routes/feed_api.dart';
@@ -13,6 +15,8 @@ import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/customModalsheets.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class FeedView extends ConsumerStatefulWidget {
   FeedView({super.key});
@@ -178,15 +182,14 @@ class _FeedViewState extends ConsumerState<FeedView> {
                     }
 
                     final feed = feeds[index];
-                       if (feed.status == 'published') {
-                        return _buildPost(
-                          withImage:
-                              feed.media != null && feed.media!.isNotEmpty,
-                          feed: feed,
-                        );
-                      } else {
-                        return SizedBox.shrink();
-                      }
+                    if (feed.status == 'published') {
+                      return _buildPost(
+                        withImage: feed.media != null && feed.media!.isNotEmpty,
+                        feed: feed,
+                      );
+                    } else {
+                      return SizedBox.shrink();
+                    }
                   },
                 ),
                 SizedBox(
@@ -214,168 +217,284 @@ class _FeedViewState extends ConsumerState<FeedView> {
     return Consumer(
       builder: (context, ref, child) {
         final asyncUser = ref.watch(fetchUserByIdProvider(feed.author!));
-        return Card(
-            color: Colors.white,
-            elevation: 0,
-            margin: const EdgeInsets.only(bottom: 16.0),
-            shape: RoundedRectangleBorder(
-              side: BorderSide(color: Color.fromARGB(255, 213, 208, 208)),
-              borderRadius: BorderRadius.circular(6.0),
-            ),
-            child: asyncUser.when(
-              loading: () => Center(child: LoadingAnimation()),
-              error: (error, stackTrace) {
-                // Handle error state
-                return Center(
-                  child: Text('Error loading promotions: $error'),
-                );
-              },
-              data: (user) {
-                print(user);
-                if (feed.author != null) {
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (withImage) ...[
-                          SizedBox(height: 16),
-                          Container(
-                            height: 200,
-                            width: double.infinity,
-                            child: Image.network(
-                              fit: BoxFit.cover,
-                              feed.media ?? 'https://placehold.co/600x400',
-                            ),
-                          )
-                        ],
-                        SizedBox(height: 16),
-                        Text(
-                          feed.content!,
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        SizedBox(height: 16),
-                        Row(
-                          children: [
-                            ClipOval(
-                              child: Container(
-                                width: 30,
-                                height: 30,
-                                color: const Color.fromARGB(255, 255, 255, 255),
-                                child: Image.network(
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Icon(Icons.person);
-                                  },
-                                  user.image!, // Replace with your image URL
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${user.name?.first} ${user.name?.middle} ${user.name?.last}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12),
-                                ),
-                                if (user.company?.name != null)
-                                  Text(
-                                    user.company!.name!,
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 12),
-                                  ),
-                              ],
-                            ),
-                            Spacer(),
-                            Text(
-                              feed.createdAt.toString(),
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
-                  return Center(
-                    child: Text('No requirements'),
-                  );
-                }
-              },
-            ));
+        return asyncUser.when(
+          data: (user) {
+            return ReusableFeedPost(
+                withImage: feed.media != null ? true : false,
+                feed: feed,
+                user: user,
+                onLike: () {},
+                onComment: () {},
+                onShare: () {});
+          },
+          loading: () => Center(child: LoadingAnimation()),
+          error: (error, stackTrace) {
+            return Center(
+              child: Text('Error loading promotions: $error'),
+            );
+          },
+        );
       },
     );
   }
 }
 
-class PostWidget extends StatelessWidget {
-  final String authorName;
-  final String companyName;
-  final String timestamp;
-  final String content;
-  final String imagePath;
+class ReusableFeedPost extends StatefulWidget {
+  final Feed feed;
+  final bool withImage;
+  final UserModel user;
+  final Function onLike;
+  final Function onComment;
+  final Function onShare;
 
-  PostWidget({
-    required this.authorName,
-    required this.companyName,
-    required this.timestamp,
-    required this.content,
-    required this.imagePath,
-  });
+  const ReusableFeedPost({
+    Key? key,
+    required this.feed,
+    this.withImage = false,
+    required this.user,
+    required this.onLike,
+    required this.onComment,
+    required this.onShare,
+  }) : super(key: key);
+
+  @override
+  _ReusableFeedPostState createState() => _ReusableFeedPostState();
+}
+
+class _ReusableFeedPostState extends State<ReusableFeedPost>
+    with SingleTickerProviderStateMixin {
+  bool isLiked = false;
+  bool showHeartAnimation = false;
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    super.initState();
+  }
+
+  void _toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+      showHeartAnimation = true;
+      widget.onLike(); // Call external like handler
+    });
+    _animationController.forward().then((_) {
+      _animationController.reset();
+      setState(() {
+        showHeartAnimation = false;
+      });
+    });
+  }
+
+  void _openCommentModal() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        actions: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.7, // Adjust height
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text('Comments'),
+                backgroundColor: Colors.white,
+                automaticallyImplyLeading: false,
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+              body: Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: 10, // Example comments count
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.grey[300],
+                            child: Icon(Icons.person),
+                          ),
+                          title: Text('User $index'),
+                          subtitle: Text('This is a comment $index.'),
+                        );
+                      },
+                    ),
+                  ),
+                  _buildCommentInputField(),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCommentInputField() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                hintText: "Add a comment...",
+                filled: true,
+                fillColor: Colors.grey[200],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 8),
+          CupertinoButton(
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            child: Text('Post'),
+            onPressed: () {
+              // Handle posting comment
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          ),
-        ],
+    return Card(
+      color: Colors.white,
+      elevation: 0,
+      margin: const EdgeInsets.only(bottom: 16.0),
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: Color.fromARGB(255, 213, 208, 208)),
+        borderRadius: BorderRadius.circular(6.0),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (widget.withImage) _buildPostImage(),
+            SizedBox(height: 16),
+            Text(widget.feed.content!, style: TextStyle(fontSize: 14)),
+            SizedBox(height: 16),
+            _buildUserInfo(widget.user),
+            SizedBox(height: 16),
+            _buildActionButtons(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPostImage() {
+    return GestureDetector(
+      onDoubleTap: _toggleLike,
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          Text(
-            content,
-            style: TextStyle(fontSize: 16),
+          Container(
+            height: 200,
+            width: double.infinity,
+            child: Image.network(
+              widget.feed.media ?? 'https://placehold.co/600x400',
+              fit: BoxFit.cover,
+            ),
           ),
-          SizedBox(height: 8),
-          Image(image: NetworkImage(imagePath)),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: AssetImage(
-                    'assets/images/avatar.png'), // Replace with your avatar image path
-              ),
-              SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    authorName,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(companyName),
-                ],
-              ),
-              Spacer(),
-              Text(timestamp),
-            ],
-          ),
+          if (showHeartAnimation)
+            Icon(Icons.favorite, color: Colors.red.withOpacity(0.8), size: 100)
+                .animate(target: showHeartAnimation ? 1 : 0)
+                .scaleXY(begin: 0.7, end: 1.2)
+                .then()
+                .scaleXY(begin: 1.2, end: 0.9),
         ],
       ),
+    );
+  }
+
+  Widget _buildUserInfo(UserModel user) {
+    return Row(
+      children: [
+        ClipOval(
+          child: Container(
+            width: 30,
+            height: 30,
+            color: const Color.fromARGB(255, 255, 255, 255),
+            child: Image.network(
+              user.image!,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(Icons.person);
+              },
+            ),
+          ),
+        ),
+        SizedBox(width: 8),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${user.name?.first} ${user.name?.middle} ${user.name?.last}',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+            ),
+            if (user.company?.name != null)
+              Text(
+                user.company!.name!,
+                style: TextStyle(color: Colors.grey, fontSize: 12),
+              ),
+          ],
+        ),
+        Spacer(),
+        Text(
+          widget.feed.createdAt.toString(),
+          style: TextStyle(color: Colors.grey, fontSize: 12),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(
+                isLiked ? Icons.favorite : Icons.favorite_border,
+                color: isLiked ? Colors.red : Colors.black,
+              ),
+              onPressed: _toggleLike,
+            ),
+            IconButton(
+              icon: Icon(FontAwesomeIcons.comment),
+              onPressed: _openCommentModal,
+            ),
+            IconButton(
+              icon: Icon(Icons.arrow_forward),
+              onPressed: () => widget.onShare(), // External share handler
+            ),
+          ],
+        ),
+        Text('10 Likes')
+      ],
     );
   }
 }

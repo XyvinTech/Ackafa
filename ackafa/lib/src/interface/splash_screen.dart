@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/app_versioncheck_api.dart';
+import 'package:ackaf/src/data/services/get_fcm.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/data/globals.dart';
@@ -24,6 +26,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   Future<void> initialize() async {
     await checktoken();
+    await getFcmToken();
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+      print("New FCM Token: $newToken");
+      // Save or send the new token to your server
+    });
     Timer(Duration(seconds: 2), () {
       print('logged in : $LoggedIn');
       if (LoggedIn) {
@@ -44,7 +51,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       setState(() {
         LoggedIn = true;
         token = savedtoken;
-        id = savedId??'';
+        id = savedId ?? '';
       });
     }
   }

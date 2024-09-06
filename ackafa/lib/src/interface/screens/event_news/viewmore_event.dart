@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/services/api_routes/events_api.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
@@ -13,7 +17,8 @@ class ViewMoreEventPage extends StatelessWidget {
   Widget build(BuildContext context) {
     String time = DateFormat('hh:mm a').format(event.startTime!);
     String date = DateFormat('yyyy-MM-dd').format(event.startDate!);
-    bool registered= event.rsvp?.contains(id)?? false;
+    bool registered = event.rsvp?.contains(id) ?? false;
+    log('event registered?:$registered');
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -184,18 +189,29 @@ class ViewMoreEventPage extends StatelessWidget {
               ],
             ),
           ),
-          Positioned(
-            bottom: 16,
-            left: 16,
-            right: 16,
-            child: customButton(
-              label: 'REGISTER EVENT',
-              onPressed: () {
-                ApiRoutes userApi = ApiRoutes();
-                userApi.markEventAsRSVP(event.id!);
-              },
-              fontSize: 16,
-            ),
+          Consumer(
+            builder: (context, ref, child) {
+              return Positioned(
+                bottom: 16,
+                left: 16,
+                right: 16,
+                child: customButton(
+                  label: event.status == 'cancelled'
+                      ? 'CANCELLED'
+                      : registered
+                          ? 'ALREADY REGISTERED'
+                          : 'REGISTER EVENT',
+                  onPressed: () {
+                    if (!registered && event.status != 'cancelled') {
+                      ApiRoutes userApi = ApiRoutes();
+                      userApi.markEventAsRSVP(event.id!);
+                      ref.invalidate(fetchEventsProvider);
+                    }
+                  },
+                  fontSize: 16,
+                ),
+              );
+            },
           ),
         ],
       ),

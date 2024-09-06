@@ -189,7 +189,6 @@ class ApiRoutes {
     }
   }
 
-
   String removeBaseUrl(String url) {
     String baseUrl = 'https://ackaf.s3.ap-south-1.amazonaws.com/';
     return url.replaceFirst(baseUrl, '');
@@ -217,7 +216,10 @@ class ApiRoutes {
     }
   }
 
-   Future<void> uploaPost({required String type,required String media,required String content}) async {
+  Future<void> uploaPost(
+      {required String type,
+      required String media,
+      required String content}) async {
     final url = Uri.parse('$baseUrl/feeds');
 
     final headers = {
@@ -295,9 +297,8 @@ class ApiRoutes {
     }
   }
 
-
   Future<void> markEventAsRSVP(String eventId) async {
-    final String url = '$baseUrl/event/single/$eventId/rsvp';
+    final String url = '$baseUrl/event/single/$eventId';
 
     try {
       final response = await http.patch(
