@@ -4,11 +4,12 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 Widget customVideo({required BuildContext context, required Promotion video}) {
   final videoUrl =
-      video.ytLink; // Assuming 'url' is the key containing the video URL
+      video.link; // Assuming 'url' is the key containing the video URL
 
   final ytController = YoutubePlayerController(
-    initialVideoId: YoutubePlayer.convertUrlToId(videoUrl)!,
+    initialVideoId: YoutubePlayer.convertUrlToId(videoUrl ?? '')!,
     flags: const YoutubePlayerFlags(
+      loop: true,
       disableDragSeek: true,
       autoPlay: false,
       mute: false,
@@ -25,7 +26,7 @@ Widget customVideo({required BuildContext context, required Promotion video}) {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: Text(video.videoTitle,
+              child: Text(video.title ?? '',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             ),
           ],

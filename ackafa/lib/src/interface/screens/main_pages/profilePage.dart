@@ -3,7 +3,8 @@ import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:ackaf/src/interface/screens/profile/card.dart';
-import 'package:ackaf/src/interface/screens/profile/profilePreview.dart'; // Import the XCard widget
+import 'package:ackaf/src/interface/screens/profile/profilePreview.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Import the XCard widget
 
 class ProfilePage extends StatelessWidget {
   final UserModel user;
@@ -164,21 +165,18 @@ class ProfilePage extends StatelessWidget {
                                       Column(
                                         children: [
                                           ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(9),
-                                            child: Image.network(
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return Image.network(
-                                                    'https://placehold.co/400');
-                                              },
-                                              user.company!.logo ??
-                                                  'https://placehold.co/400',
-                                              height: 33,
-                                              width: 40,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
+                                              borderRadius:
+                                                  BorderRadius.circular(9),
+                                              child: user.company?.logo !=
+                                                          null &&
+                                                      user.company?.logo != ''
+                                                  ? Image.network(
+                                                      user.company!.logo!,
+                                                      height: 33,
+                                                      width: 40,
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : SizedBox())
                                         ],
                                       ),
                                       const SizedBox(width: 10),
@@ -186,22 +184,24 @@ class ProfilePage extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            user.company!.designation ?? '',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 16,
-                                              color: Color.fromARGB(
-                                                  255, 42, 41, 41),
+                                          if (user.company?.designation != null)
+                                            Text(
+                                              user.company?.designation ?? '',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16,
+                                                color: Color.fromARGB(
+                                                    255, 42, 41, 41),
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            user.company!.name!,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey,
+                                          if (user.company?.name != null)
+                                            Text(
+                                              user.company?.name ?? '',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey,
+                                              ),
                                             ),
-                                          ),
                                         ],
                                       ),
                                     ],
@@ -249,17 +249,20 @@ class ProfilePage extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Icon(Icons.location_on, color: Color(0xFFE30613)),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: Text(
-                                  user.bio!,
-                                ),
-                              ),
-                            ],
-                          ),
+                          if (user.address != null)
+                            Row(
+                              children: [
+                                Icon(Icons.location_on,
+                                    color: Color(0xFFE30613)),
+                                SizedBox(width: 10),
+                                if (user.bio != null)
+                                  Expanded(
+                                    child: Text(
+                                      user.bio ?? '',
+                                    ),
+                                  ),
+                              ],
+                            ),
                         ],
                       ),
                     ),
@@ -325,13 +328,13 @@ class ProfilePage extends StatelessWidget {
                           icon: Image.asset('assets/icons/qr_button.png'),
                           iconSize: 50,
                           onPressed: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>
-                            //         ProfileCard(), // Navigate to CardPage
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ProfileCard(), // Navigate to CardPage
+                              ),
+                            );
                           },
                         ),
                       ],

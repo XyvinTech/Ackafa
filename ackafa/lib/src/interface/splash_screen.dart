@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/app_versioncheck_api.dart';
+import 'package:ackaf/src/data/services/get_fcm_token.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/data/globals.dart';
@@ -20,6 +22,24 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     super.initState();
     checkAppVersion(context);
     initialize();
+    getToken();
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+  print("New FCM Token: $newToken");
+  // Save or send the new token to your server
+});
+FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Received a message in foreground: ${message.notification?.title}');
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('Notification opened: ${message.data}');
+    });
+
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+      if (message != null) {
+        print('Notification clicked when app was terminated');
+      }
+    });
   }
 
   Future<void> initialize() async {
@@ -38,11 +58,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   Future<void> checktoken() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? savedtoken = preferences.getString('token');
+    String? savedId = preferences.getString('id');
     log('splashScreen: $savedtoken');
     if (savedtoken != null && savedtoken.isNotEmpty) {
       setState(() {
         LoggedIn = true;
         token = savedtoken;
+        id = savedId ?? '';
       });
     }
   }

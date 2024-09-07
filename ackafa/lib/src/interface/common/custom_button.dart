@@ -5,6 +5,7 @@ Widget customButton(
     required VoidCallback onPressed,
     required int fontSize}) {
   return SizedBox(
+    height: 55,
     width: double.infinity,
     child: ElevatedButton(
         onPressed: onPressed,

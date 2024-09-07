@@ -17,7 +17,6 @@ import '../menu/privacy.dart';
 import '../menu/about.dart';
 // import '../menu/my_subscription.dart';
 import '../menu/my_events.dart';
-import '../menu/my_transaction.dart';
 import '../menu/my_post.dart';
 
 void showDeleteAccountDialog(BuildContext context) {
@@ -301,148 +300,135 @@ class MenuPage extends StatelessWidget {
 
                       SizedBox(height: 13),
 
-                      // Container(
-                      //   height: 50,
-                      //   width: double.infinity,
-                      //   color: Color(0xFFF2F2F2),
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.only(left: 16.0),
-                      //     child: Row(
-                      //       children: [
-                      //         Text(
-                      //           'ACCOUNT',
-                      //           style: TextStyle(
-                      //             fontWeight: FontWeight.bold,
-                      //             color: Colors.grey,
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
+                      Container(
+                        height: 50,
+                        width: double.infinity,
+                        color: Color(0xFFF2F2F2),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                'ACCOUNT',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
 
-                      // // Menu List
-                      // _buildListTile(
-                      //   context,
-                      //   Icons.credit_card,
-                      //   'Request NFC',
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //           builder: (context) => RequestNFCPage()),
-                      //     );
-                      //   },
-                      // ),
+                      // Menu List
+                      _buildListTile(
+                        context,
+                        Icons.credit_card,
+                        'Request NFC',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RequestNFCPage()),
+                          );
+                        },
+                      ),
 
-                      // Divider(),
-                      // _buildListTile(
-                      //   context,
-                      //   Icons.subscriptions,
-                      //   'My Events',
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //           builder: (context) => const MyEventsPage()),
-                      //     );
-                      //   },
-                      // ),
-                      // Divider(),
-                      // _buildListTile(
-                      //   context,
-                      //   Icons.monetization_on,
-                      //   'My Transactions',
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //           builder: (context) => MyTransactionsPage()),
-                      //     );
-                      //   },
-                      // ),
+                      Divider(),
+                      _buildListTile(
+                        context,
+                        Icons.subscriptions,
+                        'My Events',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MyEventsPage()),
+                          );
+                        },
+                      ),
+                      Divider(),
 
-                      // Divider(),
-                      // _buildListTile(
-                      //   context,
-                      //   Icons.monetization_on,
-                      //   'My Posts',
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //           builder: (context) => MyPostPage()),
-                      //     );
-                      //   },
-                      // ),
+                      _buildListTile(
+                        context,
+                        Icons.monetization_on,
+                        'My Posts',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MyPostsPage()),
+                          );
+                        },
+                      ),
 
-                      // Divider(),
-                      // _buildListTile(
-                      //   context,
-                      //   Icons.info,
-                      //   'About us',
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //           builder: (context) => AboutPage()),
-                      //     );
-                      //   },
-                      // ),
-                      // Divider(),
-                      // _buildListTile(
-                      //   context,
-                      //   Icons.privacy_tip,
-                      //   'Privacy policy',
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //           builder: (context) => PrivacyPolicyPage()),
-                      //     );
-                      //   },
-                      // ),
-                      // Divider(),
-                      // _buildListTile(
-                      //   context,
-                      //   Icons.rule,
-                      //   'Terms & condition',
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //           builder: (context) => TermsAndConditionsPage()),
-                      //     );
-                      //   },
-                      // ),
+                      Divider(),
+                      _buildListTile(
+                        context,
+                        Icons.info,
+                        'About us',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AboutPage()),
+                          );
+                        },
+                      ),
+                      Divider(),
+                      _buildListTile(
+                        context,
+                        Icons.privacy_tip,
+                        'Privacy policy',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PrivacyPolicyPage()),
+                          );
+                        },
+                      ),
+                      Divider(),
+                      _buildListTile(
+                        context,
+                        Icons.rule,
+                        'Terms & condition',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TermsAndConditionsPage()),
+                          );
+                        },
+                      ),
 
-                      // // Spacing before Logout and Delete
-                      // Container(color: Color(0xFFF2F2F2), height: 15),
+                      // Spacing before Logout and Delete
+                      Container(color: Color(0xFFF2F2F2), height: 15),
 
-                      // // Logout and Delete Account
-                      // _buildListTile(
-                      //   context,
-                      //   Icons.logout,
-                      //   'Logout',
-                      //   textColor: Colors.black,
-                      //   onTap: () => showLogoutDialog(context),
-                      // ),
-                      // Container(color: Color(0xFFF2F2F2), height: 15),
+                      // Logout and Delete Account
+                      _buildListTile(
+                        context,
+                        Icons.logout,
+                        'Logout',
+                        textColor: Colors.black,
+                        onTap: () => showLogoutDialog(context),
+                      ),
+                      Container(color: Color(0xFFF2F2F2), height: 15),
 
-                      // Column(
-                      //   children: [
-                      //     Padding(
-                      //       padding: const EdgeInsets.symmetric(),
-                      //       child: _buildListTile(
-                      //         context,
-                      //         Icons.delete,
-                      //         'Delete account',
-                      //         textColor: Colors.red,
-                      //         onTap: () => showDeleteAccountDialog(context),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(),
+                            child: _buildListTile(
+                              context,
+                              Icons.delete,
+                              'Delete account',
+                              textColor: Colors.red,
+                              onTap: () => showDeleteAccountDialog(context),
+                            ),
+                          ),
+                        ],
+                      ),
 
                       Container(color: Color(0xFFF2F2F2), height: 20),
 

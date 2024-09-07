@@ -437,7 +437,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
 
       ApiRoutes userApi = ApiRoutes();
       String savedToken =
-          await userApi.verifyOTP(widget.verificationId, _otpController.text);
+          await userApi.verifyOTP(verificationId: widget.verificationId,  fcmToken: fcmToken, smsCode: _otpController.text,);
 
       if (savedToken.isNotEmpty) {
         final SharedPreferences preferences =

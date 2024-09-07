@@ -15,11 +15,9 @@ class PeoplePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2, // Number of tabs
-      child: Consumer(
-        builder: (context, ref, child) {
-          final asyncUsers = ref.watch(fetchUsersProvider(token));
 
-          return Scaffold(
+
+          child:  Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
               toolbarHeight: 60.0,
@@ -94,34 +92,25 @@ class PeoplePage extends StatelessWidget {
                 ),
               ),
             ),
-            body: asyncUsers.when(
-              data: (users) {
-                return Column(
+            body: 
+                 Column(
                   children: [
                     // Wrap TabBar with a Container to adjust margin
 
                     Expanded(
                       child: TabBarView(
                         children: [
-                          MembersPage(users: users),
+                          MembersPage( ),
                           ChatPage(),
                         ],
                       ),
                     ),
                   ],
-                );
-              },
-              loading: () => Center(child: CircularProgressIndicator()),
-              error: (error, stackTrace) {
-                print(stackTrace);
-                return Center(
-                  child: Text('Error loading users: $error'),
-                );
-              },
-            ),
-          );
-        },
-      ),
+                )
+            
+          )
+      
+ 
     );
   }
 }

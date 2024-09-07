@@ -6,7 +6,7 @@ part of 'events_api.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchEventsHash() => r'50f4b9eda1283649b52ae63d4979eb04344205d1';
+String _$fetchEventsHash() => r'97016089f01fd2745a12019ad887e6faabe90c51';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -154,5 +154,21 @@ class _FetchEventsProviderElement
   @override
   String get token => (origin as FetchEventsProvider).token;
 }
+
+String _$fetchMyEventsHash() => r'61d68719db492c84b95f14764f17582fac8d372b';
+
+/// See also [fetchMyEvents].
+@ProviderFor(fetchMyEvents)
+final fetchMyEventsProvider = AutoDisposeFutureProvider<List<Event>>.internal(
+  fetchMyEvents,
+  name: r'fetchMyEventsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$fetchMyEventsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FetchMyEventsRef = AutoDisposeFutureProviderRef<List<Event>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

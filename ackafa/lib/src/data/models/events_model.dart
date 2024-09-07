@@ -1,109 +1,176 @@
-class Event {
-  String? id;
-  String? type;
-  String? name;
-  String? image;
-  DateTime? date;
-  DateTime? time;
-  String? platform;
-  String? meetingLink;
-  String? organiserName;
-  String? organiserCompanyName;
-  String? guestImage;
-  String? organiserRole;
-  bool? activate;
-  List<Speaker>? speakers;
+class Speaker {
+  final String? name;
+  final String? designation;
+  final String? role;
+  final String? image;
+  final String? id;
 
-  Event({
-    this.id,
-    this.type,
+  Speaker({
     this.name,
+    this.designation,
+    this.role,
     this.image,
-    this.date,
-    this.time,
-    this.platform,
-    this.meetingLink,
-    this.organiserName,
-    this.organiserCompanyName,
-    this.guestImage,
-    this.organiserRole,
-    this.activate,
-    this.speakers,
+    this.id,
   });
 
-  factory Event.fromJson(Map<String, dynamic> json) {
-    return Event(
-      id: json['_id'],
-      type: json['type'],
-      name: json['name'],
-      image: json['image'],
-      date: DateTime.parse(json['date']),
-      time: DateTime.parse(json['time']),
-      platform: json['platform'],
-      meetingLink: json['meeting_link'],
-      organiserName: json['organiser_name'],
-      organiserCompanyName: json['organiser_company_name'],
-      guestImage: json['guest_image'],
-      organiserRole: json['organiser_role'],
-      activate: json['activate'],
-      speakers: (json['speakers'] as List)
-          .map((speakerJson) => Speaker.fromJson(speakerJson))
-          .toList(),
+  // fromJson
+  factory Speaker.fromJson(Map<String, dynamic> json) {
+    return Speaker(
+      name: json['name'] as String?,
+      designation: json['designation'] as String?,
+      role: json['role'] as String?,
+      image: json['image'] as String?,
+      id: json['_id'] as String?,
     );
   }
 
+  // toJson
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
-      'type': type,
       'name': name,
+      'designation': designation,
+      'role': role,
       'image': image,
-      'date': date?.toIso8601String(),
-      'time': time?.toIso8601String(),
-      'platform': platform,
-      'meeting_link': meetingLink,
-      'organiser_name': organiserName,
-      'organiser_company_name': organiserCompanyName,
-      'guest_image': guestImage,
-      'organiser_role': organiserRole,
-      'activate': activate,
-      'speakers': speakers?.map((speaker) => speaker.toJson()).toList(),
+      '_id': id,
     };
   }
 }
 
-class Speaker {
-  String? id;
-  String? speakerName;
-  String? speakerDesignation;
-  String? speakerImage;
-  String? speakerRole;
+class Event {
+  final String? id;
+  final String? eventName;
+  final String? type;
+  final String? image;
+  final DateTime? startDate;
+  final DateTime? startTime;
+  final DateTime? endDate;
+  final DateTime? endTime;
+  final String? platform;
+  final String? link;
+  final String? venue;
+  final List<Speaker>? speakers;
+  final String? status;
+  final List<dynamic>? rsvp;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final int? v;
+  final String? organiser;
 
-  Speaker({
+  Event({
     this.id,
-    this.speakerName,
-    this.speakerDesignation,
-    this.speakerImage,
-    this.speakerRole,
+    this.eventName,
+    this.type,
+    this.image,
+    this.startDate,
+    this.startTime,
+    this.endDate,
+    this.endTime,
+    this.platform,
+    this.link,
+    this.venue,
+    this.speakers,
+    this.status,
+    this.rsvp,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
+    this.organiser
   });
 
-  factory Speaker.fromJson(Map<String, dynamic> json) {
-    return Speaker(
-      id: json['_id'],
-      speakerName: json['speaker_name'],
-      speakerDesignation: json['speaker_designation'],
-      speakerImage: json['speaker_image'],
-      speakerRole: json['speaker_role'],
+  // fromJson
+  factory Event.fromJson(Map<String, dynamic> json) {
+    return Event(
+      id: json['_id'] as String?,
+      eventName: json['eventName'] as String?,
+      type: json['type'] as String?,
+      image: json['image'] as String?,
+      startDate:
+          json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
+      startTime:
+          json['startTime'] != null ? DateTime.parse(json['startTime']) : null,
+      endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
+      endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null,
+      platform: json['platform'] as String?,
+      link: json['link'] as String?,
+      venue: json['venue'] as String?,
+      speakers: json['speakers'] != null
+          ? List<Speaker>.from(json['speakers'].map((x) => Speaker.fromJson(x)))
+          : [],
+      status: json['status'] as String?,
+      rsvp: json['rsvp'] != null ? List<dynamic>.from(json['rsvp']) : [],
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      v: json['__v'] as int?,
+      organiser: json['organiserName'] as String?,
     );
   }
 
+  // toJson
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
-      'speaker_name': speakerName,
-      'speaker_designation': speakerDesignation,
-      'speaker_image': speakerImage,
-      'speaker_role': speakerRole,
+      'eventName': eventName,
+      'type': type,
+      'image': image,
+      'startDate': startDate?.toIso8601String(),
+      'startTime': startTime?.toIso8601String(),
+      'endDate': endDate?.toIso8601String(),
+      'endTime': endTime?.toIso8601String(),
+      'platform': platform,
+      'link': link,
+      'venue': venue,
+      'speakers': speakers?.map((x) => x.toJson()).toList(),
+      'status': status,
+      'rsvp': rsvp ?? [],
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
+      '__v': v,
+      'organiserName': organiser
     };
+  }
+
+  // copyWith
+  Event copyWith({
+    String? id,
+    String? eventName,
+    String? type,
+    String? image,
+    DateTime? startDate,
+    DateTime? startTime,
+    DateTime? endDate,
+    DateTime? endTime,
+    String? platform,
+    String? link,
+    String? venue,
+    List<Speaker>? speakers,
+    String? status,
+    List<dynamic>? rsvp,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? v,
+    String? organiser,
+  }) {
+    return Event(
+      id: id ?? this.id,
+      eventName: eventName ?? this.eventName,
+      type: type ?? this.type,
+      image: image ?? this.image,
+      startDate: startDate ?? this.startDate,
+      startTime: startTime ?? this.startTime,
+      endDate: endDate ?? this.endDate,
+      endTime: endTime ?? this.endTime,
+      platform: platform ?? this.platform,
+      link: link ?? this.link,
+      venue: venue ?? this.venue,
+      speakers: speakers ?? this.speakers,
+      status: status ?? this.status,
+      rsvp: rsvp ?? this.rsvp,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      v: v ?? this.v,
+      organiser: organiser??this.organiser
+    );
   }
 }

@@ -11,18 +11,20 @@ import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/custom_dialog.dart';
+import 'package:ackaf/src/interface/common/custom_dropdowns/custom_dropdowns.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/paymentpage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_completetion_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRegistrationScreen extends StatefulWidget {
   const UserRegistrationScreen({super.key});
@@ -49,7 +51,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
     }
 
     if (status.isGranted) {
-      _pickFile();
+      _pickFile(source);
     } else if (status.isPermanentlyDenied) {
       _showPermissionDeniedDialog(true, context);
     } else {
@@ -57,15 +59,13 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
     }
   }
 
-  Future<File?> _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['png', 'jpg', 'jpeg'],
-    );
+  Future<File?> _pickFile(source) async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: source);
 
-    if (result != null) {
+    if (image != null) {
       setState(() {
-        _profileImageFile = File(result.files.single.path!);
+        _profileImageFile = File(image.path);
         // api.createFileUrl(file: _profileImageFile!, token: token).then((url) {
         //   String profileUrl = url;
         //   ref.read(userProvider.notifier).updateProfilePicture(profileUrl);
@@ -114,7 +114,6 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        log('im in userregistraion $token');
         final asyncUser = ref.watch(userProvider);
         return asyncUser.when(
           data: (user) {
@@ -578,12 +577,13 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                   if (response) {
                                                     showCustomDialog(context);
                                                     log('user status: ${user.status}');
-                                                    if (user.status == 'active')
+                                                    if (user.status ==
+                                                        'active') {
                                                       Navigator.of(context).push(
                                                           MaterialPageRoute(
                                                               builder: (context) =>
                                                                   ProfileCompletionScreen()));
-                                                    else {
+                                                    } else {
                                                       Navigator.of(context).push(
                                                           MaterialPageRoute(
                                                               builder: (context) =>
@@ -617,8 +617,10 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
               //   return DetailsPage();
             } else if (user.status == 'active') {
               return ProfileCompletionScreen();
-            } else {
+            } else if(user.status == 'inactive') {
               return const UserInactivePage();
+            }else{
+              return  PaymentConfirmationPage();
             }
           },
           loading: () => Center(child: LoadingAnimation()),
@@ -644,14 +646,14 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
             _pickImage(ImageSource.gallery, context);
           },
         ),
-        // ListTile(
-        //   leading: const Icon(Icons.camera_alt),
-        //   title: const Text('Take a Photo'),
-        //   onTap: () {
-        //     Navigator.pop(context);
-        //     _pickImage(ImageSource.camera, imageType);
-        //   },
-        // ),
+        ListTile(
+          leading: const Icon(Icons.camera_alt),
+          title: const Text('Take a Photo'),
+          onTap: () {
+            Navigator.pop(context);
+            _pickImage(ImageSource.camera, context);
+          },
+        ),
       ],
     );
   }
