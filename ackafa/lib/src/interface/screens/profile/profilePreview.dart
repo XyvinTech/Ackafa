@@ -1,3 +1,4 @@
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -61,7 +62,18 @@ class ProfilePreview extends ConsumerWidget {
                               Icons.edit,
                               color: Color(0xFF004797),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) => DetailsPage(),
+                                  transitionDuration:
+                                      Duration(milliseconds: 500),
+                                  transitionsBuilder: (_, a, __, c) =>
+                                      FadeTransition(opacity: a, child: c),
+                                ),
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(
@@ -120,10 +132,7 @@ class ProfilePreview extends ConsumerWidget {
                                           fit: BoxFit.cover,
                                         ),
                                       )
-                                    : ClipRRect(
-                                        borderRadius: BorderRadius.circular(9),
-                                        child:
-                                            Icon(FontAwesomeIcons.buildingUser))
+                                    : SizedBox()
                               ],
                             ),
                             const SizedBox(width: 10),
@@ -183,7 +192,7 @@ class ProfilePreview extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const Icon(Icons.phone, color: Color(0xFF004797)),
+                            const Icon(Icons.phone, color: Color(0xFFE30613)),
                             const SizedBox(width: 10),
                             Text(user.phone!),
                           ],
@@ -191,25 +200,25 @@ class ProfilePreview extends ConsumerWidget {
                         const SizedBox(height: 10),
                         Row(
                           children: [
-                            const Icon(Icons.email, color: Color(0xFF004797)),
+                            const Icon(Icons.email, color: Color(0xFFE30613)),
                             const SizedBox(width: 10),
                             Text(user.email!),
                           ],
                         ),
                         const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            const Icon(Icons.location_on,
-                                color: Color(0xFF004797)),
-                            const SizedBox(width: 10),
-                            if (user.address != null)
+                        if (user.address != null)
+                          Row(
+                            children: [
+                              const Icon(Icons.location_on,
+                                  color: Color(0xFFE30613)),
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
                                   user.address!,
                                 ),
                               )
-                          ],
-                        ),
+                            ],
+                          ),
                       ],
                     ),
                     const SizedBox(height: 60),
@@ -222,51 +231,52 @@ class ProfilePreview extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Flexible(child: Text('''${user.bio}''')),
-                        ],
+                    if (user.bio != null)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Flexible(child: Text('''${user.bio}''')),
+                          ],
+                        ),
                       ),
-                    ),
                     const SizedBox(
                       height: 50,
                     ),
-                    // const Row(
-                    //   children: [
-                    //     Text(
-                    //       'Social Media',
-                    //       style: TextStyle(
-                    //           color: Color(0xFF2C2829),
-                    //           fontSize: 17,
-                    //           fontWeight: FontWeight.w500),
-                    //     ),
-                    //   ],
-                    // ),
-                    // for (int index = 0; index < user.social!.length; index++)
-                    //   customProfilePreviewLinks(index,
-                    //       social: user.social![index]),
-                    // const Padding(
-                    //   padding: EdgeInsets.only(top: 50),
-                    //   child: Row(
-                    //     children: [
-                    //       Text(
-                    //         'Websites & Links',
-                    //         style: TextStyle(
-                    //             color: Color(0xFF2C2829),
-                    //             fontSize: 17,
-                    //             fontWeight: FontWeight.w500),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // for (int index = 0; index < user.websites!.length; index++)
-                    //   customProfilePreviewLinks(index,
-                    //       website: user.websites![index]),
-                    // const SizedBox(
-                    //   height: 30,
-                    // ),
+                    const Row(
+                      children: [
+                        Text(
+                          'Social Media',
+                          style: TextStyle(
+                              color: Color(0xFF2C2829),
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                    for (int index = 0; index < user.social!.length; index++)
+                      customProfilePreviewLinks(index,
+                          social: user.social![index]),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 50),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Websites & Links',
+                            style: TextStyle(
+                                color: Color(0xFF2C2829),
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ),
+                    for (int index = 0; index < user.websites!.length; index++)
+                      customProfilePreviewLinks(index,
+                          website: user.websites![index]),
+                    const SizedBox(
+                      height: 30,
+                    ),
                     if (user.videos!.isNotEmpty)
                       Column(
                         children: [
@@ -304,17 +314,18 @@ class ProfilePreview extends ConsumerWidget {
                     const SizedBox(
                       height: 40,
                     ),
-                    const Row(
-                      children: [
-                        Text(
-                          'Certificates',
-                          style: TextStyle(
-                              color: Color(0xFF2C2829),
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
+                    if (user.certificates!.isNotEmpty)
+                      const Row(
+                        children: [
+                          Text(
+                            'Certificates',
+                            style: TextStyle(
+                                color: Color(0xFF2C2829),
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
                     ListView.builder(
                       shrinkWrap:
                           true, // Let ListView take up only as much space as it needs
@@ -332,18 +343,18 @@ class ProfilePreview extends ConsumerWidget {
                         );
                       },
                     ),
-
-                    const Row(
-                      children: [
-                        Text(
-                          'Awards',
-                          style: TextStyle(
-                              color: Color(0xFF2C2829),
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
+                    if (user.awards!.isNotEmpty)
+                      const Row(
+                        children: [
+                          Text(
+                            'Awards',
+                            style: TextStyle(
+                                color: Color(0xFF2C2829),
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
                     GridView.builder(
                       shrinkWrap:
                           true, // Let GridView take up only as much space as it needs

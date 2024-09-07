@@ -15,6 +15,7 @@ import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 
 void showWlinkorVlinkSheet({
@@ -161,7 +162,9 @@ class ShowEnterAwardtSheet extends StatefulWidget {
   final VoidCallback addAwardCard;
   final String imageType;
   File? awardImage;
-  final Future<File?> Function({required String imageType}) pickImage;
+  final ImageSource source;
+  final Future<File?> Function(
+      {required ImageSource source, required String imageType}) pickImage;
 
   ShowEnterAwardtSheet({
     required this.textController1,
@@ -171,6 +174,7 @@ class ShowEnterAwardtSheet extends StatefulWidget {
     required this.imageType,
     this.awardImage,
     super.key,
+    required this.source,
   });
 
   @override
@@ -225,8 +229,8 @@ class _ShowEnterAwardtSheetState extends State<ShowEnterAwardtSheet> {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        final pickedFile =
-                            await widget.pickImage(imageType: widget.imageType);
+                        final pickedFile = await widget.pickImage(
+                            source: widget.source, imageType: widget.imageType);
                         setState(() {
                           widget.awardImage = pickedFile;
                           state.didChange(pickedFile);
@@ -327,7 +331,9 @@ class ShowAddCertificateSheet extends StatefulWidget {
   final TextEditingController textController;
   final String imageType;
   File? certificateImage;
-  final Future<File?> Function({required String imageType}) pickImage;
+  final ImageSource source;
+  final Future<File?> Function(
+      {required ImageSource source, required String imageType}) pickImage;
   final VoidCallback addCertificateCard;
 
   ShowAddCertificateSheet({
@@ -337,6 +343,7 @@ class ShowAddCertificateSheet extends StatefulWidget {
     this.certificateImage,
     required this.pickImage,
     required this.addCertificateCard,
+    required this.source,
   });
 
   @override
@@ -392,8 +399,8 @@ class _ShowAddCertificateSheetState extends State<ShowAddCertificateSheet> {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        final pickedFile =
-                            await widget.pickImage(imageType: widget.imageType);
+                        final pickedFile = await widget.pickImage(
+                            source: widget.source, imageType: widget.imageType);
                         setState(() {
                           widget.certificateImage = pickedFile;
                           state
@@ -942,7 +949,9 @@ Future<String?> _showProductPriceTypeDialog(BuildContext context) {
 }
 
 class ShowAddPostSheet extends StatefulWidget {
-  final Future<File?> Function({required String imageType}) pickImage;
+  final ImageSource source;
+  final Future<File?> Function(
+      {required ImageSource source, required String imageType}) pickImage;
   final TextEditingController textController;
   final String imageType;
   File? postImage;
@@ -952,7 +961,7 @@ class ShowAddPostSheet extends StatefulWidget {
     required this.textController,
     required this.imageType,
     required this.postImage,
-    required this.pickImage,
+    required this.pickImage, required this.source,
   });
 
   @override
@@ -1026,7 +1035,7 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
                       children: [
                         GestureDetector(
                           onTap: () async {
-                            final pickedFile = await widget.pickImage(
+                            final pickedFile = await widget.pickImage(source: widget.source,
                                 imageType: widget.imageType);
                             setState(() {
                               widget.postImage = pickedFile;

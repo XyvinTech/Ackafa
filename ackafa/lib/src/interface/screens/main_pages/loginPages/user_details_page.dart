@@ -6,13 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
-import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/interface/common/customModalsheets.dart';
 import 'package:ackaf/src/interface/common/customTextfields.dart';
@@ -96,47 +91,50 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   File? _productImageFIle;
   File? _certificateImageFIle;
   File? _brochurePdfFile;
+  ImageSource? _profileImageSource;
+  ImageSource? _companyImageSource;
+  ImageSource? _awardImageSource;
+  ImageSource? _productImageSource;
+  ImageSource? _certificateSource;
+  ImageSource? _brochurePdfSource;
 
   final _formKey = GlobalKey<FormState>();
   ApiRoutes api = ApiRoutes();
 
   String productUrl = '';
 
-  Future<File?> _pickFile({required String imageType}) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['png', 'jpg', 'jpeg'],
-    );
+  Future<File?> _pickFile({required source,required String imageType}) async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: source);
 
-    if (result != null) {
+    if (image != null) {
       if (imageType == 'profile') {
         setState(() {
-          _profileImageFile = File(result.files.single.path!);
+          _profileImageFile = File(image.path!);
           imageUpload(Path.basename(_profileImageFile!.path),
                   _profileImageFile!.path)
               .then((url) {
             String profileUrl = url;
+            _productImageSource= source;
             ref.read(userProvider.notifier).updateProfilePicture(profileUrl);
             print((profileUrl));
           });
         });
         return _profileImageFile;
       } else if (imageType == 'award') {
-        _awardImageFIle = File(result.files.single.path!);
+        _awardImageFIle = File(image.path);     _awardImageSource= source;
         return _awardImageFIle;
-      } else if (imageType == 'product') {
-        _productImageFIle = File(result.files.single.path!);
-        return _productImageFIle;
       } else if (imageType == 'certificate') {
-        _certificateImageFIle = File(result.files.single.path!);
+        _certificateImageFIle = File(image.path);     _certificateSource= source;
         return _certificateImageFIle;
       } else if (imageType == 'company') {
         setState(() {
-          _companyImageFile = File(result.files.single.path!);
+          _companyImageFile = File(image.path);
           imageUpload(Path.basename(_companyImageFile!.path),
                   _companyImageFile!.path)
               .then((url) {
             String companyUrl = url;
+             _certificateSource= source;
             ref.read(userProvider.notifier).updateCompany(Company(logo: url));
             final user = ref.watch(userProvider);
             user.whenData(
@@ -150,7 +148,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
         });
         return _companyImageFile;
       } else {
-        _brochurePdfFile = File(result.files.single.path!);
+        _brochurePdfFile = File(image.path);
         return _brochurePdfFile;
       }
     }
@@ -238,7 +236,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     String middleName = nameParts.length > 2 ? nameParts[1] : ' ';
     String lastName = nameParts.length > 1 ? nameParts.last : ' ';
     log('company logo:${user.company!.logo!}');
-
+    log('middlename :$middleName');
     final Map<String, dynamic> profileData = {
       "name": {
         "first": firstName,
@@ -306,7 +304,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     }
 
     if (status.isGranted) {
-      _pickFile(imageType: imageType);
+      _pickFile(source: source,imageType: imageType);
     } else if (status.isPermanentlyDenied) {
       _showPermissionDeniedDialog(true);
     } else {
@@ -346,7 +344,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       context: context,
       builder: (context) {
         if (sheet == 'award') {
-          return ShowEnterAwardtSheet(
+          return ShowEnterAwardtSheet(source: _awardImageSource!,
             pickImage: _pickFile,
             addAwardCard: _addNewAward,
             imageType: sheet,
@@ -355,7 +353,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
             textController2: awardAuthorityController,
           );
         } else {
-          return ShowAddCertificateSheet(
+          return ShowAddCertificateSheet(source: _certificateSource!,
               certificateImage: _certificateImageFIle,
               addCertificateCard: _addNewCertificate,
               textController: certificateNameController,
@@ -1362,14 +1360,14 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
             _pickImage(ImageSource.gallery, imageType);
           },
         ),
-        // ListTile(
-        //   leading: const Icon(Icons.camera_alt),
-        //   title: const Text('Take a Photo'),
-        //   onTap: () {
-        //     Navigator.pop(context);
-        //     _pickImage(ImageSource.camera, imageType);
-        //   },
-        // ),
+        ListTile(
+          leading: const Icon(Icons.camera_alt),
+          title: const Text('Take a Photo'),
+          onTap: () {
+            Navigator.pop(context);
+            _pickImage(ImageSource.camera, imageType);
+          },
+        ),
       ],
     );
   }

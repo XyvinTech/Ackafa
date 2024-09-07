@@ -94,15 +94,15 @@ class CustomTextFormField extends StatelessWidget {
                 break;
               case 'Enter your Middle name':
                 ref.read(userProvider.notifier).updateName(
-                    firstName: textController!.text,
-                    middleName: null,
+                    firstName: null,
+                    middleName: textController!.text,
                     lastName: null);
                 break;
               case 'Enter your Last name':
                 ref.read(userProvider.notifier).updateName(
-                    firstName: textController!.text,
+                    firstName: null,
                     middleName: null,
-                    lastName: null);
+                    lastName: textController!.text);
                 break;
               case 'Enter Your Phone':
                 ref
@@ -138,7 +138,7 @@ class CustomTextFormField extends StatelessWidget {
                 ref
                     .read(userProvider.notifier)
                     .updateCompany(Company(address: textController!.text));
-            
+
               case 'Enter Ig':
                 ref.read(userProvider.notifier).updateSocialMedia(
                     [...?ref.read(userProvider).value?.social],

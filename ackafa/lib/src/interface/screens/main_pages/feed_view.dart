@@ -1,11 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/notifires/feed_notifier.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +18,7 @@ import 'package:ackaf/src/interface/common/customModalsheets.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pinput/pinput.dart';
+import 'package:image_picker/image_picker.dart';
 
 class FeedView extends ConsumerStatefulWidget {
   FeedView({super.key});
@@ -50,21 +50,18 @@ class _FeedViewState extends ConsumerState<FeedView> {
   }
 
   File? _feedImage;
+  ImageSource? _feedImageSource;
   ApiRoutes api = ApiRoutes();
 
-  Future<File?> _pickFile({required String imageType}) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: [
-        'png',
-        'jpg',
-        'jpeg',
-      ],
-    );
+  Future<File?> _pickFile(
+      {required ImageSource source, required String imageType}) async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: source);
 
-    if (result != null) {
+    if (image != null) {
       setState(() {
-        _feedImage = File(result.files.single.path!);
+        _feedImage = File(image.path);
+        _feedImageSource = source;
       });
       return _feedImage;
     }
@@ -77,6 +74,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
         context: context,
         builder: (context) {
           return ShowAddPostSheet(
+            source: _feedImageSource!,
             pickImage: _pickFile,
             textController: feedContentController,
             imageType: sheet,
@@ -278,7 +276,11 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
   void initState() {
     super.initState();
 
-    if (widget.feed.likes!.contains(widget.user.id)) {
+    initialize();
+  }
+
+  initialize() async {
+    if (widget.feed.likes!.contains(id)) {
       isLiked = true;
     }
 

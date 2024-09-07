@@ -29,3 +29,33 @@ Future<List<Feed>> fetchFeeds(FetchFeedsRef ref,
     throw Exception('Failed to load feeds');
   }
 }
+
+@riverpod
+Future<List<Feed>> fetchMyPosts(FetchMyPostsRef ref) async {
+  final url = Uri.parse('$baseUrl/feeds/my-feeds');
+  print('Requesting URL: $url');
+  final response = await http.get(
+    url,
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    },
+  );
+  print('hello');
+  print(json.decode(response.body)['status']);
+  if (response.statusCode == 200) {
+    final List<dynamic> data = json.decode(response.body)['data'];
+    print(response.body);
+    List<Feed> posts = [];
+
+    for (var item in data) {
+      posts.add(Feed.fromJson(item));
+    }
+    print(posts);
+    return posts;
+  } else {
+    print(json.decode(response.body)['message']);
+
+    throw Exception(json.decode(response.body)['message']);
+  }
+}

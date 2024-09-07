@@ -121,7 +121,7 @@ class ApiRoutes {
     );
   }
 
-  Future<String> verifyOTP(String verificationId, String smsCode) async {
+  Future<String> verifyOTP({required String verificationId,required String fcmToken,required String smsCode}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verificationId,
@@ -135,7 +135,7 @@ class ApiRoutes {
       if (user != null) {
         String? idToken = await user.getIdToken();
         log("ID Token: $idToken");
-        final token = await verifyUserDB(idToken!, context);
+        final token = await verifyUserDB(idToken!,fcmToken, context);
         return token;
       } else {
         print("User signed in, but no user information was found.");
@@ -147,11 +147,11 @@ class ApiRoutes {
     }
   }
 
-  Future<String> verifyUserDB(String idToken, context) async {
+  Future<String> verifyUserDB(String idToken,String fcmToken, context) async {
     final response = await http.post(
       Uri.parse('$baseUrl/user/login'),
       headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"clientToken": idToken}),
+      body: jsonEncode({"clientToken": idToken,"fcm": fcmToken}),
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
@@ -252,9 +252,9 @@ class ApiRoutes {
     }
   }
 
-  Future<void> deleteRequirement(
-      String token, String requirementId, context) async {
-    final url = Uri.parse('$baseUrl/requirements/$requirementId');
+  Future<void> deletePost(
+      String token, String postId, context) async {
+    final url = Uri.parse('$baseUrl/feeds/single/$postId');
     print('requesting url:$url');
     final response = await http.delete(
       url,
@@ -266,7 +266,7 @@ class ApiRoutes {
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Requirement Deleted Successfully')));
+          SnackBar(content: Text('Post Deleted Successfully')));
     } else {
       final jsonResponse = json.decode(response.body);
       ScaffoldMessenger.of(context)

@@ -176,8 +176,7 @@ class ProfilePage extends StatelessWidget {
                                                       width: 40,
                                                       fit: BoxFit.cover,
                                                     )
-                                                  : Icon(FontAwesomeIcons
-                                                      .building)),
+                                                  : SizedBox())
                                         ],
                                       ),
                                       const SizedBox(width: 10),
@@ -185,22 +184,24 @@ class ProfilePage extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            user.company?.designation ?? '',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 16,
-                                              color: Color.fromARGB(
-                                                  255, 42, 41, 41),
+                                          if (user.company?.designation != null)
+                                            Text(
+                                              user.company?.designation ?? '',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16,
+                                                color: Color.fromARGB(
+                                                    255, 42, 41, 41),
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            user.company?.name ?? '',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey,
+                                          if (user.company?.name != null)
+                                            Text(
+                                              user.company?.name ?? '',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey,
+                                              ),
                                             ),
-                                          ),
                                         ],
                                       ),
                                     ],
@@ -248,17 +249,20 @@ class ProfilePage extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Icon(Icons.location_on, color: Color(0xFFE30613)),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: Text(
-                                  user.bio ?? '',
-                                ),
-                              ),
-                            ],
-                          ),
+                          if (user.address != null)
+                            Row(
+                              children: [
+                                Icon(Icons.location_on,
+                                    color: Color(0xFFE30613)),
+                                SizedBox(width: 10),
+                                if (user.bio != null)
+                                  Expanded(
+                                    child: Text(
+                                      user.bio ?? '',
+                                    ),
+                                  ),
+                              ],
+                            ),
                         ],
                       ),
                     ),

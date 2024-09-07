@@ -8,13 +8,12 @@
 // import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 // import 'package:ackaf/src/interface/common/loading.dart';
 
-// class MyRequirementsPage extends StatelessWidget {
+// class MyPostsPage extends StatelessWidget {
 //   @override
 //   Widget build(BuildContext context) {
 //     return Consumer(
 //       builder: (context, ref, child) {
-//         final asyncUserRequirments =
-//             ref.watch(feedNotifierProvider);
+//         final asyncMyPosts = ref.watch(fetchMyPostsProvider);
 //         return Scaffold(
 //             appBar: AppBar(
 //               title: Text('My requirements'),
@@ -33,7 +32,7 @@
 //                 ),
 //               ],
 //             ),
-//             body: asyncUserRequirments.when(
+//             body: asyncMyPosts.when(
 //               loading: () => Center(child: LoadingAnimation()),
 //               error: (error, stackTrace) {
 //                 // Handle error state
@@ -41,23 +40,23 @@
 //                   child: Text('USER HASN\'T POSTED ANYTHING'),
 //                 );
 //               },
-//               data: (userRequirements) {
-//                 print(userRequirements);
+//               data: (myPosts) {
+//                 print(myPosts);
 //                 return Padding(
 //                   padding: const EdgeInsets.all(16.0),
 //                   child: Column(
 //                     children: [
 //                       Expanded(
 //                         child: ListView.builder(
-//                           itemCount: userRequirements.length,
+//                           itemCount: myPosts.length,
 //                           itemBuilder: (context, index) {
 //                             return _buildRequirementCard(
 //                                 context,
-//                                 userRequirements[index].content,
+//                                 myPosts[index].content ?? '',
 //                                 '3 messages',
-//                                 userRequirements[index].createdAt,
-//                                 userRequirements[index].id,
-//                                 imageUrl: userRequirements[index].image);
+//                                 myPosts[index].createdAt!,
+//                                 myPosts[index].id!,
+//                                 imageUrl: myPosts[index].media);
 //                           },
 //                         ),
 //                       ),
@@ -182,16 +181,16 @@
 //                         style: TextButton.styleFrom(
 //                             backgroundColor: Color(0xFFEB5757)),
 //                         onPressed: () {
-//                           ref.invalidate(fetchUserRequirementsProvider);
+//                           ref.invalidate(fetchMyPostsProvider);
 //                           ApiRoutes userApi = ApiRoutes();
 //                           userApi.deleteFile(token, imageUrl);
-//                           userApi.deleteRequirement(
+//                           userApi.deletePost(
 //                               token, requirementId, context);
 
 //                           Navigator.of(context).pop();
 //                         },
 //                         child: Text('Yes, Delete',
-//                             style: TextStyle(color: Colors.white)),
+//                             style: TextStyle(color: const Color.fromARGB(255, 113, 22, 22))),
 //                       );
 //                     },
 //                   ),

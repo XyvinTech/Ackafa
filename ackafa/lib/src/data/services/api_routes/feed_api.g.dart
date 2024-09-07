@@ -171,5 +171,20 @@ class _FetchFeedsProviderElement
   @override
   int get limit => (origin as FetchFeedsProvider).limit;
 }
+
+String _$fetchMyPostsHash() => r'f85332fa59731a561f7ea0a47856631fcd8cb578';
+
+/// See also [fetchMyPosts].
+@ProviderFor(fetchMyPosts)
+final fetchMyPostsProvider = AutoDisposeFutureProvider<List<Feed>>.internal(
+  fetchMyPosts,
+  name: r'fetchMyPostsProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$fetchMyPostsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FetchMyPostsRef = AutoDisposeFutureProviderRef<List<Feed>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

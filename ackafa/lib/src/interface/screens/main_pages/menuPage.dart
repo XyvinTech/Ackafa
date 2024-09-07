@@ -357,7 +357,7 @@ class MenuPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MyPostPage()),
+                                builder: (context) => MyPostsPage()),
                           );
                         },
                       ),

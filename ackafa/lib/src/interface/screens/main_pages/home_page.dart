@@ -390,7 +390,7 @@ class _HomePageState extends State<HomePage> {
               child: Image.network(
                 width: double.infinity,
                 banner.media ?? 'https://placehold.co/600x400/png',
-                fit: BoxFit.fill,
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -418,7 +418,7 @@ class _HomePageState extends State<HomePage> {
         ),
         child: Image.network(
           poster.media ?? 'https://placehold.co/600x400/png',
-          fit: BoxFit.fill,
+          fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
             return Image.network(
                 fit: BoxFit.fill, 'https://placehold.co/600x400/png');
