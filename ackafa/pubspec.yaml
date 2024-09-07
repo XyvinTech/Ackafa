@@ -54,8 +54,15 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
 
 
+
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter_Regular.ttf
+        - asset: assets/fonts/Inter_Bold.ttf
+          weight: 700
   assets:
 
     - assets/

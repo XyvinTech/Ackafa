@@ -50,7 +50,7 @@ class MyPostsPage extends StatelessWidget {
                         child: ListView.builder(
                           itemCount: myPosts.length,
                           itemBuilder: (context, index) {
-                            return _buildRequirementCard(
+                            return _buildPostCard(
                                 context,
                                 myPosts[index].content ?? '',
                                 '3 messages',
@@ -70,7 +70,7 @@ class MyPostsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildRequirementCard(BuildContext context, String description,
+  Widget _buildPostCard(BuildContext context, String description,
       String messages, DateTime timestamp, String requirementId,
       {String? imageUrl}) {
     DateTime localDateTime = timestamp.toLocal();

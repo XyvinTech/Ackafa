@@ -22,7 +22,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(ProviderScope(child: MainApp()));
 }
 
@@ -34,6 +34,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          fontFamily: 'Inter',
           primarySwatch: Colors.blue,
           secondaryHeaderColor: Colors.blue,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),

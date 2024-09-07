@@ -12,14 +12,14 @@ class PaymentConfirmationPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 40), // Spacing from top
+              const SizedBox(height: 40), // Spacing from top
               // Congratulations Icon and Text
               Column(
                 children: [
                   // Icon for congratulation (can be replaced with an asset image)
                   Image.asset('assets/success.png'),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'Congratulations!',
                     style: TextStyle(
                       fontSize: 22,
@@ -28,7 +28,7 @@ class PaymentConfirmationPage extends StatelessWidget {
                     ),
                   ),
 
-                  Text(
+                  const Text(
                     'Your request has been approved',
                     style: TextStyle(
                       fontSize: 19,
@@ -39,12 +39,12 @@ class PaymentConfirmationPage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 40), // Space between sections
+              const SizedBox(height: 40), // Space between sections
               // Next Steps
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Next steps!',
                     style: TextStyle(
                       fontSize: 22,
@@ -52,16 +52,38 @@ class PaymentConfirmationPage extends StatelessWidget {
                       color: Colors.red,
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Gain full access to the app by making a One-Time-Payment',
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Gain full access to the app by making',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 30),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'a',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        ' One-Time-Payment',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Color(0xFF7C7C7C),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
                   // Checklist
                   _buildCheckListItem(
                       'Get your request approved', true), // Checked
@@ -72,11 +94,11 @@ class PaymentConfirmationPage extends StatelessWidget {
                   _buildCheckListItem('You are all in!', false), // Unchecked
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               // Continue to Payment Button
               customButton(
                   label: 'Continue to Payment', onPressed: () {}, fontSize: 16),
-              SizedBox(height: 30), // Bottom padding
+              const SizedBox(height: 30), // Bottom padding
             ],
           ),
         ),
@@ -95,7 +117,7 @@ class PaymentConfirmationPage extends StatelessWidget {
             isChecked ? Icons.check : Icons.check,
             color: isChecked ? Colors.red : Colors.grey,
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Text(
             text,
             style: TextStyle(
