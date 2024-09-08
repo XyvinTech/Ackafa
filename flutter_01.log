@@ -1,0 +1,93 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter pub get https://github.com/firebase/firebase-ios-sdk
+
+## exception
+
+FileSystemException: FileSystemException: Exists failed, path = 'C:\Users\sreer\OneDrive\Documents\GitHub\Ackafa_Flutter\https://github.com/firebase/firebase-ios-sdk' (OS Error: The filename, directory name, or volume label syntax is incorrect.
+, errno = 123)
+
+```
+#0      _Directory.existsSync (dart:io/directory_impl.dart:87:7)
+#1      ForwardingFileSystemEntity.existsSync (package:file/src/forwarding/forwarding_file_system_entity.dart:43:33)
+#2      ErrorHandlingDirectory.existsSync.<anonymous closure> (package:flutter_tools/src/base/error_handling_io.dart:498:22)
+#3      _runSync (package:flutter_tools/src/base/error_handling_io.dart:595:14)
+#4      ErrorHandlingDirectory.existsSync (package:flutter_tools/src/base/error_handling_io.dart:497:12)
+#5      findProjectRoot (package:flutter_tools/src/base/os.dart:621:27)
+#6      PackagesGetCommand.runCommand (package:flutter_tools/src/commands/packages.dart:266:18)
+#7      FlutterCommand.verifyThenRunCommand (package:flutter_tools/src/runner/flutter_command.dart:1758:12)
+<asynchronous suspension>
+#8      FlutterCommand.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command.dart:1394:27)
+<asynchronous suspension>
+#9      AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:153:19)
+<asynchronous suspension>
+#10     CommandRunner.runCommand (package:args/command_runner.dart:212:13)
+<asynchronous suspension>
+#11     FlutterCommandRunner.runCommand.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:372:9)
+<asynchronous suspension>
+#12     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:153:19)
+<asynchronous suspension>
+#13     FlutterCommandRunner.runCommand (package:flutter_tools/src/runner/flutter_command_runner.dart:308:5)
+<asynchronous suspension>
+#14     run.<anonymous closure>.<anonymous closure> (package:flutter_tools/runner.dart:130:9)
+<asynchronous suspension>
+#15     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:153:19)
+<asynchronous suspension>
+#16     main (package:flutter_tools/executable.dart:93:3)
+<asynchronous suspension>
+```
+
+## flutter doctor
+
+```
+[32m[✓][39m Flutter (Channel stable, 3.22.3, on Microsoft Windows [Version 10.0.22631.4037], locale en-IN)
+    [32m•[39m Flutter version 3.22.3 on channel stable at C:\flutter
+    [32m•[39m Upstream repository https://github.com/flutter/flutter.git
+    [32m•[39m Framework revision b0850beeb2 (8 weeks ago), 2024-07-16 21:43:41 -0700
+    [32m•[39m Engine revision 235db911ba
+    [32m•[39m Dart version 3.4.4
+    [32m•[39m DevTools version 2.34.3
+
+[32m[✓][39m Windows Version (Installed version of Windows is version 10 or higher)
+
+[32m[✓][39m Android toolchain - develop for Android devices (Android SDK version 33.0.1)
+    [32m•[39m Android SDK at C:\Users\sreer\AppData\Local\Android\sdk
+    [32m•[39m Platform android-34, build-tools 33.0.1
+    [32m•[39m Java binary at: C:\Program Files\Android\Android Studio\jre\bin\java
+    [32m•[39m Java version OpenJDK Runtime Environment (build 11.0.13+0-b1751.21-8125866)
+    [32m•[39m All Android licenses accepted.
+
+[32m[✓][39m Chrome - develop for the web
+    [32m•[39m Chrome at C:\Program Files\Google\Chrome\Application\chrome.exe
+
+[32m[✓][39m Visual Studio - develop Windows apps (Visual Studio Community 2022 17.10.2)
+    [32m•[39m Visual Studio at C:\Program Files\Microsoft Visual Studio\2022\Community
+    [32m•[39m Visual Studio Community 2022 version 17.10.35004.147
+    [32m•[39m Windows 10 SDK version 10.0.22621.0
+
+[32m[✓][39m Android Studio (version 2021.3)
+    [32m•[39m Android Studio at C:\Program Files\Android\Android Studio
+    [32m•[39m Flutter plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/9212-flutter
+    [32m•[39m Dart plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/6351-dart
+    [32m•[39m Java version OpenJDK Runtime Environment (build 11.0.13+0-b1751.21-8125866)
+
+[32m[✓][39m VS Code (version 1.92.2)
+    [32m•[39m VS Code at C:\Users\sreer\AppData\Local\Programs\Microsoft VS Code
+    [32m•[39m Flutter extension version 3.96.0
+
+[32m[✓][39m Connected device (4 available)
+    [32m•[39m sdk gphone64 x86 64 (mobile) • emulator-5554 • android-x64    • Android 13 (API 33) (emulator)
+    [32m•[39m Windows (desktop)            • windows       • windows-x64    • Microsoft Windows [Version 10.0.22631.4037]
+    [32m•[39m Chrome (web)                 • chrome        • web-javascript • Google Chrome 128.0.6613.120
+    [32m•[39m Edge (web)                   • edge          • web-javascript • Microsoft Edge 128.0.2739.67
+
+[32m[✓][39m Network resources
+    [32m•[39m All expected network resources are available.
+
+[32m•[39m No issues found!
+```

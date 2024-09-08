@@ -284,24 +284,24 @@ class ProfilePage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // RichText(
-                          //   text: TextSpan(
-                          //     text: 'Member ID: ',
-                          //     style: TextStyle(
-                          //       color: Colors.black,
-                          //       fontWeight: FontWeight.normal,
-                          //     ),
-                          //     children: <TextSpan>[
-                          //       TextSpan(
-                          //         text: user.m,
-                          //         style: TextStyle(
-                          //           fontWeight: FontWeight.bold,
-                          //           color: Colors.black,
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
+                          RichText(
+                            text: TextSpan(
+                              text: 'Member ID: ',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: user.memberId,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
