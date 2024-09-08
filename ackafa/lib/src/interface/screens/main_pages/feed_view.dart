@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -498,7 +497,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (widget.withImage) _buildPostImage(widget.feed.media!),
+            if (widget.withImage) _buildPostImage(),
             SizedBox(height: 16),
             Text(widget.feed.content!, style: TextStyle(fontSize: 14)),
             SizedBox(height: 16),
@@ -511,36 +510,22 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
     );
   }
 
-  Widget _buildPostImage(String imageUrl) {
+  Widget _buildPostImage() {
     return GestureDetector(
       onDoubleTap: _toggleLike,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              return FutureBuilder<Size>(
-                future: _getImageSize(imageUrl),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.hasData) {
-                    final imageSize = snapshot.data!;
-                    return AspectRatio(
-                      aspectRatio: imageSize.width / imageSize.height,
-                      child: Image.network(
-                        imageUrl,
-                        fit: BoxFit.fill,
-                      ),
-                    );
-                  } else {
-                    return SizedBox(
-                      height: 300, // Placeholder height while loading
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  }
-                },
-              );
-            },
+          SizedBox(
+            height: 200,
+            width: double.infinity,
+            child: Image.network(
+              errorBuilder: (context, error, stackTrace) {
+                return SizedBox.shrink();
+              },
+              widget.feed.media ?? 'https://placehold.co/600x400',
+              fit: BoxFit.fill,
+            ),
           ),
           if (showHeartAnimation)
             Icon(Icons.favorite, color: Colors.red.withOpacity(0.8), size: 100)
@@ -551,19 +536,6 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
         ],
       ),
     );
-  }
-
-  Future<Size> _getImageSize(String imageUrl) async {
-    final Completer<Size> completer = Completer();
-    final Image image = Image.network(imageUrl);
-    image.image.resolve(const ImageConfiguration()).addListener(
-      ImageStreamListener((ImageInfo info, bool synchronousCall) {
-        final size =
-            Size(info.image.width.toDouble(), info.image.height.toDouble());
-        completer.complete(size);
-      }),
-    );
-    return completer.future;
   }
 
   Widget _buildUserInfo(UserModel user) {
