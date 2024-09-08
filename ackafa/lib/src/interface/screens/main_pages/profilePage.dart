@@ -161,47 +161,50 @@ class ProfilePage extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(9),
-                                            child: Image.network(
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return Image.network(
-                                                    'https://placehold.co/400');
-                                              },
-                                              user.company!.logo ??
-                                                  'https://placehold.co/400',
-                                              height: 33,
-                                              width: 40,
-                                              fit: BoxFit.cover,
+                                      if (user.company?.logo != null)
+                                        Column(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(9),
+                                              child: Image.network(
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return Image.network(
+                                                      'https://placehold.co/400');
+                                                },
+                                                user.company?.logo ??
+                                                    'https://placehold.co/400',
+                                                height: 33,
+                                                width: 40,
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
+                                          ],
+                                        ),
                                       const SizedBox(width: 10),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            user.company!.designation ?? '',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 16,
-                                              color: Color.fromARGB(
-                                                  255, 42, 41, 41),
+                                          if (user.company?.designation != null)
+                                            Text(
+                                              user.company?.designation ?? '',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16,
+                                                color: Color.fromARGB(
+                                                    255, 42, 41, 41),
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            user.company!.name!,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey,
+                                          if (user.company?.name != null)
+                                            Text(
+                                              user.company!.name!,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey,
+                                              ),
                                             ),
-                                          ),
                                         ],
                                       ),
                                     ],
@@ -253,6 +256,7 @@ class ProfilePage extends StatelessWidget {
                             children: [
                               Icon(Icons.location_on, color: Color(0xFFE30613)),
                               SizedBox(width: 10),
+                              if(user.bio!=null)
                               Expanded(
                                 child: Text(
                                   user.bio!,
