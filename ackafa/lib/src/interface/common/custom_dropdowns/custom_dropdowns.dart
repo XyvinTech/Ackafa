@@ -1,8 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
-
-
 class CustomDropdownButton<T> extends StatelessWidget {
   final String labelText;
   final List<DropdownMenuItem<T>> items;
@@ -81,7 +79,8 @@ class CustomDropdownButton<T> extends StatelessWidget {
 
 class CustomDropdownButton2 extends StatefulWidget {
   final ValueChanged<String?> onValueChanged;
-  final FormFieldValidator<String?>? validator; // Added validator as a parameter
+  final FormFieldValidator<String?>?
+      validator; // Added validator as a parameter
 
   const CustomDropdownButton2({
     Key? key,
@@ -185,3 +184,4 @@ class _CustomDropdownButton2State extends State<CustomDropdownButton2> {
     );
   }
 }
+

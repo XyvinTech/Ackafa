@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,7 +35,6 @@ class ProfilePreview extends ConsumerWidget {
     _videoCountController.addListener(() {
       _currentVideo.value = _videoCountController.page!.round();
     });
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -50,32 +51,33 @@ class ProfilePreview extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: const Color(0xFFF2F2F2),
-                              borderRadius: BorderRadius.circular(30)),
-                          child: IconButton(
-                            icon: const Icon(
-                              size: 18,
-                              Icons.edit,
-                              color: Color(0xFF004797),
+                        if (id.toString() == user.id.toString())
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: const Color(0xFFF2F2F2),
+                                borderRadius: BorderRadius.circular(30)),
+                            child: IconButton(
+                              icon: const Icon(
+                                size: 18,
+                                Icons.edit,
+                                color: Color(0xFF004797),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (_, __, ___) => DetailsPage(),
+                                    transitionDuration:
+                                        Duration(milliseconds: 500),
+                                    transitionsBuilder: (_, a, __, c) =>
+                                        FadeTransition(opacity: a, child: c),
+                                  ),
+                                );
+                              },
                             ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (_, __, ___) => DetailsPage(),
-                                  transitionDuration:
-                                      Duration(milliseconds: 500),
-                                  transitionsBuilder: (_, a, __, c) =>
-                                      FadeTransition(opacity: a, child: c),
-                                ),
-                              );
-                            },
                           ),
-                        ),
                         const SizedBox(
                           width: 10,
                         ),

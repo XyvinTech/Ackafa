@@ -1,15 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:ackaf/src/data/globals.dart';
-import 'package:ackaf/src/data/models/college_model.dart';
+
 import 'package:ackaf/src/data/providers/loading_notifier.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
-import 'package:ackaf/src/data/services/api_routes/college_api.dart';
-import 'package:ackaf/src/interface/common/custom_dialog.dart';
-import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_completetion_page.dart';
-import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
+
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -436,8 +432,11 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
       print(_otpController.text);
 
       ApiRoutes userApi = ApiRoutes();
-      String savedToken =
-          await userApi.verifyOTP(verificationId: widget.verificationId,  fcmToken: fcmToken, smsCode: _otpController.text,);
+      String savedToken = await userApi.verifyOTP(
+        verificationId: widget.verificationId,
+        fcmToken: fcmToken,
+        smsCode: _otpController.text,
+      );
 
       if (savedToken.isNotEmpty) {
         final SharedPreferences preferences =
@@ -446,7 +445,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
         token = savedToken;
         log('savedToken: $savedToken');
         ref.invalidate(userProvider);
-        Navigator.of(context).push(
+        Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => UserRegistrationScreen()));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

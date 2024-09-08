@@ -88,24 +88,41 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   File? _profileImageFile;
   File? _companyImageFile;
   File? _awardImageFIle;
-  File? _productImageFIle;
   File? _certificateImageFIle;
   File? _brochurePdfFile;
   ImageSource? _profileImageSource;
   ImageSource? _companyImageSource;
   ImageSource? _awardImageSource;
-  ImageSource? _productImageSource;
   ImageSource? _certificateSource;
-  ImageSource? _brochurePdfSource;
 
   final _formKey = GlobalKey<FormState>();
   ApiRoutes api = ApiRoutes();
 
   String productUrl = '';
 
-  Future<File?> _pickFile({required source,required String imageType}) async {
+  Future<void> _pickImage(ImageSource source, String imageType) async {
+    PermissionStatus status;
+
+    if (source == ImageSource.camera) {
+      status = await Permission.camera.request();
+    } else if (source == ImageSource.gallery) {
+      status = await Permission.photos.request();
+    } else {
+      return;
+    }
+
+    if (status.isGranted) {
+      _pickFile( imageType: imageType);
+    } else if (status.isPermanentlyDenied) {
+      _showPermissionDeniedDialog(true);
+    } else {
+      _showPermissionDeniedDialog(false);
+    }
+  }
+
+  Future<File?> _pickFile({ required String imageType}) async {
     final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: source);
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       if (imageType == 'profile') {
@@ -115,17 +132,19 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                   _profileImageFile!.path)
               .then((url) {
             String profileUrl = url;
-            _productImageSource= source;
+            _profileImageSource = ImageSource.gallery;
             ref.read(userProvider.notifier).updateProfilePicture(profileUrl);
             print((profileUrl));
           });
         });
         return _profileImageFile;
       } else if (imageType == 'award') {
-        _awardImageFIle = File(image.path);     _awardImageSource= source;
+        _awardImageFIle = File(image.path);
+        _awardImageSource = ImageSource.gallery;
         return _awardImageFIle;
       } else if (imageType == 'certificate') {
-        _certificateImageFIle = File(image.path);     _certificateSource= source;
+        _certificateImageFIle = File(image.path);
+        _certificateSource = ImageSource.gallery;
         return _certificateImageFIle;
       } else if (imageType == 'company') {
         setState(() {
@@ -134,7 +153,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                   _companyImageFile!.path)
               .then((url) {
             String companyUrl = url;
-             _certificateSource= source;
+            _companyImageSource = ImageSource.gallery;
             ref.read(userProvider.notifier).updateCompany(Company(logo: url));
             final user = ref.watch(userProvider);
             user.whenData(
@@ -292,25 +311,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   //   }
   // }
 
-  Future<void> _pickImage(ImageSource source, String imageType) async {
-    PermissionStatus status;
-
-    if (source == ImageSource.camera) {
-      status = await Permission.camera.request();
-    } else if (source == ImageSource.gallery) {
-      status = await Permission.photos.request();
-    } else {
-      return;
-    }
-
-    if (status.isGranted) {
-      _pickFile(source: source,imageType: imageType);
-    } else if (status.isPermanentlyDenied) {
-      _showPermissionDeniedDialog(true);
-    } else {
-      _showPermissionDeniedDialog(false);
-    }
-  }
+  
 
   void _showPermissionDeniedDialog(bool isPermanentlyDenied) {
     showDialog(
@@ -337,14 +338,14 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     );
   }
 
-  void _openModalSheet(
-      {required String sheet, String brochureName = 'Sample'}) {
+  void _openModalSheet({required String sheet}) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
       builder: (context) {
         if (sheet == 'award') {
-          return ShowEnterAwardtSheet(source: _awardImageSource!,
+          return ShowEnterAwardtSheet(
+      
             pickImage: _pickFile,
             addAwardCard: _addNewAward,
             imageType: sheet,
@@ -353,7 +354,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
             textController2: awardAuthorityController,
           );
         } else {
-          return ShowAddCertificateSheet(source: _certificateSource!,
+          return ShowAddCertificateSheet(
+    
               certificateImage: _certificateImageFIle,
               addCertificateCard: _addNewCertificate,
               textController: certificateNameController,

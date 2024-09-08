@@ -51,7 +51,8 @@ class FeedNotifier extends _$FeedNotifier {
           .read(fetchFeedsProvider(pageNo: pageNo, limit: limit).future);
       feeds = refreshedFeeds;
       hasMore = refreshedFeeds.length == limit;
-      state = feeds;  // Update the state with the refreshed feed
+      state = feeds; // Update the state with the refreshed feed\
+      log('refreshed');
     } catch (e, stackTrace) {
       log(e.toString());
       log(stackTrace.toString());

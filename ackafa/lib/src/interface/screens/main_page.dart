@@ -77,7 +77,7 @@ class _MainPageState extends State<MainPage> {
     _widgetOptions = <Widget>[
       // HomePage(),
       // FeedPage(),
-      HomePage(),
+      HomePage(user:  user,),
       FeedView(),
       ProfilePage(user: user),
       Event_News_Page(),

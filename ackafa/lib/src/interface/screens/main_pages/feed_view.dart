@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -53,15 +54,14 @@ class _FeedViewState extends ConsumerState<FeedView> {
   ImageSource? _feedImageSource;
   ApiRoutes api = ApiRoutes();
 
-  Future<File?> _pickFile(
-      {required ImageSource source, required String imageType}) async {
+  Future<File?> _pickFile({required String imageType}) async {
     final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: source);
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       setState(() {
         _feedImage = File(image.path);
-        _feedImageSource = source;
+        _feedImageSource = ImageSource.gallery;
       });
       return _feedImage;
     }
@@ -74,7 +74,6 @@ class _FeedViewState extends ConsumerState<FeedView> {
         context: context,
         builder: (context) {
           return ShowAddPostSheet(
-            source: _feedImageSource!,
             pickImage: _pickFile,
             textController: feedContentController,
             imageType: sheet,
@@ -83,132 +82,192 @@ class _FeedViewState extends ConsumerState<FeedView> {
         });
   }
 
+  String selectedFilter = 'All'; // Default filter is 'All'
+
+  // Example method to filter feeds
+  List<Feed> filterFeeds(List<Feed> feeds) {
+    if (selectedFilter == 'All') {
+      return feeds;
+    } else {
+      return feeds.where((feed) => feed.type == selectedFilter).toList();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final feeds = ref.watch(feedNotifierProvider);
     final isLoading = ref.read(feedNotifierProvider.notifier).isLoading;
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 40.0,
-        backgroundColor: Colors.white,
-        scrolledUnderElevation: 0,
-        leadingWidth: 100,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: SizedBox(
-            width: 100,
-            height: 100,
-            child: Image.asset(
-              'assets/icons/ackaf_logo.png',
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.notifications_none_outlined,
-              size: 21,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NotificationPage()),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.menu,
-              size: 21,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MenuPage()), // Navigate to MenuPage
-              );
-            },
-          ),
-        ],
-      ),
-      body: feeds.isEmpty
-          ? Center(
-              child: Text('No FEEDS'),
-            )
-          : ListView(
-              padding: const EdgeInsets.all(16.0),
-              children: [
-                Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.search),
-                        hintText: 'Search your requirements',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(255, 216, 211, 211),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(255, 216, 211, 211),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(255, 216, 211, 211),
-                          ),
-                        ),
-                      ),
-                    )),
-                SizedBox(height: 16),
-                ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  controller: _scrollController,
-                  itemCount: feeds.length + 1, // Ad
-                  itemBuilder: (context, index) {
-                    if (index == feeds.length) {
-                      return isLoading
-                          ? Center(
-                              child:
-                                  LoadingAnimation()) // Show loading when fetching more users
-                          : SizedBox.shrink(); // Hide when done
-                    }
 
-                    final feed = feeds[index];
-                    if (feed.status == 'published') {
-                      return _buildPost(
-                        withImage: feed.media != null && feed.media!.isNotEmpty,
-                        feed: feed,
-                      );
-                    } else {
-                      return SizedBox.shrink();
-                    }
-                  },
-                ),
-                SizedBox(
-                  height: 40,
-                )
-              ],
+    List<Feed> filteredFeeds = filterFeeds(feeds);
+
+    return RefreshIndicator(
+      backgroundColor: Colors.white,
+      color: Colors.red,
+      onRefresh: () => ref.read(feedNotifierProvider.notifier).refreshFeed(),
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 40.0,
+          backgroundColor: Colors.white,
+          scrolledUnderElevation: 0,
+          leadingWidth: 100,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: Image.asset(
+                'assets/icons/ackaf_logo.png',
+                fit: BoxFit.contain,
+              ),
             ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _openModalSheet(sheet: 'post'),
-        label: const Text(
-          'Add Post',
-          style: TextStyle(color: Colors.white),
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.notifications_none_outlined,
+                size: 21,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NotificationPage()),
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.menu,
+                size: 21,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MenuPage()), // Navigate to MenuPage
+                );
+              },
+            ),
+          ],
         ),
-        icon: const Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 27,
+        body: Column(
+          children: [
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+              child: Material(
+                elevation: 2.0, // Adjust elevation to control shadow depth
+                shadowColor:
+                    Colors.black.withOpacity(0.25), // Shadow color with opacity
+                borderRadius: BorderRadius.circular(
+                    8.0), // Same border radius as TextField
+                child: TextField(
+                  decoration: InputDecoration(
+                    filled: true, // Ensures the background is fully white
+                    fillColor:
+                        Colors.white, // Background color inside TextField
+                    prefixIcon: Icon(Icons.search),
+                    hintText: 'Search Feed',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 215, 212, 212)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 215, 212, 212)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 215, 212, 212)),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // Horizontally scrollable Choice Chips
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    _buildChoiceChip('All'),
+                    _buildChoiceChip('Information'),
+                    _buildChoiceChip('Job'),
+                    _buildChoiceChip('Funding'),
+                    _buildChoiceChip('Requirement'),
+                  ],
+                ),
+              ),
+            ),
+            // Feed list
+            Expanded(
+              child: filteredFeeds.isEmpty
+                  ? Center(child: Text('No FEEDS'))
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16.0),
+                      itemCount: filteredFeeds.length + 1, // Ad
+                      itemBuilder: (context, index) {
+                        if (index == filteredFeeds.length) {
+                          return isLoading
+                              ? Center(child: CircularProgressIndicator())
+                              : SizedBox.shrink();
+                        }
+
+                        final feed = filteredFeeds[index];
+                        if (feed.status == 'published') {
+                          return _buildPost(
+                            withImage:
+                                feed.media != null && feed.media!.isNotEmpty,
+                            feed: feed,
+                          );
+                        } else {
+                          return SizedBox.shrink();
+                        }
+                      },
+                    ),
+            ),
+          ],
         ),
-        backgroundColor: Color(0xFFE30613),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => _openModalSheet(sheet: 'post'),
+          label: const Text(
+            'Add Post',
+            style: TextStyle(color: Colors.white),
+          ),
+          icon: const Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 27,
+          ),
+          backgroundColor: Color(0xFFE30613),
+        ),
+      ),
+    );
+  }
+
+  // Method to build individual Choice Chips
+  Widget _buildChoiceChip(String label) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: ChoiceChip(
+        label: Text(label),
+        selected: selectedFilter == label,
+        onSelected: (selected) {
+          setState(() {
+            selectedFilter = label;
+          });
+        },
+        backgroundColor: Colors.white, // Light green background color
+        selectedColor: Color(0xFFD3EDCA), // When selected
+
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: Color.fromARGB(255, 214, 210, 210)),
+          borderRadius: BorderRadius.circular(20.0), // Circular border
+        ),
+        showCheckmark: false, // Remove tick icon
       ),
     );
   }
@@ -351,10 +410,14 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
                                       : Icon(Icons.person),
                                 ),
                               ),
-                              title: Text(widget
-                                  .feed.comments![index].user!.name!.first!),
+                              title: Text(
+                                  widget.feed.comments![index].user != null
+                                      ? widget.feed.comments![index].user!.name
+                                              ?.first ??
+                                          'Unkown User'
+                                      : 'Unkown User'),
                               subtitle: Text(
-                                  widget.feed.comments![index].comment ?? ''),
+                                  widget.feed.comments?[index].comment ?? ''),
                             );
                           },
                         );
@@ -435,7 +498,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (widget.withImage) _buildPostImage(),
+            if (widget.withImage) _buildPostImage(widget.feed.media!),
             SizedBox(height: 16),
             Text(widget.feed.content!, style: TextStyle(fontSize: 14)),
             SizedBox(height: 16),
@@ -448,22 +511,36 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
     );
   }
 
-  Widget _buildPostImage() {
+  Widget _buildPostImage(String imageUrl) {
     return GestureDetector(
       onDoubleTap: _toggleLike,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          SizedBox(
-            height: 200,
-            width: double.infinity,
-            child: Image.network(
-              errorBuilder: (context, error, stackTrace) {
-                return SizedBox.shrink();
-              },
-              widget.feed.media ?? 'https://placehold.co/600x400',
-              fit: BoxFit.fill,
-            ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return FutureBuilder<Size>(
+                future: _getImageSize(imageUrl),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done &&
+                      snapshot.hasData) {
+                    final imageSize = snapshot.data!;
+                    return AspectRatio(
+                      aspectRatio: imageSize.width / imageSize.height,
+                      child: Image.network(
+                        imageUrl,
+                        fit: BoxFit.fill,
+                      ),
+                    );
+                  } else {
+                    return SizedBox(
+                      height: 300, // Placeholder height while loading
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                },
+              );
+            },
           ),
           if (showHeartAnimation)
             Icon(Icons.favorite, color: Colors.red.withOpacity(0.8), size: 100)
@@ -474,6 +551,19 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
         ],
       ),
     );
+  }
+
+  Future<Size> _getImageSize(String imageUrl) async {
+    final Completer<Size> completer = Completer();
+    final Image image = Image.network(imageUrl);
+    image.image.resolve(const ImageConfiguration()).addListener(
+      ImageStreamListener((ImageInfo info, bool synchronousCall) {
+        final size =
+            Size(info.image.width.toDouble(), info.image.height.toDouble());
+        completer.complete(size);
+      }),
+    );
+    return completer.future;
   }
 
   Widget _buildUserInfo(UserModel user) {

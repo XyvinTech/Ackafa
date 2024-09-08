@@ -309,34 +309,51 @@ class ProfilePage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IconButton(
-                          icon: Image.asset(
-                              'assets/icons/Button.png'), //add button.png here
-                          iconSize: 50,
-                          onPressed: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>
-                            //         ProfilePage(), // Navigate to Shared
-                            //   ),
-                            // );
-                          },
+                        Container(
+                          width: 90,
+                          height: 90,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFE30613),
+                            borderRadius: BorderRadius.circular(
+                                50), // Apply circular border to the outer container
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Color(0xFFE30613),
+                              ),
+                              child: Icon(
+                                Icons.share,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 20),
-                        IconButton(
-                          icon: Image.asset('assets/icons/qr_button.png'),
-                          iconSize: 50,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ProfileCard(), // Navigate to CardPage
+                        Container(
+                          width: 90,
+                          height: 90,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(
+                                50), // Apply circular border to the outer container
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Colors.white,
                               ),
-                            );
-                          },
-                        ),
+                              child: Icon(
+                                Icons.qr_code,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ],

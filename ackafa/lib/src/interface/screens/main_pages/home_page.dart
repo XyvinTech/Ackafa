@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/promotions_model.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:ackaf/src/data/notifires/approval_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/promotions_api.dart';
 import 'package:ackaf/src/interface/common/custom_video.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/main_pages/approvalPages/approval_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +16,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final UserModel user;
+  const HomePage({super.key, required this.user});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -89,18 +94,24 @@ class _HomePageState extends State<HomePage> {
     // Ensure the timer is cleared before starting a new one
     scrollTimer?.cancel();
     scrollTimer = Timer.periodic(scrollInterval, (timer) {
-      if (!_isUserInteracting) {
+      if (!_isUserInteracting && mounted) {
         currentIndex++;
         if (currentIndex >= items.length) {
           currentIndex = 0;
         }
         final itemWidth = _getItemWidth(itemKey);
-        controller.animateTo(
-          currentIndex * itemWidth,
-          duration: Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-        onIndexChanged(currentIndex);
+        if (controller.hasClients) {
+          controller.animateTo(
+            currentIndex * itemWidth,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        }
+        if (mounted) {
+          setState(() {
+            onIndexChanged(currentIndex);
+          });
+        }
       }
     });
   }
@@ -116,7 +127,7 @@ class _HomePageState extends State<HomePage> {
       List<dynamic> banners, List<dynamic> notices, List<dynamic> posters) {
     _restartAutoScrollTimer
         ?.cancel(); // Cancel the previous restart timer if any
-    _restartAutoScrollTimer = Timer(Duration(seconds: 10), () {
+    _restartAutoScrollTimer = Timer(const Duration(seconds: 7), () {
       _isUserInteracting = false; // Reset the interaction flag
 
       // Restart auto-scroll for all promotion types
@@ -162,14 +173,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    _bannerScrollController.dispose();
-    _noticeScrollController.dispose();
-    _posterScrollController.dispose();
-
     _bannerScrollTimer?.cancel();
     _noticeScrollTimer?.cancel();
     _posterScrollTimer?.cancel();
-    _restartAutoScrollTimer?.cancel(); // Cancel the restart timer
+    _restartAutoScrollTimer?.cancel();
+
+    _bannerScrollController.dispose();
+    _noticeScrollController.dispose();
+    _posterScrollController.dispose();
 
     super.dispose();
   }
@@ -235,6 +246,7 @@ class _HomePageState extends State<HomePage> {
                 );
               }
 
+              log('my role ${widget.user.role}');
               return GestureDetector(
                 onPanDown: (_) =>
                     _onUserGestureDetected(banners, notices, posters),
@@ -273,17 +285,19 @@ class _HomePageState extends State<HomePage> {
                           ),
                           actions: [
                             IconButton(
-                              icon: Icon(Icons.notifications_none_outlined),
+                              icon:
+                                  const Icon(Icons.notifications_none_outlined),
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => NotificationPage()),
+                                      builder: (context) =>
+                                          const NotificationPage()),
                                 );
                               },
                             ),
                             IconButton(
-                              icon: Icon(Icons.menu),
+                              icon: const Icon(Icons.menu),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -296,7 +310,7 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       promotions.isEmpty
@@ -332,7 +346,109 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                             ),
-                      const SizedBox(height: 16),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      if (widget.user.role != 'member')
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final nonApprovedUsers =
+                                ref.watch(approvalNotifierProvider);
+
+                            if (nonApprovedUsers.isNotEmpty) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, bottom: 16),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 16),
+                                  decoration: BoxDecoration(
+                                      color: const Color(
+                                          0xFFFFE0E2), // Background color
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                          color: const Color.fromARGB(
+                                              255, 222, 178, 181),
+                                          width: 1,
+                                          strokeAlign:
+                                              BorderSide.strokeAlignInside)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'Approvals Pending',
+                                            style: TextStyle(
+                                              color: Color(
+                                                  0xFFE30613), // Text color
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          SizedBox(width: 8),
+                                          CircleAvatar(
+                                            radius: 12,
+                                            backgroundColor: Colors.white,
+                                            child: Text(
+                                              nonApprovedUsers.length
+                                                  .toString(),
+                                              style: TextStyle(
+                                                color: Color(
+                                                    0xFFE30613), // Text color for number
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      IconButton(
+                                        onPressed: () => Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                            pageBuilder: (context, animation,
+                                                    secondaryAnimation) =>
+                                                ApprovalPage(),
+                                            transitionsBuilder: (context,
+                                                animation,
+                                                secondaryAnimation,
+                                                child) {
+                                              const begin = Offset(1.0,
+                                                  0.0); // Slide from right to left
+                                              const end = Offset.zero;
+                                              const curve = Curves
+                                                  .fastEaseInToSlowEaseOut;
+
+                                              var tween = Tween(
+                                                      begin: begin, end: end)
+                                                  .chain(
+                                                      CurveTween(curve: curve));
+                                              var offsetAnimation =
+                                                  animation.drive(tween);
+
+                                              return SlideTransition(
+                                                position: offsetAnimation,
+                                                child: child,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        icon: const Icon(
+                                          Icons.arrow_forward,
+                                          color:
+                                              Color(0xFFE30613), // Arrow color
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return SizedBox();
+                            }
+                          },
+                        ),
                       if (banners.isNotEmpty)
                         Card(
                           color: Colors.transparent,
@@ -404,7 +520,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             },
-            loading: () => Center(child: CircularProgressIndicator()),
+            loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stackTrace) {
               return Center(
                 child: Text('Error loading promotions: $error'),
@@ -506,16 +622,16 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Text(
                     notice.title!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       color: Color(0xFF004797), // Set the font color to blue
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     notice.description!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color.fromRGBO(
                           0, 0, 0, 1), // Set the font color to blue
                     ),

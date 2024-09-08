@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'feed_api.dart';
+part of 'approval_api.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchFeedsHash() => r'49d2c58fb528452bdd83e9765d868b010982a8b1';
+String _$fetchApprovalsHash() => r'1e868d49a37f3c1f50674e4a59698df49a5f24a4';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,29 +29,29 @@ class _SystemHash {
   }
 }
 
-/// See also [fetchFeeds].
-@ProviderFor(fetchFeeds)
-const fetchFeedsProvider = FetchFeedsFamily();
+/// See also [fetchApprovals].
+@ProviderFor(fetchApprovals)
+const fetchApprovalsProvider = FetchApprovalsFamily();
 
-/// See also [fetchFeeds].
-class FetchFeedsFamily extends Family<AsyncValue<List<Feed>>> {
-  /// See also [fetchFeeds].
-  const FetchFeedsFamily();
+/// See also [fetchApprovals].
+class FetchApprovalsFamily extends Family<AsyncValue<List<UserModel>>> {
+  /// See also [fetchApprovals].
+  const FetchApprovalsFamily();
 
-  /// See also [fetchFeeds].
-  FetchFeedsProvider call({
+  /// See also [fetchApprovals].
+  FetchApprovalsProvider call({
     int pageNo = 1,
     int limit = 10,
   }) {
-    return FetchFeedsProvider(
+    return FetchApprovalsProvider(
       pageNo: pageNo,
       limit: limit,
     );
   }
 
   @override
-  FetchFeedsProvider getProviderOverride(
-    covariant FetchFeedsProvider provider,
+  FetchApprovalsProvider getProviderOverride(
+    covariant FetchApprovalsProvider provider,
   ) {
     return call(
       pageNo: provider.pageNo,
@@ -71,35 +71,36 @@ class FetchFeedsFamily extends Family<AsyncValue<List<Feed>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'fetchFeedsProvider';
+  String? get name => r'fetchApprovalsProvider';
 }
 
-/// See also [fetchFeeds].
-class FetchFeedsProvider extends AutoDisposeFutureProvider<List<Feed>> {
-  /// See also [fetchFeeds].
-  FetchFeedsProvider({
+/// See also [fetchApprovals].
+class FetchApprovalsProvider
+    extends AutoDisposeFutureProvider<List<UserModel>> {
+  /// See also [fetchApprovals].
+  FetchApprovalsProvider({
     int pageNo = 1,
     int limit = 10,
   }) : this._internal(
-          (ref) => fetchFeeds(
-            ref as FetchFeedsRef,
+          (ref) => fetchApprovals(
+            ref as FetchApprovalsRef,
             pageNo: pageNo,
             limit: limit,
           ),
-          from: fetchFeedsProvider,
-          name: r'fetchFeedsProvider',
+          from: fetchApprovalsProvider,
+          name: r'fetchApprovalsProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$fetchFeedsHash,
-          dependencies: FetchFeedsFamily._dependencies,
+                  : _$fetchApprovalsHash,
+          dependencies: FetchApprovalsFamily._dependencies,
           allTransitiveDependencies:
-              FetchFeedsFamily._allTransitiveDependencies,
+              FetchApprovalsFamily._allTransitiveDependencies,
           pageNo: pageNo,
           limit: limit,
         );
 
-  FetchFeedsProvider._internal(
+  FetchApprovalsProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -115,12 +116,12 @@ class FetchFeedsProvider extends AutoDisposeFutureProvider<List<Feed>> {
 
   @override
   Override overrideWith(
-    FutureOr<List<Feed>> Function(FetchFeedsRef provider) create,
+    FutureOr<List<UserModel>> Function(FetchApprovalsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: FetchFeedsProvider._internal(
-        (ref) => create(ref as FetchFeedsRef),
+      override: FetchApprovalsProvider._internal(
+        (ref) => create(ref as FetchApprovalsRef),
         from: from,
         name: null,
         dependencies: null,
@@ -133,13 +134,13 @@ class FetchFeedsProvider extends AutoDisposeFutureProvider<List<Feed>> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<Feed>> createElement() {
-    return _FetchFeedsProviderElement(this);
+  AutoDisposeFutureProviderElement<List<UserModel>> createElement() {
+    return _FetchApprovalsProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is FetchFeedsProvider &&
+    return other is FetchApprovalsProvider &&
         other.pageNo == pageNo &&
         other.limit == limit;
   }
@@ -154,7 +155,7 @@ class FetchFeedsProvider extends AutoDisposeFutureProvider<List<Feed>> {
   }
 }
 
-mixin FetchFeedsRef on AutoDisposeFutureProviderRef<List<Feed>> {
+mixin FetchApprovalsRef on AutoDisposeFutureProviderRef<List<UserModel>> {
   /// The parameter `pageNo` of this provider.
   int get pageNo;
 
@@ -162,29 +163,15 @@ mixin FetchFeedsRef on AutoDisposeFutureProviderRef<List<Feed>> {
   int get limit;
 }
 
-class _FetchFeedsProviderElement
-    extends AutoDisposeFutureProviderElement<List<Feed>> with FetchFeedsRef {
-  _FetchFeedsProviderElement(super.provider);
+class _FetchApprovalsProviderElement
+    extends AutoDisposeFutureProviderElement<List<UserModel>>
+    with FetchApprovalsRef {
+  _FetchApprovalsProviderElement(super.provider);
 
   @override
-  int get pageNo => (origin as FetchFeedsProvider).pageNo;
+  int get pageNo => (origin as FetchApprovalsProvider).pageNo;
   @override
-  int get limit => (origin as FetchFeedsProvider).limit;
+  int get limit => (origin as FetchApprovalsProvider).limit;
 }
-
-String _$fetchMyPostsHash() => r'238226ab610fd7eadf17221e03b773b1cf9a8683';
-
-/// See also [fetchMyPosts].
-@ProviderFor(fetchMyPosts)
-final fetchMyPostsProvider = AutoDisposeFutureProvider<List<Feed>>.internal(
-  fetchMyPosts,
-  name: r'fetchMyPostsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$fetchMyPostsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef FetchMyPostsRef = AutoDisposeFutureProviderRef<List<Feed>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

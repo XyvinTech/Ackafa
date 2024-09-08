@@ -26,7 +26,7 @@ Widget customVideo({required BuildContext context, required Promotion video}) {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: Text(video.title ?? '',
+              child: Text('${video.title?.split(' ').take(6).join(' ') ?? ''}',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             ),
           ],

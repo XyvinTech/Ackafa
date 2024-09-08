@@ -17,6 +17,8 @@ class ViewMoreEventPage extends StatelessWidget {
   Widget build(BuildContext context) {
     String time = DateFormat('hh:mm a').format(event.startTime!);
     String date = DateFormat('yyyy-MM-dd').format(event.startDate!);
+    log('rsvp : ${event.rsvp}');
+    log('my id : ${event.id}');
     bool registered = event.rsvp?.contains(id) ?? false;
     log('event registered?:$registered');
     return Scaffold(
@@ -51,7 +53,7 @@ class ViewMoreEventPage extends StatelessWidget {
                               'https://placehold.co/600x400/png');
                         },
                         event.image!, // Replace with your image URL
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                       ),
                     ),
                     Positioned(
@@ -209,11 +211,14 @@ class ViewMoreEventPage extends StatelessWidget {
                       : registered
                           ? 'ALREADY REGISTERED'
                           : 'REGISTER EVENT',
-                  onPressed: () {
+                  onPressed: () async {
                     if (!registered && event.status != 'cancelled') {
                       ApiRoutes userApi = ApiRoutes();
-                      userApi.markEventAsRSVP(event.id!);
+                      await userApi.markEventAsRSVP(event.id!);
+                      Future.delayed(Duration(seconds: 4));
                       ref.invalidate(fetchEventsProvider);
+
+                      registered = event.rsvp?.contains(id) ?? false;
                     }
                   },
                   fontSize: 16,
