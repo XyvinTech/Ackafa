@@ -26,12 +26,13 @@ class _HomePageState extends State<HomePage> {
   Timer? _bannerScrollTimer;
   Timer? _noticeScrollTimer;
   Timer? _posterScrollTimer;
+  Timer? _restartAutoScrollTimer;
+  bool _isUserInteracting = false; // To track user interaction
 
   int _currentBannerIndex = 0;
   int _currentNoticeIndex = 0;
   int _currentPosterIndex = 0;
 
-  // GlobalKeys to measure item width
   final GlobalKey _bannerKey = GlobalKey();
   final GlobalKey _noticeKey = GlobalKey();
   final GlobalKey _posterKey = GlobalKey();
@@ -46,28 +47,6 @@ class _HomePageState extends State<HomePage> {
     final RenderBox? renderBox =
         key.currentContext?.findRenderObject() as RenderBox?;
     return renderBox?.size.width ?? 200.0;
-  }
-
-  void startAutoScroll({
-    required ScrollController controller,
-    required int itemCount,
-    required int currentIndex,
-    required GlobalKey itemKey,
-    required Function(int) onIndexChanged,
-  }) {
-    Timer.periodic(Duration(seconds: 2), (timer) {
-      currentIndex++;
-      if (currentIndex >= itemCount) {
-        currentIndex = 0;
-      }
-      final itemWidth = _getItemWidth(itemKey);
-      controller.animateTo(
-        currentIndex * itemWidth,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-      onIndexChanged(currentIndex);
-    });
   }
 
   double _calculateDynamicHeight(List<Promotion> notices) {
@@ -97,6 +76,90 @@ class _HomePageState extends State<HomePage> {
     return numLines * fontSize * 1.2; // Multiplying by 1.2 for line height
   }
 
+  // Updated auto-scroll start
+  void startAutoScroll({
+    required ScrollController controller,
+    required List<dynamic> items,
+    required int currentIndex,
+    required GlobalKey itemKey,
+    required Function(int) onIndexChanged,
+    required Timer? scrollTimer,
+    Duration scrollInterval = const Duration(seconds: 5),
+  }) {
+    // Ensure the timer is cleared before starting a new one
+    scrollTimer?.cancel();
+    scrollTimer = Timer.periodic(scrollInterval, (timer) {
+      if (!_isUserInteracting) {
+        currentIndex++;
+        if (currentIndex >= items.length) {
+          currentIndex = 0;
+        }
+        final itemWidth = _getItemWidth(itemKey);
+        controller.animateTo(
+          currentIndex * itemWidth,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+        onIndexChanged(currentIndex);
+      }
+    });
+  }
+
+  void stopAutoScroll() {
+    _bannerScrollTimer?.cancel();
+    _noticeScrollTimer?.cancel();
+    _posterScrollTimer?.cancel();
+    _isUserInteracting = true;
+  }
+
+  void restartAutoScroll(
+      List<dynamic> banners, List<dynamic> notices, List<dynamic> posters) {
+    _restartAutoScrollTimer
+        ?.cancel(); // Cancel the previous restart timer if any
+    _restartAutoScrollTimer = Timer(Duration(seconds: 10), () {
+      _isUserInteracting = false; // Reset the interaction flag
+
+      // Restart auto-scroll for all promotion types
+      startAutoScroll(
+        controller: _bannerScrollController,
+        items: banners,
+        currentIndex: _currentBannerIndex,
+        itemKey: _bannerKey,
+        onIndexChanged: (index) => setState(() {
+          _currentBannerIndex = index;
+        }),
+        scrollTimer: _bannerScrollTimer,
+      );
+      startAutoScroll(
+        controller: _noticeScrollController,
+        items: notices,
+        currentIndex: _currentNoticeIndex,
+        itemKey: _noticeKey,
+        onIndexChanged: (index) => setState(() {
+          _currentNoticeIndex = index;
+        }),
+        scrollTimer: _noticeScrollTimer,
+      );
+      startAutoScroll(
+        controller: _posterScrollController,
+        items: posters,
+        currentIndex: _currentPosterIndex,
+        itemKey: _posterKey,
+        onIndexChanged: (index) => setState(() {
+          _currentPosterIndex = index;
+        }),
+        scrollTimer: _posterScrollTimer,
+      );
+    });
+  }
+
+  void _onUserGestureDetected(
+      List<dynamic> banners, List<dynamic> notices, List<dynamic> posters) {
+    stopAutoScroll(); // Stop auto-scroll when a gesture is detected
+    restartAutoScroll(
+        banners, notices, posters); // Restart auto-scroll after 10 seconds
+  }
+
   @override
   void dispose() {
     _bannerScrollController.dispose();
@@ -106,6 +169,7 @@ class _HomePageState extends State<HomePage> {
     _bannerScrollTimer?.cancel();
     _noticeScrollTimer?.cancel();
     _posterScrollTimer?.cancel();
+    _restartAutoScrollTimer?.cancel(); // Cancel the restart timer
 
     super.dispose();
   }
@@ -131,229 +195,216 @@ class _HomePageState extends State<HomePage> {
               final filteredVideos = videos
                   .where((video) => video.link!.startsWith('http'))
                   .toList();
-
+              // Start auto-scroll for all promotions when data is ready
               if (banners.isNotEmpty) {
-                _bannerScrollTimer =
-                    Timer.periodic(Duration(seconds: 5), (timer) {
-                  _currentBannerIndex++;
-                  if (_currentBannerIndex >= banners.length) {
-                    _currentBannerIndex = 0;
-                  }
-                  final itemWidth = _getItemWidth(_bannerKey);
-                  if (_bannerScrollController.hasClients) {
-                    _bannerScrollController.animateTo(
-                      _currentBannerIndex * itemWidth,
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeInOut,
-                    );
-                  }
-                });
+                startAutoScroll(
+                  controller: _bannerScrollController,
+                  items: banners,
+                  currentIndex: _currentBannerIndex,
+                  itemKey: _bannerKey,
+                  onIndexChanged: (index) => setState(() {
+                    _currentBannerIndex = index;
+                  }),
+                  scrollTimer: _bannerScrollTimer,
+                );
               }
 
               if (notices.isNotEmpty) {
-                _noticeScrollTimer =
-                    Timer.periodic(Duration(seconds: 6), (timer) {
-                  _currentNoticeIndex++;
-                  if (_currentNoticeIndex >= notices.length) {
-                    _currentNoticeIndex = 0;
-                  }
-                  if (_noticeScrollController.hasClients) {
-                    final itemWidth = _getItemWidth(_noticeKey);
-                    _noticeScrollController.animateTo(
-                      _currentNoticeIndex * itemWidth,
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeInOut,
-                    );
-                  }
-                });
+                startAutoScroll(
+                  controller: _noticeScrollController,
+                  items: notices,
+                  currentIndex: _currentNoticeIndex,
+                  itemKey: _noticeKey,
+                  onIndexChanged: (index) => setState(() {
+                    _currentNoticeIndex = index;
+                  }),
+                  scrollTimer: _noticeScrollTimer,
+                );
               }
 
               if (posters.isNotEmpty) {
-                _posterScrollTimer =
-                    Timer.periodic(Duration(seconds: 5), (timer) {
-                  _currentPosterIndex++;
-                  if (_currentPosterIndex >= posters.length) {
-                    _currentPosterIndex = 0;
-                  }
-                  if (_posterScrollController.hasClients) {
-                    final itemWidth = _getItemWidth(_bannerKey);
-                    _posterScrollController.animateTo(
-                      _currentPosterIndex * itemWidth,
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeInOut,
-                    );
-                  }
-                });
+                startAutoScroll(
+                  controller: _posterScrollController,
+                  items: posters,
+                  currentIndex: _currentPosterIndex,
+                  itemKey: _posterKey,
+                  onIndexChanged: (index) => setState(() {
+                    _currentPosterIndex = index;
+                  }),
+                  scrollTimer: _posterScrollTimer,
+                );
               }
 
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            offset: const Offset(0, 2),
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
-                      child: AppBar(
-                        toolbarHeight: 45.0,
-                        scrolledUnderElevation: 0,
-                        backgroundColor: Colors.white,
-                        elevation: 0,
-                        leadingWidth: 100,
-                        leading: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: SizedBox(
-                            width: 100,
-                            height: 100,
-                            child: Image.asset(
-                              'assets/icons/ackaf_logo.png',
-                              fit: BoxFit.contain,
+              return GestureDetector(
+                onPanDown: (_) =>
+                    _onUserGestureDetected(banners, notices, posters),
+                onTap: () => _onUserGestureDetected(banners, notices, posters),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              offset: const Offset(0, 2),
+                              blurRadius: 4,
                             ),
-                          ),
+                          ],
                         ),
-                        actions: [
-                          IconButton(
-                            icon: Icon(Icons.notifications_none_outlined),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => NotificationPage()),
-                              );
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.menu),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        MenuPage()), // Navigate to MenuPage
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    promotions.isEmpty
-                        ? const Center(
-                            child: Text(
-                              'No Promotions Yet',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w700),
-                            ),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.only(
-                                top: 8, left: 8, right: 8),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(Icons.search),
-                                hintText: 'Search promotions',
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color:
-                                          Color.fromARGB(255, 214, 211, 211)),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color:
-                                          Color.fromARGB(255, 217, 212, 212)),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
+                        child: AppBar(
+                          toolbarHeight: 45.0,
+                          scrolledUnderElevation: 0,
+                          backgroundColor: Colors.white,
+                          elevation: 0,
+                          leadingWidth: 100,
+                          leading: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: SizedBox(
+                              width: 100,
+                              height: 100,
+                              child: Image.asset(
+                                'assets/icons/ackaf_logo.png',
+                                fit: BoxFit.contain,
                               ),
                             ),
                           ),
-                    const SizedBox(height: 16),
-
-                    if (banners.isNotEmpty)
-                      Card(
-                        color: Colors.transparent,
-                        elevation: 0,
-                        child: Container(
+                          actions: [
+                            IconButton(
+                              icon: Icon(Icons.notifications_none_outlined),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NotificationPage()),
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.menu),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          MenuPage()), // Navigate to MenuPage
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      promotions.isEmpty
+                          ? const Center(
+                              child: Text(
+                                'No Promotions Yet',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w700),
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 8, left: 8, right: 8),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  prefixIcon: const Icon(Icons.search),
+                                  hintText: 'Search promotions',
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 214, 211, 211)),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 217, 212, 212)),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                      const SizedBox(height: 16),
+                      if (banners.isNotEmpty)
+                        Card(
                           color: Colors.transparent,
-                          height: 140,
+                          elevation: 0,
+                          child: Container(
+                            color: Colors.transparent,
+                            height: 140,
+                            child: ListView.builder(
+                              key: _bannerKey,
+                              controller: _bannerScrollController,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: banners.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 20.0),
+                                  child: _buildBanners(
+                                      context: context, banner: banners[index]),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 16),
+                      if (notices.isNotEmpty)
+                        SizedBox(
+                          height: _calculateDynamicHeight(notices),
                           child: ListView.builder(
-                            key: _bannerKey,
-                            controller: _bannerScrollController,
+                            key: _noticeKey,
+                            controller: _noticeScrollController,
                             scrollDirection: Axis.horizontal,
-                            itemCount: banners.length,
+                            itemCount: notices.length,
                             itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 20.0),
-                                child: _buildBanners(
-                                    context: context, banner: banners[index]),
-                              );
+                              return customNotice(
+                                  context: context, notice: notices[index]);
                             },
                           ),
                         ),
-                      ),
-                    const SizedBox(height: 16),
-                    if (notices.isNotEmpty)
-                      SizedBox(
-                        height: _calculateDynamicHeight(notices),
-                        child: ListView.builder(
-                          key: _noticeKey,
-                          controller: _noticeScrollController,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: notices.length,
-                          itemBuilder: (context, index) {
-                            return customNotice(
-                                context: context, notice: notices[index]);
-                          },
+                      const SizedBox(height: 16),
+                      if (posters.isNotEmpty)
+                        SizedBox(
+                          height: 250,
+                          child: ListView.builder(
+                            key: _posterKey,
+                            controller: _posterScrollController,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: posters.length,
+                            itemBuilder: (context, index) {
+                              return customPoster(
+                                  context: context, poster: posters[index]);
+                            },
+                          ),
                         ),
-                      ),
-                    const SizedBox(height: 16),
-
-                    if (posters.isNotEmpty)
-                      SizedBox(
-                        height: 250,
-                        child: ListView.builder(
-                          key: _posterKey,
-                          controller: _posterScrollController,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: posters.length,
-                          itemBuilder: (context, index) {
-                            return customPoster(
-                                context: context, poster: posters[index]);
-                          },
+                      const SizedBox(height: 16),
+                      if (filteredVideos.isNotEmpty)
+                        SizedBox(
+                          height: 300,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: filteredVideos.length,
+                            itemBuilder: (context, index) {
+                              return customVideo(
+                                  context: context,
+                                  video: filteredVideos[index]);
+                            },
+                          ),
                         ),
-                      ),
-                    const SizedBox(height: 20),
-
-                    // Videos section (no auto-scroll)
-                    if (filteredVideos.isNotEmpty)
-                      SizedBox(
-                        height: 300,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: filteredVideos.length,
-                          itemBuilder: (context, index) {
-                            return customVideo(
-                                context: context, video: filteredVideos[index]);
-                          },
-                        ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
-            loading: () => Center(child: LoadingAnimation()),
+            loading: () => Center(child: CircularProgressIndicator()),
             error: (error, stackTrace) {
               return Center(
                 child: Text('Error loading promotions: $error'),
