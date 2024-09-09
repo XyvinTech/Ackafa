@@ -126,7 +126,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                   ],
                 ),
                 title: Text(
-                  '${widget.receiver.name?.first ?? ''}${widget.receiver.name?.middle ?? ''}${widget.receiver.name?.first ?? ''}',
+                  '${widget.receiver.name?.first}  ${widget.receiver.name?.middle} ${widget.receiver.name?.last}',
                   style: TextStyle(fontSize: 18),
                 ),
                 actions: [

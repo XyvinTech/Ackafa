@@ -194,8 +194,13 @@ void showLogoutDialog(BuildContext context) {
                         preferences.setString('token', '');
                         preferences.setString('id', '');
 
-                        Navigator.pushReplacementNamed(
-                            context, '/login_screen');
+                        // Clear the entire stack and push the login screen
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          '/login_screen',
+                          (Route<dynamic> route) =>
+                              false, // This removes all the previous routes
+                        );
                       },
                     ),
                   ),

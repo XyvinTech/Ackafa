@@ -6,7 +6,7 @@ part of 'approval_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$approvalNotifierHash() => r'f7cf8eabbe1b8e8fbff50afd00b82c8ed060b065';
+String _$approvalNotifierHash() => r'8b44c0b94f63b1e60a96e844d4f3b18302ac165d';
 
 /// See also [ApprovalNotifier].
 @ProviderFor(ApprovalNotifier)

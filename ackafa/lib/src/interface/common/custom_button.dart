@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 Widget customButton(
     {required String label,
+    Color color = const Color(0xFFE30613),
     required VoidCallback onPressed,
     required int fontSize}) {
   return SizedBox(
@@ -10,12 +11,12 @@ Widget customButton(
     child: ElevatedButton(
         onPressed: onPressed,
         style: ButtonStyle(
-          foregroundColor: WidgetStateProperty.all<Color>(Color(0xFFE30613)),
-          backgroundColor: WidgetStateProperty.all<Color>(Color(0xFFE30613)),
+          foregroundColor: WidgetStateProperty.all<Color>(color),
+          backgroundColor: WidgetStateProperty.all<Color>(color),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(3),
-              side: BorderSide(color: Color(0xFFE30613)),
+              side: BorderSide(color: color),
             ),
           ),
         ),

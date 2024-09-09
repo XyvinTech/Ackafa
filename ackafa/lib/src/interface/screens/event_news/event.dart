@@ -1,3 +1,4 @@
+import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -7,41 +8,56 @@ import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart'; // Import the ViewMoreEventPage
 
 class EventPage extends StatelessWidget {
-  final List<Event> events;
-  const EventPage({super.key, required this.events});
+  const EventPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16.0),
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: TextField(
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              hintText: 'Search for Events',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
+    return Consumer(
+      builder: (context, ref, child) {
+        final asyncEvents = ref.watch(fetchEventsProvider);
+      return  asyncEvents.when(
+          data: (events) {
+            return   ListView(
+          padding: const EdgeInsets.all(16.0),
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search),
+                  hintText: 'Search for Events',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        SizedBox(height: 16),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: events.length,
-          itemBuilder: (context, index) {
-            return _buildPost(
-              withImage: true,
-              context: context,
-              event: events[
-                  index], // Assuming your _buildPost takes an event parameter
+            SizedBox(height: 16),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: events.length,
+              itemBuilder: (context, index) {
+                return _buildPost(
+                  withImage: true,
+                  context: context,
+                  event: events[
+                      index], // Assuming your _buildPost takes an event parameter
+                );
+              },
+            ),
+          ],
+        );
+          },
+          loading: () => Center(child: LoadingAnimation()),
+          error: (error, stackTrace) {
+            return Center(
+              child: Text('Error loading promotions: $error'),
             );
           },
-        ),
-      ],
+        );
+       
+      },
     );
   }
 
@@ -111,8 +127,8 @@ class EventPage extends StatelessWidget {
                             0xFFA9F3C7), // Greenish background for LIVE label
                         borderRadius: BorderRadius.circular(3),
                       ),
-                      child: event.status!=null && event.status!=''
-                          ?  Text(
+                      child: event.status != null && event.status != ''
+                          ? Text(
                               event.status!,
                               style: TextStyle(
                                 color:
@@ -212,31 +228,33 @@ class EventPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 16),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ViewMoreEventPage(
-                                    event: event,
-                                  )),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFFE30613), // Blue color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ViewMoreEventPage(
+                                      event: event,
+                                    )),
+                          );
+                          ref.invalidate(fetchEventsProvider);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFE30613), // Blue color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        'View more',
-                        style: TextStyle(
-                          color: Colors.white,
+                        child: Text(
+                          'View more',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ],
               ),

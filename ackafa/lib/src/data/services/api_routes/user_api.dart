@@ -1,10 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:developer';
-import 'dart:io';
-
-import 'package:ackaf/src/data/models/feed_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -472,10 +468,33 @@ Future<UserModel> fetchUserDetails(FetchUserDetailsRef ref) async {
 
 //list of users
 @riverpod
-Future<List<UserModel>> fetchUsers(FetchUsersRef ref,
+Future<List<UserModel>> fetchActiveUsers(FetchActiveUsersRef ref,
     {int pageNo = 1, int limit = 10}) async {
   final response = await http.get(
     Uri.parse('$baseUrl/user/list?pageNo=$pageNo&limit=$limit'),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    final usersJson = data['data'] as List<dynamic>? ?? [];
+
+    return usersJson.map((user) => UserModel.fromJson(user)).toList();
+  } else {
+    final data = json.decode(response.body);
+    log(data['message']);
+    throw Exception('Failed to load users');
+  }
+}
+
+@riverpod
+Future<List<UserModel>> fetchAllUsers(FetchAllUsersRef ref,
+    {int pageNo = 1, int limit = 10}) async {
+  final response = await http.get(
+    Uri.parse('$baseUrl/user/users?pageNo=$pageNo&limit=$limit'),
     headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token"

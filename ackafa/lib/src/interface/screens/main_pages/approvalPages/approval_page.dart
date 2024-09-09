@@ -1,4 +1,6 @@
+import 'package:ackaf/src/interface/screens/main_pages/approvalPages/approved.dart';
 import 'package:ackaf/src/interface/screens/main_pages/approvalPages/pending.dart';
+import 'package:ackaf/src/interface/screens/main_pages/approvalPages/rejected.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -131,8 +133,8 @@ class ApprovalPage extends StatelessWidget {
                   child: TabBarView(
                     children: [
                       PendingApprovalPage(),
-                      PendingApprovalPage(),
-                      PendingApprovalPage()
+                      ApprovedApprovalPage(),
+                      RejectedApprovalPage()
                     ],
                   ),
                 ),

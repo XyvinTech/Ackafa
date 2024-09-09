@@ -223,19 +223,6 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
         .removeCertificate(ref.read(userProvider).value!.certificates![index]);
   }
 
-  void _addNewWebsite() async {
-    Link newWebsite = Link(
-        link: websiteNameController.text, name: websiteLinkController.text);
-    ref.read(userProvider.notifier).updateWebsite(
-        [...?ref.read(userProvider).value?.websites, newWebsite]);
-  }
-
-  void _removeWebsite(int index) async {
-    ref
-        .read(userProvider.notifier)
-        .removeCertificate(ref.read(userProvider).value!.certificates![index]);
-  }
-
   @override
   void dispose() {
     // Dispose controllers when the widget is disposed

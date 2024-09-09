@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/notifires/people_notifier.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
@@ -50,10 +52,10 @@ class _MembersPageState extends ConsumerState<MembersPage> {
             ? Center(child: Text('NO MEMBERS YET')) // Show loader when no data
             : asyncChats.when(
                 data: (chats) {
+                  log('im inside chat');
                   return ListView.builder(
                     controller: _scrollController,
-                    itemCount:
-                        users.length , // Add 1 for the loading indicator
+                    itemCount: users.length, // Add 1 for the loading indicator
                     itemBuilder: (context, index) {
                       var chatForUser = chats.firstWhere(
                         (chat) =>
@@ -67,7 +69,8 @@ class _MembersPageState extends ConsumerState<MembersPage> {
                               name: users[index].name,
                               image: users[index].image,
                             ),
-                            Participant(id: id), // You can replace this with a default sender (current user)
+                            Participant(
+                                id: id), // You can replace this with a default sender (current user)
                           ],
                         ),
                       );
@@ -132,10 +135,10 @@ class _MembersPageState extends ConsumerState<MembersPage> {
                             icon: Icon(Icons.chat),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => IndividualPage(
-                            receiver: receiver!,
-                            sender: sender!,
-                          )));
+                                  builder: (context) => IndividualPage(
+                                        receiver: receiver!,
+                                        sender: sender!,
+                                      )));
                             },
                           ),
                         ),

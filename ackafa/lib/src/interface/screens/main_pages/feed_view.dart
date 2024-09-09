@@ -20,6 +20,7 @@ import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class FeedView extends ConsumerStatefulWidget {
   FeedView({super.key});
@@ -285,7 +286,6 @@ class _FeedViewState extends ConsumerState<FeedView> {
                 user: user,
                 onLike: () async {
                   await userApi.likeFeed(feed.id!);
-                  await ref.read(feedNotifierProvider.notifier).refreshFeed();
                 },
                 onComment: () async {},
                 onShare: () {});
@@ -330,7 +330,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
   bool showHeartAnimation = false;
   late AnimationController _animationController;
   TextEditingController commentController = TextEditingController();
-
+  int likes = 0;
   @override
   void initState() {
     super.initState();
@@ -342,7 +342,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
     if (widget.feed.likes!.contains(id)) {
       isLiked = true;
     }
-
+    likes = widget.feed.likes?.length ?? 0;
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -517,30 +517,12 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              return FutureBuilder<Size>(
-                future: _getImageSize(imageUrl),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.hasData) {
-                    final imageSize = snapshot.data!;
-                    return AspectRatio(
-                      aspectRatio: imageSize.width / imageSize.height,
-                      child: Image.network(
-                        imageUrl,
-                        fit: BoxFit.fill,
-                      ),
-                    );
-                  } else {
-                    return SizedBox(
-                      height: 300, // Placeholder height while loading
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  }
-                },
-              );
-            },
+          AspectRatio(
+            aspectRatio: 4 / 4,
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.contain,
+            ),
           ),
           if (showHeartAnimation)
             Icon(Icons.favorite, color: Colors.red.withOpacity(0.8), size: 100)
@@ -553,20 +535,9 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
     );
   }
 
-  Future<Size> _getImageSize(String imageUrl) async {
-    final Completer<Size> completer = Completer();
-    final Image image = Image.network(imageUrl);
-    image.image.resolve(const ImageConfiguration()).addListener(
-      ImageStreamListener((ImageInfo info, bool synchronousCall) {
-        final size =
-            Size(info.image.width.toDouble(), info.image.height.toDouble());
-        completer.complete(size);
-      }),
-    );
-    return completer.future;
-  }
-
   Widget _buildUserInfo(UserModel user) {
+    String formattedDateTime = DateFormat('h:mm a · MMM d, yyyy')
+        .format(DateTime.parse(widget.feed.updatedAt.toString()).toLocal());
     return Row(
       children: [
         ClipOval(
@@ -600,7 +571,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
         ),
         Spacer(),
         Text(
-          widget.feed.createdAt.toString(),
+          formattedDateTime,
           style: TextStyle(color: Colors.grey, fontSize: 12),
         ),
       ],
@@ -630,9 +601,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
             ),
           ],
         ),
-        Text(widget.feed.likes!.isNotEmpty
-            ? '${widget.feed.likes!.length.toString()} Likes'
-            : '')
+        Text('${likes.toString()} Likes')
       ],
     );
   }

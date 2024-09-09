@@ -10,7 +10,6 @@ import 'package:ackaf/src/data/services/api_routes/image_upload.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
-import 'package:ackaf/src/interface/common/custom_dialog.dart';
 import 'package:ackaf/src/interface/common/custom_dropdowns/custom_dropdowns.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
@@ -125,483 +124,501 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                         ref.watch(fetchCollegesProvider(token));
                     return asyncColleges.when(
                       data: (colleges) {
-                        return Scaffold(
-                            backgroundColor: Colors.white,
-                            body: Stack(
-                              children: [
-                                SingleChildScrollView(
-                                  child: Form(
-                                    key: _formKey,
-                                    child: Column(
-                                      children: [
-                                        const SizedBox(height: 35),
-                                        FormField<File>(
-                                          validator: (value) {
-                                            if (_profileImageFile == null) {
-                                              log(profileImageUrl ??
-                                                  'No profile image selected');
-                                              return 'Please select a profile image';
-                                            }
-                                            return null;
-                                          },
-                                          builder:
-                                              (FormFieldState<File> state) {
-                                            return Center(
-                                              child: Column(
-                                                children: [
-                                                  Stack(
-                                                    children: [
-                                                      DottedBorder(
-                                                        borderType:
-                                                            BorderType.Circle,
-                                                        dashPattern: [6, 3],
-                                                        color: Colors.grey,
-                                                        strokeWidth: 2,
-                                                        child: ClipOval(
-                                                          child: Container(
-                                                              width: 120,
-                                                              height: 120,
-                                                              color: const Color
-                                                                  .fromARGB(
-                                                                  255,
-                                                                  255,
-                                                                  255,
-                                                                  255),
-                                                              child:
-                                                                  _profileImageFile !=
-                                                                          null
-                                                                      ? Image
-                                                                          .file(
-                                                                          _profileImageFile!,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        )
-                                                                      : Icon(
-                                                                          Icons
-                                                                              .person,
-                                                                          size:
-                                                                              50,
-                                                                        )),
+                        return RefreshIndicator(
+                          backgroundColor: Colors.white,
+                          color: Colors.red,
+                          onRefresh: () async => ref.invalidate(userProvider),
+                          child: Scaffold(
+                              backgroundColor: Colors.white,
+                              body: Stack(
+                                children: [
+                                  SingleChildScrollView(
+                                    child: Form(
+                                      key: _formKey,
+                                      child: Column(
+                                        children: [
+                                          const SizedBox(height: 35),
+                                          FormField<File>(
+                                            validator: (value) {
+                                              if (_profileImageFile == null) {
+                                                log(profileImageUrl ??
+                                                    'No profile image selected');
+                                                return 'Please select a profile image';
+                                              }
+                                              return null;
+                                            },
+                                            builder:
+                                                (FormFieldState<File> state) {
+                                              return Center(
+                                                child: Column(
+                                                  children: [
+                                                    Stack(
+                                                      children: [
+                                                        DottedBorder(
+                                                          borderType:
+                                                              BorderType.Circle,
+                                                          dashPattern: [6, 3],
+                                                          color: Colors.grey,
+                                                          strokeWidth: 2,
+                                                          child: ClipOval(
+                                                            child: Container(
+                                                                width: 120,
+                                                                height: 120,
+                                                                color: const Color
+                                                                    .fromARGB(
+                                                                    255,
+                                                                    255,
+                                                                    255,
+                                                                    255),
+                                                                child:
+                                                                    _profileImageFile !=
+                                                                            null
+                                                                        ? Image
+                                                                            .file(
+                                                                            _profileImageFile!,
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          )
+                                                                        : Icon(
+                                                                            Icons.person,
+                                                                            size:
+                                                                                50,
+                                                                          )),
+                                                          ),
                                                         ),
-                                                      ),
-                                                      Positioned(
-                                                        bottom: 4,
-                                                        right: 4,
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            showModalBottomSheet(
-                                                              context: context,
-                                                              builder: (context) =>
-                                                                  _buildImagePickerOptions(
-                                                                context,
-                                                              ),
-                                                            );
-                                                          },
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              boxShadow: [
-                                                                BoxShadow(
-                                                                  color: Colors
-                                                                      .black
-                                                                      .withOpacity(
-                                                                          0.2),
-                                                                  offset:
-                                                                      const Offset(
-                                                                          2, 2),
-                                                                  blurRadius: 4,
+                                                        Positioned(
+                                                          bottom: 4,
+                                                          right: 4,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              showModalBottomSheet(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        _buildImagePickerOptions(
+                                                                  context,
                                                                 ),
-                                                              ],
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                            ),
-                                                            child:
-                                                                const CircleAvatar(
-                                                              radius: 17,
-                                                              backgroundColor:
-                                                                  Colors.white,
-                                                              child: Icon(
-                                                                Icons.edit,
-                                                                color: Color(
-                                                                    0xFFE30613),
-                                                                size: 16,
+                                                              );
+                                                            },
+                                                            child: Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                    color: Colors
+                                                                        .black
+                                                                        .withOpacity(
+                                                                            0.2),
+                                                                    offset:
+                                                                        const Offset(
+                                                                            2,
+                                                                            2),
+                                                                    blurRadius:
+                                                                        4,
+                                                                  ),
+                                                                ],
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                              ),
+                                                              child:
+                                                                  const CircleAvatar(
+                                                                radius: 17,
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .white,
+                                                                child: Icon(
+                                                                  Icons.edit,
+                                                                  color: Color(
+                                                                      0xFFE30613),
+                                                                  size: 16,
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  if (state.hasError)
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 15),
-                                                      child: Text(
-                                                        state.errorText ?? '',
-                                                        style: const TextStyle(
-                                                            color: Colors.red),
-                                                      ),
+                                                      ],
                                                     ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        const Row(
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: 60,
-                                                  left: 16,
-                                                  bottom: 10),
-                                              child: Text(
-                                                'Personal Details',
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 20,
-                                              right: 20,
-                                              top: 10,
-                                              bottom: 10),
-                                          child: Column(
+                                                    if (state.hasError)
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 15),
+                                                        child: Text(
+                                                          state.errorText ?? '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .red),
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          const Row(
                                             children: [
-                                              CustomTextFormField(
-                                                validator: (value) {
-                                                  if (value == null ||
-                                                      value.isEmpty) {
-                                                    return 'Please Enter your First Name';
-                                                  }
-                                                  return null;
-                                                },
-                                                textController:
-                                                    firstNameController,
-                                                labelText:
-                                                    'Enter your First name',
-                                              ),
-                                              const SizedBox(height: 20.0),
-                                              CustomTextFormField(
-                                                  validator: (value) {
-                                                    if (value == null ||
-                                                        value.isEmpty) {
-                                                      return 'Please Enter your Middle name';
-                                                    }
-                                                    return null;
-                                                  },
-                                                  textController:
-                                                      middleNameController,
-                                                  labelText:
-                                                      'Enter your Middle name'),
-                                              const SizedBox(height: 20.0),
-                                              CustomTextFormField(
-                                                  validator: (value) {
-                                                    if (value == null ||
-                                                        value.isEmpty) {
-                                                      return 'Please Enter your Last name';
-                                                    }
-                                                    return null;
-                                                  },
-                                                  textController:
-                                                      lastNameController,
-                                                  labelText:
-                                                      'Enter your Last name'),
-                                              const SizedBox(height: 20.0),
-                                              CustomTextFormField(
-                                                  validator: (value) {
-                                                    if (value == null ||
-                                                        value.isEmpty) {
-                                                      return 'Please Enter your Email ID';
-                                                    }
-                                                    return null;
-                                                  },
-                                                  textController:
-                                                      emailController,
-                                                  labelText:
-                                                      'Enter your  Email ID'),
-                                              const SizedBox(height: 20.0),
-                                              FormField<College>(
-                                                validator: (value) {
-                                                  if (selectedCollege == null) {
-                                                    return 'Please select a college';
-                                                  }
-                                                  return null;
-                                                },
-                                                builder:
-                                                    (FormFieldState<College>
-                                                        state) {
-                                                  return Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      CustomDropdownButton<
-                                                          College>(
-                                                        labelText:
-                                                            'Select College',
-                                                        items: colleges
-                                                            .map((college) {
-                                                          return DropdownMenuItem<
-                                                              College>(
-                                                            value:
-                                                                college, // Store the entire College object as value
-                                                            child: Text(college
-                                                                .collegeName!),
-                                                          );
-                                                        }).toList(),
-                                                        onChanged:
-                                                            (College? value) {
-                                                          setState(() {
-                                                            selectedCollege =
-                                                                value;
-                                                            selectedCollegeIndex =
-                                                                colleges.indexWhere(
-                                                                    (college) =>
-                                                                        college
-                                                                            .id ==
-                                                                        value
-                                                                            ?.id);
-                                                            selectedCollegeId =
-                                                                value?.id;
-                                                            state.didChange(
-                                                                value); // Notify the form field of the change
-                                                          });
-                                                        },
-                                                      ),
-                                                      if (state.hasError)
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  top: 8.0),
-                                                          child: Text(
-                                                            state.errorText!,
-                                                            style: TextStyle(
-                                                                color:
-                                                                    Colors.red),
-                                                          ),
-                                                        ),
-                                                    ],
-                                                  );
-                                                },
-                                              ),
-                                              const SizedBox(height: 20.0),
-                                              FormField<String>(
-                                                validator: (value) {
-                                                  if (selectedBatch == null) {
-                                                    return 'Please select a batch';
-                                                  }
-                                                  return null;
-                                                },
-                                                builder: (FormFieldState<String>
-                                                    state) {
-                                                  return Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      CustomDropdownButton<
-                                                          String>(
-                                                        labelText:
-                                                            'Select Batch',
-                                                        items: selectedCollegeIndex !=
-                                                                -1
-                                                            ? colleges[
-                                                                    selectedCollegeIndex!]
-                                                                .batch!
-                                                                .map((batch) {
-                                                                return DropdownMenuItem<
-                                                                    String>(
-                                                                  value: batch
-                                                                      .toString(),
-                                                                  child: Text(batch
-                                                                      .toString()),
-                                                                );
-                                                              }).toList()
-                                                            : [],
-                                                        value: selectedBatch,
-                                                        onChanged:
-                                                            (String? value) {
-                                                          setState(() {
-                                                            selectedBatch =
-                                                                value;
-                                                            state.didChange(
-                                                                value); // Notify the form field of the change
-                                                          });
-                                                        },
-                                                      ),
-                                                      if (state.hasError)
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  top: 8.0),
-                                                          child: Text(
-                                                            state.errorText!,
-                                                            style: TextStyle(
-                                                                color:
-                                                                    Colors.red),
-                                                          ),
-                                                        ),
-                                                    ],
-                                                  );
-                                                },
-                                              ),
-                                              const SizedBox(height: 20.0),
-                                              FormField<Course>(
-                                                validator: (value) {
-                                                  if (selectedCourse == null) {
-                                                    return 'Please select a course';
-                                                  }
-                                                  return null;
-                                                },
-                                                builder: (FormFieldState<Course>
-                                                    state) {
-                                                  return Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      CustomDropdownButton<
-                                                          Course>(
-                                                        labelText:
-                                                            'Select Course',
-                                                        items: selectedCollegeIndex !=
-                                                                -1
-                                                            ? colleges[
-                                                                    selectedCollegeIndex!]
-                                                                .course!
-                                                                .map((course) {
-                                                                return DropdownMenuItem<
-                                                                    Course>(
-                                                                  value:
-                                                                      course, // Store the entire Course object as value
-                                                                  child: Text(course
-                                                                      .courseName
-                                                                      .toString()),
-                                                                );
-                                                              }).toList()
-                                                            : [],
-                                                        value: selectedCourse,
-                                                        onChanged:
-                                                            (Course? value) {
-                                                          setState(() {
-                                                            selectedCourse =
-                                                                value; // Update the selected course
-                                                            selectedCourseId =
-                                                                value?.id;
-                                                            state.didChange(
-                                                                value); // Notify the form field of the change
-                                                          });
-                                                        },
-                                                      ),
-                                                      if (state.hasError)
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  top: 8.0),
-                                                          child: Text(
-                                                            state.errorText!,
-                                                            style: TextStyle(
-                                                                color:
-                                                                    Colors.red),
-                                                          ),
-                                                        ),
-                                                    ],
-                                                  );
-                                                },
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 60,
+                                                    left: 16,
+                                                    bottom: 10),
+                                                child: Text(
+                                                  'Personal Details',
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
                                               ),
                                             ],
                                           ),
-                                        ),
-                                        const SizedBox(height: 90),
-                                      ],
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20,
+                                                right: 20,
+                                                top: 10,
+                                                bottom: 10),
+                                            child: Column(
+                                              children: [
+                                                CustomTextFormField(
+                                                  validator: (value) {
+                                                    if (value == null ||
+                                                        value.isEmpty) {
+                                                      return 'Please Enter your First Name';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  textController:
+                                                      firstNameController,
+                                                  labelText:
+                                                      'Enter your First name',
+                                                ),
+                                                const SizedBox(height: 20.0),
+                                                CustomTextFormField(
+                                                    validator: (value) {
+                                                      if (value == null ||
+                                                          value.isEmpty) {
+                                                        return 'Please Enter your Middle name';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    textController:
+                                                        middleNameController,
+                                                    labelText:
+                                                        'Enter your Middle name'),
+                                                const SizedBox(height: 20.0),
+                                                CustomTextFormField(
+                                                    validator: (value) {
+                                                      if (value == null ||
+                                                          value.isEmpty) {
+                                                        return 'Please Enter your Last name';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    textController:
+                                                        lastNameController,
+                                                    labelText:
+                                                        'Enter your Last name'),
+                                                const SizedBox(height: 20.0),
+                                                CustomTextFormField(
+                                                    validator: (value) {
+                                                      if (value == null ||
+                                                          value.isEmpty) {
+                                                        return 'Please Enter your Email ID';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    textController:
+                                                        emailController,
+                                                    labelText:
+                                                        'Enter your  Email ID'),
+                                                const SizedBox(height: 20.0),
+                                                FormField<College>(
+                                                  validator: (value) {
+                                                    if (selectedCollege ==
+                                                        null) {
+                                                      return 'Please select a college';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  builder:
+                                                      (FormFieldState<College>
+                                                          state) {
+                                                    return Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        CustomDropdownButton<
+                                                            College>(
+                                                          labelText:
+                                                              'Select College',
+                                                          items: colleges
+                                                              .map((college) {
+                                                            return DropdownMenuItem<
+                                                                College>(
+                                                              value:
+                                                                  college, // Store the entire College object as value
+                                                              child: Text(college
+                                                                  .collegeName!),
+                                                            );
+                                                          }).toList(),
+                                                          onChanged:
+                                                              (College? value) {
+                                                            setState(() {
+                                                              selectedCollege =
+                                                                  value;
+                                                              selectedCollegeIndex =
+                                                                  colleges.indexWhere(
+                                                                      (college) =>
+                                                                          college
+                                                                              .id ==
+                                                                          value
+                                                                              ?.id);
+                                                              selectedCollegeId =
+                                                                  value?.id;
+                                                              state.didChange(
+                                                                  value); // Notify the form field of the change
+                                                            });
+                                                          },
+                                                        ),
+                                                        if (state.hasError)
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    top: 8.0),
+                                                            child: Text(
+                                                              state.errorText!,
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .red),
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    );
+                                                  },
+                                                ),
+                                                const SizedBox(height: 20.0),
+                                                FormField<String>(
+                                                  validator: (value) {
+                                                    if (selectedBatch == null) {
+                                                      return 'Please select a batch';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  builder:
+                                                      (FormFieldState<String>
+                                                          state) {
+                                                    return Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        CustomDropdownButton<
+                                                            String>(
+                                                          labelText:
+                                                              'Select Batch',
+                                                          items: selectedCollegeIndex !=
+                                                                  -1
+                                                              ? colleges[
+                                                                      selectedCollegeIndex!]
+                                                                  .batch!
+                                                                  .map((batch) {
+                                                                  return DropdownMenuItem<
+                                                                      String>(
+                                                                    value: batch
+                                                                        .toString(),
+                                                                    child: Text(
+                                                                        batch
+                                                                            .toString()),
+                                                                  );
+                                                                }).toList()
+                                                              : [],
+                                                          value: selectedBatch,
+                                                          onChanged:
+                                                              (String? value) {
+                                                            setState(() {
+                                                              selectedBatch =
+                                                                  value;
+                                                              state.didChange(
+                                                                  value); // Notify the form field of the change
+                                                            });
+                                                          },
+                                                        ),
+                                                        if (state.hasError)
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    top: 8.0),
+                                                            child: Text(
+                                                              state.errorText!,
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .red),
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    );
+                                                  },
+                                                ),
+                                                const SizedBox(height: 20.0),
+                                                FormField<Course>(
+                                                  validator: (value) {
+                                                    if (selectedCourse ==
+                                                        null) {
+                                                      return 'Please select a course';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  builder:
+                                                      (FormFieldState<Course>
+                                                          state) {
+                                                    return Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        CustomDropdownButton<
+                                                            Course>(
+                                                          labelText:
+                                                              'Select Course',
+                                                          items: selectedCollegeIndex !=
+                                                                  -1
+                                                              ? colleges[
+                                                                      selectedCollegeIndex!]
+                                                                  .course!
+                                                                  .map(
+                                                                      (course) {
+                                                                  return DropdownMenuItem<
+                                                                      Course>(
+                                                                    value:
+                                                                        course, // Store the entire Course object as value
+                                                                    child: Text(course
+                                                                        .courseName
+                                                                        .toString()),
+                                                                  );
+                                                                }).toList()
+                                                              : [],
+                                                          value: selectedCourse,
+                                                          onChanged:
+                                                              (Course? value) {
+                                                            setState(() {
+                                                              selectedCourse =
+                                                                  value; // Update the selected course
+                                                              selectedCourseId =
+                                                                  value?.id;
+                                                              state.didChange(
+                                                                  value); // Notify the form field of the change
+                                                            });
+                                                          },
+                                                        ),
+                                                        if (state.hasError)
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    top: 8.0),
+                                                            child: Text(
+                                                              state.errorText!,
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .red),
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    );
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 90),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Positioned(
-                                    bottom: 20,
-                                    left: 20,
-                                    right: 20,
-                                    child: SizedBox(
-                                        height: 50,
-                                        child: customButton(
-                                            fontSize: 16,
-                                            label: 'Send Request',
-                                            onPressed: () async {
-                                              if (_formKey.currentState!
-                                                  .validate()) {
-                                                try {
-                                                  ApiRoutes userApi =
-                                                      ApiRoutes();
-                                                  profileImageUrl =
-                                                      await imageUpload(
-                                                          _profileImageFile!
-                                                              .path,
-                                                          _profileImageFile!
-                                                              .path);
+                                  Positioned(
+                                      bottom: 20,
+                                      left: 20,
+                                      right: 20,
+                                      child: SizedBox(
+                                          height: 50,
+                                          child: customButton(
+                                              fontSize: 16,
+                                              label: 'Send Request',
+                                              onPressed: () async {
+                                                if (_formKey.currentState!
+                                                    .validate()) {
+                                                  try {
+                                                    ApiRoutes userApi =
+                                                        ApiRoutes();
+                                                    profileImageUrl =
+                                                        await imageUpload(
+                                                            _profileImageFile!
+                                                                .path,
+                                                            _profileImageFile!
+                                                                .path);
 
-                                                  print(profileImageUrl);
-                                                  log(token);
+                                                    print(profileImageUrl);
+                                                    log(token);
 
-                                                  final response = await userApi
-                                                      .updateUser(
-                                                          token: token,
-                                                          profileUrl:
-                                                              profileImageUrl,
-                                                          firstName:
-                                                              firstNameController
-                                                                  .text,
-                                                          middleName:
-                                                              middleNameController
-                                                                  .text,
-                                                          lastName: lastNameController
-                                                              .text,
-                                                          emailId:
-                                                              emailController
-                                                                  .text,
-                                                          college:
-                                                              selectedCollegeId,
-                                                          batch: selectedBatch,
-                                                          course:
-                                                              selectedCourseId,
-                                                          context: context);
+                                                    final response = await userApi.updateUser(
+                                                        token: token,
+                                                        profileUrl:
+                                                            profileImageUrl,
+                                                        firstName:
+                                                            firstNameController
+                                                                .text,
+                                                        middleName:
+                                                            middleNameController
+                                                                .text,
+                                                        lastName:
+                                                            lastNameController
+                                                                .text,
+                                                        emailId: emailController
+                                                            .text,
+                                                        college:
+                                                            selectedCollegeId,
+                                                        batch: selectedBatch,
+                                                        course:
+                                                            selectedCourseId,
+                                                        context: context);
 
-                                                  if (response) {
-                                                    showCustomDialog(context);
-                                                    log('user status: ${user.status}');
-                                                    if (user.status ==
-                                                        'active') {
-                                                      Navigator.of(context).push(
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  ProfileCompletionScreen()));
-                                                    } else {
-                                                      Navigator.of(context).push(
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  UserInactivePage()));
+                                                    if (response) {
+                                                      log('user status: ${user.status}');
+                                                      if (user.status ==
+                                                          'active') {
+                                                        Navigator.of(context).push(
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        ProfileCompletionScreen()));
+                                                      } else {
+                                                        Navigator.of(context).push(
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        UserInactivePage()));
+                                                      }
                                                     }
+                                                  } catch (e) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                          content: Text(
+                                                              'An error occurred: $e')),
+                                                    );
                                                   }
-                                                } catch (e) {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                        content: Text(
-                                                            'An error occurred: $e')),
-                                                  );
                                                 }
-                                              }
-                                            }))),
-                              ],
-                            ));
+                                              }))),
+                                ],
+                              )),
+                        );
                       },
                       loading: () => Center(child: LoadingAnimation()),
                       error: (error, stackTrace) {
@@ -617,10 +634,10 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
               //   return DetailsPage();
             } else if (user.status == 'active') {
               return ProfileCompletionScreen();
-            } else if(user.status == 'inactive') {
+            } else if (user.status == 'inactive') {
               return const UserInactivePage();
-            }else{
-              return  PaymentConfirmationPage();
+            } else {
+              return PaymentConfirmationPage();
             }
           },
           loading: () => Center(child: LoadingAnimation()),

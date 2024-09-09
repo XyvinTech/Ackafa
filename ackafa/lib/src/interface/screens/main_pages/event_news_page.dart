@@ -34,8 +34,6 @@ class _Event_News_PageState extends State<Event_News_Page>
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        final newsAsyncValue = ref.watch(fetchNewsProvider(token));
-        final eventsAsyncValue = ref.watch(fetchEventsProvider(token));
 
         return DefaultTabController(
           length: 2,
@@ -117,27 +115,15 @@ class _Event_News_PageState extends State<Event_News_Page>
             body: Column(
               children: [
                 Expanded(
-                  child: newsAsyncValue.when(
-                    data: (news) => eventsAsyncValue.when(
-                      data: (events) {
-                        return TabBarView(
+                
+                        child:  TabBarView(
                           children: [
-                            NewsPage(news: news),
-                            EventPage(events: events),
+                            NewsPage(),
+                            EventPage(),
                           ],
-                        );
-                      },
-                      loading: () => Center(child: LoadingAnimation()),
-                      error: (error, stack) => Center(
-                        child: Text('Error loading events: $error'),
-                      ),
-                    ),
-                    loading: () => Center(child: LoadingAnimation()),
-                    error: (error, stack) => Center(
-                      child: Text('Error loading news: $error'),
-                    ),
-                  ),
-                ),
+                        ),
+                )
+                   
               ],
             ),
           ),

@@ -8,7 +8,7 @@ part 'events_api.g.dart';
 const String baseUrl = 'http://3.108.205.101:3000/api/v1';
 
 @riverpod
-Future<List<Event>> fetchEvents(FetchEventsRef ref, String token) async {
+Future<List<Event>> fetchEvents(FetchEventsRef ref) async {
   final url = Uri.parse('$baseUrl/event/list');
   print('Requesting URL: $url');
   final response = await http.get(

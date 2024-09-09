@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 
 class ApprovedWidget extends StatelessWidget {
+  final String status;
   final String imageUrl;
   final String name;
   final String college;
@@ -13,6 +13,7 @@ class ApprovedWidget extends StatelessWidget {
     required this.name,
     required this.college,
     required this.batch,
+    required this.status,
   }) : super(key: key);
 
   @override
@@ -51,7 +52,7 @@ class ApprovedWidget extends StatelessWidget {
               ),
             ],
           ),
-          trailing: Icon(Icons.arrow_forward_ios)),
+          trailing: Text(status)),
     );
   }
 }

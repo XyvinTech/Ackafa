@@ -52,6 +52,7 @@ class MyPostsPage extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return _buildPostCard(
                                 context,
+                                myPosts[index].status ?? '',
                                 myPosts[index].content ?? '',
                                 '3 messages',
                                 myPosts[index].createdAt!,
@@ -70,7 +71,7 @@ class MyPostsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPostCard(BuildContext context, String description,
+  Widget _buildPostCard(BuildContext context, String status, String description,
       String messages, DateTime timestamp, String requirementId,
       {String? imageUrl}) {
     DateTime localDateTime = timestamp.toLocal();
@@ -104,7 +105,7 @@ class MyPostsPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  messages,
+                  'Status: ${status.toUpperCase()}',
                   style: TextStyle(
                     color: Color(0xFFE30613),
                   ),

@@ -9,17 +9,30 @@ import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 
-class ViewMoreEventPage extends StatelessWidget {
+class ViewMoreEventPage extends ConsumerStatefulWidget {
   final Event event;
   const ViewMoreEventPage({super.key, required this.event});
 
   @override
+  ConsumerState<ViewMoreEventPage> createState() => _ViewMoreEventPageState();
+}
+
+class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
+  bool registered = false; // Moved to the top-level state variable
+
+  @override
+  void initState() {
+    super.initState();
+    registered = widget.event.rsvp?.contains(id) ?? false;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    String time = DateFormat('hh:mm a').format(event.startTime!);
-    String date = DateFormat('yyyy-MM-dd').format(event.startDate!);
-    log('rsvp : ${event.rsvp}');
-    log('my id : ${event.id}');
-    bool registered = event.rsvp?.contains(id) ?? false;
+    String time = DateFormat('hh:mm a').format(widget.event.startTime!);
+    String date = DateFormat('yyyy-MM-dd').format(widget.event.startDate!);
+    log('rsvp : ${widget.event.rsvp}');
+    log('my id : ${id}');
+    bool registered = widget.event.rsvp?.contains(id) ?? false;
     log('event registered?:$registered');
     return Scaffold(
       backgroundColor: Colors.white,
@@ -52,7 +65,7 @@ class ViewMoreEventPage extends StatelessWidget {
                               fit: BoxFit.fill,
                               'https://placehold.co/600x400/png');
                         },
-                        event.image!, // Replace with your image URL
+                        widget.event.image!, // Replace with your image URL
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -67,11 +80,12 @@ class ViewMoreEventPage extends StatelessWidget {
                               const Color(0xFFE4483E), // Red background color
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: event.status != null && event.status != ''
+                        child: widget.event.status != null &&
+                                widget.event.status != ''
                             ? Row(
                                 children: [
                                   Text(
-                                    event.status!,
+                                    widget.event.status!,
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -93,7 +107,7 @@ class ViewMoreEventPage extends StatelessWidget {
                 const SizedBox(height: 16),
                 // Event Title
                 Text(
-                  event.eventName!,
+                  widget.event.eventName!,
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -139,7 +153,7 @@ class ViewMoreEventPage extends StatelessWidget {
                 const Divider(color: Color.fromARGB(255, 192, 188, 188)),
                 const Text('Organiser'),
                 Text(
-                  event.organiser ?? '',
+                  widget.event.organiser ?? '',
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.w600),
                 ),
@@ -164,12 +178,12 @@ class ViewMoreEventPage extends StatelessWidget {
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: event.speakers!.length,
+                  itemCount: widget.event.speakers!.length,
                   itemBuilder: (context, index) {
                     return _buildSpeakerCard(
-                        event.speakers![index].image,
-                        event.speakers![index].name!,
-                        event.speakers![index].designation!);
+                        widget.event.speakers![index].image,
+                        widget.event.speakers![index].name!,
+                        widget.event.speakers![index].designation!);
                   },
                 ),
                 const SizedBox(height: 24),
@@ -206,19 +220,26 @@ class ViewMoreEventPage extends StatelessWidget {
                 left: 16,
                 right: 16,
                 child: customButton(
-                  label: event.status == 'cancelled'
+                  color: registered ? Colors.green : Color(0xFFE30613),
+                  label: widget.event.status == 'cancelled'
                       ? 'CANCELLED'
                       : registered
-                          ? 'ALREADY REGISTERED'
+                          ? 'REGISTERED'
                           : 'REGISTER EVENT',
                   onPressed: () async {
-                    if (!registered && event.status != 'cancelled') {
+                    if (!registered && widget.event.status != 'cancelled') {
                       ApiRoutes userApi = ApiRoutes();
-                      await userApi.markEventAsRSVP(event.id!);
-                      Future.delayed(Duration(seconds: 4));
-                      ref.invalidate(fetchEventsProvider);
+                      await userApi.markEventAsRSVP(widget.event.id!);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Registered')));
+                      // Update the local rsvp list to reflect the changes immediately
+                      setState(() {
+                        widget.event.rsvp?.add(id); // Add the user to RSVP
+                        registered = widget.event.rsvp?.contains(id) ?? false;
+                      });
 
-                      registered = event.rsvp?.contains(id) ?? false;
+                      ref.invalidate(
+                          fetchEventsProvider); // Update your global state if needed
                     }
                   },
                   fontSize: 16,
