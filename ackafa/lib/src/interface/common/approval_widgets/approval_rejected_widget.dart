@@ -18,8 +18,8 @@ class ApprovalRejectedWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
-      child: ListTile(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+        child: ListTile(
           contentPadding: const EdgeInsets.all(0),
           leading: CircleAvatar(
             radius: 20.0, // Adjust the size
@@ -51,7 +51,7 @@ class ApprovalRejectedWidget extends StatelessWidget {
               ),
             ],
           ),
-          trailing: ApproveDropDown()),
-    );
+          trailing: IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
+        ));
   }
 }

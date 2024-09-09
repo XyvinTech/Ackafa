@@ -121,7 +121,10 @@ class ApiRoutes {
     );
   }
 
-  Future<String> verifyOTP({required String verificationId,required String fcmToken,required String smsCode}) async {
+  Future<String> verifyOTP(
+      {required String verificationId,
+      required String fcmToken,
+      required String smsCode}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verificationId,
@@ -135,7 +138,7 @@ class ApiRoutes {
       if (user != null) {
         String? idToken = await user.getIdToken();
         log("ID Token: $idToken");
-        final token = await verifyUserDB(idToken!,fcmToken, context);
+        final token = await verifyUserDB(idToken!, fcmToken, context);
         return token;
       } else {
         print("User signed in, but no user information was found.");
@@ -147,11 +150,11 @@ class ApiRoutes {
     }
   }
 
-  Future<String> verifyUserDB(String idToken,String fcmToken, context) async {
+  Future<String> verifyUserDB(String idToken, String fcmToken, context) async {
     final response = await http.post(
       Uri.parse('$baseUrl/user/login'),
       headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"clientToken": idToken,"fcm": fcmToken}),
+      body: jsonEncode({"clientToken": idToken, "fcm": fcmToken}),
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
@@ -252,8 +255,7 @@ class ApiRoutes {
     }
   }
 
-  Future<void> deletePost(
-      String token, String postId, context) async {
+  Future<void> deletePost(String token, String postId, context) async {
     final url = Uri.parse('$baseUrl/feeds/single/$postId');
     print('requesting url:$url');
     final response = await http.delete(
@@ -265,8 +267,8 @@ class ApiRoutes {
     );
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Post Deleted Successfully')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Post Deleted Successfully')));
     } else {
       final jsonResponse = json.decode(response.body);
       ScaffoldMessenger.of(context)
@@ -348,43 +350,98 @@ class ApiRoutes {
     }
   }
 
+  Future<void> postComment(
+      {required String feedId, required String comment}) async {
+    final url = Uri.parse('$baseUrl/feeds/comment/$feedId');
 
-  Future<void> postComment({required String feedId,required String comment}) async {
-  final url = Uri.parse('$baseUrl/feeds/comment/$feedId');
-  
-  // Replace with your actual token
+    // Replace with your actual token
 
-  
-  // Define the headers
-  final headers = {
-    'Authorization': 'Bearer $token',
-    'Content-Type': 'application/json',
-    'accept': '*/*',
-  };
-  
-  // Define the request body
-  final body = jsonEncode({
-    'comment': comment,
-  });
+    // Define the headers
+    final headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+      'accept': '*/*',
+    };
 
-  try {
-    // Send the POST request
+    // Define the request body
+    final body = jsonEncode({
+      'comment': comment,
+    });
+
+    try {
+      // Send the POST request
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        print('Comment posted successfully');
+      } else {
+        print('Failed to post comment: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+  Future<String?> makePayment() async {
+    final url = Uri.parse('$baseUrl/payment/make-payment');
+
     final response = await http.post(
       url,
-      headers: headers,
-      body: body,
+      headers: {
+        'accept': '*/*',
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode == 200) {
-      print('Comment posted successfully');
+      // Successfully made the payment
+      print('Payment Success: ${response.body}');
+      final jsonResponse = json.decode(response.body);
+      return jsonResponse['data'];
     } else {
-      print('Failed to post comment: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      // Handle the error
+      print('Payment Failed: ${response.statusCode} ${response.body}');
     }
-  } catch (error) {
-    print('Error: $error');
   }
-}
+
+  Future<bool> updateUserStatus(
+      {required String userId, required String status, String? reason}) async {
+    final url = Uri.parse('$baseUrl/user/approval/$userId');
+    final headers = {
+      'accept': '*/*',
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'status': status,
+      'reason': reason,
+    });
+
+    try {
+      final response = await http.put(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        // Handle success
+        print('User status updated successfully: ${response.body}');
+        return true;
+      } else {
+        // Handle error
+        final dynamic data = json.decode(response.body);
+        print('Failed to update user status: ${response.statusCode}');
+        log(data['message']);
+        return false;
+      }
+    } catch (e) {
+      print('Error: $e');
+      return false;
+    }
+  }
 }
 
 const String baseUrl = 'http://3.108.205.101:3000/api/v1';

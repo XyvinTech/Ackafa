@@ -245,26 +245,11 @@ class ProfilePreview extends ConsumerWidget {
                     const SizedBox(
                       height: 50,
                     ),
-                    const Row(
-                      children: [
-                        Text(
-                          'Social Media',
-                          style: TextStyle(
-                              color: Color(0xFF2C2829),
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    for (int index = 0; index < user.social!.length; index++)
-                      customProfilePreviewLinks(index,
-                          social: user.social![index]),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 50),
-                      child: Row(
+                    if (user.social!.isNotEmpty)
+                      const Row(
                         children: [
                           Text(
-                            'Websites & Links',
+                            'Social Media',
                             style: TextStyle(
                                 color: Color(0xFF2C2829),
                                 fontSize: 17,
@@ -272,7 +257,24 @@ class ProfilePreview extends ConsumerWidget {
                           ),
                         ],
                       ),
-                    ),
+                    for (int index = 0; index < user.social!.length; index++)
+                      customProfilePreviewLinks(index,
+                          social: user.social![index]),
+                    if (user.websites!.isNotEmpty)
+                      const Padding(
+                        padding: EdgeInsets.only(top: 50),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Websites & Links',
+                              style: TextStyle(
+                                  color: Color(0xFF2C2829),
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      ),
                     for (int index = 0; index < user.websites!.length; index++)
                       customProfilePreviewLinks(index,
                           website: user.websites![index]),

@@ -37,6 +37,28 @@ class ApprovalNotifier extends _$ApprovalNotifier {
       log(stackTrace.toString());
     } finally {
       isLoading = false;
+      log('im in people $approvals');
+    }
+  }
+
+  Future<void> refreshApprovals() async {
+    if (isLoading) return;
+
+    isLoading = true;
+
+    try {
+      pageNo = 1;
+      final refreshApprovals = await ref
+          .read(fetchApprovalsProvider(pageNo: pageNo, limit: limit).future);
+      approvals = refreshApprovals;
+      hasMore = refreshApprovals.length == limit;
+      state = approvals; // Update the state with the refreshed feed\
+      log('refreshed');
+    } catch (e, stackTrace) {
+      log(e.toString());
+      log(stackTrace.toString());
+    } finally {
+      isLoading = false;
     }
   }
 }

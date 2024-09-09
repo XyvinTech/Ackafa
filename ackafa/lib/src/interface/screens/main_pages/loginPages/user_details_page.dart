@@ -112,7 +112,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     }
 
     if (status.isGranted) {
-      _pickFile( imageType: imageType);
+      _pickFile(imageType: imageType);
     } else if (status.isPermanentlyDenied) {
       _showPermissionDeniedDialog(true);
     } else {
@@ -120,7 +120,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     }
   }
 
-  Future<File?> _pickFile({ required String imageType}) async {
+  Future<File?> _pickFile({required String imageType}) async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
@@ -223,6 +223,19 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
         .removeCertificate(ref.read(userProvider).value!.certificates![index]);
   }
 
+  void _addNewWebsite() async {
+    Link newWebsite = Link(
+        link: websiteNameController.text, name: websiteLinkController.text);
+    ref.read(userProvider.notifier).updateWebsite(
+        [...?ref.read(userProvider).value?.websites, newWebsite]);
+  }
+
+  void _removeWebsite(int index) async {
+    ref
+        .read(userProvider.notifier)
+        .removeCertificate(ref.read(userProvider).value!.certificates![index]);
+  }
+
   @override
   void dispose() {
     // Dispose controllers when the widget is disposed
@@ -235,7 +248,6 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     personalPhoneController.dispose();
     landlineController.dispose();
     companyPhoneController.dispose();
-
     designationController.dispose();
     companyNameController.dispose();
     companyEmailController.dispose();
@@ -254,7 +266,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     String firstName = nameParts[0];
     String middleName = nameParts.length > 2 ? nameParts[1] : ' ';
     String lastName = nameParts.length > 1 ? nameParts.last : ' ';
-    log('company logo:${user.company!.logo!}');
+    log('company logo:${user.company?.logo ?? ''}');
     log('middlename :$middleName');
     final Map<String, dynamic> profileData = {
       "name": {
@@ -266,14 +278,16 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       "image": user.image,
       "college": user.college?.id,
       "course": user.course?.id,
-      "address": user.address,
-      "bio": user.bio,
+      if (user.address != null) "address": user.address.toString() ?? '',
+      if (user.bio != null) "bio": user.bio.toString() ?? '',
       "company": {
-        "name": user.company!.name ?? '',
-        "designation": user.company!.designation ?? '',
-        "phone": user.company!.phone ?? '',
-        "address": user.company!.address ?? '',
-        "logo": user.company!.logo ?? '',
+        if (user.company?.name != null) "name": user.company?.name ?? '',
+        if (user.company?.designation != null)
+          "designation": user.company?.designation ?? '',
+        if (user.company?.phone != null) "phone": user.company?.phone ?? '',
+        if (user.company?.address != null)
+          "address": user.company?.address ?? '',
+        if (user.company?.name != null) "logo": user.company?.logo ?? '',
       },
       "social": [
         for (var i in user.social!) {"name": "${i.name}", "link": i.link}
@@ -311,8 +325,6 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   //   }
   // }
 
-  
-
   void _showPermissionDeniedDialog(bool isPermanentlyDenied) {
     showDialog(
       context: context,
@@ -345,7 +357,6 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       builder: (context) {
         if (sheet == 'award') {
           return ShowEnterAwardtSheet(
-      
             pickImage: _pickFile,
             addAwardCard: _addNewAward,
             imageType: sheet,
@@ -355,7 +366,6 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
           );
         } else {
           return ShowAddCertificateSheet(
-    
               certificateImage: _certificateImageFIle,
               addCertificateCard: _addNewCertificate,
               textController: certificateNameController,
@@ -644,57 +654,57 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   labelText: 'Enter your Last name',
                                 ),
                                 const SizedBox(height: 20.0),
+                                // CustomTextFormField(
+                                //     readOnly: true,
+                                //     validator: (value) {
+                                //       if (value == null || value.isEmpty) {
+                                //         return 'Please Enter Your Phone';
+                                //       }
+                                //       return null;
+                                //     },
+                                //     textController: personalPhoneController,
+                                //     labelText: 'Enter Your Phone'),
+                                // const SizedBox(height: 20.0),
+                                // CustomTextFormField(
+                                //     readOnly: true,
+                                //     validator: (value) {
+                                //       if (value == null || value.isEmpty) {
+                                //         return 'Please Select Your College';
+                                //       }
+                                //       return null;
+                                //     },
+                                //     textController: collegeController,
+                                //     labelText: 'Select Your College'),
+                                // const SizedBox(height: 20.0),
+                                // CustomTextFormField(
+                                //     readOnly: true,
+                                //     validator: (value) {
+                                //       if (value == null || value.isEmpty) {
+                                //         return 'Please Select Your Batch';
+                                //       }
+                                //       return null;
+                                //     },
+                                //     textController: batchController,
+                                //     labelText: 'Select Your Batch'),
+                                // const SizedBox(height: 20.0),
+                                // CustomTextFormField(
+                                //     readOnly: true,
+                                //     validator: (value) {
+                                //       if (value == null || value.isEmpty) {
+                                //         return 'Please Enter Your Email';
+                                //       }
+                                //       return null;
+                                //     },
+                                //     textController: emailController,
+                                //     labelText: 'Enter Your Email'),
+
                                 CustomTextFormField(
-                                    readOnly: true,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please Enter Your Phone';
-                                      }
-                                      return null;
-                                    },
-                                    textController: personalPhoneController,
-                                    labelText: 'Enter Your Phone'),
-                                const SizedBox(height: 20.0),
-                                CustomTextFormField(
-                                    readOnly: true,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please Select Your College';
-                                      }
-                                      return null;
-                                    },
-                                    textController: collegeController,
-                                    labelText: 'Select Your College'),
-                                const SizedBox(height: 20.0),
-                                CustomTextFormField(
-                                    readOnly: true,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please Select Your Batch';
-                                      }
-                                      return null;
-                                    },
-                                    textController: batchController,
-                                    labelText: 'Select Your Batch'),
-                                const SizedBox(height: 20.0),
-                                CustomTextFormField(
-                                    readOnly: true,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please Enter Your Email';
-                                      }
-                                      return null;
-                                    },
-                                    textController: emailController,
-                                    labelText: 'Enter Your Email'),
-                                const SizedBox(height: 20.0),
-                                CustomTextFormField(
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please Enter Your Personal Address';
-                                    }
-                                    return null;
-                                  },
+                                  // validator: (value) {
+                                  //   if (value == null || value.isEmpty) {
+                                  //     return 'Please Enter Your Personal Address';
+                                  //   }
+                                  //   return null;
+                                  // },
                                   textController: addressController,
                                   labelText: 'Enter Personal Address',
                                   maxLines: 3,
@@ -703,12 +713,12 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 ),
                                 const SizedBox(height: 20.0),
                                 CustomTextFormField(
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please Enter Your Bio';
-                                      }
-                                      return null;
-                                    },
+                                    // validator: (value) {
+                                    //   if (value == null || value.isEmpty) {
+                                    //     return 'Please Enter Your Bio';
+                                    //   }
+                                    //   return null;
+                                    // },
                                     textController: bioController,
                                     labelText: 'Bio',
                                     maxLines: 5),
@@ -730,12 +740,12 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                             ],
                           ),
                           FormField<File>(
-                            validator: (value) {
-                              if (user.company?.logo == null) {
-                                return 'Please select a company logo';
-                              }
-                              return null;
-                            },
+                            // validator: (value) {
+                            //   if (user.company?.logo == null) {
+                            //     return 'Please select a company logo';
+                            //   }
+                            //   return null;
+                            // },
                             builder: (FormFieldState<File> state) {
                               return Center(
                                 child: Column(
@@ -879,12 +889,12 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                             padding: const EdgeInsets.only(
                                 top: 20, left: 20, right: 20, bottom: 10),
                             child: CustomTextFormField(
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please Enter Your Company Designation';
-                                  }
-                                  return null;
-                                },
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return 'Please Enter Your Company Designation';
+                                //   }
+                                //   return null;
+                                // },
                                 labelText: 'Enter Company designation',
                                 textController: designationController),
                           ),
@@ -892,24 +902,24 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                             padding: const EdgeInsets.only(
                                 top: 10, left: 20, right: 20, bottom: 10),
                             child: CustomTextFormField(
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please Enter Company Name';
-                                  }
-                                  return null;
-                                },
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return 'Please Enter Company Name';
+                                //   }
+                                //   return null;
+                                // },
                                 labelText: 'Enter Company Name',
                                 textController: companyNameController),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(20),
                             child: CustomTextFormField(
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please Enter Your Company Phone';
-                                }
-                                return null;
-                              },
+                              // validator: (value) {
+                              //   if (value == null || value.isEmpty) {
+                              //     return 'Please Enter Your Company Phone';
+                              //   }
+                              //   return null;
+                              // },
                               labelText: 'Enter Company Phone',
                               textController: companyPhoneController,
                               prefixIcon: const Icon(
@@ -921,12 +931,12 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                           Padding(
                             padding: const EdgeInsets.all(20),
                             child: CustomTextFormField(
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please Enter Your Company Address (street, city, state, zip)';
-                                }
-                                return null;
-                              },
+                              // validator: (value) {
+                              //   if (value == null || value.isEmpty) {
+                              //     return 'Please Enter Your Company Address (street, city, state, zip)';
+                              //   }
+                              //   return null;
+                              // },
                               labelText: 'Enter Company Address',
                               textController: companyAddressController,
                               maxLines: 3,
@@ -1018,27 +1028,27 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 ),
                               ),
                             ),
-                          if (isSocialDetailsVisible)
-                            const Padding(
-                              padding: EdgeInsets.only(right: 20, bottom: 50),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    'Add more',
-                                    style: TextStyle(
-                                        color: Color(0xFFE30613),
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15),
-                                  ),
-                                  Icon(
-                                    Icons.add,
-                                    color: Color(0xFFE30613),
-                                    size: 18,
-                                  )
-                                ],
-                              ),
-                            ),
+                          // if (isSocialDetailsVisible)
+                          //   const Padding(
+                          //     padding: EdgeInsets.only(right: 20, bottom: 50),
+                          //     child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.end,
+                          //       children: [
+                          //         Text(
+                          //           'Add more',
+                          //           style: TextStyle(
+                          //               color: Color(0xFFE30613),
+                          //               fontWeight: FontWeight.w600,
+                          //               fontSize: 15),
+                          //         ),
+                          //         Icon(
+                          //           Icons.add,
+                          //           color: Color(0xFFE30613),
+                          //           size: 18,
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
                           Padding(
                             padding: const EdgeInsets.all(20),
                             child: Row(

@@ -6,7 +6,7 @@ part of 'approval_api.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchApprovalsHash() => r'1e868d49a37f3c1f50674e4a59698df49a5f24a4';
+String _$fetchApprovalsHash() => r'27e3725264f40a90d877798c2c34853bfed0946f';
 
 /// Copied from Dart SDK
 class _SystemHash {

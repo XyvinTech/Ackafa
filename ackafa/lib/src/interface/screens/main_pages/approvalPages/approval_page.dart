@@ -1,5 +1,6 @@
 import 'package:ackaf/src/interface/screens/main_pages/approvalPages/pending.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/data/globals.dart';
@@ -36,7 +37,7 @@ class ApprovalPage extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.notifications_none_outlined,
                     size: 21,
                   ),
@@ -44,12 +45,12 @@ class ApprovalPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => NotificationPage()),
+                          builder: (context) => const NotificationPage()),
                     );
                   },
                 ),
                 IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.menu,
                     size: 21,
                   ),
@@ -64,35 +65,65 @@ class ApprovalPage extends StatelessWidget {
                 ),
               ],
               bottom: PreferredSize(
-                preferredSize: Size.fromHeight(20),
-                child: Container(
-                  margin: EdgeInsets.only(
-                      top: 0), // Adjust this value to reduce space
-                  child: const SizedBox(
-                    height: 40,
-                    child: TabBar(
-                      isScrollable: false, // Disable scroll to center the tabs
-                      indicatorColor:
-                          Color(0xFFE30613), // Set to AppPalette.kPrimaryColor
-                      indicatorWeight: 3.0,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      labelColor: Color(0xFFE30613),
-                      unselectedLabelColor: Colors.grey,
-                      labelStyle: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      tabs: [
-                        Tab(text: "PENDING"),
-                        Tab(text: "APPROVED"),
-                        Tab(text: "REJECTED"),
-                      ],
+                preferredSize: const Size.fromHeight(80),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Row(
+                        children: [
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(Icons.arrow_back),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'Approvals',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    const Divider(),
+                    Container(
+                      margin: const EdgeInsets.only(
+                          top: 0), // Adjust this value to reduce space
+                      child: const SizedBox(
+                        height: 40,
+                        child: TabBar(
+                          isScrollable:
+                              false, // Disable scroll to center the tabs
+                          indicatorColor: Color(
+                              0xFFE30613), // Set to AppPalette.kPrimaryColor
+                          indicatorWeight: 3.0,
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          labelColor: Color(0xFFE30613),
+                          unselectedLabelColor: Colors.grey,
+                          labelStyle: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          tabs: [
+                            Tab(text: "PENDING"),
+                            Tab(text: "APPROVED"),
+                            Tab(text: "REJECTED"),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            body: Column(
+            body: const Column(
               children: [
                 // Wrap TabBar with a Container to adjust margin
 
@@ -100,8 +131,8 @@ class ApprovalPage extends StatelessWidget {
                   child: TabBarView(
                     children: [
                       PendingApprovalPage(),
-                      ChatPage(),
-                      MembersPage()
+                      PendingApprovalPage(),
+                      PendingApprovalPage()
                     ],
                   ),
                 ),

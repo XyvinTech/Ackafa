@@ -1,5 +1,9 @@
+import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/interface/common/webview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PaymentConfirmationPage extends StatelessWidget {
   @override
@@ -96,8 +100,24 @@ class PaymentConfirmationPage extends StatelessWidget {
               ),
               const Spacer(),
               // Continue to Payment Button
-              customButton(
-                  label: 'Continue to Payment', onPressed: () {}, fontSize: 16),
+              Consumer(
+                builder: (context, ref, child) {
+                  return customButton(
+                      label: 'Continue to Payment',
+                      onPressed: () async {
+                        ApiRoutes userApi = ApiRoutes();
+                        String? paymentUrl = await userApi.makePayment();
+                        if (paymentUrl != null) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => PaymentWebView(
+                                    paymentUrl: paymentUrl,
+                                  )));
+                       
+                        }
+                      },
+                      fontSize: 16);
+                },
+              ),
               const SizedBox(height: 30), // Bottom padding
             ],
           ),

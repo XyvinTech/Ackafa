@@ -60,19 +60,18 @@ class _PendingApprovalPageState extends ConsumerState<PendingApprovalPage> {
                 }
 
                 final approval = approvals[index];
-
                 return Column(
                   children: [
                     ApprovalPendingWidget(
-                        imageUrl: approval.image ??
-                            'https://placehold.co/600x400/png',
-                        name:
-                            '${approval.name?.first} ${approval.name?.middle} ${approval.name?.last}',
-                        college: approval.college?.collegeName ?? '',
-                        batch: 'Batch of:${approval.batch.toString() ?? ''}'),
-                    Divider(
-                      color: Color.fromARGB(255, 233, 227, 227),
-                    )
+                  userId: approval.id!,
+                      imageUrl:
+                          approval.image ?? 'https://placehold.co/600x400/png',
+                      name:
+                          '${approval.name?.first} ${approval.name?.middle} ${approval.name?.last}',
+                      college: approval.college?.collegeName ?? '',
+                      batch: 'Batch of: ${approval.batch.toString() ?? ''}',
+                    ),
+                    Divider(color: Color.fromARGB(255, 233, 227, 227)),
                   ],
                 );
               },

@@ -1,3 +1,5 @@
+import 'package:ackaf/src/data/models/user_model.dart';
+
 class Feed {
   String? id;
   String? type;
@@ -113,27 +115,3 @@ class FeedUser {
   }
 }
 
-// Name model with fromJson and toJson methods
-class Name {
-  String? first;
-  String? middle;
-  String? last;
-
-  Name({this.first, this.middle, this.last});
-
-  factory Name.fromJson(Map<String, dynamic> json) {
-    return Name(
-      first: json['first'] as String?,
-      middle: json['middle'] as String?,
-      last: json['last'] as String?,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'first': first,
-      'middle': middle,
-      'last': last,
-    };
-  }
-}

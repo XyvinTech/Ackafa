@@ -5,6 +5,7 @@ import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/promotions_model.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/notifires/approval_notifier.dart';
+import 'package:ackaf/src/data/notifires/people_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/promotions_api.dart';
 import 'package:ackaf/src/interface/common/custom_video.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
@@ -15,15 +16,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   final UserModel user;
   const HomePage({super.key, required this.user});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   ScrollController _bannerScrollController = ScrollController();
   ScrollController _noticeScrollController = ScrollController();
   ScrollController _posterScrollController = ScrollController();
@@ -41,6 +42,16 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey _bannerKey = GlobalKey();
   final GlobalKey _noticeKey = GlobalKey();
   final GlobalKey _posterKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchInitialApprovals();
+  }
+
+  Future<void> _fetchInitialApprovals() async {
+    await ref.read(approvalNotifierProvider.notifier).fetchMoreApprovals();
+  }
 
   Future<void> _launchUrl({required url}) async {
     if (!await launchUrl(Uri.parse(url))) {
@@ -190,342 +201,349 @@ class _HomePageState extends State<HomePage> {
     return Consumer(
       builder: (context, ref, child) {
         final asyncPromotions = ref.watch(fetchPromotionsProvider(token));
+        final nonApprovedUsers = ref.watch(approvalNotifierProvider);
+        log(nonApprovedUsers.toString());
+        return RefreshIndicator(
+          onRefresh: () =>
+              ref.read(approvalNotifierProvider.notifier).refreshApprovals(),
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: asyncPromotions.when(
+              data: (promotions) {
+                final banners = promotions
+                    .where((promo) => promo.type == 'banner')
+                    .toList();
+                final posters = promotions
+                    .where((promo) => promo.type == 'poster')
+                    .toList();
+                final notices = promotions
+                    .where((promo) => promo.type == 'notice')
+                    .toList();
+                final videos =
+                    promotions.where((promo) => promo.type == 'video').toList();
+                final filteredVideos = videos
+                    .where((video) => video.link!.startsWith('http'))
+                    .toList();
+                // Start auto-scroll for all promotions when data is ready
+                if (banners.isNotEmpty) {
+                  startAutoScroll(
+                    controller: _bannerScrollController,
+                    items: banners,
+                    currentIndex: _currentBannerIndex,
+                    itemKey: _bannerKey,
+                    onIndexChanged: (index) => setState(() {
+                      _currentBannerIndex = index;
+                    }),
+                    scrollTimer: _bannerScrollTimer,
+                  );
+                }
 
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: asyncPromotions.when(
-            data: (promotions) {
-              final banners =
-                  promotions.where((promo) => promo.type == 'banner').toList();
-              final posters =
-                  promotions.where((promo) => promo.type == 'poster').toList();
-              final notices =
-                  promotions.where((promo) => promo.type == 'notice').toList();
-              final videos =
-                  promotions.where((promo) => promo.type == 'video').toList();
-              final filteredVideos = videos
-                  .where((video) => video.link!.startsWith('http'))
-                  .toList();
-              // Start auto-scroll for all promotions when data is ready
-              if (banners.isNotEmpty) {
-                startAutoScroll(
-                  controller: _bannerScrollController,
-                  items: banners,
-                  currentIndex: _currentBannerIndex,
-                  itemKey: _bannerKey,
-                  onIndexChanged: (index) => setState(() {
-                    _currentBannerIndex = index;
-                  }),
-                  scrollTimer: _bannerScrollTimer,
-                );
-              }
+                if (notices.isNotEmpty) {
+                  startAutoScroll(
+                    controller: _noticeScrollController,
+                    items: notices,
+                    currentIndex: _currentNoticeIndex,
+                    itemKey: _noticeKey,
+                    onIndexChanged: (index) => setState(() {
+                      _currentNoticeIndex = index;
+                    }),
+                    scrollTimer: _noticeScrollTimer,
+                  );
+                }
 
-              if (notices.isNotEmpty) {
-                startAutoScroll(
-                  controller: _noticeScrollController,
-                  items: notices,
-                  currentIndex: _currentNoticeIndex,
-                  itemKey: _noticeKey,
-                  onIndexChanged: (index) => setState(() {
-                    _currentNoticeIndex = index;
-                  }),
-                  scrollTimer: _noticeScrollTimer,
-                );
-              }
+                if (posters.isNotEmpty) {
+                  startAutoScroll(
+                    controller: _posterScrollController,
+                    items: posters,
+                    currentIndex: _currentPosterIndex,
+                    itemKey: _posterKey,
+                    onIndexChanged: (index) => setState(() {
+                      _currentPosterIndex = index;
+                    }),
+                    scrollTimer: _posterScrollTimer,
+                  );
+                }
 
-              if (posters.isNotEmpty) {
-                startAutoScroll(
-                  controller: _posterScrollController,
-                  items: posters,
-                  currentIndex: _currentPosterIndex,
-                  itemKey: _posterKey,
-                  onIndexChanged: (index) => setState(() {
-                    _currentPosterIndex = index;
-                  }),
-                  scrollTimer: _posterScrollTimer,
-                );
-              }
-
-              log('my role ${widget.user.role}');
-              return GestureDetector(
-                onPanDown: (_) =>
-                    _onUserGestureDetected(banners, notices, posters),
-                onTap: () => _onUserGestureDetected(banners, notices, posters),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              offset: const Offset(0, 2),
-                              blurRadius: 4,
-                            ),
-                          ],
-                        ),
-                        child: AppBar(
-                          toolbarHeight: 45.0,
-                          scrolledUnderElevation: 0,
-                          backgroundColor: Colors.white,
-                          elevation: 0,
-                          leadingWidth: 100,
-                          leading: Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: Image.asset(
-                                'assets/icons/ackaf_logo.png',
-                                fit: BoxFit.contain,
+                return GestureDetector(
+                  onPanDown: (_) =>
+                      _onUserGestureDetected(banners, notices, posters),
+                  onTap: () =>
+                      _onUserGestureDetected(banners, notices, posters),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                offset: const Offset(0, 2),
+                                blurRadius: 4,
                               ),
-                            ),
+                            ],
                           ),
-                          actions: [
-                            IconButton(
-                              icon:
-                                  const Icon(Icons.notifications_none_outlined),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const NotificationPage()),
-                                );
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.menu),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          MenuPage()), // Navigate to MenuPage
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      promotions.isEmpty
-                          ? const Center(
-                              child: Text(
-                                'No Promotions Yet',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w700),
-                              ),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 8, left: 8, right: 8),
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  prefixIcon: const Icon(Icons.search),
-                                  hintText: 'Search promotions',
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color:
-                                            Color.fromARGB(255, 214, 211, 211)),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color:
-                                            Color.fromARGB(255, 217, 212, 212)),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
+                          child: AppBar(
+                            toolbarHeight: 45.0,
+                            scrolledUnderElevation: 0,
+                            backgroundColor: Colors.white,
+                            elevation: 0,
+                            leadingWidth: 100,
+                            leading: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: Image.asset(
+                                  'assets/icons/ackaf_logo.png',
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                             ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      if (widget.user.role != 'member')
-                        Consumer(
-                          builder: (context, ref, child) {
-                            final nonApprovedUsers =
-                                ref.watch(approvalNotifierProvider);
-
-                            if (nonApprovedUsers.isNotEmpty) {
-                              return Padding(
+                            actions: [
+                              IconButton(
+                                icon: const Icon(
+                                    Icons.notifications_none_outlined),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const NotificationPage()),
+                                  );
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.menu),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            MenuPage()), // Navigate to MenuPage
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        promotions.isEmpty
+                            ? const Center(
+                                child: Text(
+                                  'No Promotions Yet',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              )
+                            : Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 20, right: 20, bottom: 16),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 16),
-                                  decoration: BoxDecoration(
-                                      color: const Color(
-                                          0xFFFFE0E2), // Background color
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                          color: const Color.fromARGB(
-                                              255, 222, 178, 181),
-                                          width: 1,
-                                          strokeAlign:
-                                              BorderSide.strokeAlignInside)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'Approvals Pending',
-                                            style: TextStyle(
-                                              color: Color(
-                                                  0xFFE30613), // Text color
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          SizedBox(width: 8),
-                                          CircleAvatar(
-                                            radius: 12,
-                                            backgroundColor: Colors.white,
-                                            child: Text(
-                                              nonApprovedUsers.length
-                                                  .toString(),
+                                    top: 8, left: 8, right: 8),
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.search),
+                                    hintText: 'Search promotions',
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: Color.fromARGB(
+                                              255, 214, 211, 211)),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: Color.fromARGB(
+                                              255, 217, 212, 212)),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        if (widget.user.role != 'member')
+                          Consumer(
+                            builder: (context, ref, child) {
+                              if (nonApprovedUsers.isNotEmpty) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, bottom: 16),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 16),
+                                    decoration: BoxDecoration(
+                                        color: const Color(
+                                            0xFFFFE0E2), // Background color
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                            color: const Color.fromARGB(
+                                                255, 222, 178, 181),
+                                            width: 1,
+                                            strokeAlign:
+                                                BorderSide.strokeAlignInside)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Approvals Pending',
                                               style: TextStyle(
                                                 color: Color(
-                                                    0xFFE30613), // Text color for number
-                                                fontWeight: FontWeight.bold,
+                                                    0xFFE30613), // Text color
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16,
                                               ),
                                             ),
+                                            SizedBox(width: 8),
+                                            CircleAvatar(
+                                              radius: 12,
+                                              backgroundColor: Colors.white,
+                                              child: Text(
+                                                nonApprovedUsers.length
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  color: Color(
+                                                      0xFFE30613), // Text color for number
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        IconButton(
+                                          onPressed: () => Navigator.push(
+                                            context,
+                                            PageRouteBuilder(
+                                              pageBuilder: (context, animation,
+                                                      secondaryAnimation) =>
+                                                  ApprovalPage(),
+                                              transitionsBuilder: (context,
+                                                  animation,
+                                                  secondaryAnimation,
+                                                  child) {
+                                                const begin = Offset(1.0,
+                                                    0.0); // Slide from right to left
+                                                const end = Offset.zero;
+                                                const curve = Curves
+                                                    .fastEaseInToSlowEaseOut;
+
+                                                var tween = Tween(
+                                                        begin: begin, end: end)
+                                                    .chain(CurveTween(
+                                                        curve: curve));
+                                                var offsetAnimation =
+                                                    animation.drive(tween);
+
+                                                return SlideTransition(
+                                                  position: offsetAnimation,
+                                                  child: child,
+                                                );
+                                              },
+                                            ),
                                           ),
-                                        ],
-                                      ),
-                                      IconButton(
-                                        onPressed: () => Navigator.push(
-                                          context,
-                                          PageRouteBuilder(
-                                            pageBuilder: (context, animation,
-                                                    secondaryAnimation) =>
-                                                ApprovalPage(),
-                                            transitionsBuilder: (context,
-                                                animation,
-                                                secondaryAnimation,
-                                                child) {
-                                              const begin = Offset(1.0,
-                                                  0.0); // Slide from right to left
-                                              const end = Offset.zero;
-                                              const curve = Curves
-                                                  .fastEaseInToSlowEaseOut;
-
-                                              var tween = Tween(
-                                                      begin: begin, end: end)
-                                                  .chain(
-                                                      CurveTween(curve: curve));
-                                              var offsetAnimation =
-                                                  animation.drive(tween);
-
-                                              return SlideTransition(
-                                                position: offsetAnimation,
-                                                child: child,
-                                              );
-                                            },
+                                          icon: const Icon(
+                                            Icons.arrow_forward,
+                                            color: Color(
+                                                0xFFE30613), // Arrow color
                                           ),
                                         ),
-                                        icon: const Icon(
-                                          Icons.arrow_forward,
-                                          color:
-                                              Color(0xFFE30613), // Arrow color
-                                        ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            } else {
-                              return SizedBox();
-                            }
-                          },
-                        ),
-                      if (banners.isNotEmpty)
-                        Card(
-                          color: Colors.transparent,
-                          elevation: 0,
-                          child: Container(
-                            color: Colors.transparent,
-                            height: 140,
-                            child: ListView.builder(
-                              key: _bannerKey,
-                              controller: _bannerScrollController,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: banners.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 20.0),
-                                  child: _buildBanners(
-                                      context: context, banner: banners[index]),
                                 );
+                              } else {
+                                return SizedBox();
+                              }
+                            },
+                          ),
+                        if (banners.isNotEmpty)
+                          Card(
+                            color: Colors.transparent,
+                            elevation: 0,
+                            child: Container(
+                              color: Colors.transparent,
+                              height: 140,
+                              child: ListView.builder(
+                                key: _bannerKey,
+                                controller: _bannerScrollController,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: banners.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 20.0),
+                                    child: _buildBanners(
+                                        context: context,
+                                        banner: banners[index]),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        const SizedBox(height: 16),
+                        if (notices.isNotEmpty)
+                          SizedBox(
+                            height: _calculateDynamicHeight(notices),
+                            child: ListView.builder(
+                              key: _noticeKey,
+                              controller: _noticeScrollController,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: notices.length,
+                              itemBuilder: (context, index) {
+                                return customNotice(
+                                    context: context, notice: notices[index]);
                               },
                             ),
                           ),
-                        ),
-                      const SizedBox(height: 16),
-                      if (notices.isNotEmpty)
-                        SizedBox(
-                          height: _calculateDynamicHeight(notices),
-                          child: ListView.builder(
-                            key: _noticeKey,
-                            controller: _noticeScrollController,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: notices.length,
-                            itemBuilder: (context, index) {
-                              return customNotice(
-                                  context: context, notice: notices[index]);
-                            },
+                        const SizedBox(height: 16),
+                        if (posters.isNotEmpty)
+                          SizedBox(
+                            height: 250,
+                            child: ListView.builder(
+                              key: _posterKey,
+                              controller: _posterScrollController,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: posters.length,
+                              itemBuilder: (context, index) {
+                                return customPoster(
+                                    context: context, poster: posters[index]);
+                              },
+                            ),
                           ),
-                        ),
-                      const SizedBox(height: 16),
-                      if (posters.isNotEmpty)
-                        SizedBox(
-                          height: 250,
-                          child: ListView.builder(
-                            key: _posterKey,
-                            controller: _posterScrollController,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: posters.length,
-                            itemBuilder: (context, index) {
-                              return customPoster(
-                                  context: context, poster: posters[index]);
-                            },
+                        const SizedBox(height: 16),
+                        if (filteredVideos.isNotEmpty)
+                          SizedBox(
+                            height: 300,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: filteredVideos.length,
+                              itemBuilder: (context, index) {
+                                return customVideo(
+                                    context: context,
+                                    video: filteredVideos[index]);
+                              },
+                            ),
                           ),
-                        ),
-                      const SizedBox(height: 16),
-                      if (filteredVideos.isNotEmpty)
-                        SizedBox(
-                          height: 300,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: filteredVideos.length,
-                            itemBuilder: (context, index) {
-                              return customVideo(
-                                  context: context,
-                                  video: filteredVideos[index]);
-                            },
-                          ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stackTrace) {
-              return Center(
-                child: Text('Error loading promotions: $error'),
-              );
-            },
+                );
+              },
+              loading: () => Center(child: LoadingAnimation()),
+              error: (error, stackTrace) {
+                return Center(
+                  child: Text('Error loading promotions: $error'),
+                );
+              },
+            ),
           ),
         );
       },

@@ -22,6 +22,7 @@ Future<List<UserModel>> fetchApprovals(FetchApprovalsRef ref,
   if (response.statusCode == 200) {
     final data = json.decode(response.body);
     final usersJson = data['data'] as List<dynamic>? ?? [];
+    log(usersJson.toString());
 
     return usersJson.map((user) => UserModel.fromJson(user)).toList();
   } else {

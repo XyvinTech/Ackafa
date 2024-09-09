@@ -36,6 +36,7 @@ class PeopleNotifier extends _$PeopleNotifier {
       log(stackTrace.toString());
     } finally {
       isLoading = false;
+      log('im in people $users');
     }
   }
 }
