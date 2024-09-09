@@ -306,7 +306,7 @@ class ProfilePreview extends ConsumerWidget {
                                 count: user.videos!.length,
                                 effect: const ExpandingDotsEffect(
                                   dotHeight: 8,
-                                  dotWidth: 3,
+                                  dotWidth: 6,
                                   activeDotColor: Colors.black,
                                   dotColor: Colors.grey,
                                 ),
@@ -505,7 +505,10 @@ class ProfilePreview extends ConsumerWidget {
                               assetName: svgIcons[index],
                               color: const Color(0xFF004797),
                             )
-                          : Icon(Icons.web)),
+                          : Icon(
+                              Icons.language,
+                              color: Color(0xFFE30613),
+                            )),
                 ),
               ),
               Padding(

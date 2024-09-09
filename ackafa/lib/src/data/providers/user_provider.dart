@@ -124,9 +124,24 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   void updateVideos(List<Link> videos) {
     state = state.whenData((user) => user.copyWith(videos: videos));
   }
-
+   void removeVideo(Link videoToRemove) {
+    state = state.whenData((user) {
+      final updatedVideo =
+          user.videos!.where((video) => video != videoToRemove).toList();
+      return user.copyWith(websites: updatedVideo);
+    });
+  }
   void updateWebsite(List<Link> websites) {
     state = state.whenData((user) => user.copyWith(websites: websites));
+    log('website count in updation ${websites.length}');
+  }
+
+   void removeWebsite(Link websiteToRemove) {
+    state = state.whenData((user) {
+      final updatedWebsites =
+          user.websites!.where((website) => website != websiteToRemove).toList();
+      return user.copyWith(websites: updatedWebsites);
+    });
   }
 
   void updatePhone(String phone) {

@@ -1,7 +1,9 @@
+import 'package:ackaf/src/interface/common/components/svg_icon.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AwardCard extends StatelessWidget {

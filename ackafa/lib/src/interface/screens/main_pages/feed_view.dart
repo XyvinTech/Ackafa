@@ -70,6 +70,8 @@ class _FeedViewState extends ConsumerState<FeedView> {
   }
 
   void _openModalSheet({required String sheet}) {
+    feedContentController.clear();
+    _feedImage = null;
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
@@ -351,6 +353,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
 
   void _toggleLike() {
     setState(() {
+      likes = isLiked == true ? likes - 1 : likes + 1;
       isLiked = !isLiked;
       showHeartAnimation = true;
       widget.onLike();
