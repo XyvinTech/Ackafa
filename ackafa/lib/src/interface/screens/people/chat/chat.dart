@@ -76,7 +76,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                               ),
                               child: Center(
                                 child: Text(
-                                  '${chats[index].unreadCount?[sender!.id]}',
+                                  '${chats[index].unreadCount?[sender!.id] ?? ''}',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 12,

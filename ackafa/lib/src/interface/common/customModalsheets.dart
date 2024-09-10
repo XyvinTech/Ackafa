@@ -1,8 +1,12 @@
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:ackaf/src/data/models/chat_model.dart';
+import 'package:ackaf/src/data/models/feed_model.dart';
+import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
 import 'package:ackaf/src/data/services/api_routes/image_upload.dart';
 import 'package:ackaf/src/interface/common/custom_dropdowns/custom_dropdowns.dart';
+import 'package:ackaf/src/interface/screens/people/chat/chatscreen.dart';
 import 'package:ackaf/src/interface/validatelinks.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +22,100 @@ import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
+
+void feedModalSheet({
+  required BuildContext context,
+  required VoidCallback onButtonPressed,
+  required String buttonText,
+  required Feed feed ,
+  required Participant sender,
+  required Participant receiver,
+  // Made imageUrl optional
+}) {
+  showModalBottomSheet(
+    isScrollControlled: true,
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+    ),
+    builder: (context) {
+      return Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Conditionally render the image
+              if (feed.media != null && feed.media!='')
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)),
+                  child: Image.network(
+                    feed.media !,
+                    width: double.infinity,
+                    height: 200, // Adjust the height as needed
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              // Add spacing only if image is displayed
+              if (feed.media != null && feed.media!='')
+                const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    return customButton(
+                      label: buttonText,
+                      onPressed: () async {
+                            await sendChatMessage(
+                                userId: feed.author!,
+                                content: feed.content!,
+                                feedId: feed.id);
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => IndividualPage(
+                                      receiver: receiver,
+                                      sender: sender,
+                                    )));
+                      },
+                      fontSize: 16,
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+          // Close button positioned at the top-right of the sheet
+          Positioned(
+            right: 5,
+            top: -50,
+            child: Container(
+              padding: const EdgeInsets.all(0),
+              width: 40,
+              height: 40,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    offset: Offset(0, 2),
+                    blurRadius: 4.0,
+                  ),
+                ],
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
 void showWebsiteSheet({
   required VoidCallback addWebsite,

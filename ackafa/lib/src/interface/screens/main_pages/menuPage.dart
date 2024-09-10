@@ -342,7 +342,7 @@ class MenuPage extends StatelessWidget {
                       Divider(),
                       _buildListTile(
                         context,
-                        Icons.subscriptions,
+                        Icons.event,
                         'My Events',
                         onTap: () {
                           Navigator.push(
@@ -356,7 +356,7 @@ class MenuPage extends StatelessWidget {
 
                       _buildListTile(
                         context,
-                        Icons.monetization_on,
+                        Icons.notifications_none,
                         'My Posts',
                         onTap: () {
                           Navigator.push(
@@ -370,7 +370,7 @@ class MenuPage extends StatelessWidget {
                       Divider(),
                       _buildListTile(
                         context,
-                        Icons.info,
+                        Icons.info_outline,
                         'About us',
                         onTap: () {
                           Navigator.push(
@@ -383,7 +383,7 @@ class MenuPage extends StatelessWidget {
                       Divider(),
                       _buildListTile(
                         context,
-                        Icons.privacy_tip,
+                        Icons.article_outlined,
                         'Privacy policy',
                         onTap: () {
                           Navigator.push(
@@ -396,7 +396,7 @@ class MenuPage extends StatelessWidget {
                       Divider(),
                       _buildListTile(
                         context,
-                        Icons.rule,
+                        Icons.description_outlined,
                         'Terms & condition',
                         onTap: () {
                           Navigator.push(
@@ -425,12 +425,9 @@ class MenuPage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.symmetric(),
                             child: _buildListTile(
-                              context,
-                              Icons.delete,
-                              'Delete account',
-                              textColor: Colors.red,
-                              onTap: () => showDeleteAccountDialog(context),
-                            ),
+                                context, Icons.delete, 'Delete account',
+                                onTap: () => showDeleteAccountDialog(context),
+                                IconColor: Colors.red),
                           ),
                         ],
                       ),
@@ -459,11 +456,12 @@ class MenuPage extends StatelessWidget {
 
   ListTile _buildListTile(BuildContext context, IconData icon, String title,
       {Color textColor = const Color.fromARGB(255, 0, 0, 0),
-      Function()? onTap}) {
+      Function()? onTap,
+      Color IconColor = const Color(0xFF585858)}) {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.white,
-        child: Icon(icon, color: const Color.fromARGB(255, 121, 116, 116)),
+        child: Icon(icon, color: IconColor),
       ),
       title: Text(title, style: TextStyle(color: textColor)),
       trailing: SvgPicture.asset(

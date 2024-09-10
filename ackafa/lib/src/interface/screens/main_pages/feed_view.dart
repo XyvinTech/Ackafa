@@ -3,10 +3,13 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/notifires/feed_notifier.dart';
+import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
+import 'package:ackaf/src/interface/screens/people/chat/chatscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,10 +36,14 @@ class FeedView extends ConsumerStatefulWidget {
 class _FeedViewState extends ConsumerState<FeedView> {
   final TextEditingController feedContentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-
+  late final webSocketClient;
   @override
   void initState() {
     super.initState();
+
+    webSocketClient = ref.read(socketIoClientProvider);
+    webSocketClient.connect(id, ref);
+
     _scrollController.addListener(_onScroll);
     _fetchInitialUsers();
   }
@@ -280,19 +287,49 @@ class _FeedViewState extends ConsumerState<FeedView> {
     return Consumer(
       builder: (context, ref, child) {
         ApiRoutes userApi = ApiRoutes();
-        final asyncUser = ref.watch(fetchUserByIdProvider(feed.author!));
-        return asyncUser.when(
-          data: (user) {
-            return ReusableFeedPost(
-                withImage: feed.media != null ? true : false,
-                feed: feed,
-                user: user,
-                onLike: () async {
-                  await userApi.likeFeed(feed.id!);
-                  ref.read(feedNotifierProvider.notifier).refreshFeed();
-                },
-                onComment: () async {},
-                onShare: () {});
+        final asynPostOwner = ref.watch(fetchUserByIdProvider(feed.author!));
+        final asyncUser = ref.watch(userProvider);
+        return asynPostOwner.when(
+          data: (postOwner) {
+            var receiver = Participant(
+              id: feed.author,
+              name: postOwner.name,
+              image: postOwner.image,
+            );
+            log('receiver:${receiver.id}\n${receiver.image}\n${receiver.name?.first}');
+
+            return asyncUser.when(
+              data: (user) {
+                var sender = Participant(
+                    id: user.id, image: user.image, name: user.name);
+                log('sender:${sender.id}\n${sender.image}\n${sender.name?.first}');
+
+                return ReusableFeedPost(
+                    withImage: feed.media != null ? true : false,
+                    feed: feed,
+                    user: postOwner,
+                    onLike: () async {
+                      await userApi.likeFeed(feed.id!);
+                      ref.read(feedNotifierProvider.notifier).refreshFeed();
+                    },
+                    onComment: () async {},
+                    onShare: () {
+                      feedModalSheet(
+                          context: context,
+                          onButtonPressed: () async {},
+                          buttonText: 'MESSAGE',
+                          feed: feed,
+                          receiver: receiver,
+                          sender: sender);
+                    });
+              },
+              loading: () => ReusableFeedPostSkeleton(),
+              error: (error, stackTrace) {
+                return Center(
+                  child: Text('Error loading promotions: $error'),
+                );
+              },
+            );
           },
           loading: () => ReusableFeedPostSkeleton(),
           error: (error, stackTrace) {

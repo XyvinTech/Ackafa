@@ -224,15 +224,14 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
         .removeWebsite(ref.read(userProvider).value!.websites![index]);
   }
 
-
-  
   void _addNewVideo() async {
     Link newVideo = Link(
         link: videoLinkController.text.toString(),
         name: videoNameController.text.toString());
     log('Hello im in website bug:${ref.read(userProvider).value?.videos}');
-    ref.read(userProvider.notifier).updateVideos(
-        [...?ref.read(userProvider).value?.videos, newVideo]);
+    ref
+        .read(userProvider.notifier)
+        .updateVideos([...?ref.read(userProvider).value?.videos, newVideo]);
     videoLinkController.clear();
     videoNameController.clear();
   }
@@ -439,20 +438,33 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
               personalPhoneController.text = user.phone ?? '';
               emailController.text = user.email ?? '';
               addressController.text = user.address ?? '';
-              List<TextEditingController> socialLinkControllers = [
-                igController,
-                linkedinController,
-                twtitterController,
-                facebookController
-              ];
-
-              for (int i = 0; i < socialLinkControllers.length; i++) {
-                if (i < user.social!.length) {
-                  socialLinkControllers[i].text = user.social![i].link ?? '';
-                } else {
-                  socialLinkControllers[i].clear();
+              // List<TextEditingController> socialLinkControllers = [
+              //   igController,
+              //   linkedinController,
+              //   twtitterController,
+              //   facebookController
+              // ];
+              for (var i in user.social!) {
+                if (i.name == 'instagram') {
+                  igController.text = i.link ?? '';
+                } else if (i.name == 'linkedin') {
+                  linkedinController.text = i.link ?? '';
+                } else if (i.name == 'twitter') {
+                  twtitterController.text = i.link ?? '';
+                } else if (i.name == 'facebook') {
+                  facebookController.text = i.link ?? '';
                 }
               }
+
+              // for (int i = 0; i < socialLinkControllers.length; i++) {
+              //   if (i < user.social!.length) {
+              //     socialLinkControllers[i].text = user.social![i].link ?? '';
+              //     log('social : ${socialLinkControllers[i].text}');
+              //   }
+              // else {
+              //   socialLinkControllers[i].clear();
+              // }
+              // }
 
               // List<TextEditingController> websiteLinkControllers = [
               //   websiteLinkController
@@ -1186,7 +1198,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 ],
                               ),
                             ),
-                             ListView.builder(
+                            ListView.builder(
                               shrinkWrap:
                                   true, // Let ListView take up only as much space as it needs
                               physics:
@@ -1211,7 +1223,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                 textController: videoLinkController,
                                 readOnly: true,
                                 onTap: () {
-                                  showVideoLinkSheet(addVideo: _addNewVideo,
+                                  showVideoLinkSheet(
+                                      addVideo: _addNewVideo,
                                       textController1: videoNameController,
                                       textController2: videoLinkController,
                                       fieldName: 'Add Youtube Link',

@@ -56,11 +56,8 @@ class ProfileCompletionScreen extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      MainPage()));
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+    MainPage()), (Route<dynamic> route) => false);
                         },
                         child: const Text('Skip',
                             style:

@@ -113,7 +113,7 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
       List<Link> socialmedias, String platform, String newUrl) {
     if (platform.isNotEmpty) {
       final index = socialmedias.indexWhere((item) => item.name == platform);
-
+      log('platform:$platform');
       if (index != -1) {
         if (newUrl.isNotEmpty) {
           // Update the existing social media link
