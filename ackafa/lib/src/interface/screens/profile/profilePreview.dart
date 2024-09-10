@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,7 +13,9 @@ import 'package:ackaf/src/interface/common/customModalsheets.dart';
 import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class ProfilePreview extends ConsumerWidget {
   final UserModel user;
@@ -19,8 +24,8 @@ class ProfilePreview extends ConsumerWidget {
   final List<String> svgIcons = [
     'assets/icons/instagram.svg',
     'assets/icons/linkedin.svg',
-    'assets/icons/twitter.svg'
-        'assets/icons/facebook.svg'
+    'assets/icons/twitter.svg',
+    'assets/icons/icons8-facebook.svg'
   ];
 
   final ValueNotifier<int> _currentVideo = ValueNotifier<int>(0);
@@ -32,7 +37,6 @@ class ProfilePreview extends ConsumerWidget {
     _videoCountController.addListener(() {
       _currentVideo.value = _videoCountController.page!.round();
     });
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -49,21 +53,33 @@ class ProfilePreview extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: const Color(0xFFF2F2F2),
-                              borderRadius: BorderRadius.circular(30)),
-                          child: IconButton(
-                            icon: const Icon(
-                              size: 18,
-                              Icons.edit,
-                              color: Color(0xFF004797),
+                        if (id.toString() == user.id.toString())
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: const Color(0xFFF2F2F2),
+                                borderRadius: BorderRadius.circular(30)),
+                            child: IconButton(
+                              icon: const Icon(
+                                size: 18,
+                                Icons.edit,
+                                color: Color(0xFF004797),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (_, __, ___) => DetailsPage(),
+                                    transitionDuration:
+                                        Duration(milliseconds: 500),
+                                    transitionsBuilder: (_, a, __, c) =>
+                                        FadeTransition(opacity: a, child: c),
+                                  ),
+                                );
+                              },
                             ),
-                            onPressed: () {},
                           ),
-                        ),
                         const SizedBox(
                           width: 10,
                         ),
@@ -109,17 +125,18 @@ class ProfilePreview extends ConsumerWidget {
                           children: [
                             Column(
                               children: [
-                                if (user.company!.logo != null &&
-                                    user.company!.logo != '')
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(9),
-                                    child: Image.network(
-                                      user.company!.logo!,
-                                      height: 33,
-                                      width: 40,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                                user.company?.logo != null &&
+                                        user.company?.logo != ''
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(9),
+                                        child: Image.network(
+                                          user.company!.logo!,
+                                          height: 33,
+                                          width: 40,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    : SizedBox()
                               ],
                             ),
                             const SizedBox(width: 10),
@@ -127,7 +144,7 @@ class ProfilePreview extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  user.company!.designation!,
+                                  user.company?.designation ?? '',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,
@@ -135,7 +152,7 @@ class ProfilePreview extends ConsumerWidget {
                                   ),
                                 ),
                                 Text(
-                                  user.company!.name!,
+                                  user.company?.name ?? '',
                                   style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey,
@@ -179,7 +196,7 @@ class ProfilePreview extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const Icon(Icons.phone, color: Color(0xFF004797)),
+                            const Icon(Icons.phone, color: Color(0xFFE30613)),
                             const SizedBox(width: 10),
                             Text(user.phone!),
                           ],
@@ -187,25 +204,25 @@ class ProfilePreview extends ConsumerWidget {
                         const SizedBox(height: 10),
                         Row(
                           children: [
-                            const Icon(Icons.email, color: Color(0xFF004797)),
+                            const Icon(Icons.email, color: Color(0xFFE30613)),
                             const SizedBox(width: 10),
                             Text(user.email!),
                           ],
                         ),
                         const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            const Icon(Icons.location_on,
-                                color: Color(0xFF004797)),
-                            const SizedBox(width: 10),
-                            if (user.address != null)
+                        if (user.address != null)
+                          Row(
+                            children: [
+                              const Icon(Icons.location_on,
+                                  color: Color(0xFFE30613)),
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
                                   user.address!,
                                 ),
                               )
-                          ],
-                        ),
+                            ],
+                          ),
                       ],
                     ),
                     const SizedBox(height: 60),
@@ -218,51 +235,53 @@ class ProfilePreview extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Flexible(child: Text('''${user.bio}''')),
-                        ],
+                    if (user.bio != null)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Flexible(child: Text('''${user.bio}''')),
+                          ],
+                        ),
                       ),
-                    ),
                     const SizedBox(
                       height: 50,
                     ),
-                    // const Row(
-                    //   children: [
-                    //     Text(
-                    //       'Social Media',
-                    //       style: TextStyle(
-                    //           color: Color(0xFF2C2829),
-                    //           fontSize: 17,
-                    //           fontWeight: FontWeight.w500),
-                    //     ),
-                    //   ],
-                    // ),
-                    // for (int index = 0; index < user.social!.length; index++)
-                    //   customProfilePreviewLinks(index,
-                    //       social: user.social![index]),
-                    // const Padding(
-                    //   padding: EdgeInsets.only(top: 50),
-                    //   child: Row(
-                    //     children: [
-                    //       Text(
-                    //         'Websites & Links',
-                    //         style: TextStyle(
-                    //             color: Color(0xFF2C2829),
-                    //             fontSize: 17,
-                    //             fontWeight: FontWeight.w500),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // for (int index = 0; index < user.websites!.length; index++)
-                    //   customProfilePreviewLinks(index,
-                    //       website: user.websites![index]),
-                    // const SizedBox(
-                    //   height: 30,
-                    // ),
+                    if (user.social!.isNotEmpty)
+                      const Row(
+                        children: [
+                          Text(
+                            'Social Media',
+                            style: TextStyle(
+                                color: Color(0xFF2C2829),
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    for (int index = 0; index < user.social!.length; index++)
+                      customSocialPreview(index, social: user.social![index]),
+                    if (user.websites!.isNotEmpty)
+                      const Padding(
+                        padding: EdgeInsets.only(top: 50),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Websites & Links',
+                              style: TextStyle(
+                                  color: Color(0xFF2C2829),
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      ),
+                    for (int index = 0; index < user.websites!.length; index++)
+                      customWebsitePreview(index,
+                          website: user.websites![index]),
+                    const SizedBox(
+                      height: 30,
+                    ),
                     if (user.videos!.isNotEmpty)
                       Column(
                         children: [
@@ -288,7 +307,7 @@ class ProfilePreview extends ConsumerWidget {
                                 count: user.videos!.length,
                                 effect: const ExpandingDotsEffect(
                                   dotHeight: 8,
-                                  dotWidth: 3,
+                                  dotWidth: 6,
                                   activeDotColor: Colors.black,
                                   dotColor: Colors.grey,
                                 ),
@@ -300,17 +319,18 @@ class ProfilePreview extends ConsumerWidget {
                     const SizedBox(
                       height: 40,
                     ),
-                    const Row(
-                      children: [
-                        Text(
-                          'Certificates',
-                          style: TextStyle(
-                              color: Color(0xFF2C2829),
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
+                    if (user.certificates!.isNotEmpty)
+                      const Row(
+                        children: [
+                          Text(
+                            'Certificates',
+                            style: TextStyle(
+                                color: Color(0xFF2C2829),
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
                     ListView.builder(
                       shrinkWrap:
                           true, // Let ListView take up only as much space as it needs
@@ -328,18 +348,18 @@ class ProfilePreview extends ConsumerWidget {
                         );
                       },
                     ),
-
-                    const Row(
-                      children: [
-                        Text(
-                          'Awards',
-                          style: TextStyle(
-                              color: Color(0xFF2C2829),
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
+                    if (user.awards!.isNotEmpty)
+                      const Row(
+                        children: [
+                          Text(
+                            'Awards',
+                            style: TextStyle(
+                                color: Color(0xFF2C2829),
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
                     GridView.builder(
                       shrinkWrap:
                           true, // Let GridView take up only as much space as it needs
@@ -398,12 +418,15 @@ class ProfilePreview extends ConsumerWidget {
   Widget profileVideo({required BuildContext context, required Link video}) {
     final videoUrl = video.link;
 
-    final ytController = YoutubePlayerController(
-      initialVideoId: YoutubePlayer.convertUrlToId(videoUrl!)!,
-      flags: const YoutubePlayerFlags(
-        disableDragSeek: true,
-        autoPlay: false,
+    final ytController = YoutubePlayerController.fromVideoId(
+      videoId: YoutubePlayerController.convertUrlToId(videoUrl ?? '')!,
+      autoPlay: false,
+      params: const YoutubePlayerParams(
+        enableJavaScript: true,
+        loop: true,
         mute: false,
+        showControls: true,
+        showFullscreenButton: true,
       ),
     );
 
@@ -438,16 +461,7 @@ class ProfilePreview extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(16.0),
                 child: YoutubePlayer(
                   controller: ytController,
-                  showVideoProgressIndicator: true,
-                  onReady: () {
-                    ytController.addListener(() {
-                      if (ytController.value.playerState == PlayerState.ended) {
-                        ytController.seekTo(Duration.zero);
-                        ytController
-                            .pause(); // Pause the video to prevent it from autoplaying again
-                      }
-                    });
-                  },
+                  aspectRatio: 16 / 9,
                 ),
               ),
             ),
@@ -457,7 +471,46 @@ class ProfilePreview extends ConsumerWidget {
     );
   }
 
-  Padding customProfilePreviewLinks(int index, {Link? social, Link? website}) {
+  Padding customSocialPreview(int index, {Link? social}) {
+    log('Icons: ${svgIcons[index]}');
+    return Padding(
+      padding: const EdgeInsets.only(top: 15),
+      child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: const Color(0xFFF2F2F2),
+          ),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 10, right: 10, top: 5, bottom: 5),
+                child: Align(
+                    alignment: Alignment.topCenter,
+                    widthFactor: 1.0,
+                    child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white,
+                        ),
+                        width: 42,
+                        height: 42,
+                        child: SvgIcon(
+                          assetName: svgIcons[index],
+                          color: Color(0xFFE30613),
+                        ))),
+              ),
+              Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                  child: Text('${social?.link}')),
+            ],
+          )),
+    );
+  }
+
+  Padding customWebsitePreview(int index, {Link? website}) {
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: Container(
@@ -481,23 +534,34 @@ class ProfilePreview extends ConsumerWidget {
                       ),
                       width: 42,
                       height: 42,
-                      child: social != null
-                          ? SvgIcon(
-                              assetName: svgIcons[index],
-                              color: const Color(0xFF004797),
-                            )
-                          : Icon(Icons.web)),
+                      child: Icon(
+                        Icons.language,
+                        color: Color(0xFFE30613),
+                      )),
                 ),
               ),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                  child: social != null
-                      ? Text('${social.link}')
-                      : Text('${website!.link}')),
+              GestureDetector(
+                onTap: () {
+                  if (website != null) {
+                    launchUrl(Uri.parse(website.link ?? ''));
+                  }
+                },
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 15),
+                    child: Text('${website!.link}')),
+              ),
             ],
           )),
     );
+  }
+}
+
+void _launchURL(String url) async {
+  try {
+    await launchUrl(Uri.parse(url));
+  } catch (e) {
+    print(e);
   }
 }
 

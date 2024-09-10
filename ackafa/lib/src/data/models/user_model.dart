@@ -21,6 +21,7 @@ class UserModel {
   final List<Link>? certificates;
   final String? reason;
   final String? profileCompletion;
+   final String? memberId;
 
   UserModel({
     this.name,
@@ -45,6 +46,7 @@ class UserModel {
     this.certificates,
     this.reason,
     this.profileCompletion,
+      this.memberId,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -91,6 +93,7 @@ class UserModel {
           : null,
       reason: json['reason'],
       profileCompletion: json['profileCompletion'] as String?,
+         memberId: json['memberId'],  
     );
   }
 
@@ -118,6 +121,7 @@ class UserModel {
       'certificates': certificates?.map((item) => item.toJson()).toList(),
       'reason': reason,
       'profileCompletion': profileCompletion,
+       'memberId': memberId,
     };
   }
 
@@ -144,6 +148,7 @@ class UserModel {
     List<Link>? certificates,
     String? reason,
     String? profileCompletion,
+     String? memberId,
   }) {
     return UserModel(
       name: name ?? this.name,
@@ -168,6 +173,7 @@ class UserModel {
       certificates: certificates ?? this.certificates,
       reason: reason ?? this.reason,
       profileCompletion: profileCompletion ?? this.profileCompletion,
+         memberId: memberId ?? this.memberId,
     );
   }
 }

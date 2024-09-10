@@ -27,9 +27,9 @@ class RequestNFCPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Connect            with Ease',
+              'Connect\nwith Ease',
               style: TextStyle(
-                fontSize: 50,
+                fontSize: 35,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFFE30613),
               ),
@@ -38,21 +38,18 @@ class RequestNFCPage extends StatelessWidget {
             Text(
               'Lorem ipsum dolor sit amet consectetur. Justo facilisis mattis tincidunt vitae quam quis. Nec nisi duis amet aenean arcu tristique et et eleifend.',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 13,
                 color: Color(0xFF828282),
               ),
             ),
             SizedBox(height: 24),
             Center(
-              child: Image.network(
-                'https://placehold.co/600x400/png', // Replace with your image URL
-                height: 200,
+              child: Image.asset(
+                scale: 2.5,
+                'assets/NFC.png', // Replace with your image URL
               ),
             ),
-            SizedBox(height: 69),
-            Center(
-                child: customButton(
-                    label: 'REQUEST NFC', onPressed: () {}, fontSize: 16)),
+            customButton(label: 'REQUEST NFC', onPressed: () {}, fontSize: 16),
           ],
         ),
       ),

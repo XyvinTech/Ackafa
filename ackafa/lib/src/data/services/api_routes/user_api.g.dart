@@ -21,7 +21,7 @@ final fetchUserDetailsProvider = AutoDisposeFutureProvider<UserModel>.internal(
 );
 
 typedef FetchUserDetailsRef = AutoDisposeFutureProviderRef<UserModel>;
-String _$fetchUsersHash() => r'aa9fab01523c5489c67302b32c8082ca0d38ea09';
+String _$fetchActiveUsersHash() => r'6fc399f3267bd975e7fe9adc992ea1113efe7d0f';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -44,30 +44,33 @@ class _SystemHash {
   }
 }
 
-/// See also [fetchUsers].
-@ProviderFor(fetchUsers)
-const fetchUsersProvider = FetchUsersFamily();
+/// See also [fetchActiveUsers].
+@ProviderFor(fetchActiveUsers)
+const fetchActiveUsersProvider = FetchActiveUsersFamily();
 
-/// See also [fetchUsers].
-class FetchUsersFamily extends Family<AsyncValue<List<UserModel>>> {
-  /// See also [fetchUsers].
-  const FetchUsersFamily();
+/// See also [fetchActiveUsers].
+class FetchActiveUsersFamily extends Family<AsyncValue<List<UserModel>>> {
+  /// See also [fetchActiveUsers].
+  const FetchActiveUsersFamily();
 
-  /// See also [fetchUsers].
-  FetchUsersProvider call(
-    String token,
-  ) {
-    return FetchUsersProvider(
-      token,
+  /// See also [fetchActiveUsers].
+  FetchActiveUsersProvider call({
+    int pageNo = 1,
+    int limit = 10,
+  }) {
+    return FetchActiveUsersProvider(
+      pageNo: pageNo,
+      limit: limit,
     );
   }
 
   @override
-  FetchUsersProvider getProviderOverride(
-    covariant FetchUsersProvider provider,
+  FetchActiveUsersProvider getProviderOverride(
+    covariant FetchActiveUsersProvider provider,
   ) {
     return call(
-      provider.token,
+      pageNo: provider.pageNo,
+      limit: provider.limit,
     );
   }
 
@@ -83,122 +86,138 @@ class FetchUsersFamily extends Family<AsyncValue<List<UserModel>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'fetchUsersProvider';
+  String? get name => r'fetchActiveUsersProvider';
 }
 
-/// See also [fetchUsers].
-class FetchUsersProvider extends AutoDisposeFutureProvider<List<UserModel>> {
-  /// See also [fetchUsers].
-  FetchUsersProvider(
-    String token,
-  ) : this._internal(
-          (ref) => fetchUsers(
-            ref as FetchUsersRef,
-            token,
+/// See also [fetchActiveUsers].
+class FetchActiveUsersProvider
+    extends AutoDisposeFutureProvider<List<UserModel>> {
+  /// See also [fetchActiveUsers].
+  FetchActiveUsersProvider({
+    int pageNo = 1,
+    int limit = 10,
+  }) : this._internal(
+          (ref) => fetchActiveUsers(
+            ref as FetchActiveUsersRef,
+            pageNo: pageNo,
+            limit: limit,
           ),
-          from: fetchUsersProvider,
-          name: r'fetchUsersProvider',
+          from: fetchActiveUsersProvider,
+          name: r'fetchActiveUsersProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$fetchUsersHash,
-          dependencies: FetchUsersFamily._dependencies,
+                  : _$fetchActiveUsersHash,
+          dependencies: FetchActiveUsersFamily._dependencies,
           allTransitiveDependencies:
-              FetchUsersFamily._allTransitiveDependencies,
-          token: token,
+              FetchActiveUsersFamily._allTransitiveDependencies,
+          pageNo: pageNo,
+          limit: limit,
         );
 
-  FetchUsersProvider._internal(
+  FetchActiveUsersProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.token,
+    required this.pageNo,
+    required this.limit,
   }) : super.internal();
 
-  final String token;
+  final int pageNo;
+  final int limit;
 
   @override
   Override overrideWith(
-    FutureOr<List<UserModel>> Function(FetchUsersRef provider) create,
+    FutureOr<List<UserModel>> Function(FetchActiveUsersRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: FetchUsersProvider._internal(
-        (ref) => create(ref as FetchUsersRef),
+      override: FetchActiveUsersProvider._internal(
+        (ref) => create(ref as FetchActiveUsersRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        token: token,
+        pageNo: pageNo,
+        limit: limit,
       ),
     );
   }
 
   @override
   AutoDisposeFutureProviderElement<List<UserModel>> createElement() {
-    return _FetchUsersProviderElement(this);
+    return _FetchActiveUsersProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is FetchUsersProvider && other.token == token;
+    return other is FetchActiveUsersProvider &&
+        other.pageNo == pageNo &&
+        other.limit == limit;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, token.hashCode);
+    hash = _SystemHash.combine(hash, pageNo.hashCode);
+    hash = _SystemHash.combine(hash, limit.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin FetchUsersRef on AutoDisposeFutureProviderRef<List<UserModel>> {
-  /// The parameter `token` of this provider.
-  String get token;
+mixin FetchActiveUsersRef on AutoDisposeFutureProviderRef<List<UserModel>> {
+  /// The parameter `pageNo` of this provider.
+  int get pageNo;
+
+  /// The parameter `limit` of this provider.
+  int get limit;
 }
 
-class _FetchUsersProviderElement
+class _FetchActiveUsersProviderElement
     extends AutoDisposeFutureProviderElement<List<UserModel>>
-    with FetchUsersRef {
-  _FetchUsersProviderElement(super.provider);
+    with FetchActiveUsersRef {
+  _FetchActiveUsersProviderElement(super.provider);
 
   @override
-  String get token => (origin as FetchUsersProvider).token;
+  int get pageNo => (origin as FetchActiveUsersProvider).pageNo;
+  @override
+  int get limit => (origin as FetchActiveUsersProvider).limit;
 }
 
-String _$fetchUserRequirementsHash() =>
-    r'70a98749b03496377a7b52cf7796680eed1ce6ea';
+String _$fetchAllUsersHash() => r'd3e2027cca3a886da3fca9127381c98f174dab78';
 
-/// See also [fetchUserRequirements].
-@ProviderFor(fetchUserRequirements)
-const fetchUserRequirementsProvider = FetchUserRequirementsFamily();
+/// See also [fetchAllUsers].
+@ProviderFor(fetchAllUsers)
+const fetchAllUsersProvider = FetchAllUsersFamily();
 
-/// See also [fetchUserRequirements].
-class FetchUserRequirementsFamily
-    extends Family<AsyncValue<List<UserRequirementModel>>> {
-  /// See also [fetchUserRequirements].
-  const FetchUserRequirementsFamily();
+/// See also [fetchAllUsers].
+class FetchAllUsersFamily extends Family<AsyncValue<List<UserModel>>> {
+  /// See also [fetchAllUsers].
+  const FetchAllUsersFamily();
 
-  /// See also [fetchUserRequirements].
-  FetchUserRequirementsProvider call(
-    String token,
-  ) {
-    return FetchUserRequirementsProvider(
-      token,
+  /// See also [fetchAllUsers].
+  FetchAllUsersProvider call({
+    int pageNo = 1,
+    int limit = 10,
+  }) {
+    return FetchAllUsersProvider(
+      pageNo: pageNo,
+      limit: limit,
     );
   }
 
   @override
-  FetchUserRequirementsProvider getProviderOverride(
-    covariant FetchUserRequirementsProvider provider,
+  FetchAllUsersProvider getProviderOverride(
+    covariant FetchAllUsersProvider provider,
   ) {
     return call(
-      provider.token,
+      pageNo: provider.pageNo,
+      limit: provider.limit,
     );
   }
 
@@ -214,96 +233,234 @@ class FetchUserRequirementsFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'fetchUserRequirementsProvider';
+  String? get name => r'fetchAllUsersProvider';
 }
 
-/// See also [fetchUserRequirements].
-class FetchUserRequirementsProvider
-    extends AutoDisposeFutureProvider<List<UserRequirementModel>> {
-  /// See also [fetchUserRequirements].
-  FetchUserRequirementsProvider(
-    String token,
-  ) : this._internal(
-          (ref) => fetchUserRequirements(
-            ref as FetchUserRequirementsRef,
-            token,
+/// See also [fetchAllUsers].
+class FetchAllUsersProvider extends AutoDisposeFutureProvider<List<UserModel>> {
+  /// See also [fetchAllUsers].
+  FetchAllUsersProvider({
+    int pageNo = 1,
+    int limit = 10,
+  }) : this._internal(
+          (ref) => fetchAllUsers(
+            ref as FetchAllUsersRef,
+            pageNo: pageNo,
+            limit: limit,
           ),
-          from: fetchUserRequirementsProvider,
-          name: r'fetchUserRequirementsProvider',
+          from: fetchAllUsersProvider,
+          name: r'fetchAllUsersProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$fetchUserRequirementsHash,
-          dependencies: FetchUserRequirementsFamily._dependencies,
+                  : _$fetchAllUsersHash,
+          dependencies: FetchAllUsersFamily._dependencies,
           allTransitiveDependencies:
-              FetchUserRequirementsFamily._allTransitiveDependencies,
-          token: token,
+              FetchAllUsersFamily._allTransitiveDependencies,
+          pageNo: pageNo,
+          limit: limit,
         );
 
-  FetchUserRequirementsProvider._internal(
+  FetchAllUsersProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.token,
+    required this.pageNo,
+    required this.limit,
   }) : super.internal();
 
-  final String token;
+  final int pageNo;
+  final int limit;
 
   @override
   Override overrideWith(
-    FutureOr<List<UserRequirementModel>> Function(
-            FetchUserRequirementsRef provider)
-        create,
+    FutureOr<List<UserModel>> Function(FetchAllUsersRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: FetchUserRequirementsProvider._internal(
-        (ref) => create(ref as FetchUserRequirementsRef),
+      override: FetchAllUsersProvider._internal(
+        (ref) => create(ref as FetchAllUsersRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        token: token,
+        pageNo: pageNo,
+        limit: limit,
       ),
     );
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<UserRequirementModel>> createElement() {
-    return _FetchUserRequirementsProviderElement(this);
+  AutoDisposeFutureProviderElement<List<UserModel>> createElement() {
+    return _FetchAllUsersProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is FetchUserRequirementsProvider && other.token == token;
+    return other is FetchAllUsersProvider &&
+        other.pageNo == pageNo &&
+        other.limit == limit;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, token.hashCode);
+    hash = _SystemHash.combine(hash, pageNo.hashCode);
+    hash = _SystemHash.combine(hash, limit.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin FetchUserRequirementsRef
-    on AutoDisposeFutureProviderRef<List<UserRequirementModel>> {
-  /// The parameter `token` of this provider.
-  String get token;
+mixin FetchAllUsersRef on AutoDisposeFutureProviderRef<List<UserModel>> {
+  /// The parameter `pageNo` of this provider.
+  int get pageNo;
+
+  /// The parameter `limit` of this provider.
+  int get limit;
 }
 
-class _FetchUserRequirementsProviderElement
-    extends AutoDisposeFutureProviderElement<List<UserRequirementModel>>
-    with FetchUserRequirementsRef {
-  _FetchUserRequirementsProviderElement(super.provider);
+class _FetchAllUsersProviderElement
+    extends AutoDisposeFutureProviderElement<List<UserModel>>
+    with FetchAllUsersRef {
+  _FetchAllUsersProviderElement(super.provider);
 
   @override
-  String get token => (origin as FetchUserRequirementsProvider).token;
+  int get pageNo => (origin as FetchAllUsersProvider).pageNo;
+  @override
+  int get limit => (origin as FetchAllUsersProvider).limit;
+}
+
+String _$fetchUserByIdHash() => r'6f107963db5a52e120576de6b88423940c4c65f7';
+
+/// See also [fetchUserById].
+@ProviderFor(fetchUserById)
+const fetchUserByIdProvider = FetchUserByIdFamily();
+
+/// See also [fetchUserById].
+class FetchUserByIdFamily extends Family<AsyncValue<UserModel>> {
+  /// See also [fetchUserById].
+  const FetchUserByIdFamily();
+
+  /// See also [fetchUserById].
+  FetchUserByIdProvider call(
+    String id,
+  ) {
+    return FetchUserByIdProvider(
+      id,
+    );
+  }
+
+  @override
+  FetchUserByIdProvider getProviderOverride(
+    covariant FetchUserByIdProvider provider,
+  ) {
+    return call(
+      provider.id,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'fetchUserByIdProvider';
+}
+
+/// See also [fetchUserById].
+class FetchUserByIdProvider extends AutoDisposeFutureProvider<UserModel> {
+  /// See also [fetchUserById].
+  FetchUserByIdProvider(
+    String id,
+  ) : this._internal(
+          (ref) => fetchUserById(
+            ref as FetchUserByIdRef,
+            id,
+          ),
+          from: fetchUserByIdProvider,
+          name: r'fetchUserByIdProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$fetchUserByIdHash,
+          dependencies: FetchUserByIdFamily._dependencies,
+          allTransitiveDependencies:
+              FetchUserByIdFamily._allTransitiveDependencies,
+          id: id,
+        );
+
+  FetchUserByIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.id,
+  }) : super.internal();
+
+  final String id;
+
+  @override
+  Override overrideWith(
+    FutureOr<UserModel> Function(FetchUserByIdRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FetchUserByIdProvider._internal(
+        (ref) => create(ref as FetchUserByIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        id: id,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<UserModel> createElement() {
+    return _FetchUserByIdProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FetchUserByIdProvider && other.id == id;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, id.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin FetchUserByIdRef on AutoDisposeFutureProviderRef<UserModel> {
+  /// The parameter `id` of this provider.
+  String get id;
+}
+
+class _FetchUserByIdProviderElement
+    extends AutoDisposeFutureProviderElement<UserModel> with FetchUserByIdRef {
+  _FetchUserByIdProviderElement(super.provider);
+
+  @override
+  String get id => (origin as FetchUserByIdProvider).id;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

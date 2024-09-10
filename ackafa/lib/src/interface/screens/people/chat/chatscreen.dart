@@ -8,12 +8,12 @@ import 'package:ackaf/src/interface/common/ReplyCard.dart';
 import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/msg_model.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
+import 'package:intl/intl.dart';
 
 class IndividualPage extends ConsumerStatefulWidget {
-  IndividualPage({required this.chatModel, required this.sourchat, super.key});
-  final ChatModel chatModel;
-  final ChatModel sourchat;
-
+  IndividualPage({required this.receiver, required this.sender, super.key});
+  final Participant receiver;
+  final Participant sender;
   @override
   _IndividualPageState createState() => _IndividualPageState();
 }
@@ -24,18 +24,15 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
   List<MessageModel> messages = [];
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = ScrollController();
-  late final webSocketClient;
+
   @override
   void initState() {
     super.initState();
-    webSocketClient = ref.read(socketIoClientProvider);
-    webSocketClient.connect(widget.chatModel.id, widget.sourchat.id);
     getMessageHistory();
   }
 
   void getMessageHistory() async {
-    final messagesette =
-        await getMessages(widget.chatModel.id, widget.sourchat.id);
+    final messagesette = await getChatBetweenUsers(widget.receiver.id!);
     setState(() {
       messages.addAll(messagesette);
     });
@@ -44,7 +41,6 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
   @override
   void dispose() {
     focusNode.unfocus();
-    webSocketClient.disconnect();
     _controller.dispose();
     _scrollController.dispose();
     focusNode.dispose();
@@ -54,28 +50,27 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
   void sendMessage() {
     if (_controller.text.isNotEmpty && mounted) {
       sendChatMessage(
-        userId: widget.chatModel.id,
-        from: widget.sourchat.id,
+        userId: widget.receiver.id!,
         content: _controller.text,
       );
-      setMessage("sent", _controller.text, widget.sourchat.id);
+      setMessage("sent", _controller.text, widget.sender.id!);
       _controller.clear();
-      if (mounted) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
+      // if (mounted) {
+      //   _scrollController.animateTo(
+      //     _scrollController.position.maxScrollExtent,
+      //     duration: Duration(milliseconds: 300),
+      //     curve: Curves.easeOut,
+      //   );
+      // }
     }
   }
 
   void setMessage(String type, String message, String fromId) {
     final messageModel = MessageModel(
-      fromId: fromId,
+      from: fromId,
       status: type,
-      message: message,
-      time: DateTime.now().toString().substring(10, 16),
+      content: message,
+      createdAt: DateTime.now(),
     );
 
     setState(() {
@@ -85,6 +80,25 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Listen to new messages from the socket stream
+    final messageStream = ref.watch(messageStreamProvider);
+
+    messageStream.whenData((newMessage) {
+      // If a new message is received, add it to the list
+      setState(() {
+        messages.add(newMessage);
+      });
+
+      // Scroll to the bottom to show the new message
+      // if (mounted) {
+      //   _scrollController.animateTo(
+      //     _scrollController.position.maxScrollExtent,
+      //     duration: Duration(milliseconds: 300),
+      //     curve: Curves.easeOut,
+      //   );
+      // }
+    });
+
     return Stack(
       children: [
         Scaffold(
@@ -111,20 +125,24 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                       ),
                     ),
                     SizedBox(width: 10),
-                    CircleAvatar(
-                      child: SvgPicture.asset(
-                        "assets/icons/person.svg",
-                        color: Colors.white,
-                        height: 30,
+                    ClipOval(
+                      child: Container(
                         width: 30,
+                        height: 30,
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                        child: Image.network(
+                          widget.receiver.image ?? '',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(Icons.person);
+                          },
+                        ),
                       ),
-                      radius: 19,
-                      backgroundColor: Colors.blueGrey,
                     ),
                   ],
                 ),
                 title: Text(
-                  widget.chatModel.name,
+                  '${widget.receiver.name?.first}  ${widget.receiver.name?.middle} ${widget.receiver.name?.last}',
                   style: TextStyle(fontSize: 18),
                 ),
                 actions: [
@@ -134,29 +152,33 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
           body: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child: WillPopScope(
+            child: PopScope(
               child: Column(
                 children: [
                   Expanded(
                     child: ListView.builder(
-                      shrinkWrap: true,
+                      reverse: true,
                       controller: _scrollController,
-                      itemCount: messages.length + 1,
+                      itemCount: messages.length,
                       itemBuilder: (context, index) {
-                        if (index == messages.length) {
-                          return Container(
-                            height: 70,
-                          );
-                        }
-                        if (messages[index].fromId == widget.sourchat.id) {
+                        final message = messages[messages.length -
+                            1 -
+                            index]; // Reverse the index to get the latest message first
+                        if (message.from == widget.sender.id) {
                           return OwnMessageCard(
-                            message: messages[index].message,
-                            time: messages[index].time,
+                            message: message.content ?? '',
+                            time: DateFormat('h:mm a').format(
+                              DateTime.parse(message.createdAt.toString())
+                                  .toLocal(),
+                            ),
                           );
                         } else {
                           return ReplyCard(
-                            message: messages[index].message,
-                            time: messages[index].time,
+                            message: message.content ?? '',
+                            time: DateFormat('h:mm a').format(
+                              DateTime.parse(message.createdAt.toString())
+                                  .toLocal(),
+                            ),
                           );
                         }
                       },
@@ -249,16 +271,22 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                   ),
                 ],
               ),
-              onWillPop: () {
-                if (show) {
-                  setState(() {
-                    show = false;
-                  });
-                } else {
-                  focusNode.unfocus();
-                  Navigator.pop(context);
+              onPopInvoked: (didPop) {
+                if (didPop) {
+                  if (show) {
+                    setState(() {
+                      show = false;
+                    });
+                  } else {
+                    focusNode.unfocus();
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
+                    });
+                  }
+                  ref.invalidate(fetchChatThreadProvider);
                 }
-                return Future.value(false);
               },
             ),
           ),

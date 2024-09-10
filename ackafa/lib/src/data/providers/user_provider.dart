@@ -10,16 +10,24 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   UserNotifier(this.ref) : super(const AsyncValue.loading()) {
     _initializeUser();
   }
+
   Future<void> _initializeUser() async {
     try {
       final user = await ref.read(fetchUserDetailsProvider.future);
-
       state = AsyncValue.data(user ?? UserModel());
     } catch (e, stackTrace) {
       log(e.toString());
       log(stackTrace.toString());
       state = AsyncValue.error(e, stackTrace);
     }
+  }
+
+  Future<void> refreshUser() async {
+    // Instead of setting state to loading, use AsyncValue.guard
+    state = await AsyncValue.guard(() async {
+      final user = await ref.read(fetchUserDetailsProvider.future);
+      return user ?? UserModel();
+    });
   }
 
   void updateName({
@@ -103,21 +111,31 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
 
   void updateSocialMedia(
       List<Link> socialmedias, String platform, String newUrl) {
-    if (platform != '') {
+    if (platform.isNotEmpty) {
       final index = socialmedias.indexWhere((item) => item.name == platform);
 
       if (index != -1) {
-        final updatedSocialMedia = socialmedias[index].copyWith(link: newUrl);
-        socialmedias[index] = updatedSocialMedia;
-      } else {
+        if (newUrl.isNotEmpty) {
+          // Update the existing social media link
+          final updatedSocialMedia = socialmedias[index].copyWith(link: newUrl);
+          socialmedias[index] = updatedSocialMedia;
+        } else {
+          // Remove the social media link if newUrl is empty
+          socialmedias.removeAt(index);
+        }
+      } else if (newUrl.isNotEmpty) {
+        // Add new social media link if platform doesn't exist and newUrl is not empty
         final newSocialMedia = Link(name: platform, link: newUrl);
         socialmedias.add(newSocialMedia);
       }
 
+      // Update the state with the modified socialmedias list
       state = state.whenData((user) => user.copyWith(social: socialmedias));
     } else {
+      // If platform is empty, clear the social media list
       state = state.whenData((user) => user.copyWith(social: []));
     }
+
     log('Updated Social Media $socialmedias');
   }
 
@@ -125,8 +143,26 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
     state = state.whenData((user) => user.copyWith(videos: videos));
   }
 
+  void removeVideo(Link videoToRemove) {
+    state = state.whenData((user) {
+      final updatedVideo =
+          user.videos!.where((video) => video != videoToRemove).toList();
+      return user.copyWith(websites: updatedVideo);
+    });
+  }
+
   void updateWebsite(List<Link> websites) {
     state = state.whenData((user) => user.copyWith(websites: websites));
+    log('website count in updation ${websites.length}');
+  }
+
+  void removeWebsite(Link websiteToRemove) {
+    state = state.whenData((user) {
+      final updatedWebsites = user.websites!
+          .where((website) => website != websiteToRemove)
+          .toList();
+      return user.copyWith(websites: updatedWebsites);
+    });
   }
 
   void updatePhone(String phone) {

@@ -20,7 +20,7 @@ class ProfileCompletionScreen extends StatelessWidget {
             String percentageString = user.profileCompletion ?? '0%';
             int profileCompletion =
                 int.parse(percentageString.replaceAll('%', ''));
-            if (profileCompletion < 100) {
+            if (profileCompletion < 70) {
               return Scaffold(
                 body: Center(
                   child: Column(

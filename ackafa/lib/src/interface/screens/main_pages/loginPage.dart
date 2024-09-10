@@ -1,15 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:ackaf/src/data/globals.dart';
-import 'package:ackaf/src/data/models/college_model.dart';
+
 import 'package:ackaf/src/data/providers/loading_notifier.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
-import 'package:ackaf/src/data/services/api_routes/college_api.dart';
-import 'package:ackaf/src/interface/common/custom_dialog.dart';
-import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_completetion_page.dart';
-import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
+
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,8 +55,8 @@ class _LoginPageState extends State<LoginPage> {
 class PhoneNumberScreen extends ConsumerWidget {
   final VoidCallback onNext;
 
-  const PhoneNumberScreen({super.key, required this.onNext});
-
+  PhoneNumberScreen({super.key, required this.onNext});
+  String? countryCode;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(loadingProvider);
@@ -106,6 +102,9 @@ class PhoneNumberScreen extends ConsumerWidget {
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.zero,
                   ),
+                  onCountryChanged: (value) {
+                    countryCode = value.dialCode;
+                  },
                   initialCountryCode: 'IN',
                   onChanged: (PhoneNumber phone) {
                     print(phone.completeNumber);
@@ -205,8 +204,8 @@ class PhoneNumberScreen extends ConsumerWidget {
         );
       } else {
         ApiRoutes userApi = ApiRoutes();
-        final data =
-            await userApi.submitPhoneNumber(context, _mobileController.text);
+        final data = await userApi.submitPhoneNumber(
+            countryCode ?? 91.toString(), context, _mobileController.text);
         final verificationId = data['verificationId'];
         final resendToken = data['resendToken'];
         if (verificationId != null && verificationId.isNotEmpty) {
@@ -436,8 +435,11 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
       print(_otpController.text);
 
       ApiRoutes userApi = ApiRoutes();
-      String savedToken =
-          await userApi.verifyOTP(widget.verificationId, _otpController.text);
+      String savedToken = await userApi.verifyOTP(
+        verificationId: widget.verificationId,
+        fcmToken: fcmToken,
+        smsCode: _otpController.text,
+      );
 
       if (savedToken.isNotEmpty) {
         final SharedPreferences preferences =
@@ -446,7 +448,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
         token = savedToken;
         log('savedToken: $savedToken');
         ref.invalidate(userProvider);
-        Navigator.of(context).push(
+        Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => UserRegistrationScreen()));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

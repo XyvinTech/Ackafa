@@ -1,27 +1,46 @@
+import 'dart:developer';
+
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/services/api_routes/events_api.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 
-import 'package:flutter/material.dart';
-
-class ViewMoreEventPage extends StatelessWidget {
+class ViewMoreEventPage extends ConsumerStatefulWidget {
   final Event event;
   const ViewMoreEventPage({super.key, required this.event});
 
   @override
-  Widget build(BuildContext context) {
-    String time = DateFormat('hh:mm a').format(event.date!);
-    String date = DateFormat('yyyy-MM-dd').format(event.date!);
+  ConsumerState<ViewMoreEventPage> createState() => _ViewMoreEventPageState();
+}
 
+class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
+  bool registered = false; // Moved to the top-level state variable
+
+  @override
+  void initState() {
+    super.initState();
+    registered = widget.event.rsvp?.contains(id) ?? false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String time = DateFormat('hh:mm a').format(widget.event.startTime!);
+    String date = DateFormat('yyyy-MM-dd').format(widget.event.startDate!);
+    log('rsvp : ${widget.event.rsvp}');
+    log('my id : ${id}');
+    bool registered = widget.event.rsvp?.contains(id) ?? false;
+    log('event registered?:$registered');
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('Event Details'),
+        title: const Text('Event Details'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -34,46 +53,46 @@ class ViewMoreEventPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Image Placeholder with LIVE text
                 Stack(
                   children: [
                     Container(
+                      width: double.infinity,
                       height: 200,
                       color: Colors.grey[300],
-                      child: Center(
-                        child: Image.network(
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.network(
-                                fit: BoxFit.cover,
-                                'https://placehold.co/600x400/png');
-                          },
-                          event.image!, // Replace with your image URL
-                          fit: BoxFit.cover,
-                        ),
+                      child: Image.network(
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.network(
+                              fit: BoxFit.fill,
+                              'https://placehold.co/600x400/png');
+                        },
+                        widget.event.image!, // Replace with your image URL
+                        fit: BoxFit.cover,
                       ),
                     ),
                     Positioned(
                       top: 8,
                       right: 8,
                       child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Color(0xFFE4483E), // Red background color
+                          color:
+                              const Color(0xFFE4483E), // Red background color
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: event.activate!
+                        child: widget.event.status != null &&
+                                widget.event.status != ''
                             ? Row(
                                 children: [
                                   Text(
-                                    'LIVE',
-                                    style: TextStyle(
+                                    widget.event.status!,
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(width: 4),
-                                  Icon(
+                                  const SizedBox(width: 4),
+                                  const Icon(
                                     Icons.circle,
                                     color: Colors.white,
                                     size: 8,
@@ -85,26 +104,27 @@ class ViewMoreEventPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 // Event Title
                 Text(
-                  event.name!,
-                  style: TextStyle(
-                    fontSize: 24,
+                  widget.event.eventName!,
+                  style: const TextStyle(
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 // Date and Time
                 Row(
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.calendar_today, color: Color(0xFFE30613)),
-                        SizedBox(width: 8),
+                        const Icon(Icons.calendar_today,
+                            color: Color(0xFFE30613)),
+                        const SizedBox(width: 8),
                         Text(
                           date,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
                             fontWeight: FontWeight.w400,
@@ -112,14 +132,14 @@ class ViewMoreEventPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Row(
                       children: [
-                        Icon(Icons.access_time, color: Color(0xFFE30613)),
-                        SizedBox(width: 8),
+                        const Icon(Icons.access_time, color: Color(0xFFE30613)),
+                        const SizedBox(width: 8),
                         Text(
                           time,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
                             fontWeight: FontWeight.w400,
@@ -129,45 +149,53 @@ class ViewMoreEventPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
-                Divider(color: Color.fromARGB(255, 192, 188, 188)),
-                // Event Description
+                const SizedBox(height: 16),
+                const Divider(color: Color.fromARGB(255, 192, 188, 188)),
+                const Text('Organiser'),
                 Text(
+                  widget.event.organiser ?? '',
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text(
                   'Lorem ipsum dolor sit amet consectetur. Nunc vivamus vel aliquet lacinia. '
                   'Ultricies mauris vulputate amet sagittis diam sit neque enim enim.',
                   style: TextStyle(fontSize: 16, color: Colors.black87),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 // Speakers Section
-                Text(
+                const Text(
                   'Speakers',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 ListView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: event.speakers!.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: widget.event.speakers!.length,
                   itemBuilder: (context, index) {
                     return _buildSpeakerCard(
-                        event.speakers![index].speakerImage,
-                        event.speakers![index].speakerName!,
-                        event.speakers![index].speakerDesignation!);
+                        widget.event.speakers![index].image,
+                        widget.event.speakers![index].name!,
+                        widget.event.speakers![index].designation!);
                   },
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 // Venue Section
-                Text(
+                const Text(
                   'Venue',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 // Map Placeholder
                 Container(
                   width: double.infinity,
@@ -180,22 +208,44 @@ class ViewMoreEventPage extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                     height: 50), // Add spacing to avoid overlap with the button
               ],
             ),
           ),
-          Positioned(
-            bottom: 16,
-            left: 16,
-            right: 16,
-            child: customButton(
-              label: 'REGISTER EVENT',
-              onPressed: () {
-                markEventAsRSVP(event.id!);
-              },
-              fontSize: 16,
-            ),
+          Consumer(
+            builder: (context, ref, child) {
+              return Positioned(
+                bottom: 16,
+                left: 16,
+                right: 16,
+                child: customButton(
+                  color: registered ? Colors.green : Color(0xFFE30613),
+                  label: widget.event.status == 'cancelled'
+                      ? 'CANCELLED'
+                      : registered
+                          ? 'REGISTERED'
+                          : 'REGISTER EVENT',
+                  onPressed: () async {
+                    if (!registered && widget.event.status != 'cancelled') {
+                      ApiRoutes userApi = ApiRoutes();
+                      await userApi.markEventAsRSVP(widget.event.id!);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Registered')));
+                      // Update the local rsvp list to reflect the changes immediately
+                      setState(() {
+                        widget.event.rsvp?.add(id); // Add the user to RSVP
+                        registered = widget.event.rsvp?.contains(id) ?? false;
+                      });
+
+                      ref.invalidate(
+                          fetchEventsProvider); // Update your global state if needed
+                    }
+                  },
+                  fontSize: 16,
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -220,20 +270,20 @@ class ViewMoreEventPage extends StatelessWidget {
             imagePath.toString(),
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
-              return Icon(Icons.error, size: 40);
+              return const Icon(Icons.person, size: 40);
             },
           ),
         ),
         title: Text(
           name,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),
         subtitle: Text(
           role,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             color: Colors.grey,
           ),
