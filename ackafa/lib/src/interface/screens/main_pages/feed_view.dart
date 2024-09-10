@@ -288,6 +288,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
                 user: user,
                 onLike: () async {
                   await userApi.likeFeed(feed.id!);
+                  ref.read(feedNotifierProvider.notifier).refreshFeed();
                 },
                 onComment: () async {},
                 onShare: () {});
@@ -344,7 +345,6 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
     if (widget.feed.likes!.contains(id)) {
       isLiked = true;
     }
-    likes = widget.feed.likes?.length ?? 0;
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -604,7 +604,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
             ),
           ],
         ),
-        Text('${likes.toString()} Likes')
+        Text('${widget.feed.likes?.length ?? 0} Likes')
       ],
     );
   }
