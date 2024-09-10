@@ -13,7 +13,8 @@ import 'package:ackaf/src/interface/common/customModalsheets.dart';
 import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class ProfilePreview extends ConsumerWidget {
   final UserModel user;
@@ -417,14 +418,15 @@ class ProfilePreview extends ConsumerWidget {
   Widget profileVideo({required BuildContext context, required Link video}) {
     final videoUrl = video.link;
 
-    final ytController = YoutubePlayerController(
-      initialVideoId: YoutubePlayer.convertUrlToId(videoUrl!)!,
-      flags: const YoutubePlayerFlags(
-        disableDragSeek: true,
-        autoPlay: false,
-        mute: false,
-      ),
-    );
+    final ytController = YoutubePlayerController.fromVideoId(videoId: YoutubePlayerController.convertUrlToId(videoUrl ?? '')!,autoPlay: false,
+    params: const YoutubePlayerParams(enableJavaScript: true,
+  
+      loop: true,
+      mute: false,
+      showControls: true,
+      showFullscreenButton: true,
+    ),
+  );
 
     return Padding(
       padding: const EdgeInsets.only(right: 16),
@@ -456,18 +458,9 @@ class ProfilePreview extends ConsumerWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
                 child: YoutubePlayer(
-                  controller: ytController,
-                  showVideoProgressIndicator: true,
-                  onReady: () {
-                    ytController.addListener(() {
-                      if (ytController.value.playerState == PlayerState.ended) {
-                        ytController.seekTo(Duration.zero);
-                        ytController
-                            .pause(); // Pause the video to prevent it from autoplaying again
-                      }
-                    });
-                  },
-                ),
+                controller: ytController,
+                aspectRatio: 16 / 9,
+              ),
               ),
             ),
           ),

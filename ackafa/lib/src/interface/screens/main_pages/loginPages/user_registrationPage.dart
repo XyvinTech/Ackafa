@@ -592,13 +592,13 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                       log('user status: ${user.status}');
                                                       if (user.status ==
                                                           'active') {
-                                                        Navigator.of(context).push(
+                                                        Navigator.of(context).pushReplacement(
                                                             MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
                                                                         ProfileCompletionScreen()));
                                                       } else {
-                                                        Navigator.of(context).push(
+                                                        Navigator.of(context).pushReplacement(
                                                             MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>

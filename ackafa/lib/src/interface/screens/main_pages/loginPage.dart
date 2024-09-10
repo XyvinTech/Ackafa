@@ -55,8 +55,8 @@ class _LoginPageState extends State<LoginPage> {
 class PhoneNumberScreen extends ConsumerWidget {
   final VoidCallback onNext;
 
-  const PhoneNumberScreen({super.key, required this.onNext});
-
+  PhoneNumberScreen({super.key, required this.onNext});
+  String? countryCode;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(loadingProvider);
@@ -102,6 +102,9 @@ class PhoneNumberScreen extends ConsumerWidget {
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.zero,
                   ),
+                  onCountryChanged: (value) {
+                    countryCode = value.dialCode;
+                  },
                   initialCountryCode: 'IN',
                   onChanged: (PhoneNumber phone) {
                     print(phone.completeNumber);
@@ -201,8 +204,8 @@ class PhoneNumberScreen extends ConsumerWidget {
         );
       } else {
         ApiRoutes userApi = ApiRoutes();
-        final data =
-            await userApi.submitPhoneNumber(context, _mobileController.text);
+        final data = await userApi.submitPhoneNumber(
+            countryCode ?? 91.toString(), context, _mobileController.text);
         final verificationId = data['verificationId'];
         final resendToken = data['resendToken'];
         if (verificationId != null && verificationId.isNotEmpty) {

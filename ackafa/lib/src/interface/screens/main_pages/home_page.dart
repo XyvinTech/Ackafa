@@ -14,6 +14,7 @@ import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -196,8 +197,15 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.dispose();
   }
 
+  final ValueNotifier<int> _currentVideo = ValueNotifier<int>(0);
+
   @override
   Widget build(BuildContext context) {
+    PageController _videoCountController = PageController();
+
+    _videoCountController.addListener(() {
+      _currentVideo.value = _videoCountController.page!.round();
+    });
     return Consumer(
       builder: (context, ref, child) {
         final asyncPromotions = ref.watch(fetchPromotionsProvider(token));
@@ -511,17 +519,37 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                       const SizedBox(height: 16),
                       if (filteredVideos.isNotEmpty)
-                        SizedBox(
-                          height: 300,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: filteredVideos.length,
-                            itemBuilder: (context, index) {
-                              return customVideo(
-                                  context: context,
-                                  video: filteredVideos[index]);
-                            },
-                          ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 265,
+                              child: ListView.builder(
+                                controller: _videoCountController,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: filteredVideos.length,
+                                itemBuilder: (context, index) {
+                                  return customVideo(
+                                      context: context,
+                                      video: filteredVideos[index]);
+                                },
+                              ),
+                            ),
+                            ValueListenableBuilder<int>(
+                              valueListenable: _currentVideo,
+                              builder: (context, value, child) {
+                                return SmoothPageIndicator(
+                                  controller: _videoCountController,
+                                  count: videos.length,
+                                  effect: const ExpandingDotsEffect(
+                                    dotHeight: 8,
+                                    dotWidth: 6,
+                                    activeDotColor: Colors.black,
+                                    dotColor: Colors.grey,
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
                         ),
                     ],
                   ),

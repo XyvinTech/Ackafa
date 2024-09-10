@@ -22,14 +22,6 @@ class MyEventsPage extends StatelessWidget {
               icon: const Icon(Icons.arrow_back),
               onPressed: () => Navigator.of(context).pop(),
             ),
-            actions: [
-              IconButton(
-                icon: FaIcon(FontAwesomeIcons.whatsapp),
-                onPressed: () {
-                  // WhatsApp action
-                },
-              ),
-            ],
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(1.0),
               child: Container(

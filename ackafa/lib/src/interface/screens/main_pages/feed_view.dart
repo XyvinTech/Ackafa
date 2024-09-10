@@ -540,7 +540,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
 
   Widget _buildUserInfo(UserModel user) {
     String formattedDateTime = DateFormat('h:mm a · MMM d, yyyy')
-        .format(DateTime.parse(widget.feed.updatedAt.toString()).toLocal());
+        .format(DateTime.parse(widget.feed.createdAt.toString()).toLocal());
     return Row(
       children: [
         ClipOval(

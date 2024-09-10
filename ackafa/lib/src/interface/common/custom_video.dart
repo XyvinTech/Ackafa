@@ -1,7 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:ackaf/src/data/models/promotions_model.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class AutoScrollText extends StatefulWidget {
   final String text;
@@ -113,13 +113,13 @@ class _AutoScrollTextState extends State<AutoScrollText> {
 Widget customVideo({required BuildContext context, required Promotion video}) {
   final videoUrl = video.link;
 
-  final ytController = YoutubePlayerController(
-    initialVideoId: YoutubePlayer.convertUrlToId(videoUrl ?? '')!,
-    flags: const YoutubePlayerFlags(
+  final ytController = YoutubePlayerController.fromVideoId(videoId: YoutubePlayerController.convertUrlToId(videoUrl ?? '')!,autoPlay: false,
+    params: const YoutubePlayerParams(enableJavaScript: true,
+    
       loop: true,
-      disableDragSeek: true,
-      autoPlay: false,
       mute: false,
+      showControls: true,
+      showFullscreenButton: true,
     ),
   );
 
@@ -150,15 +150,7 @@ Widget customVideo({required BuildContext context, required Promotion video}) {
               borderRadius: BorderRadius.circular(16.0),
               child: YoutubePlayer(
                 controller: ytController,
-                showVideoProgressIndicator: true,
-                onReady: () {
-                  ytController.addListener(() {
-                    if (ytController.value.playerState == PlayerState.ended) {
-                      ytController.seekTo(Duration.zero);
-                      ytController.pause(); // Prevent it from autoplaying again
-                    }
-                  });
-                },
+                aspectRatio: 16 / 9,
               ),
             ),
           ),

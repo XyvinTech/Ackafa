@@ -60,12 +60,13 @@ class ApiRoutes {
   }
 
   Future<Map<String, String>> submitPhoneNumber(
-      BuildContext context, String phone) async {
+      String countryCode, BuildContext context, String phone) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     Completer<String> verificationIdcompleter = Completer<String>();
     Completer<String> resendTokencompleter = Completer<String>();
+    log('phone:+$countryCode$phone');
     await auth.verifyPhoneNumber(
-      phoneNumber: '+91$phone',
+      phoneNumber: '+$countryCode$phone',
       verificationCompleted: (PhoneAuthCredential credential) async {
         // Handle automatic verification completion if needed
       },

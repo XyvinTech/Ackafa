@@ -16,7 +16,7 @@ class MyPostsPage extends StatelessWidget {
         final asyncMyPosts = ref.watch(fetchMyPostsProvider);
         return Scaffold(
             appBar: AppBar(
-              title: Text('My requirements'),
+              title: Text('My Posts'),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {

@@ -10,10 +10,10 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   UserNotifier(this.ref) : super(const AsyncValue.loading()) {
     _initializeUser();
   }
+
   Future<void> _initializeUser() async {
     try {
       final user = await ref.read(fetchUserDetailsProvider.future);
-
       state = AsyncValue.data(user ?? UserModel());
     } catch (e, stackTrace) {
       log(e.toString());
@@ -21,6 +21,15 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
       state = AsyncValue.error(e, stackTrace);
     }
   }
+
+  Future<void> refreshUser() async {
+    // Instead of setting state to loading, use AsyncValue.guard
+    state = await AsyncValue.guard(() async {
+      final user = await ref.read(fetchUserDetailsProvider.future);
+      return user ?? UserModel();
+    });
+  }
+
 
   void updateName({
     String? firstName,
@@ -124,22 +133,25 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   void updateVideos(List<Link> videos) {
     state = state.whenData((user) => user.copyWith(videos: videos));
   }
-   void removeVideo(Link videoToRemove) {
+
+  void removeVideo(Link videoToRemove) {
     state = state.whenData((user) {
       final updatedVideo =
           user.videos!.where((video) => video != videoToRemove).toList();
       return user.copyWith(websites: updatedVideo);
     });
   }
+
   void updateWebsite(List<Link> websites) {
     state = state.whenData((user) => user.copyWith(websites: websites));
     log('website count in updation ${websites.length}');
   }
 
-   void removeWebsite(Link websiteToRemove) {
+  void removeWebsite(Link websiteToRemove) {
     state = state.whenData((user) {
-      final updatedWebsites =
-          user.websites!.where((website) => website != websiteToRemove).toList();
+      final updatedWebsites = user.websites!
+          .where((website) => website != websiteToRemove)
+          .toList();
       return user.copyWith(websites: updatedWebsites);
     });
   }
