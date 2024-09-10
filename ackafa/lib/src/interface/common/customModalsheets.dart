@@ -71,22 +71,22 @@ void showWebsiteSheet({
                     textController: textController1,
                   ),
                   const SizedBox(height: 10),
-                  fieldName == 'Add Youtube Link'
-                      ? ModalSheetTextFormField(
-                          validator: (value) => validateYouTubeUrl(value),
-                          label: fieldName,
-                          textController: textController2,
-                        )
-                      : ModalSheetTextFormField(
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'This is a required field';
-                            }
-                            return null;
-                          },
-                          label: fieldName,
-                          textController: textController2,
-                        ),
+                  ModalSheetTextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Enter a valid website';
+                      }
+
+                      bool? result = isValidUrl(value);
+                      if (!result!) {
+                        return 'Enter a valid website';
+                      }
+
+                      return null;
+                    },
+                    label: fieldName,
+                    textController: textController2,
+                  ),
                   const SizedBox(height: 10),
                   Consumer(
                     builder: (context, ref, child) {
