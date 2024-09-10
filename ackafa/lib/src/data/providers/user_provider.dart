@@ -30,7 +30,6 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
     });
   }
 
-
   void updateName({
     String? firstName,
     String? middleName,
@@ -112,21 +111,31 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
 
   void updateSocialMedia(
       List<Link> socialmedias, String platform, String newUrl) {
-    if (platform != '') {
+    if (platform.isNotEmpty) {
       final index = socialmedias.indexWhere((item) => item.name == platform);
 
       if (index != -1) {
-        final updatedSocialMedia = socialmedias[index].copyWith(link: newUrl);
-        socialmedias[index] = updatedSocialMedia;
-      } else {
+        if (newUrl.isNotEmpty) {
+          // Update the existing social media link
+          final updatedSocialMedia = socialmedias[index].copyWith(link: newUrl);
+          socialmedias[index] = updatedSocialMedia;
+        } else {
+          // Remove the social media link if newUrl is empty
+          socialmedias.removeAt(index);
+        }
+      } else if (newUrl.isNotEmpty) {
+        // Add new social media link if platform doesn't exist and newUrl is not empty
         final newSocialMedia = Link(name: platform, link: newUrl);
         socialmedias.add(newSocialMedia);
       }
 
+      // Update the state with the modified socialmedias list
       state = state.whenData((user) => user.copyWith(social: socialmedias));
     } else {
+      // If platform is empty, clear the social media list
       state = state.whenData((user) => user.copyWith(social: []));
     }
+
     log('Updated Social Media $socialmedias');
   }
 

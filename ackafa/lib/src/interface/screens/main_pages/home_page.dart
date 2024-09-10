@@ -29,6 +29,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   ScrollController _bannerScrollController = ScrollController();
   ScrollController _noticeScrollController = ScrollController();
   ScrollController _posterScrollController = ScrollController();
+      PageController _videoCountController = PageController();
 
   Timer? _bannerScrollTimer;
   Timer? _noticeScrollTimer;
@@ -189,7 +190,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     _noticeScrollTimer?.cancel();
     _posterScrollTimer?.cancel();
     _restartAutoScrollTimer?.cancel();
-
+ 
     _bannerScrollController.dispose();
     _noticeScrollController.dispose();
     _posterScrollController.dispose();
@@ -201,7 +202,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    PageController _videoCountController = PageController();
+
 
     _videoCountController.addListener(() {
       _currentVideo.value = _videoCountController.page!.round();

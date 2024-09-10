@@ -22,15 +22,15 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   void initState() {
     super.initState();
     webSocketClient = ref.read(socketIoClientProvider);
-    webSocketClient.connect(id,ref);
+    webSocketClient.connect(id, ref);
   }
 
-  @override
-  void dispose() {
-    webSocketClient.disconnect();
+  // @override
+  // void dispose() {
+  //   webSocketClient.disconnect();
 
-    super.dispose();
-  }
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
