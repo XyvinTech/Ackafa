@@ -23,10 +23,14 @@ class MembersPage extends ConsumerStatefulWidget {
 class _MembersPageState extends ConsumerState<MembersPage> {
   final ScrollController _scrollController = ScrollController();
 
+  late final webSocketClient;
   @override
   void initState() {
     super.initState();
+    webSocketClient = ref.read(socketIoClientProvider);
+    webSocketClient.connect(id, ref);
     _scrollController.addListener(_onScroll);
+
     _fetchInitialUsers();
   }
 
@@ -46,118 +50,126 @@ class _MembersPageState extends ConsumerState<MembersPage> {
     final users = ref.watch(peopleNotifierProvider);
     final isLoading = ref.read(peopleNotifierProvider.notifier).isLoading;
     final asyncChats = ref.watch(fetchChatThreadProvider);
-    return Scaffold(
-        backgroundColor: Colors.white,
-        body: users.isEmpty
-            ? Center(child: Text('NO MEMBERS YET')) // Show loader when no data
-            : asyncChats.when(
-                data: (chats) {
-                  log('im inside chat');
-                  return ListView.builder(
-                    controller: _scrollController,
-                    itemCount: users.length, // Add 1 for the loading indicator
-                    itemBuilder: (context, index) {
-                      var chatForUser = chats.firstWhere(
-                        (chat) =>
-                            chat.participants?.any((participant) =>
-                                participant.id == users[index].id) ??
-                            false,
-                        orElse: () => ChatModel(
-                          participants: [
-                            Participant(
-                              id: users[index].id,
-                              name: users[index].name,
-                              image: users[index].image,
-                            ),
-                            Participant(
-                                id: id), // You can replace this with a default sender (current user)
-                          ],
-                        ),
-                      );
+    return PopScope(
+      onPopInvoked: (didPop) {
+        ref.invalidate(fetchChatThreadProvider);
+      },
+      child: Scaffold(
+          backgroundColor: Colors.white,
+          body: users.isEmpty
+              ? Center(
+                  child: Text('NO MEMBERS YET')) // Show loader when no data
+              : asyncChats.when(
+                  data: (chats) {
+                    log('im inside chat');
+                    return ListView.builder(
+                      controller: _scrollController,
+                      itemCount:
+                          users.length, // Add 1 for the loading indicator
+                      itemBuilder: (context, index) {
+                        var chatForUser = chats.firstWhere(
+                          (chat) =>
+                              chat.participants?.any((participant) =>
+                                  participant.id == users[index].id) ??
+                              false,
+                          orElse: () => ChatModel(
+                            participants: [
+                              Participant(
+                                id: users[index].id,
+                                name: users[index].name,
+                                image: users[index].image,
+                              ),
+                              Participant(
+                                  id: id), // You can replace this with a default sender (current user)
+                            ],
+                          ),
+                        );
 
-                      // Get the receiver and sender for the chat
-                      var receiver = chatForUser.participants?.firstWhere(
-                        (participant) => participant.id != id,
-                        orElse: () => Participant(
-                          id: users[index].id,
-                          name: users[index].name,
-                          image: users[index].image,
-                        ),
-                      );
+                        // Get the receiver and sender for the chat
+                        var receiver = chatForUser.participants?.firstWhere(
+                          (participant) => participant.id != id,
+                          orElse: () => Participant(
+                            id: users[index].id,
+                            name: users[index].name,
+                            image: users[index].image,
+                          ),
+                        );
 
-                      var sender = chatForUser.participants?.firstWhere(
-                        (participant) => participant.id == id,
-                        orElse: () => Participant(),
-                      );
-                      if (index == users.length) {
-                        return isLoading
-                            ? Center(
-                                child:
-                                    LoadingAnimation()) // Show loading when fetching more users
-                            : SizedBox.shrink(); // Hide when done
-                      }
+                        var sender = chatForUser.participants?.firstWhere(
+                          (participant) => participant.id == id,
+                          orElse: () => Participant(),
+                        );
+                        if (index == users.length) {
+                          return isLoading
+                              ? Center(
+                                  child:
+                                      LoadingAnimation()) // Show loading when fetching more users
+                              : SizedBox.shrink(); // Hide when done
+                        }
 
-                      final user = users[index];
+                        final user = users[index];
 
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ProfilePreview(
-                                user: user,
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ProfilePreview(
+                                  user: user,
+                                ),
+                              ),
+                            );
+                          },
+                          child: ListTile(
+                            leading: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: ClipOval(
+                                child: Image.network(
+                                  user.image ??
+                                      'https://placehold.co/600x400/png',
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Image.network(
+                                      'https://placehold.co/600x400/png',
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                ),
                               ),
                             ),
-                          );
-                        },
-                        child: ListTile(
-                          leading: SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: ClipOval(
-                              child: Image.network(
-                                user.image ??
-                                    'https://placehold.co/600x400/png',
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Image.network(
-                                    'https://placehold.co/600x400/png',
-                                    fit: BoxFit.cover,
-                                  );
-                                },
-                              ),
+                            title: Text(user.name?.first ?? 'No Name'),
+                            subtitle: user.company?.designation != null
+                                ? Text(user.company!.designation!)
+                                : null,
+                            trailing: IconButton(
+                              icon: Icon(Icons.chat),
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => IndividualPage(
+                                          receiver: receiver!,
+                                          sender: sender!,
+                                        )));
+                              },
                             ),
                           ),
-                          title: Text(user.name?.first ?? 'No Name'),
-                          subtitle: user.company?.designation != null
-                              ? Text(user.company!.designation!)
-                              : null,
-                          trailing: IconButton(
-                            icon: Icon(Icons.chat),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => IndividualPage(
-                                        receiver: receiver!,
-                                        sender: sender!,
-                                      )));
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-                loading: () => Center(child: LoadingAnimation()),
-                error: (error, stackTrace) {
-                  return Center(
-                    child: Text('Error loading promotions: $error'),
-                  );
-                },
-              ));
+                        );
+                      },
+                    );
+                  },
+                  loading: () => Center(child: LoadingAnimation()),
+                  error: (error, stackTrace) {
+                    return Center(
+                      child: Text('Error loading promotions: $error'),
+                    );
+                  },
+                )),
+    );
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+    webSocketClient.disconnect();
   }
 }

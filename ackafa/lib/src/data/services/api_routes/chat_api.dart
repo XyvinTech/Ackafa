@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/chat_model.dart';
@@ -29,7 +30,7 @@ class SocketIoClient {
 
   Stream<MessageModel> get messageStream => _controller.stream;
 
-  void connect(String receiverId, String senderId) {
+  void connect(String senderId, WidgetRef ref) {
     final uri = 'ws://3.108.205.101:3000/api/v1/chat?userId=$senderId';
 
     // Initialize socket.io client
@@ -37,7 +38,6 @@ class SocketIoClient {
       uri,
       IO.OptionBuilder()
           .setTransports(['websocket']) // Use WebSocket transport
-          .setExtraHeaders({'receiver_id': receiverId}) // Optional headers
           .disableAutoConnect() // Disable auto-connect
           .build(),
     );
@@ -56,6 +56,10 @@ class SocketIoClient {
       print('Received message: $data');
       final messageModel = MessageModel.fromJson(data);
       log(messageModel.toString());
+
+      // Invalidate the fetchChatThreadProvider when a new message is received
+      ref.invalidate(fetchChatThreadProvider);
+
       if (!_controller.isClosed) {
         _controller.add(messageModel);
       }

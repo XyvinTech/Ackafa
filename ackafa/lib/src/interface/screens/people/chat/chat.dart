@@ -1,14 +1,36 @@
+import 'package:ackaf/src/data/globals.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/chat_model.dart';
-import 'package:ackaf/src/data/models/msg_model.dart';
+
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chatscreen.dart';
 
-class ChatPage extends StatelessWidget {
+class ChatPage extends ConsumerStatefulWidget {
   ChatPage({super.key});
+
+  @override
+  ConsumerState<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends ConsumerState<ChatPage> {
+  late final webSocketClient;
+
+  @override
+  void initState() {
+    super.initState();
+    webSocketClient = ref.read(socketIoClientProvider);
+    webSocketClient.connect(id,ref);
+  }
+
+  @override
+  void dispose() {
+    webSocketClient.disconnect();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

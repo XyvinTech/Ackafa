@@ -13,6 +13,7 @@ import 'package:ackaf/src/interface/common/customModalsheets.dart';
 import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
@@ -23,8 +24,8 @@ class ProfilePreview extends ConsumerWidget {
   final List<String> svgIcons = [
     'assets/icons/instagram.svg',
     'assets/icons/linkedin.svg',
-    'assets/icons/twitter.svg'
-        'assets/icons/facebook.svg'
+    'assets/icons/twitter.svg',
+    'assets/icons/icons8-facebook.svg'
   ];
 
   final ValueNotifier<int> _currentVideo = ValueNotifier<int>(0);
@@ -259,8 +260,7 @@ class ProfilePreview extends ConsumerWidget {
                         ],
                       ),
                     for (int index = 0; index < user.social!.length; index++)
-                      customProfilePreviewLinks(index,
-                          social: user.social![index]),
+                      customSocialPreview(index, social: user.social![index]),
                     if (user.websites!.isNotEmpty)
                       const Padding(
                         padding: EdgeInsets.only(top: 50),
@@ -277,7 +277,7 @@ class ProfilePreview extends ConsumerWidget {
                         ),
                       ),
                     for (int index = 0; index < user.websites!.length; index++)
-                      customProfilePreviewLinks(index,
+                      customWebsitePreview(index,
                           website: user.websites![index]),
                     const SizedBox(
                       height: 30,
@@ -418,15 +418,17 @@ class ProfilePreview extends ConsumerWidget {
   Widget profileVideo({required BuildContext context, required Link video}) {
     final videoUrl = video.link;
 
-    final ytController = YoutubePlayerController.fromVideoId(videoId: YoutubePlayerController.convertUrlToId(videoUrl ?? '')!,autoPlay: false,
-    params: const YoutubePlayerParams(enableJavaScript: true,
-  
-      loop: true,
-      mute: false,
-      showControls: true,
-      showFullscreenButton: true,
-    ),
-  );
+    final ytController = YoutubePlayerController.fromVideoId(
+      videoId: YoutubePlayerController.convertUrlToId(videoUrl ?? '')!,
+      autoPlay: false,
+      params: const YoutubePlayerParams(
+        enableJavaScript: true,
+        loop: true,
+        mute: false,
+        showControls: true,
+        showFullscreenButton: true,
+      ),
+    );
 
     return Padding(
       padding: const EdgeInsets.only(right: 16),
@@ -458,9 +460,9 @@ class ProfilePreview extends ConsumerWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
                 child: YoutubePlayer(
-                controller: ytController,
-                aspectRatio: 16 / 9,
-              ),
+                  controller: ytController,
+                  aspectRatio: 16 / 9,
+                ),
               ),
             ),
           ),
@@ -469,7 +471,46 @@ class ProfilePreview extends ConsumerWidget {
     );
   }
 
-  Padding customProfilePreviewLinks(int index, {Link? social, Link? website}) {
+  Padding customSocialPreview(int index, {Link? social}) {
+    log('Icons: ${svgIcons[index]}');
+    return Padding(
+      padding: const EdgeInsets.only(top: 15),
+      child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: const Color(0xFFF2F2F2),
+          ),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 10, right: 10, top: 5, bottom: 5),
+                child: Align(
+                    alignment: Alignment.topCenter,
+                    widthFactor: 1.0,
+                    child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white,
+                        ),
+                        width: 42,
+                        height: 42,
+                        child: SvgIcon(
+                          assetName: svgIcons[index],
+                          color: Color(0xFFE30613),
+                        ))),
+              ),
+              Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                  child: Text('${social?.link}')),
+            ],
+          )),
+    );
+  }
+
+  Padding customWebsitePreview(int index, {Link? website}) {
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: Container(
@@ -493,26 +534,34 @@ class ProfilePreview extends ConsumerWidget {
                       ),
                       width: 42,
                       height: 42,
-                      child: social != null
-                          ? SvgIcon(
-                              assetName: svgIcons[index],
-                              color: const Color(0xFF004797),
-                            )
-                          : Icon(
-                              Icons.language,
-                              color: Color(0xFFE30613),
-                            )),
+                      child: Icon(
+                        Icons.language,
+                        color: Color(0xFFE30613),
+                      )),
                 ),
               ),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                  child: social != null
-                      ? Text('${social.link}')
-                      : Text('${website!.link}')),
+              GestureDetector(
+                onTap: () {
+                  if (website != null) {
+                    launchUrl(Uri.parse(website.link ?? ''));
+                  }
+                },
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 15),
+                    child: Text('${website!.link}')),
+              ),
             ],
           )),
     );
+  }
+}
+
+void _launchURL(String url) async {
+  try {
+    await launchUrl(Uri.parse(url));
+  } catch (e) {
+    print(e);
   }
 }
 

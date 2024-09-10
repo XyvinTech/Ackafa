@@ -24,12 +24,10 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
   List<MessageModel> messages = [];
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = ScrollController();
-  late final webSocketClient;
+
   @override
   void initState() {
     super.initState();
-    webSocketClient = ref.read(socketIoClientProvider);
-    webSocketClient.connect(widget.receiver.id, widget.sender.id);
     getMessageHistory();
   }
 
@@ -43,7 +41,6 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
   @override
   void dispose() {
     focusNode.unfocus();
-    webSocketClient.disconnect();
     _controller.dispose();
     _scrollController.dispose();
     focusNode.dispose();
@@ -58,13 +55,13 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
       );
       setMessage("sent", _controller.text, widget.sender.id!);
       _controller.clear();
-      if (mounted) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
+      // if (mounted) {
+      //   _scrollController.animateTo(
+      //     _scrollController.position.maxScrollExtent,
+      //     duration: Duration(milliseconds: 300),
+      //     curve: Curves.easeOut,
+      //   );
+      // }
     }
   }
 
@@ -83,6 +80,25 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Listen to new messages from the socket stream
+    final messageStream = ref.watch(messageStreamProvider);
+
+    messageStream.whenData((newMessage) {
+      // If a new message is received, add it to the list
+      setState(() {
+        messages.add(newMessage);
+      });
+
+      // Scroll to the bottom to show the new message
+      // if (mounted) {
+      //   _scrollController.animateTo(
+      //     _scrollController.position.maxScrollExtent,
+      //     duration: Duration(milliseconds: 300),
+      //     curve: Curves.easeOut,
+      //   );
+      // }
+    });
+
     return Stack(
       children: [
         Scaffold(
@@ -141,8 +157,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                 children: [
                   Expanded(
                     child: ListView.builder(
-                      reverse:
-                          true, // This makes the list start from the bottom
+                      reverse: true,
                       controller: _scrollController,
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
@@ -263,9 +278,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                       show = false;
                     });
                   } else {
-                    // Unfocus without immediately popping
                     focusNode.unfocus();
-                    // Delay popping to allow unfocus to complete
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       if (Navigator.canPop(context)) {
                         Navigator.pop(context);
