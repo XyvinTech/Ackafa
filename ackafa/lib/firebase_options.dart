@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1085720545332',
     projectId: 'ackaf-9318f',
     storageBucket: 'ackaf-9318f.appspot.com',
-    iosBundleId: 'com.example.ackaf',
+    iosBundleId: 'com.skybertech.ackaf',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1085720545332',
     projectId: 'ackaf-9318f',
     storageBucket: 'ackaf-9318f.appspot.com',
-    iosBundleId: 'com.example.ackaf',
+    iosBundleId: 'com.skybertech.ackaf',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
