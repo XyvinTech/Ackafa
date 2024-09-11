@@ -75,14 +75,17 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                 minHeight: 16,
                               ),
                               child: Center(
-                                child: Text(
-                                  '${chats[index].unreadCount?[sender!.id] ?? ''}',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
+                                child: chats[index].unreadCount?[sender!.id] !=
+                                        null
+                                    ? Text(
+                                        '${chats[index].unreadCount?[sender!.id]}',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      )
+                                    : null,
                               ),
                             ),
                           )

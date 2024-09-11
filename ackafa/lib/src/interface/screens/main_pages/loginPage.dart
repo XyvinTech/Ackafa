@@ -211,7 +211,7 @@ class PhoneNumberScreen extends ConsumerWidget {
         if (verificationId != null && verificationId.isNotEmpty) {
           log('Otp Sent successfully');
           onNext();
-          Navigator.of(context).push(MaterialPageRoute(
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => OTPScreen(
               phone: _mobileController.text,
               verificationId: verificationId,
