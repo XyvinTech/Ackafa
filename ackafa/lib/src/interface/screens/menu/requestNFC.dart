@@ -35,13 +35,6 @@ class RequestNFCPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Justo facilisis mattis tincidunt vitae quam quis. Nec nisi duis amet aenean arcu tristique et et eleifend.',
-              style: TextStyle(
-                fontSize: 13,
-                color: Color(0xFF828282),
-              ),
-            ),
             SizedBox(height: 24),
             Center(
               child: Image.asset(

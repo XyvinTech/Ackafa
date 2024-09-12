@@ -172,7 +172,7 @@ class MyEventsPage extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        'Lorem ipsum dolor sit amet consectetur. Justo facilisis mattis tincidunt vitae quam quis. Nec nisi duis amet aenean arcu tristique et et eleifend.',
+                     event.description??'',
                         style: TextStyle(fontSize: 14),
                       ),
                     ),

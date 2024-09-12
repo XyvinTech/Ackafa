@@ -6,7 +6,7 @@ import 'package:ackaf/src/data/models/feed_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_api.g.dart';
 
-const String baseUrl = 'http://3.108.205.101:3000/api/v1';
+const String baseUrl = 'https://akcafconnect.com/api/v1';
 @riverpod
 Future<List<Feed>> fetchFeeds(FetchFeedsRef ref,
     {int pageNo = 1, int limit = 10}) async {

@@ -12,12 +12,12 @@ import 'package:flutter_upgrade_version/flutter_upgrade_version.dart';
 
 Future<void> checkAppVersion(context) async {
   final response = await http
-      .get(Uri.parse('http://3.108.205.101:3000/api/v1/user/app-version'));
+      .get(Uri.parse('https://akcafconnect.com/api/v1/user/app-version'));
 
   if (response.statusCode == 200) {
     final jsonResponse = json.decode(response.body);
     final appVersionResponse = AppVersionResponse.fromJson(jsonResponse);
-    isPaymentEnabled = appVersionResponse.isPaymentEnabled??true;
+    isPaymentEnabled = appVersionResponse.isPaymentEnabled ?? true;
 
     await checkForUpdate(appVersionResponse, context);
   } else {
