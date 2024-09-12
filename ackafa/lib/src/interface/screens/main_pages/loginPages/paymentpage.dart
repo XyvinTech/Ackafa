@@ -103,27 +103,25 @@ class PaymentConfirmationPage extends StatelessWidget {
               // Continue to Payment Button
               Consumer(
                 builder: (context, ref, child) {
-                  if(isPaymentEnabled) {
+                  if (isPaymentEnabled) {
                     return customButton(
-                      label: 'Continue to Payment',
-                      onPressed: () async {
-                        ApiRoutes userApi = ApiRoutes();
-                        String? paymentUrl = await userApi.makePayment();
-                        if (paymentUrl != null) {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PaymentWebView(
-                                    paymentUrl: paymentUrl,
-                                  )));
-                       
-                        }
-                      },
-                      fontSize: 16);
-                  }
-                  else{
-               return     customButton(
-                                    label: 'COMING SOON',
-                                    onPressed: () async {},
-                                    fontSize: 16);
+                        label: 'Continue to Payment',
+                        onPressed: () async {
+                          ApiRoutes userApi = ApiRoutes();
+                          String? paymentUrl = await userApi.makePayment();
+                          if (paymentUrl != null) {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => PaymentWebView(
+                                      paymentUrl: paymentUrl,
+                                    )));
+                          }
+                        },
+                        fontSize: 16);
+                  } else {
+                    return customButton(
+                        label: 'COMING SOON',
+                        onPressed: () async {},
+                        fontSize: 16);
                   }
                 },
               ),
