@@ -54,8 +54,8 @@ class SocketIoClient {
       log(data.toString());
       print("im inside event listener");
       print('Received message: $data');
+      log(' Received message${data.toString()}');
       final messageModel = MessageModel.fromJson(data);
-      log(messageModel.toString());
 
       // Invalidate the fetchChatThreadProvider when a new message is received
       ref.invalidate(fetchChatThreadProvider);
@@ -95,7 +95,7 @@ class SocketIoClient {
 }
 
 Future<void> sendChatMessage(
-    {required String userId, required String content}) async {
+    {required String userId, required String content, String? feedId}) async {
   final url =
       Uri.parse('http://3.108.205.101:3000/api/v1/chat/send-message/$userId');
   final headers = {
@@ -103,10 +103,8 @@ Future<void> sendChatMessage(
     'Authorization': 'Bearer $token',
     'Content-Type': 'application/json',
   };
-  final body = jsonEncode({
-    'content': content,
-    'isGroup': false,
-  });
+  final body =
+      jsonEncode({'content': content, 'isGroup': false, 'feed': feedId});
 
   try {
     final response = await http.post(

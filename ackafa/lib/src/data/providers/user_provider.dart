@@ -22,7 +22,7 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
     }
   }
 
-  Future<void> refreshUser() async {
+  Future<UserModel?> refreshUser() async {
     // Instead of setting state to loading, use AsyncValue.guard
     state = await AsyncValue.guard(() async {
       final user = await ref.read(fetchUserDetailsProvider.future);
@@ -113,7 +113,7 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
       List<Link> socialmedias, String platform, String newUrl) {
     if (platform.isNotEmpty) {
       final index = socialmedias.indexWhere((item) => item.name == platform);
-
+      log('platform:$platform');
       if (index != -1) {
         if (newUrl.isNotEmpty) {
           // Update the existing social media link

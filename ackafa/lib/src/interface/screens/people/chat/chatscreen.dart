@@ -55,13 +55,6 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
       );
       setMessage("sent", _controller.text, widget.sender.id!);
       _controller.clear();
-      // if (mounted) {
-      //   _scrollController.animateTo(
-      //     _scrollController.position.maxScrollExtent,
-      //     duration: Duration(milliseconds: 300),
-      //     curve: Curves.easeOut,
-      //   );
-      // }
     }
   }
 
@@ -80,23 +73,18 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Listen to new messages from the socket stream
     final messageStream = ref.watch(messageStreamProvider);
 
     messageStream.whenData((newMessage) {
-      // If a new message is received, add it to the list
-      setState(() {
-        messages.add(newMessage);
-      });
+      bool messageExists = messages.any((message) =>
+          message.createdAt == newMessage.createdAt &&
+          message.content == newMessage.content);
 
-      // Scroll to the bottom to show the new message
-      // if (mounted) {
-      //   _scrollController.animateTo(
-      //     _scrollController.position.maxScrollExtent,
-      //     duration: Duration(milliseconds: 300),
-      //     curve: Curves.easeOut,
-      //   );
-      // }
+      if (!messageExists) {
+        setState(() {
+          messages.add(newMessage);
+        });
+      }
     });
 
     return Stack(
@@ -142,7 +130,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                   ],
                 ),
                 title: Text(
-                  '${widget.receiver.name?.first}  ${widget.receiver.name?.middle} ${widget.receiver.name?.last}',
+                  '${widget.receiver.name?.first}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last}',
                   style: TextStyle(fontSize: 18),
                 ),
                 actions: [
@@ -166,6 +154,8 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                             index]; // Reverse the index to get the latest message first
                         if (message.from == widget.sender.id) {
                           return OwnMessageCard(
+                            status: message.status!,
+                            feed: message.feed,
                             message: message.content ?? '',
                             time: DateFormat('h:mm a').format(
                               DateTime.parse(message.createdAt.toString())

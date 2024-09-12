@@ -65,7 +65,7 @@ class CustomTextFormField extends StatelessWidget {
   final VoidCallback? onTap;
   final FormFieldValidator<String>? validator;
   final VoidCallback? onChanged;
-
+  final bool? enabled;
   const CustomTextFormField({
     Key? key,
     required this.labelText,
@@ -76,14 +76,14 @@ class CustomTextFormField extends StatelessWidget {
     this.suffixIcon,
     required this.textController,
     this.validator,
-    this.onChanged,
+    this.onChanged, this.enabled,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        return TextFormField(
+        return TextFormField(enabled:enabled,
           onChanged: (value) {
             switch (labelText) {
               case 'Enter your First name':

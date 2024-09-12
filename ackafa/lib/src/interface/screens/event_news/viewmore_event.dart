@@ -196,7 +196,15 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                // Map Placeholder
+                if (widget.event.venue != null)
+                  Text(
+                    widget.event.venue ?? '',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                const SizedBox(height: 8),
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
