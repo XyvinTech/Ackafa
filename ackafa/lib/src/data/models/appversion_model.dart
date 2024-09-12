@@ -5,12 +5,14 @@ class AppVersionResponse {
   final bool force;
   final String applink;
   final String updateMessage;
+  final bool? isPaymentEnabled;
 
-  AppVersionResponse({
+  AppVersionResponse( {
     required this.version,
     required this.force,
     required this.applink,
     required this.updateMessage,
+    this.isPaymentEnabled
   });
 
   factory AppVersionResponse.fromJson(Map<String, dynamic> json) {
@@ -21,6 +23,8 @@ class AppVersionResponse {
       force: platform['force'],
       applink: platform['applink'],
       updateMessage: platform['updateMessage'],
+      isPaymentEnabled: platform['paymentEnabled'],
+      
     );
   }
 }

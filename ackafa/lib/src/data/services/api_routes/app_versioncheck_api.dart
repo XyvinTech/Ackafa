@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/appversion_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_upgrade_version/flutter_upgrade_version.dart';
@@ -15,6 +17,7 @@ Future<void> checkAppVersion(context) async {
   if (response.statusCode == 200) {
     final jsonResponse = json.decode(response.body);
     final appVersionResponse = AppVersionResponse.fromJson(jsonResponse);
+    isPaymentEnabled = appVersionResponse.isPaymentEnabled??true;
 
     await checkForUpdate(appVersionResponse, context);
   } else {

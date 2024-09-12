@@ -24,7 +24,6 @@ class ApiRoutes {
       required String? emailId,
       required String? college,
       required String? batch,
-      required String? course,
       required context}) async {
     final url = Uri.parse('http://3.108.205.101:3000/api/v1/user/update');
 
@@ -44,7 +43,6 @@ class ApiRoutes {
         "image": profileUrl,
         "email": emailId,
         "college": college,
-        "course": course.toString(),
         "batch": batch,
       }),
     );

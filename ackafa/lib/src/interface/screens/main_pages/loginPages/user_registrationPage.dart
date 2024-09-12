@@ -116,7 +116,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
         final asyncUser = ref.watch(userProvider);
         return asyncUser.when(
           data: (user) {
-            if (user.course == null) {
+            if (user.batch == null) {
               return SafeArea(
                 child: Consumer(
                   builder: (context, ref, child) {
@@ -465,74 +465,6 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                     );
                                                   },
                                                 ),
-                                                const SizedBox(height: 20.0),
-                                                FormField<Course>(
-                                                  validator: (value) {
-                                                    if (selectedCourse ==
-                                                        null) {
-                                                      return 'Please select a course';
-                                                    }
-                                                    return null;
-                                                  },
-                                                  builder:
-                                                      (FormFieldState<Course>
-                                                          state) {
-                                                    return Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        CustomDropdownButton<
-                                                            Course>(
-                                                          labelText:
-                                                              'Select Course',
-                                                          items: selectedCollegeIndex !=
-                                                                  -1
-                                                              ? colleges[
-                                                                      selectedCollegeIndex!]
-                                                                  .course!
-                                                                  .map(
-                                                                      (course) {
-                                                                  return DropdownMenuItem<
-                                                                      Course>(
-                                                                    value:
-                                                                        course, // Store the entire Course object as value
-                                                                    child: Text(course
-                                                                        .courseName
-                                                                        .toString()),
-                                                                  );
-                                                                }).toList()
-                                                              : [],
-                                                          value: selectedCourse,
-                                                          onChanged:
-                                                              (Course? value) {
-                                                            setState(() {
-                                                              selectedCourse =
-                                                                  value; // Update the selected course
-                                                              selectedCourseId =
-                                                                  value?.id;
-                                                              state.didChange(
-                                                                  value); // Notify the form field of the change
-                                                            });
-                                                          },
-                                                        ),
-                                                        if (state.hasError)
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    top: 8.0),
-                                                            child: Text(
-                                                              state.errorText!,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .red),
-                                                            ),
-                                                          ),
-                                                      ],
-                                                    );
-                                                  },
-                                                ),
                                               ],
                                             ),
                                           ),
@@ -584,8 +516,6 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                         college:
                                                             selectedCollegeId,
                                                         batch: selectedBatch,
-                                                        course:
-                                                            selectedCourseId,
                                                         context: context);
 
                                                     if (response) {
