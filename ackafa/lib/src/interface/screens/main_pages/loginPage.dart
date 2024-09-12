@@ -152,7 +152,7 @@ class PhoneNumberScreen extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildbutton(label: 'ABC', model: ''),
+                        _buildbutton(label: '   ', model: ''),
                         _buildbutton(label: '0', model: 'mobile'),
                         _buildbutton(
                             label: 'back',
@@ -385,7 +385,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildbutton(label: 'ABC', model: ''),
+                        _buildbutton(label: '   ', model: ''),
                         _buildbutton(label: '0', model: 'otp'),
                         _buildbutton(
                             label: 'back',
