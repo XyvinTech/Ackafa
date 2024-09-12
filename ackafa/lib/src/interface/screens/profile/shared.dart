@@ -125,17 +125,7 @@ class ProfilePage extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Icon(Icons.location_on, color: Colors.blue),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            'Lorem ipsum dolor sit amet consectetur. Viverra sed posuere placerat est donec.',
-                          ),
-                        ),
-                      ],
-                    ),
+                  
                   ],
                 ),
               ),

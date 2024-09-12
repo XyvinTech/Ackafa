@@ -112,7 +112,7 @@ class ProfilePreview extends ConsumerWidget {
                             : const Icon(Icons.person),
                         const SizedBox(height: 10),
                         Text(
-                          '${user.name!.first} ${user.name!.middle} ${user.name!.last}',
+                          '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
                           style: const TextStyle(
                             color: Color(0xFF2C2829),
                             fontSize: 20,
@@ -475,18 +475,69 @@ class ProfilePreview extends ConsumerWidget {
     log('Icons: ${svgIcons[index]}');
     return Padding(
       padding: const EdgeInsets.only(top: 15),
-      child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: const Color(0xFFF2F2F2),
-          ),
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 10, right: 10, top: 5, bottom: 5),
-                child: Align(
+      child: GestureDetector(
+        onTap: () {
+          if (social != null) {
+            _launchURL(social.link ?? '');
+          }
+        },
+        child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: const Color(0xFFF2F2F2),
+            ),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 10, right: 10, top: 5, bottom: 5),
+                  child: Align(
+                      alignment: Alignment.topCenter,
+                      widthFactor: 1.0,
+                      child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                          ),
+                          width: 42,
+                          height: 42,
+                          child: SvgIcon(
+                            assetName: svgIcons[index],
+                            color: Color(0xFFE30613),
+                          ))),
+                ),
+                Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 15),
+                    child: Text('${social?.name}')),
+              ],
+            )),
+      ),
+    );
+  }
+
+  Padding customWebsitePreview(int index, {Link? website}) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 15),
+      child: GestureDetector(
+        onTap: () {
+          if (website != null) {
+            _launchURL(website.link ?? '');
+          }
+        },
+        child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: const Color(0xFFF2F2F2),
+            ),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 10, right: 10, top: 5, bottom: 5),
+                  child: Align(
                     alignment: Alignment.topCenter,
                     widthFactor: 1.0,
                     child: Container(
@@ -496,68 +547,29 @@ class ProfilePreview extends ConsumerWidget {
                         ),
                         width: 42,
                         height: 42,
-                        child: SvgIcon(
-                          assetName: svgIcons[index],
+                        child: Icon(
+                          Icons.language,
                           color: Color(0xFFE30613),
-                        ))),
-              ),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                  child: Text('${social?.link}')),
-            ],
-          )),
-    );
-  }
-
-  Padding customWebsitePreview(int index, {Link? website}) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 15),
-      child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: const Color(0xFFF2F2F2),
-          ),
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 10, right: 10, top: 5, bottom: 5),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  widthFactor: 1.0,
-                  child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
-                      ),
-                      width: 42,
-                      height: 42,
-                      child: Icon(
-                        Icons.language,
-                        color: Color(0xFFE30613),
-                      )),
+                        )),
+                  ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  if (website != null) {
-                    launchUrl(Uri.parse(website.link ?? ''));
-                  }
-                },
-                child: Padding(
+                Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 15),
-                    child: Text('${website!.link}')),
-              ),
-            ],
-          )),
+                    child: Text('${website!.name}')),
+              ],
+            )),
+      ),
     );
   }
 }
 
 void _launchURL(String url) async {
+  // Check if the URL starts with 'http://' or 'https://', if not add 'http://'
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    url = 'http://' + url;
+  }
+
   try {
     await launchUrl(Uri.parse(url));
   } catch (e) {

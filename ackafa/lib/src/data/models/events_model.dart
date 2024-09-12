@@ -55,27 +55,28 @@ class Event {
   final DateTime? updatedAt;
   final int? v;
   final String? organiser;
+  final String? description;
 
-  Event({
-    this.id,
-    this.eventName,
-    this.type,
-    this.image,
-    this.startDate,
-    this.startTime,
-    this.endDate,
-    this.endTime,
-    this.platform,
-    this.link,
-    this.venue,
-    this.speakers,
-    this.status,
-    this.rsvp,
-    this.createdAt,
-    this.updatedAt,
-    this.v,
-    this.organiser
-  });
+  Event(
+      {this.id,
+      this.eventName,
+      this.type,
+      this.image,
+      this.startDate,
+      this.startTime,
+      this.endDate,
+      this.endTime,
+      this.platform,
+      this.link,
+      this.venue,
+      this.speakers,
+      this.status,
+      this.rsvp,
+      this.createdAt,
+      this.updatedAt,
+      this.v,
+      this.organiser,
+      this.description, });
 
   // fromJson
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -104,6 +105,7 @@ class Event {
           json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
       v: json['__v'] as int?,
       organiser: json['organiserName'] as String?,
+      description: json['description'] as String?
     );
   }
 
@@ -127,7 +129,8 @@ class Event {
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
       '__v': v,
-      'organiserName': organiser
+      'organiserName': organiser,
+      'description': description
     };
   }
 
@@ -151,26 +154,27 @@ class Event {
     DateTime? updatedAt,
     int? v,
     String? organiser,
+    String? description
   }) {
     return Event(
-      id: id ?? this.id,
-      eventName: eventName ?? this.eventName,
-      type: type ?? this.type,
-      image: image ?? this.image,
-      startDate: startDate ?? this.startDate,
-      startTime: startTime ?? this.startTime,
-      endDate: endDate ?? this.endDate,
-      endTime: endTime ?? this.endTime,
-      platform: platform ?? this.platform,
-      link: link ?? this.link,
-      venue: venue ?? this.venue,
-      speakers: speakers ?? this.speakers,
-      status: status ?? this.status,
-      rsvp: rsvp ?? this.rsvp,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      v: v ?? this.v,
-      organiser: organiser??this.organiser
-    );
+        id: id ?? this.id,
+        eventName: eventName ?? this.eventName,
+        type: type ?? this.type,
+        image: image ?? this.image,
+        startDate: startDate ?? this.startDate,
+        startTime: startTime ?? this.startTime,
+        endDate: endDate ?? this.endDate,
+        endTime: endTime ?? this.endTime,
+        platform: platform ?? this.platform,
+        link: link ?? this.link,
+        venue: venue ?? this.venue,
+        speakers: speakers ?? this.speakers,
+        status: status ?? this.status,
+        rsvp: rsvp ?? this.rsvp,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        v: v ?? this.v,
+        organiser: organiser ?? this.organiser,
+        description: description?? this.description);
   }
 }

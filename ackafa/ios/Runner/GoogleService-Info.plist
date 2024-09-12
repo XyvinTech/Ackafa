@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.ackaf</string>
+	<string>com.skybertech.akcaf</string>
 	<key>PROJECT_ID</key>
 	<string>ackaf-9318f</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1085720545332:ios:ed4e498b9b3643f5166261</string>
+	<string>1:1085720545332:ios:cd6e0ceca6b62f09166261</string>
 </dict>
 </plist>

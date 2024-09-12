@@ -283,21 +283,21 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   }
 
   Future<void> _submitData({required UserModel user}) async {
-    String fullName =
-        '${user.name!.first} ${user.name!.middle} ${user.name!.last}';
+    // String fullName =
+    //     '${user.name!.first} ${user.name!.middle} ${user.name!.last}';
 
-    List<String> nameParts = fullName.split(' ');
+    // List<String> nameParts = fullName.split(' ');
 
-    String firstName = nameParts[0];
-    String middleName = nameParts.length > 2 ? nameParts[1] : ' ';
-    String lastName = nameParts.length > 1 ? nameParts.last : ' ';
-    log('company logo:${user.company?.logo ?? ''}');
-    log('middlename :$middleName');
+    // String firstName = nameParts[0];
+    // String middleName = nameParts.length > 2 ? nameParts[1] : ' ';
+    // String lastName = nameParts.length > 1 ? nameParts.last : ' ';
+
     final Map<String, dynamic> profileData = {
       "name": {
-        "first": firstName,
-        "middle": middleName,
-        "last": lastName,
+        "first": user.name!.first,
+        if (user.name?.middle != null && user.name?.middle != '')
+          "middle": user.name?.middle,
+        "last": user.name!.last,
       },
       "email": user.email,
       "image": user.image,
@@ -426,7 +426,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
             data: (user) {
               print(user.name?.first);
               firstNameController.text = user.name!.first!;
-              middleNameController.text = user.name!.middle ?? '';
+              middleNameController.text = user.name?.middle ?? '';
               lastNameController.text = user.name!.last!;
               collegeController.text = user.college?.collegeName ?? '';
               batchController.text = user.batch.toString() ?? '';
@@ -679,12 +679,12 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   ),
                                   const SizedBox(height: 20.0),
                                   CustomTextFormField(
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please Enter your Middle name';
-                                      }
-                                      return null;
-                                    },
+                                    // validator: (value) {
+                                    //   if (value == null || value.isEmpty) {
+                                    //     return 'Please Enter your Middle name';
+                                    //   }
+                                    //   return null;
+                                    // },
                                     textController: middleNameController,
                                     labelText: 'Enter your Middle name',
                                   ),

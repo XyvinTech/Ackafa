@@ -1,20 +1,22 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/appversion_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_upgrade_version/flutter_upgrade_version.dart';
 
 Future<void> checkAppVersion(context) async {
   final response = await http
-      .get(Uri.parse('http://3.108.205.101:3000/api/v1/user/app-version'));
+      .get(Uri.parse('https://akcafconnect.com/api/v1/user/app-version'));
 
   if (response.statusCode == 200) {
     final jsonResponse = json.decode(response.body);
     final appVersionResponse = AppVersionResponse.fromJson(jsonResponse);
+    isPaymentEnabled = appVersionResponse.isPaymentEnabled ?? true;
 
     await checkForUpdate(appVersionResponse, context);
   } else {
@@ -32,22 +34,29 @@ Future<void> checkForUpdate(AppVersionResponse response, context) async {
   }
 }
 
-void showUpdateDialog(AppVersionResponse response, context) {
+
+void showUpdateDialog(AppVersionResponse response, BuildContext context) {
   showDialog(
     context: context,
     barrierDismissible: false, // Make it non-dismissible
-    builder: (context) => AlertDialog(
-      title: Text('Update Required'),
-      content: Text(response.updateMessage),
-      actions: [
-        TextButton(
-          onPressed: () {
-            // Redirect to app store
-            _launchURL(response.applink);
-          },
-          child: Text('Update Now'),
-        ),
-      ],
+    builder: (context) => PopScope(onPopInvoked: (didPop) {
+         SystemNavigator.pop();
+
+    },
+
+      child: AlertDialog(
+        title: Text('Update Required'),
+        content: Text(response.updateMessage),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Redirect to app store
+              _launchURL(response.applink);
+            },
+            child: Text('Update Now'),
+          ),
+        ],
+      ),
     ),
   );
 }

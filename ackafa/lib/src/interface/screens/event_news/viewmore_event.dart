@@ -160,9 +160,8 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
-                  'Lorem ipsum dolor sit amet consectetur. Nunc vivamus vel aliquet lacinia. '
-                  'Ultricies mauris vulputate amet sagittis diam sit neque enim enim.',
+                 Text(
+                 widget.event.description??'',
                   style: TextStyle(fontSize: 16, color: Colors.black87),
                 ),
                 const SizedBox(height: 24),
@@ -196,7 +195,15 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                // Map Placeholder
+                if (widget.event.venue != null)
+                  Text(
+                    widget.event.venue ?? '',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                const SizedBox(height: 8),
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(

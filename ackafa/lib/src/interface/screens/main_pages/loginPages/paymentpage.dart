@@ -1,3 +1,4 @@
+import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
@@ -102,20 +103,26 @@ class PaymentConfirmationPage extends StatelessWidget {
               // Continue to Payment Button
               Consumer(
                 builder: (context, ref, child) {
-                  return customButton(
-                      label: 'Continue to Payment',
-                      onPressed: () async {
-                        ApiRoutes userApi = ApiRoutes();
-                        String? paymentUrl = await userApi.makePayment();
-                        if (paymentUrl != null) {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PaymentWebView(
-                                    paymentUrl: paymentUrl,
-                                  )));
-                       
-                        }
-                      },
-                      fontSize: 16);
+                  if (isPaymentEnabled) {
+                    return customButton(
+                        label: 'Continue to Payment',
+                        onPressed: () async {
+                          ApiRoutes userApi = ApiRoutes();
+                          String? paymentUrl = await userApi.makePayment();
+                          if (paymentUrl != null) {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => PaymentWebView(
+                                      paymentUrl: paymentUrl,
+                                    )));
+                          }
+                        },
+                        fontSize: 16);
+                  } else {
+                    return customButton(
+                        label: 'COMING SOON',
+                        onPressed: () async {},
+                        fontSize: 16);
+                  }
                 },
               ),
               const SizedBox(height: 30), // Bottom padding

@@ -130,7 +130,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                   ],
                 ),
                 title: Text(
-                  '${widget.receiver.name?.first}  ${widget.receiver.name?.middle} ${widget.receiver.name?.last}',
+                  '${widget.receiver.name?.first}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last}',
                   style: TextStyle(fontSize: 18),
                 ),
                 actions: [
@@ -154,6 +154,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                             index]; // Reverse the index to get the latest message first
                         if (message.from == widget.sender.id) {
                           return OwnMessageCard(
+                            status: message.status!,
                             feed: message.feed,
                             message: message.content ?? '',
                             time: DateFormat('h:mm a').format(

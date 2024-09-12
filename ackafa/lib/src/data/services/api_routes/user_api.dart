@@ -13,9 +13,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_api.g.dart';
 
 class ApiRoutes {
-  final String baseUrl = 'http://3.108.205.101:3000/api/v1';
+  final String baseUrl = 'https://akcafconnect.com/api/v1';
 
-  Future<bool> updateUser(
+  Future<bool> registerUser(
       {required String token,
       required String? profileUrl,
       required String? firstName,
@@ -24,9 +24,8 @@ class ApiRoutes {
       required String? emailId,
       required String? college,
       required String? batch,
-      required String? course,
       required context}) async {
-    final url = Uri.parse('http://3.108.205.101:3000/api/v1/user/update');
+    final url = Uri.parse('https://akcafconnect.com/api/v1/user/update');
 
     final response = await http.patch(
       url,
@@ -36,11 +35,14 @@ class ApiRoutes {
         'accept': '*/*',
       },
       body: jsonEncode({
-        "name": {"first": firstName, "middle": middleName, "last": lastName},
+        "name": {
+          "first": firstName,
+          if (middleName != null && middleName != '') "middle": middleName,
+          "last": lastName
+        },
         "image": profileUrl,
         "email": emailId,
         "college": college,
-        "course": course.toString(),
         "batch": batch,
       }),
     );
@@ -218,7 +220,7 @@ class ApiRoutes {
 
   Future<void> uploaPost(
       {required String type,
-      required String media,
+      required String? media,
       required String content}) async {
     final url = Uri.parse('$baseUrl/feeds');
 
@@ -230,7 +232,7 @@ class ApiRoutes {
 
     final body = jsonEncode({
       'type': type,
-      'media': media,
+      if (media != null && media != '') 'media': media,
       'content': content,
     });
 
@@ -441,7 +443,7 @@ class ApiRoutes {
   }
 }
 
-const String baseUrl = 'http://3.108.205.101:3000/api/v1';
+const String baseUrl = 'https://akcafconnect.com/api/v1';
 
 @riverpod
 Future<UserModel> fetchUserDetails(FetchUserDetailsRef ref) async {

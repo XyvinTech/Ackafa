@@ -24,10 +24,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     initialize();
     getToken();
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-  print("New FCM Token: $newToken");
-  // Save or send the new token to your server
-});
-FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("New FCM Token: $newToken");
+      // Save or send the new token to your server
+    });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Received a message in foreground: ${message.notification?.title}');
     });
 
@@ -35,7 +35,9 @@ FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Notification opened: ${message.data}');
     });
 
-    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage? message) {
       if (message != null) {
         print('Notification clicked when app was terminated');
       }
@@ -73,12 +75,34 @@ FirebaseMessaging.onMessage.listen((RemoteMessage message) {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Image.asset(
-          'assets/icons/ackaf_logo.png',
-          scale: 0.7,
-        ),
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Image.asset(
+              'assets/splash2.png',
+              scale: 1,
+            ),
+          ),
+          Center(
+            child: Image.asset(
+              'assets/icons/akcaf_icon.png',
+              scale: 1.2,
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: Image.asset(
+              'assets/splash1.png',
+              scale: 1,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
+
+

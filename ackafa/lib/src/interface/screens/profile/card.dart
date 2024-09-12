@@ -111,11 +111,7 @@ class ProfileCard extends StatelessWidget {
                       children: [
                         Icon(Icons.location_on, color: Color(0xFFAEAAAB)),
                         SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            'Lorem ipsum dolor sit amet consectetur. Viverra sed posuere placerat est donec.',
-                          ),
-                        ),
+                       
                       ],
                     ),
                   ],

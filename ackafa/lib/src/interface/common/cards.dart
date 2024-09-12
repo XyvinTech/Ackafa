@@ -46,16 +46,22 @@ class AwardCard extends StatelessWidget {
                 ),
                 if (onRemove != null)
                   Positioned(
-                    top: 4.0,
+                    top: 10.0,
                     right: 10.0,
                     child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.white,
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: DropDownMenu(onRemove: onRemove!),
+                        child: GestureDetector(
+                          onTap: () {
+                            onRemove!();
+                          },
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.black,
+                            size: 22,
+                          ),
                         )),
                   ),
               ],
@@ -184,49 +190,49 @@ class CertificateCard extends StatelessWidget {
   }
 }
 
-class DropDownMenu extends StatelessWidget {
-  final VoidCallback onRemove;
+// class DropDownMenu extends StatelessWidget {
+//   final VoidCallback onRemove;
 
-  const DropDownMenu({super.key, required this.onRemove});
+//   const DropDownMenu({super.key, required this.onRemove});
 
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButtonHideUnderline(
-      child: DropdownButton2(
-        customButton: const Icon(
-          Icons.more_vert,
-          color: Colors.black,
-          size: 22,
-        ),
-        items: [
-          const DropdownMenuItem<String>(
-            value: 'remove',
-            child: Text(
-              'Remove',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.red,
-              ),
-            ),
-          ),
-        ],
-        onChanged: (value) {
-          if (value == 'remove') {
-            onRemove();
-          }
-        },
-        dropdownStyleData: DropdownStyleData(
-          width: 160,
-          padding: const EdgeInsets.symmetric(vertical: 6),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-        menuItemStyleData: const MenuItemStyleData(
-          height: 48,
-          padding: EdgeInsets.symmetric(horizontal: 16),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return DropdownButtonHideUnderline(
+//       child: DropdownButton2(
+//         customButton: const Icon(
+//           Icons.more_vert,
+//           color: Colors.black,
+//           size: 22,
+//         ),
+//         items: [
+//           const DropdownMenuItem<String>(
+//             value: 'remove',
+//             child: Text(
+//               'Remove',
+//               style: TextStyle(
+//                 fontSize: 14,
+//                 color: Colors.red,
+//               ),
+//             ),
+//           ),
+//         ],
+//         onChanged: (value) {
+//           if (value == 'remove') {
+//             onRemove();
+//           }
+//         },
+//         dropdownStyleData: DropdownStyleData(
+//           width: 160,
+//           padding: const EdgeInsets.symmetric(vertical: 6),
+//           decoration: BoxDecoration(
+//             borderRadius: BorderRadius.circular(10),
+//           ),
+//         ),
+//         menuItemStyleData: const MenuItemStyleData(
+//           height: 48,
+//           padding: EdgeInsets.symmetric(horizontal: 16),
+//         ),
+//       ),
+//     );
+//   }
+// }

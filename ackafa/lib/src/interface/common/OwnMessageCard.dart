@@ -2,17 +2,20 @@ import 'package:ackaf/src/data/models/msg_model.dart';
 import 'package:flutter/material.dart';
 
 class OwnMessageCard extends StatelessWidget {
+
+
   const OwnMessageCard({
     Key? key,
     required this.message,
     required this.time,
+    required this.status,
     this.feed,
   }) : super(key: key);
 
   final String message;
   final String time;
   final ChatFeed? feed;
-
+   final String status;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -75,7 +78,7 @@ class OwnMessageCard extends StatelessWidget {
                     Icon(
                       Icons.done_all,
                       size: 20,
-                      color: Colors.blue[300],
+                      color:status=='seen'? Colors.blue[300]:Colors.grey,
                     ),
                   ],
                 ),
