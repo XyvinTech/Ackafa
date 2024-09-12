@@ -37,8 +37,6 @@ Future<List<Event>> fetchEvents(FetchEventsRef ref) async {
   }
 }
 
-
-
 @riverpod
 Future<List<Event>> fetchMyEvents(FetchMyEventsRef ref) async {
   final url = Uri.parse('$baseUrl/event/reg-events');

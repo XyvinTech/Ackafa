@@ -220,8 +220,7 @@ class EventPage extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Lorem ipsum dolor sit amet consectetur. Quis enim nisl ullamcorper tristique integer orci nunc in eget. '
-                    'Amet hac bibendum dignissim eget pretium turpis in non cum.',
+                  event.description??'',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey,

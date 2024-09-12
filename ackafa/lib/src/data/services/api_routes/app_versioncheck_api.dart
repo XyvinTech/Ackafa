@@ -17,7 +17,7 @@ Future<void> checkAppVersion(context) async {
   if (response.statusCode == 200) {
     final jsonResponse = json.decode(response.body);
     final appVersionResponse = AppVersionResponse.fromJson(jsonResponse);
-    isPaymentEnabled = appVersionResponse.isPaymentEnabled??true;
+    isPaymentEnabled = appVersionResponse.isPaymentEnabled ?? true;
 
     await checkForUpdate(appVersionResponse, context);
   } else {
