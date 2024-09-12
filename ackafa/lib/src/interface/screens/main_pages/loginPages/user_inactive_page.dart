@@ -7,15 +7,9 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 class UserInactivePage extends ConsumerWidget {
   const UserInactivePage({super.key});
 
-  Future<void> _refreshUser(WidgetRef ref, BuildContext context) async {
-    final user = await ref.read(userProvider.notifier).refreshUser();
-    if (user?.status == 'awaiting_payment') {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => PaymentConfirmationPage()),
-      );
-    }
-  }
+
+
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,7 +18,7 @@ class UserInactivePage extends ConsumerWidget {
       body: RefreshIndicator(
         backgroundColor: Colors.white,
         color: Colors.red,
-        onRefresh: () async => _refreshUser(ref, context),
+        onRefresh: () async =>      ref.invalidate(userProvider),
         child: ListView(
           children: [
             SizedBox(
