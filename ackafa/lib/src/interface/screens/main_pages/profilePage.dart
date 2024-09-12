@@ -152,7 +152,7 @@ class ProfilePage extends StatelessWidget {
                                       : Icon(Icons.person),
                                   const SizedBox(height: 10),
                                   Text(
-                                    '${user.name!.first} ${user.name!.middle} ${user.name!.last}',
+                        '${user.name!.first!} ${user.name?.middle??''} ${user.name!.last!}',
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,

@@ -333,9 +333,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
           },
           loading: () => ReusableFeedPostSkeleton(),
           error: (error, stackTrace) {
-            return Center(
-              child: Text('Error loading promotions: $error'),
-            );
+            return ReusableFeedPostSkeleton();
           },
         );
       },
@@ -600,7 +598,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${user.name?.first} ${user.name?.middle} ${user.name?.last}',
+              '${user.name?.first} ${user.name?.middle ?? ''} ${user.name?.last}',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
             ),
             if (user.company?.name != null)
@@ -636,10 +634,11 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
               icon: Icon(FontAwesomeIcons.comment),
               onPressed: _openCommentModal,
             ),
-            IconButton(
-              icon: Icon(Icons.arrow_forward),
-              onPressed: () => widget.onShare(), // External share handler
-            ),
+            if (widget.feed.author != id)
+              IconButton(
+                icon: Icon(Icons.arrow_forward),
+                onPressed: () => widget.onShare(), // External share handler
+              ),
           ],
         ),
         Text('${widget.feed.likes?.length ?? 0} Likes')

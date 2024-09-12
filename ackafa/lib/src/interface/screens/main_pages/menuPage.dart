@@ -269,7 +269,7 @@ class MenuPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${user.name!.first!} ${user.name!.middle!} ${user.name!.last!}',
+                                  '${user.name!.first!} ${user.name?.middle??''} ${user.name!.last!}',
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,

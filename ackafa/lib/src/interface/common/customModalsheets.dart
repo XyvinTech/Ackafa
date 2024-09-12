@@ -27,7 +27,7 @@ void feedModalSheet({
   required BuildContext context,
   required VoidCallback onButtonPressed,
   required String buttonText,
-  required Feed feed ,
+  required Feed feed,
   required Participant sender,
   required Participant receiver,
   // Made imageUrl optional
@@ -47,18 +47,19 @@ void feedModalSheet({
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Conditionally render the image
-              if (feed.media != null && feed.media!='')
+              if (feed.media != null && feed.media != '')
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(20.0)),
                   child: Image.network(
-                    feed.media !,
+                    feed.media!,
                     width: double.infinity,
                     height: 200, // Adjust the height as needed
                     fit: BoxFit.cover,
                   ),
                 ),
               // Add spacing only if image is displayed
-              if (feed.media != null && feed.media!='')
+              if (feed.media != null && feed.media != '')
                 const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -67,15 +68,15 @@ void feedModalSheet({
                     return customButton(
                       label: buttonText,
                       onPressed: () async {
-                            await sendChatMessage(
-                                userId: feed.author!,
-                                content: feed.content!,
-                                feedId: feed.id);
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => IndividualPage(
-                                      receiver: receiver,
-                                      sender: sender,
-                                    )));
+                        await sendChatMessage(
+                            userId: feed.author!,
+                            content: feed.content!,
+                            feedId: feed.id);
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => IndividualPage(
+                                  receiver: receiver,
+                                  sender: sender,
+                                )));
                       },
                       fontSize: 16,
                     );
@@ -115,7 +116,6 @@ void feedModalSheet({
     },
   );
 }
-
 
 void showWebsiteSheet({
   required VoidCallback addWebsite,
@@ -172,12 +172,7 @@ void showWebsiteSheet({
                   ModalSheetTextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Enter a valid website';
-                      }
-
-                      bool? result = isValidUrl(value);
-                      if (!result!) {
-                        return 'Enter a valid website';
+                        return 'Enter a website';
                       }
 
                       return null;
@@ -1167,7 +1162,7 @@ class ShowAddPostSheet extends StatefulWidget {
 class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
   String? selectedType;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  String? mediaUrl;
   @override
   Widget build(BuildContext context) {
     ApiRoutes api = ApiRoutes();
@@ -1220,12 +1215,6 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
                 const SizedBox(height: 20),
                 FormField<File>(
                   initialValue: widget.postImage,
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Please upload an image';
-                    }
-                    return null;
-                  },
                   builder: (FormFieldState<File> state) {
                     return Column(
                       children: [
@@ -1311,14 +1300,17 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       print(selectedType);
-                      final mediaUrl = await imageUpload(
-                          basename(widget.postImage!.path),
-                          widget.postImage!.path);
+                      if (widget.postImage != null) {
+                        mediaUrl = await imageUpload(
+                            basename(widget.postImage!.path),
+                            widget.postImage!.path);
+                      }
                       api.uploaPost(
                         type: selectedType ?? '',
                         media: mediaUrl,
                         content: widget.textController.text,
                       );
+
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

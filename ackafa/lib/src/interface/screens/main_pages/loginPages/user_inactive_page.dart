@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/paymentpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -21,15 +22,21 @@ class _UserInactivePageState extends ConsumerState<UserInactivePage> {
     _startPeriodicRefresh();
   }
 
-  void _startPeriodicRefresh() {
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      ref.read(userProvider.notifier).refreshUser();
+  void _startPeriodicRefresh() async {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+      final user = await ref.read(userProvider.notifier).refreshUser();
+      if (user?.status == 'awaiting_payment') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => PaymentConfirmationPage()),
+        );
+      }
     });
   }
 
   @override
   void dispose() {
-    _timer?.cancel();  // Cancel the timer when the widget is disposed
+    _timer?.cancel(); // Cancel the timer when the widget is disposed
     super.dispose();
   }
 

@@ -22,7 +22,7 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
     }
   }
 
-  Future<void> refreshUser() async {
+  Future<UserModel?> refreshUser() async {
     // Instead of setting state to loading, use AsyncValue.guard
     state = await AsyncValue.guard(() async {
       final user = await ref.read(fetchUserDetailsProvider.future);

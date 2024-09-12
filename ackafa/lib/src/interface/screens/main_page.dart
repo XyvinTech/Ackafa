@@ -53,14 +53,20 @@ class IconResolver extends StatelessWidget {
   }
 }
 
-class MainPage extends StatefulWidget {
+class MainPage extends ConsumerStatefulWidget {
   const MainPage({super.key});
 
   @override
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends ConsumerState<MainPage> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(userProvider.notifier).refreshUser();
+  }
+
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[];
@@ -77,7 +83,9 @@ class _MainPageState extends State<MainPage> {
     _widgetOptions = <Widget>[
       // HomePage(),
       // FeedPage(),
-      HomePage(user:  user,),
+      HomePage(
+        user: user,
+      ),
       FeedView(),
       ProfilePage(user: user),
       Event_News_Page(),
@@ -96,11 +104,12 @@ class _MainPageState extends State<MainPage> {
       'assets/icons/home_active.svg',
       'assets/icons/feed_active.svg',
       user.image!,
-      'assets/icons/news_active.svg',
+      'assets/icons/active_event.svg',
       'assets/icons/people_active.svg',
     ];
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString('id', user.id ?? '');
+    preferences.setString('id', user.id!);
+    id = preferences.getString('id') ?? '';
     log('main page user id:$id');
   }
 

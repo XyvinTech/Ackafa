@@ -297,13 +297,13 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                 ),
                                                 const SizedBox(height: 20.0),
                                                 CustomTextFormField(
-                                                    validator: (value) {
-                                                      if (value == null ||
-                                                          value.isEmpty) {
-                                                        return 'Please Enter your Middle name';
-                                                      }
-                                                      return null;
-                                                    },
+                                                    // validator: (value) {
+                                                    //   if (value == null ||
+                                                    //       value.isEmpty) {
+                                                    //     return 'Please Enter your Middle name';
+                                                    //   }
+                                                    //   return null;
+                                                    // },
                                                     textController:
                                                         middleNameController,
                                                     labelText:
@@ -566,7 +566,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                     print(profileImageUrl);
                                                     log(token);
 
-                                                    final response = await userApi.updateUser(
+                                                    final response = await userApi.registerUser(
                                                         token: token,
                                                         profileUrl:
                                                             profileImageUrl,
@@ -592,17 +592,28 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                       log('user status: ${user.status}');
                                                       if (user.status ==
                                                           'active') {
-                                                        Navigator.of(context).pushReplacement(
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        ProfileCompletionScreen()));
+                                                        Navigator.of(context)
+                                                            .pushReplacement(
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            ProfileCompletionScreen()));
+                                                      } else if (user.status ==
+                                                          'awaiting_payment') {
+                                                        log('im in payment condition ok');
+                                                        Navigator.of(context)
+                                                            .pushReplacement(
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            PaymentConfirmationPage()));
                                                       } else {
-                                                        Navigator.of(context).pushReplacement(
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        UserInactivePage()));
+                                                        Navigator.of(context)
+                                                            .pushReplacement(
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            UserInactivePage()));
                                                       }
                                                     }
                                                   } catch (e) {
@@ -633,10 +644,13 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
               // } else if (user.status == 'accepted') {
               //   return DetailsPage();
             } else if (user.status == 'active') {
+              log('im in active condition');
               return ProfileCompletionScreen();
             } else if (user.status == 'inactive') {
+              log('im in inactive condition');
               return const UserInactivePage();
             } else {
+              log('im in payment condition');
               return PaymentConfirmationPage();
             }
           },

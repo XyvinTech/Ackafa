@@ -15,7 +15,7 @@ part 'user_api.g.dart';
 class ApiRoutes {
   final String baseUrl = 'http://3.108.205.101:3000/api/v1';
 
-  Future<bool> updateUser(
+  Future<bool> registerUser(
       {required String token,
       required String? profileUrl,
       required String? firstName,
@@ -36,7 +36,11 @@ class ApiRoutes {
         'accept': '*/*',
       },
       body: jsonEncode({
-        "name": {"first": firstName, "middle": middleName, "last": lastName},
+        "name": {
+          "first": firstName,
+          if (middleName != null && middleName != '') "middle": middleName,
+          "last": lastName
+        },
         "image": profileUrl,
         "email": emailId,
         "college": college,
@@ -218,7 +222,7 @@ class ApiRoutes {
 
   Future<void> uploaPost(
       {required String type,
-      required String media,
+      required String? media,
       required String content}) async {
     final url = Uri.parse('$baseUrl/feeds');
 
@@ -230,7 +234,7 @@ class ApiRoutes {
 
     final body = jsonEncode({
       'type': type,
-      'media': media,
+      if (media != null && media != '') 'media': media,
       'content': content,
     });
 

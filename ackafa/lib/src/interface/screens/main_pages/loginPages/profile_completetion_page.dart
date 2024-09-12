@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
@@ -6,6 +9,7 @@ import 'package:ackaf/src/interface/screens/main_pages/loginPages/demopage.dart'
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileCompletionScreen extends StatelessWidget {
   ProfileCompletionScreen({super.key});
@@ -47,7 +51,10 @@ class ProfileCompletionScreen extends StatelessWidget {
                             width: double.infinity,
                             child: customButton(
                                 label: 'Next',
-                                onPressed: () {
+                                onPressed: () async {
+                                  SharedPreferences preferences =
+                                      await SharedPreferences.getInstance();
+                                  preferences.setString('id', user.id ?? '');
                                   Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(
                                           builder: (context) => DetailsPage()));
@@ -55,9 +62,12 @@ class ProfileCompletionScreen extends StatelessWidget {
                                 fontSize: 16)),
                       ),
                       TextButton(
-                        onPressed: () {
-                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-    MainPage()), (Route<dynamic> route) => false);
+                        onPressed: () async {
+                          log('PROFFFFFFFFFFFFFFFIIIIIIILLLLLLLLE COMPLEEEEEEEEEEEEETIONNNNNN${user.id}');
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => MainPage()),
+                              (Route<dynamic> route) => false);
                         },
                         child: const Text('Skip',
                             style:
