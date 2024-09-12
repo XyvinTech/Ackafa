@@ -119,7 +119,7 @@ class PhoneNumberScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  'We will send you the 4 digit Verification code',
+                  'We will send you the 5 digit Verification code',
                   style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
                 ),
                 const Spacer(),
