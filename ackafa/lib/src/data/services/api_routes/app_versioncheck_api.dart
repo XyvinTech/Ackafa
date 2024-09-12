@@ -38,7 +38,7 @@ Future<void> checkForUpdate(AppVersionResponse response, context) async {
 void showUpdateDialog(AppVersionResponse response, BuildContext context) {
   showDialog(
     context: context,
-    barrierDismissible: false, // Make it non-dismissible
+    barrierDismissible: false,
     builder: (context) => PopScope(onPopInvoked: (didPop) {
          SystemNavigator.pop();
 
