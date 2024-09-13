@@ -34,6 +34,10 @@ class RequestNFCPage extends StatelessWidget {
                 color: Color(0xFFE30613),
               ),
             ),
+            Flexible(
+              child: Text(
+                  'Tired of carrying bulky business cards or typing out contact details? Upgrade to the future with our sleek NFC card! Just a simple tap, and your contact information, website, or social media instantly appears on any smartphone.'),
+            ),
             SizedBox(height: 16),
             SizedBox(height: 24),
             Center(
