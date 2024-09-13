@@ -1432,9 +1432,10 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                             child: customButton(
                                 fontSize: 16,
                                 label: 'Save & Proceed',
-                                onPressed: () {
+                                onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                    _submitData(user: user);
+                                    await _submitData(user: user);
+                                    ref.invalidate(userProvider);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(content: Text('Success')),
                                     );
