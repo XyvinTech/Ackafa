@@ -133,9 +133,9 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                   '${widget.receiver.name?.first}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last}',
                   style: TextStyle(fontSize: 18),
                 ),
-                actions: [
-                  IconButton(icon: Icon(Icons.call), onPressed: () {}),
-                ],
+                // actions: [
+                //   IconButton(icon: Icon(Icons.call), onPressed: () {}),
+                // ],
               )),
           body: Container(
             height: MediaQuery.of(context).size.height,
