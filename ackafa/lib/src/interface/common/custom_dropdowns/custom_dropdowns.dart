@@ -22,6 +22,7 @@ class CustomDropdownButton<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField2<T>(
+      isExpanded: true,
       value: value,
       hint: Text(labelText),
       items: items,
@@ -184,4 +185,3 @@ class _CustomDropdownButton2State extends State<CustomDropdownButton2> {
     );
   }
 }
-

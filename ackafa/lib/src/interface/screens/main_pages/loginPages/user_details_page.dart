@@ -302,7 +302,6 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       "email": user.email,
       "image": user.image,
       "college": user.college?.id,
-      "course": user.course?.id,
       if (user.address != null) "address": user.address.toString() ?? '',
       if (user.bio != null) "bio": user.bio.toString() ?? '',
       "company": {

@@ -3,134 +3,123 @@ import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/webview.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_completetion_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PaymentConfirmationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 40), // Spacing from top
-              // Congratulations Icon and Text
-              Column(
-                children: [
-                  // Icon for congratulation (can be replaced with an asset image)
-                  Image.asset('assets/success.png'),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Congratulations!',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF6D6D6D),
+    if (!LoggedIn) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 40), // Spacing from top
+                // Congratulations Icon and Text
+                Column(
+                  children: [
+                    // Icon for congratulation (can be replaced with an asset image)
+                    Image.asset('assets/success.png'),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Congratulations!',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF6D6D6D),
+                      ),
                     ),
-                  ),
 
-                  const Text(
-                    'Your request has been approved',
-                    style: TextStyle(
-                      fontSize: 19,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 40), // Space between sections
-              // Next Steps
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Next steps!',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Gain full access to the app by making',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'a',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                        ),
-                        textAlign: TextAlign.center,
+                    const Text(
+                      'Your request has been approved',
+                      style: TextStyle(
+                        fontSize: 19,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text(
-                        ' One-Time-Payment',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Color(0xFF7C7C7C),
-                        ),
-                        textAlign: TextAlign.center,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 40), // Space between sections
+                // Next Steps
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Coming Soon!',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  // Checklist
-                  _buildCheckListItem(
-                      'Get your request approved', true), // Checked
-                  _buildCheckListItem(
-                      'Make payment of 10 AED', false), // Unchecked
-                  _buildCheckListItem(
-                      'Receive payment confirmation', false), // Unchecked
-                  _buildCheckListItem('You are all in!', false), // Unchecked
-                ],
-              ),
-              const Spacer(),
-              // Continue to Payment Button
-              Consumer(
-                builder: (context, ref, child) {
-                  if (isPaymentEnabled) {
-                    return customButton(
-                        label: 'Continue to Payment',
-                        onPressed: () async {
-                          ApiRoutes userApi = ApiRoutes();
-                          String? paymentUrl = await userApi.makePayment();
-                          if (paymentUrl != null) {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => PaymentWebView(
-                                      paymentUrl: paymentUrl,
-                                    )));
-                          }
-                        },
-                        fontSize: 16);
-                  } else {
-                    return customButton(
-                        label: 'COMING SOON',
-                        onPressed: () async {},
-                        fontSize: 16);
-                  }
-                },
-              ),
-              const SizedBox(height: 30), // Bottom padding
-            ],
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'You Will Receive Payment Link SOon',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: 30),
+                    // Checklist
+                    _buildCheckListItem(
+                        'Get your request approved', true), // Checked
+                    _buildCheckListItem(
+                        'Make payment of 10 AED', false), // Unchecked
+                    _buildCheckListItem(
+                        'Receive payment confirmation', false), // Unchecked
+                    _buildCheckListItem('You are all in!', false), // Unchecked
+                  ],
+                ),
+                const Spacer(),
+                // Continue to Payment Button
+                Consumer(
+                  builder: (context, ref, child) {
+                    if (isPaymentEnabled) {
+                      return customButton(
+                          label: 'Continue to Payment',
+                          onPressed: () async {
+                            ApiRoutes userApi = ApiRoutes();
+                            String? paymentUrl = await userApi.makePayment();
+                            if (paymentUrl != null) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => PaymentWebView(
+                                        paymentUrl: paymentUrl,
+                                      )));
+                            }
+                          },
+                          fontSize: 16);
+                    } else {
+                      return customButton(
+                          label: 'CONTINUE TO APP',
+                          onPressed: () async {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProfileCompletionScreen()));
+                          },
+                          fontSize: 16);
+                    }
+                  },
+                ),
+                const SizedBox(height: 30), // Bottom padding
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      return ProfileCompletionScreen();
+    }
   }
 
   // Helper method to create checklist items
