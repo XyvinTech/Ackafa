@@ -105,7 +105,7 @@ class PhoneNumberScreen extends ConsumerWidget {
                   onCountryChanged: (value) {
                     countryCode = value.dialCode;
                   },
-                  initialCountryCode: 'IN',
+                  initialCountryCode: 'AE',
                   onChanged: (PhoneNumber phone) {
                     print(phone.completeNumber);
                   },
