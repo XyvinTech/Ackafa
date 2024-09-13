@@ -15,39 +15,39 @@ class EventPage extends StatelessWidget {
     return Consumer(
       builder: (context, ref, child) {
         final asyncEvents = ref.watch(fetchEventsProvider);
-      return  asyncEvents.when(
+        return asyncEvents.when(
           data: (events) {
-            return   ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search),
-                  hintText: 'Search for Events',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
+            return ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                // Container(
+                //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+                //   child: TextField(
+                //     decoration: InputDecoration(
+                //       prefixIcon: Icon(Icons.search),
+                //       hintText: 'Search for Events',
+                //       border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(8.0),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                SizedBox(height: 16),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    return _buildPost(
+                      withImage: true,
+                      context: context,
+                      event: events[
+                          index], // Assuming your _buildPost takes an event parameter
+                    );
+                  },
                 ),
-              ),
-            ),
-            SizedBox(height: 16),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: events.length,
-              itemBuilder: (context, index) {
-                return _buildPost(
-                  withImage: true,
-                  context: context,
-                  event: events[
-                      index], // Assuming your _buildPost takes an event parameter
-                );
-              },
-            ),
-          ],
-        );
+              ],
+            );
           },
           loading: () => Center(child: LoadingAnimation()),
           error: (error, stackTrace) {
@@ -56,7 +56,6 @@ class EventPage extends StatelessWidget {
             );
           },
         );
-       
       },
     );
   }
@@ -220,7 +219,7 @@ class EventPage extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                  event.description??'',
+                    event.description ?? '',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey,

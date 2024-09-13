@@ -78,7 +78,7 @@ class PhoneNumberScreen extends ConsumerWidget {
                 const SizedBox(height: 20),
                 const Text(
                   'Enter your Phone Number',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
                 ),
                 const SizedBox(height: 20),
                 IntlPhoneField(
@@ -119,7 +119,7 @@ class PhoneNumberScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  'We will send you the 5 digit Verification code',
+                  'We will send you the 6 digit Verification code',
                   style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
                 ),
                 const Spacer(),
@@ -312,7 +312,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                 const SizedBox(height: 20),
                 const Text(
                   'Enter your OTP',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
                 ),
                 const SizedBox(height: 20),
                 TextField(

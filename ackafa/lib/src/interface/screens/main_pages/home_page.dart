@@ -14,6 +14,7 @@ import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -331,42 +332,32 @@ class _HomePageState extends ConsumerState<HomePage> {
                       const SizedBox(
                         height: 20,
                       ),
-                      promotions.isEmpty
-                          ? const Center(
-                              child: Text(
-                                'No Promotions Yet',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w700),
-                              ),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 8, left: 8, right: 8),
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  prefixIcon: const Icon(Icons.search),
-                                  hintText: 'Search promotions',
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color:
-                                            Color.fromARGB(255, 214, 211, 211)),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color:
-                                            Color.fromARGB(255, 217, 212, 212)),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                ),
-                              ),
-                            ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      // Padding(
+                      //   padding:
+                      //       const EdgeInsets.only(top: 8, left: 8, right: 8),
+                      //   child: TextField(
+                      //     decoration: InputDecoration(
+                      //       prefixIcon: const Icon(Icons.search),
+                      //       hintText: 'Search promotions',
+                      //       enabledBorder: OutlineInputBorder(
+                      //         borderSide: const BorderSide(
+                      //             color: Color.fromARGB(255, 214, 211, 211)),
+                      //         borderRadius: BorderRadius.circular(8.0),
+                      //       ),
+                      //       focusedBorder: OutlineInputBorder(
+                      //         borderSide: const BorderSide(
+                      //             color: Color.fromARGB(255, 217, 212, 212)),
+                      //         borderRadius: BorderRadius.circular(8.0),
+                      //       ),
+                      //       border: OutlineInputBorder(
+                      //         borderRadius: BorderRadius.circular(8.0),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // const SizedBox(
+                      //   height: 20,
+                      // ),
                       if (widget.user.role != 'member')
                         Consumer(
                           builder: (context, ref, child) {
@@ -470,7 +461,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           elevation: 0,
                           child: Container(
                             color: Colors.transparent,
-                            height: 120,
+                            height: 175,
                             child: ListView.builder(
                               key: _bannerKey,
                               controller: _bannerScrollController,
@@ -504,7 +495,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       const SizedBox(height: 16),
                       if (posters.isNotEmpty)
                         SizedBox(
-                          height: 400,
+                          height: 380,
                           child: ListView.builder(
                             key: _posterKey,
                             controller: _posterScrollController,
@@ -555,10 +546,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
               );
             },
-            loading: () => Center(child: LoadingAnimation()),
+            loading: () => Center(child: buildShimmerPromotionsColumn(context: context)),
             error: (error, stackTrace) {
               return Center(
-                child: Text('Error loading promotions: $error'),
+                child: Text('NO PROMOTIONS YET'),
               );
             },
           ),
@@ -577,22 +568,43 @@ class _HomePageState extends ConsumerState<HomePage> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: 120,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    Color.fromARGB(41, 249, 180, 6),
-                    Color.fromARGB(113, 249, 180, 6)
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
+              height: 175,
+              // decoration: BoxDecoration(
+              //   gradient: const LinearGradient(
+              //     colors: [
+              //       Color.fromARGB(41, 249, 180, 6),
+              //       Color.fromARGB(113, 249, 180, 6)
+              //     ],
+              //     begin: Alignment.topLeft,
+              //     end: Alignment.bottomRight,
+              //   ),
+              //   borderRadius: BorderRadius.circular(8.0),
+              // ),
               child: Image.network(
-                width: double.infinity,
                 banner.media ?? 'https://placehold.co/600x400/png',
-                fit: BoxFit.cover,
+                width: double.infinity,
+                fit: BoxFit.fill,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    // If the image is fully loaded, show the image
+                    return child;
+                  }
+                  // While the image is loading, show shimmer effect
+                  return Container(
+                    width: MediaQuery.sizeOf(context).width / 1.15,
+                    height: 175,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -609,17 +621,24 @@ class _HomePageState extends ConsumerState<HomePage> {
       child: Container(
         width: MediaQuery.of(context).size.width -
             32, // Poster width matches screen width
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(
-            color: const Color.fromARGB(255, 225, 231, 236),
-            width: 2.0,
-          ),
-        ),
         child: Image.network(
           poster.media ?? 'https://placehold.co/600x400/png',
           fit: BoxFit.fill,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child; // Image loaded successfully
+            } else {
+              return Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  width: double.infinity,
+                  height: 400, // Adjust height based on your poster size
+                  color: Colors.white,
+                ),
+              );
+            }
+          },
           errorBuilder: (context, error, stackTrace) {
             return Image.network(
               'https://placehold.co/600x400/png',
@@ -680,4 +699,98 @@ class _HomePageState extends ConsumerState<HomePage> {
       ),
     );
   }
+}
+
+
+Widget buildShimmerPromotionsColumn({
+  required BuildContext context,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      shimmerNotice(context: context),
+      const SizedBox(height: 16),
+      shimmerPoster(context: context),
+      const SizedBox(height: 16),
+      shimmerVideo(context: context),
+    ],
+  );
+}
+
+Widget shimmerNotice({
+  required BuildContext context,
+}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        width: MediaQuery.of(context).size.width - 32,
+        height: 100,
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget shimmerPoster({
+  required BuildContext context,
+}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        width: MediaQuery.of(context).size.width - 32,
+        height: 200,
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget shimmerVideo({
+  required BuildContext context,
+}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 20, // Height for the title shimmer
+              color: Colors.grey[300],
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: MediaQuery.of(context).size.width - 32,
+            height: 200,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }
