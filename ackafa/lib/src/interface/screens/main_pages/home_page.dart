@@ -29,7 +29,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   ScrollController _bannerScrollController = ScrollController();
   ScrollController _noticeScrollController = ScrollController();
   ScrollController _posterScrollController = ScrollController();
-      PageController _videoCountController = PageController();
+  PageController _videoCountController = PageController();
 
   Timer? _bannerScrollTimer;
   Timer? _noticeScrollTimer;
@@ -190,7 +190,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     _noticeScrollTimer?.cancel();
     _posterScrollTimer?.cancel();
     _restartAutoScrollTimer?.cancel();
- 
+
     _bannerScrollController.dispose();
     _noticeScrollController.dispose();
     _posterScrollController.dispose();
@@ -202,8 +202,6 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     _videoCountController.addListener(() {
       _currentVideo.value = _videoCountController.page!.round();
     });
@@ -472,7 +470,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           elevation: 0,
                           child: Container(
                             color: Colors.transparent,
-                            height: 140,
+                            height: 120,
                             child: ListView.builder(
                               key: _bannerKey,
                               controller: _bannerScrollController,
@@ -506,7 +504,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       const SizedBox(height: 16),
                       if (posters.isNotEmpty)
                         SizedBox(
-                          height: 250,
+                          height: 400,
                           child: ListView.builder(
                             key: _posterKey,
                             controller: _posterScrollController,
@@ -572,7 +570,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget _buildBanners(
       {required BuildContext context, required Promotion banner}) {
     return Container(
-      width: MediaQuery.sizeOf(context).width / 1.20,
+      width: MediaQuery.sizeOf(context).width / 1.15,
       child: Stack(
         clipBehavior: Clip.none, // This allows overflow
         children: [
@@ -611,7 +609,6 @@ class _HomePageState extends ConsumerState<HomePage> {
       child: Container(
         width: MediaQuery.of(context).size.width -
             32, // Poster width matches screen width
-        padding: const EdgeInsets.all(0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),
@@ -622,10 +619,12 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         child: Image.network(
           poster.media ?? 'https://placehold.co/600x400/png',
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
           errorBuilder: (context, error, stackTrace) {
             return Image.network(
-                fit: BoxFit.fill, 'https://placehold.co/600x400/png');
+              'https://placehold.co/600x400/png',
+              fit: BoxFit.contain,
+            );
           },
         ),
       ),
