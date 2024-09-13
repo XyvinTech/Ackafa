@@ -162,41 +162,41 @@ class _FeedViewState extends ConsumerState<FeedView> {
         ),
         body: Column(
           children: [
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
-              child: Material(
-                elevation: 2.0, // Adjust elevation to control shadow depth
-                shadowColor:
-                    Colors.black.withOpacity(0.25), // Shadow color with opacity
-                borderRadius: BorderRadius.circular(
-                    8.0), // Same border radius as TextField
-                child: TextField(
-                  decoration: InputDecoration(
-                    filled: true, // Ensures the background is fully white
-                    fillColor:
-                        Colors.white, // Background color inside TextField
-                    prefixIcon: Icon(Icons.search),
-                    hintText: 'Search Feed',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(
-                          color: const Color.fromARGB(255, 215, 212, 212)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(
-                          color: const Color.fromARGB(255, 215, 212, 212)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(
-                          color: const Color.fromARGB(255, 215, 212, 212)),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Container(
+            //   padding:
+            //       const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+            //   child: Material(
+            //     elevation: 2.0, // Adjust elevation to control shadow depth
+            //     shadowColor:
+            //         Colors.black.withOpacity(0.25), // Shadow color with opacity
+            //     borderRadius: BorderRadius.circular(
+            //         8.0), // Same border radius as TextField
+            //     child: TextField(
+            //       decoration: InputDecoration(
+            //         filled: true, // Ensures the background is fully white
+            //         fillColor:
+            //             Colors.white, // Background color inside TextField
+            //         prefixIcon: Icon(Icons.search),
+            //         hintText: 'Search Feed',
+            //         border: OutlineInputBorder(
+            //           borderRadius: BorderRadius.circular(8.0),
+            //           borderSide: BorderSide(
+            //               color: const Color.fromARGB(255, 215, 212, 212)),
+            //         ),
+            //         enabledBorder: OutlineInputBorder(
+            //           borderRadius: BorderRadius.circular(8.0),
+            //           borderSide: BorderSide(
+            //               color: const Color.fromARGB(255, 215, 212, 212)),
+            //         ),
+            //         focusedBorder: OutlineInputBorder(
+            //           borderRadius: BorderRadius.circular(8.0),
+            //           borderSide: BorderSide(
+            //               color: const Color.fromARGB(255, 215, 212, 212)),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             // Horizontally scrollable Choice Chips
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -219,12 +219,19 @@ class _FeedViewState extends ConsumerState<FeedView> {
                   ? Center(child: Text('No FEEDS'))
                   : ListView.builder(
                       padding: const EdgeInsets.all(16.0),
-                      itemCount: filteredFeeds.length + 1, // Ad
+                      itemCount:
+                          filteredFeeds.length + 2, // +2 for Ad and spacer
                       itemBuilder: (context, index) {
                         if (index == filteredFeeds.length) {
                           return isLoading
                               ? ReusableFeedPostSkeleton()
                               : SizedBox.shrink();
+                        }
+
+                        if (index == filteredFeeds.length + 1) {
+                          // SizedBox to add space at the bottom
+                          return SizedBox(
+                              height: 80); // Adjust height as needed
                         }
 
                         final feed = filteredFeeds[index];

@@ -302,7 +302,6 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       "email": user.email,
       "image": user.image,
       "college": user.college?.id,
-      "course": user.course?.id,
       if (user.address != null) "address": user.address.toString() ?? '',
       if (user.bio != null) "bio": user.bio.toString() ?? '',
       "company": {
@@ -1433,9 +1432,10 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                             child: customButton(
                                 fontSize: 16,
                                 label: 'Save & Proceed',
-                                onPressed: () {
+                                onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                    _submitData(user: user);
+                                    await _submitData(user: user);
+                                    ref.invalidate(userProvider);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(content: Text('Success')),
                                     );

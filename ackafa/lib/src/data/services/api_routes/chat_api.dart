@@ -31,7 +31,7 @@ class SocketIoClient {
   Stream<MessageModel> get messageStream => _controller.stream;
 
   void connect(String senderId, WidgetRef ref) {
-    final uri = 'ws://3.108.205.101:3000/api/v1/chat?userId=$senderId';
+    final uri = 'ws://akcafconnect.com/api/v1/chat?userId=$senderId';
 
     // Initialize socket.io client
     _socket = IO.io(

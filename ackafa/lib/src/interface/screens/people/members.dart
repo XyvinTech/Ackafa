@@ -57,8 +57,7 @@ class _MembersPageState extends ConsumerState<MembersPage> {
       child: Scaffold(
           backgroundColor: Colors.white,
           body: users.isEmpty
-              ? Center(
-                  child: Text('NO MEMBERS YET')) // Show loader when no data
+              ? Center(child: LoadingAnimation()) // Show loader when no data
               : asyncChats.when(
                   data: (chats) {
                     log('im inside chat');

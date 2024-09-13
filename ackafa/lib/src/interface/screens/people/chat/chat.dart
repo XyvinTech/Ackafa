@@ -60,7 +60,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     title: Text(
                         '${receiver?.name?.first ?? ''}${receiver?.name?.middle ?? ''}${receiver?.name?.last ?? ''}'),
                     subtitle: Text(chats[index].lastMessage?.content ?? ''),
-                    trailing: chats[index].unreadCount?[sender?.id] != 0
+                    trailing: chats[index].unreadCount?[sender?.id] != 0 &&
+                            chats[index].unreadCount?[sender!.id] != null
                         ? SizedBox(
                             width: 24,
                             height: 24,
