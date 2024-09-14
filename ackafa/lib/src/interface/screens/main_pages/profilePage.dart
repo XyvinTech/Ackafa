@@ -281,6 +281,8 @@ class ProfilePage extends StatelessWidget {
                                   children: [
                                     const Icon(Icons.location_on,
                                         color: Color(0xFFE30613)),
+                                          if (user.address != null)
+                                    Text(user.address??''),
                                     const SizedBox(width: 10),
                                     if (user.bio != null)
                                       Expanded(
