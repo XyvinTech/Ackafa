@@ -255,10 +255,9 @@ class MenuPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(9),
                               child: Image.network(
                                 errorBuilder: (context, error, stackTrace) {
-                                  return Image.network(
-                                      'https://placehold.co/400');
+                                  return Icon(Icons.person);
                                 },
-                                user.image!,
+                                user.image ?? 'https://placehold.co/600x400',
                                 height: 70,
                                 width: 75,
                                 fit: BoxFit.cover,
@@ -269,7 +268,7 @@ class MenuPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${user.name!.first!} ${user.name?.middle??''} ${user.name!.last!}',
+                                  '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,

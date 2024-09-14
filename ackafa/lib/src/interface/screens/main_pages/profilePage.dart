@@ -165,8 +165,10 @@ class ProfilePage extends StatelessWidget {
                                       user.image != null
                                           ? CircleAvatar(
                                               radius: 40,
-                                              backgroundImage:
-                                                  NetworkImage(user.image!),
+                                              backgroundImage: NetworkImage(
+                                                user.image ??
+                                                    'https://placehold.co/600x400',
+                                              ),
                                             )
                                           : const Icon(Icons.person),
                                       const SizedBox(height: 10),

@@ -300,7 +300,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
         "last": user.name!.last,
       },
       "email": user.email,
-      "image": user.image,
+   if(user.image!=null && user.image!='')   "image": user.image,
       "college": user.college?.id,
       if (user.address != null) "address": user.address.toString() ?? '',
       if (user.bio != null) "bio": user.bio.toString() ?? '',
@@ -559,12 +559,12 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                             ),
                             const SizedBox(height: 35),
                             FormField<File>(
-                              validator: (value) {
-                                if (user.image == null) {
-                                  return 'Please select a profile image';
-                                }
-                                return null;
-                              },
+                              // validator: (value) {
+                              //   if (user.image == null) {
+                              //     return 'Please select a profile image';
+                              //   }
+                              //   return null;
+                              // },
                               builder: (FormFieldState<File> state) {
                                 return Center(
                                   child: Column(
@@ -587,7 +587,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                                       stackTrace) {
                                                     return Icon(Icons.person);
                                                   },
-                                                  user.image!, // Replace with your image URL
+                                                  user.image??  'https://placehold.co/600x400', // Replace with your image URL
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
