@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.1.7</string>
+	<string>0.1.6</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>7</string>
+	<string>5</string>
 	<key>FLTEnableImpeller</key>
 	<false/>
 	<key>FirebaseAppDelegateProxyEnabled</key>
@@ -52,9 +52,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to take photos.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>We need permission to save photos to your library.</string>
+	<string>We need permission to save photos after you upload and share them in posts with others.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library to select images.</string>
+	<string>We need access to your photo library to let you select images for uploading and sharing posts with others in the app.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
