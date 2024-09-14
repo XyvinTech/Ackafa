@@ -460,7 +460,7 @@ class MenuPage extends StatelessWidget {
                               delay: const Duration(milliseconds: 300),
                               child: GestureDetector(
                                 onTap: () {
-                                  _launchURL('https://www.skybertech.com');
+                                  _launchURL('https://www.skybertech.ae');
                                 },
                                 child: const Text(
                                   'Powered By SkyberTech',
