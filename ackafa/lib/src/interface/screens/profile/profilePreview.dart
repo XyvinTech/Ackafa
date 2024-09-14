@@ -53,33 +53,33 @@ class ProfilePreview extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        if (id.toString() == user.id.toString())
-                          Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                                color: const Color(0xFFF2F2F2),
-                                borderRadius: BorderRadius.circular(30)),
-                            child: IconButton(
-                              icon: const Icon(
-                                size: 18,
-                                Icons.edit,
-                                color: Color(0xFF004797),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) => DetailsPage(),
-                                    transitionDuration:
-                                        Duration(milliseconds: 500),
-                                    transitionsBuilder: (_, a, __, c) =>
-                                        FadeTransition(opacity: a, child: c),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                        // if (id.toString() == user.id.toString())
+                        //   Container(
+                        //     width: 50,
+                        //     height: 50,
+                        //     decoration: BoxDecoration(
+                        //         color: const Color(0xFFF2F2F2),
+                        //         borderRadius: BorderRadius.circular(30)),
+                        //     child: IconButton(
+                        //       icon: const Icon(
+                        //         size: 18,
+                        //         Icons.edit,
+                        //         color: Color(0xFF004797),
+                        //       ),
+                        //       onPressed: () {
+                        //         Navigator.push(
+                        //           context,
+                        //           PageRouteBuilder(
+                        //             pageBuilder: (_, __, ___) => DetailsPage(),
+                        //             transitionDuration:
+                        //                 Duration(milliseconds: 500),
+                        //             transitionsBuilder: (_, a, __, c) =>
+                        //                 FadeTransition(opacity: a, child: c),
+                        //           ),
+                        //         );
+                        //       },
+                        //     ),
+                        //   ),
                         const SizedBox(
                           width: 10,
                         ),

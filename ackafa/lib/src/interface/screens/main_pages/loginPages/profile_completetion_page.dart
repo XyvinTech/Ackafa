@@ -24,62 +24,63 @@ class ProfileCompletionScreen extends StatelessWidget {
             String percentageString = user.profileCompletion ?? '0%';
             int profileCompletion =
                 int.parse(percentageString.replaceAll('%', ''));
-            if (profileCompletion < 70) {
-              return Scaffold(
-                body: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Replace SvgPicture.asset with any image you are using
-                      Image.asset('assets/letsgetstarted.png', width: 150),
+            // if (profileCompletion < 70) {
+            //   return Scaffold(
+            //     body: Center(
+            //       child: Column(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           // Replace SvgPicture.asset with any image you are using
+            //           Image.asset('assets/letsgetstarted.png', width: 150),
 
-                      const Text(
-                        "Let's Get Started,\nComplete your profile",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 118, 121, 124),
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 25, right: 25, top: 10),
-                        child: SizedBox(
-                            height: 50,
-                            width: double.infinity,
-                            child: customButton(
-                                label: 'Next',
-                                onPressed: () async {
-                                  SharedPreferences preferences =
-                                      await SharedPreferences.getInstance();
-                                  preferences.setString('id', user.id ?? '');
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) => DetailsPage()));
-                                },
-                                fontSize: 16)),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          log('PROFFFFFFFFFFFFFFFIIIIIIILLLLLLLLE COMPLEEEEEEEEEEEEETIONNNNNN${user.id}');
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => MainPage()),
-                              (Route<dynamic> route) => false);
-                        },
-                        child: const Text('Skip',
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 15)),
-                      )
-                    ],
-                  ),
-                ),
-              );
-            } else {
+            //           const Text(
+            //             "Let's Get Started,\nComplete your profile",
+            //             textAlign: TextAlign.center,
+            //             style: TextStyle(
+            //               color: Color.fromARGB(255, 118, 121, 124),
+            //               fontSize: 22,
+            //               fontWeight: FontWeight.bold,
+            //             ),
+            //           ),
+            //           const SizedBox(height: 20),
+            //           Padding(
+            //             padding:
+            //                 const EdgeInsets.only(left: 25, right: 25, top: 10),
+            //             child: SizedBox(
+            //                 height: 50,
+            //                 width: double.infinity,
+            //                 child: customButton(
+            //                     label: 'Next',
+            //                     onPressed: () async {
+            //                       SharedPreferences preferences =
+            //                           await SharedPreferences.getInstance();
+            //                       preferences.setString('id', user.id ?? '');
+            //                       Navigator.of(context).pushReplacement(
+            //                           MaterialPageRoute(
+            //                               builder: (context) => DetailsPage()));
+            //                     },
+            //                     fontSize: 16)),
+            //           ),
+            //           TextButton(
+            //             onPressed: () async {
+            //               log('PROFFFFFFFFFFFFFFFIIIIIIILLLLLLLLE COMPLEEEEEEEEEEEEETIONNNNNN${user.id}');
+            //               Navigator.of(context).pushAndRemoveUntil(
+            //                   MaterialPageRoute(
+            //                       builder: (context) => MainPage()),
+            //                   (Route<dynamic> route) => false);
+            //             },
+            //             child: const Text('Skip',
+            //                 style:
+            //                     TextStyle(color: Colors.black, fontSize: 15)),
+            //           )
+            //         ],
+            //       ),
+            //     ),
+            //   );
+            // } 
+        
               return MainPage();
-            }
+
           },
           loading: () => Center(child: LoadingAnimation()),
           error: (error, stackTrace) {

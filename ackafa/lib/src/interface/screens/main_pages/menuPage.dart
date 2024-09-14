@@ -280,24 +280,24 @@ class MenuPage extends StatelessWidget {
                               ],
                             ),
                             Spacer(),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) => DetailsPage(),
-                                    transitionDuration:
-                                        Duration(milliseconds: 500),
-                                    transitionsBuilder: (_, a, __, c) =>
-                                        FadeTransition(opacity: a, child: c),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                'Edit',
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            ),
+                            // TextButton(
+                            //   onPressed: () {
+                            //     Navigator.push(
+                            //       context,
+                            //       PageRouteBuilder(
+                            //         pageBuilder: (_, __, ___) => DetailsPage(),
+                            //         transitionDuration:
+                            //             Duration(milliseconds: 500),
+                            //         transitionsBuilder: (_, a, __, c) =>
+                            //             FadeTransition(opacity: a, child: c),
+                            //       ),
+                            //     );
+                            //   },
+                            //   child: Text(
+                            //     'Edit',
+                            //     style: TextStyle(color: Colors.red),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -495,7 +495,7 @@ class MenuPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      
+
                       Container(color: Color(0xFFF2F2F2), height: 20),
                     ],
                   ),
