@@ -96,14 +96,14 @@ class _MainPageState extends ConsumerState<MainPage> {
     _inactiveIcons = [
       'assets/icons/home_inactive.svg',
       'assets/icons/feed_inactive.svg',
-      user.image!,
+      user.image ?? 'https://placehold.co/600x400',
       'assets/icons/news_inactive.svg',
       'assets/icons/people_inactive.svg',
     ];
     _activeIcons = [
       'assets/icons/home_active.svg',
       'assets/icons/feed_active.svg',
-      user.image!,
+      user.image ?? 'https://placehold.co/600x400',
       'assets/icons/active_event.svg',
       'assets/icons/people_active.svg',
     ];
@@ -135,7 +135,9 @@ class _MainPageState extends ConsumerState<MainPage> {
                   backgroundColor: Colors.white,
                   icon: index == 2 // Assuming profile is the third item
                       ? CircleAvatar(
-                          backgroundImage: NetworkImage(user.image!),
+                          backgroundImage: NetworkImage(
+                            user.image ?? 'https://placehold.co/600x400',
+                          ),
                           radius: 15,
                         )
                       : IconResolver(
@@ -146,7 +148,9 @@ class _MainPageState extends ConsumerState<MainPage> {
                         ),
                   activeIcon: index == 2
                       ? CircleAvatar(
-                          backgroundImage: NetworkImage(user.image!),
+                          backgroundImage: NetworkImage(
+                            user.image ?? 'https://placehold.co/600x400',
+                          ),
                           radius: 15,
                         )
                       : IconResolver(

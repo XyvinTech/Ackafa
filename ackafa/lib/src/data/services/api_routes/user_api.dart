@@ -40,7 +40,7 @@ class ApiRoutes {
           if (middleName != null && middleName != '') "middle": middleName,
           "last": lastName
         },
-        "image": profileUrl,
+     if (profileUrl != null && profileUrl != '')    "image": profileUrl,
         "email": emailId,
         "college": college,
         "batch": batch,

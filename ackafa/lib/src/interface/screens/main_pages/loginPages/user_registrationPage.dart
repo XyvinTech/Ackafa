@@ -139,14 +139,14 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                         children: [
                                           const SizedBox(height: 35),
                                           FormField<File>(
-                                            validator: (value) {
-                                              if (_profileImageFile == null) {
-                                                log(profileImageUrl ??
-                                                    'No profile image selected');
-                                                return 'Please select a profile image';
-                                              }
-                                              return null;
-                                            },
+                                            // validator: (value) {
+                                            //   if (_profileImageFile == null) {
+                                            //     log(profileImageUrl ??
+                                            //         'No profile image selected');
+                                            //     return 'Please select a profile image';
+                                            //   }
+                                            //   return null;
+                                            // },
                                             builder:
                                                 (FormFieldState<File> state) {
                                               return Center(
@@ -488,12 +488,14 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                   try {
                                                     ApiRoutes userApi =
                                                         ApiRoutes();
-                                                    profileImageUrl =
+                                                        if(_profileImageFile!=null&& _profileImageFile!='') {
+                                                          profileImageUrl =
                                                         await imageUpload(
                                                             _profileImageFile!
                                                                 .path,
                                                             _profileImageFile!
                                                                 .path);
+                                                        }
 
                                                     print(profileImageUrl);
                                                     log(token);
