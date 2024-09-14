@@ -266,8 +266,8 @@ class ApiRoutes {
     );
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Post Deleted Successfully')));
+      // ScaffoldMessenger.of(context)
+      //     .showSnackBar(SnackBar(content: Text('Post Deleted Successfully')));
     } else {
       final jsonResponse = json.decode(response.body);
       ScaffoldMessenger.of(context)
