@@ -17,6 +17,7 @@ Future<void> getToken() async {
 
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
     // Fetch the FCM token
+    await Future.delayed(Duration(seconds: 10));
     String? token = await messaging.getToken();
     fcmToken = token!;
     print("FCM Token: $token");
