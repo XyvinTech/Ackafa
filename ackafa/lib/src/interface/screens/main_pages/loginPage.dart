@@ -52,14 +52,18 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
+final countryCodeProvider = StateProvider<String?>((ref) => '971');
+
 class PhoneNumberScreen extends ConsumerWidget {
   final VoidCallback onNext;
 
   PhoneNumberScreen({super.key, required this.onNext});
-  String? countryCode;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(loadingProvider);
+    final countryCode =
+        ref.watch(countryCodeProvider); // Watch the countryCodeProvider
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -95,7 +99,7 @@ class PhoneNumberScreen extends ConsumerWidget {
                     hintText: '0000000000',
                     hintStyle: TextStyle(
                       color: Colors.grey,
-                      letterSpacing: 4.0,
+                      letterSpacing: 5.0,
                       fontSize: 30,
                       fontWeight: FontWeight.w400,
                     ),
@@ -103,7 +107,9 @@ class PhoneNumberScreen extends ConsumerWidget {
                     contentPadding: EdgeInsets.zero,
                   ),
                   onCountryChanged: (value) {
-                    countryCode = value.dialCode;
+                    // Update the provider with the new country code
+                    ref.read(countryCodeProvider.notifier).state =
+                        value.dialCode;
                   },
                   initialCountryCode: 'AE',
                   onChanged: (PhoneNumber phone) {
@@ -128,38 +134,79 @@ class PhoneNumberScreen extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildbutton(label: '1', model: 'mobile'),
-                        _buildbutton(label: '2', model: 'mobile'),
-                        _buildbutton(label: '3', model: 'mobile')
+                        _buildbutton(
+                          label: '1',
+                          model: 'mobile',
+                          countryCode: countryCode,
+                        ),
+                        _buildbutton(
+                          label: '2',
+                          model: 'mobile',
+                          countryCode: countryCode,
+                        ),
+                        _buildbutton(
+                          label: '3',
+                          model: 'mobile',
+                          countryCode: countryCode,
+                        ),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildbutton(label: '4', model: 'mobile'),
-                        _buildbutton(label: '5', model: 'mobile'),
-                        _buildbutton(label: '6', model: 'mobile')
+                        _buildbutton(
+                          label: '4',
+                          model: 'mobile',
+                          countryCode: countryCode,
+                        ),
+                        _buildbutton(
+                          label: '5',
+                          model: 'mobile',
+                          countryCode: countryCode,
+                        ),
+                        _buildbutton(
+                          label: '6',
+                          model: 'mobile',
+                          countryCode: countryCode,
+                        ),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildbutton(label: '7', model: 'mobile'),
-                        _buildbutton(label: '8', model: 'mobile'),
-                        _buildbutton(label: '9', model: 'mobile')
+                        _buildbutton(
+                          label: '7',
+                          model: 'mobile',
+                          countryCode: countryCode,
+                        ),
+                        _buildbutton(
+                          label: '8',
+                          model: 'mobile',
+                          countryCode: countryCode,
+                        ),
+                        _buildbutton(
+                          label: '9',
+                          model: 'mobile',
+                          countryCode: countryCode,
+                        ),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         _buildbutton(label: '   ', model: ''),
-                        _buildbutton(label: '0', model: 'mobile'),
                         _buildbutton(
-                            label: 'back',
-                            icondata: Icons.arrow_back_ios,
-                            model: 'mobile')
+                          label: '0',
+                          model: 'mobile',
+                          countryCode: countryCode,
+                        ),
+                        _buildbutton(
+                          label: 'back',
+                          icondata: Icons.arrow_back_ios,
+                          model: 'mobile',
+                        ),
                       ],
-                    )
+                    ),
                   ],
                 ),
                 Padding(
@@ -195,33 +242,73 @@ class PhoneNumberScreen extends ConsumerWidget {
   }
 
   Future<void> _handleOtpGeneration(BuildContext context, WidgetRef ref) async {
+    final countryCode = ref.watch(countryCodeProvider);
     ref.read(loadingProvider.notifier).startLoading();
 
     try {
-      if (_mobileController.text.length != 10) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Please Enter Valid Phone number')),
-        );
-      } else {
-        ApiRoutes userApi = ApiRoutes();
-        final data = await userApi.submitPhoneNumber(
-            countryCode ?? 971.toString(), context, _mobileController.text);
-        final verificationId = data['verificationId'];
-        final resendToken = data['resendToken'];
-        if (verificationId != null && verificationId.isNotEmpty) {
-          log('Otp Sent successfully');
-          onNext();
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => OTPScreen(
-              phone: _mobileController.text,
-              verificationId: verificationId,
-              resendToken: resendToken ?? '',
-            ),
-          ));
-        } else {
+      if (countryCode == '971') {
+        if (_mobileController.text.length != 9) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed')),
+            SnackBar(content: Text('Please Enter Valid Phone number')),
           );
+        } else {
+          ApiRoutes userApi = ApiRoutes();
+
+          final data = await userApi.submitPhoneNumber(
+              countryCode == '971'
+                  ? 9710.toString()
+                  : countryCode ?? 971.toString(),
+              context,
+              _mobileController.text);
+          final verificationId = data['verificationId'];
+          final resendToken = data['resendToken'];
+          if (verificationId != null && verificationId.isNotEmpty) {
+            log('Otp Sent successfully');
+            onNext();
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => OTPScreen(
+                phone: _mobileController.text,
+                verificationId: verificationId,
+                resendToken: resendToken ?? '',
+              ),
+            ));
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed')),
+            );
+          }
+        }
+      } else if (countryCode != '971') {
+        if (_mobileController.text.length != 10) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Please Enter Valid Phone number')),
+          );
+        } else {
+          ApiRoutes userApi = ApiRoutes();
+
+          final data = await userApi.submitPhoneNumber(
+              countryCode == '971'
+                  ? 9710.toString()
+                  : countryCode ?? 971.toString(),
+              context,
+              _mobileController.text);
+          final verificationId = data['verificationId'];
+          final resendToken = data['resendToken'];
+          if (verificationId != null && verificationId.isNotEmpty) {
+            log('Otp Sent successfully');
+            onNext();
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => OTPScreen(
+                phone: _mobileController.text,
+                verificationId: verificationId,
+                resendToken: resendToken ?? '',
+              ),
+            ));
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed')),
+            );
+          }
         }
       }
     } catch (e) {
@@ -465,14 +552,14 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   }
 }
 
-InkWell _buildbutton({
-  required String label,
-  IconData? icondata,
-  required String model,
-}) {
+InkWell _buildbutton(
+    {required String label,
+    IconData? icondata,
+    required String model,
+    String? countryCode}) {
   return InkWell(
       onTap: () {
-        _onbuttonTap(label, model);
+        _onbuttonTap(label, model, countryCode ?? '971');
       },
       borderRadius: BorderRadius.circular(10),
       child: Padding(
@@ -499,14 +586,18 @@ InkWell _buildbutton({
       ));
 }
 
-_onbuttonTap(var value, String model) {
+_onbuttonTap(var value, String model, String countryCode) {
   if (model == "mobile") {
     if (value == 'back') {
       if (_mobileController.text.isNotEmpty) {
         _mobileController.text = _mobileController.text
             .substring(0, _mobileController.text.length - 1);
       }
-    } else if (_mobileController.text.length < 10) {
+    } else if (countryCode == '971' && _mobileController.text.length < 9) {
+      log('Country code:$countryCode');
+      _mobileController.text += value;
+    } else if (countryCode != '971' && _mobileController.text.length < 10) {
+      log('Country code:$countryCode');
       _mobileController.text += value;
     } else {}
   } else if (model == "otp") {
