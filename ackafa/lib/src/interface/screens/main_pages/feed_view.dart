@@ -6,7 +6,9 @@ import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/notifires/feed_notifier.dart';
+import 'package:ackaf/src/data/services/api_routes/app_versioncheck_api.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
+import 'package:ackaf/src/interface/common/customDialog.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chatscreen.dart';
@@ -24,6 +26,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 class FeedView extends ConsumerStatefulWidget {
@@ -250,7 +253,14 @@ class _FeedViewState extends ConsumerState<FeedView> {
           ],
         ),
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => _openModalSheet(sheet: 'post'),
+          onPressed: () async {
+            if (!isAgreed) {
+              showUploadPolicyDialog(context);
+            }
+            if (isAgreed) {
+              _openModalSheet(sheet: 'post');
+            }
+          },
           label: const Text(
             'Add Post',
             style: TextStyle(color: Colors.white),
@@ -592,7 +602,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
             height: 30,
             color: const Color.fromARGB(255, 255, 255, 255),
             child: Image.network(
-                    user.image??'https://placehold.co/600x400',
+              user.image ?? 'https://placehold.co/600x400',
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Icon(Icons.person);
