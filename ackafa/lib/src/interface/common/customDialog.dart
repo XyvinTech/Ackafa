@@ -1,3 +1,4 @@
+import 'package:ackaf/src/data/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -194,6 +195,7 @@ class UploadPolicyDialog extends StatelessWidget {
                 SharedPreferences preferences =
                     await SharedPreferences.getInstance();
                 preferences.setBool('isAgreed', true);
+                isAgreed = true;
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
