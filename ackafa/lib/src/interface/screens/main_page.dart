@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/interface/common/customDialog.dart';
 import 'package:ackaf/src/interface/screens/main_pages/feed_view.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +66,13 @@ class _MainPageState extends ConsumerState<MainPage> {
   void initState() {
     super.initState();
     ref.read(userProvider.notifier).refreshUser();
+    if (!isAgreed) {
+      log('Agreed? inside ${isAgreed.toString()}');
+      // Use a post-frame callback to show the dialog
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showUploadPolicyDialog(context);
+      });
+    }
   }
 
   int _selectedIndex = 0;

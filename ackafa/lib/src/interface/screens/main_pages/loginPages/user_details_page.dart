@@ -1,5 +1,7 @@
+import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/services/api_routes/image_upload.dart';
 import 'package:ackaf/src/interface/common/cards.dart';
+import 'package:ackaf/src/interface/common/customDialog.dart';
 import 'package:ackaf/src/interface/common/website_video_card/website_video_card.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/demopage.dart';
 import 'package:flutter/cupertino.dart';
@@ -300,7 +302,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
         "last": user.name!.last,
       },
       "email": user.email,
-   if(user.image!=null && user.image!='')   "image": user.image,
+      if (user.image != null && user.image != '') "image": user.image,
       "college": user.college?.id,
       if (user.address != null) "address": user.address.toString() ?? '',
       if (user.bio != null) "bio": user.bio.toString() ?? '',
@@ -543,6 +545,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   TextButton(
                                       onPressed: () {
                                         ref.invalidate(userProvider);
+                                        log('Agreed?${isAgreed.toString()}');
+
                                         Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
@@ -587,7 +591,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                                       stackTrace) {
                                                     return Icon(Icons.person);
                                                   },
-                                                  user.image??  'https://placehold.co/600x400', // Replace with your image URL
+                                                  user.image ??
+                                                      'https://placehold.co/600x400', // Replace with your image URL
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -1439,6 +1444,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(content: Text('Success')),
                                     );
+                                    log('Agreed?${isAgreed.toString()}');
+
                                     Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(

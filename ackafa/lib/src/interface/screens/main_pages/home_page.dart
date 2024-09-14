@@ -7,6 +7,7 @@ import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/notifires/approval_notifier.dart';
 import 'package:ackaf/src/data/notifires/people_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/promotions_api.dart';
+import 'package:ackaf/src/interface/common/customDialog.dart';
 import 'package:ackaf/src/interface/common/custom_video.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/main_pages/approvalPages/approval_page.dart';
@@ -49,7 +50,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
-    _fetchInitialApprovals();
+         _fetchInitialApprovals();
   }
 
   Future<void> _fetchInitialApprovals() async {

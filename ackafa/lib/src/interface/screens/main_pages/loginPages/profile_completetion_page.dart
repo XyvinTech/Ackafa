@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/interface/common/customDialog.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/main_page.dart';
@@ -77,10 +78,17 @@ class ProfileCompletionScreen extends StatelessWidget {
             //       ),
             //     ),
             //   );
-            // } 
-        
-              return MainPage();
+            // }
+      
+            // if (!isAgreed) {
+            //   log('Agreed? inside ${isAgreed.toString()}');
+            //   // Use a post-frame callback to show the dialog
+            //   WidgetsBinding.instance.addPostFrameCallback((_) {
+            //     showUploadPolicyDialog(context);
+            //   });
+            // }
 
+            return MainPage();
           },
           loading: () => Center(child: LoadingAnimation()),
           error: (error, stackTrace) {

@@ -254,6 +254,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () async {
+            log('Agreed?${isAgreed.toString()}');
             if (!isAgreed) {
               showUploadPolicyDialog(context);
             }
