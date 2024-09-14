@@ -245,77 +245,97 @@ void showUploadPolicyDialog(BuildContext context) {
 }
 
 class BlockPersonDialog extends StatefulWidget {
+  final String userId;
+  final VoidCallback onBlockStatusChanged;
+
+  BlockPersonDialog({
+    required this.userId,
+    required this.onBlockStatusChanged,
+    super.key,
+  });
+
   @override
   _BlockPersonDialogState createState() => _BlockPersonDialogState();
 }
 
 class _BlockPersonDialogState extends State<BlockPersonDialog> {
-  bool isBlocked = false; // Initially not blocked
+  bool isBlocked = false;
 
   @override
   void initState() {
     super.initState();
-    _loadBlockStatus(); // Load initial block status from SharedPreferences
+    _loadBlockStatus(); // Load initial block status from SharedPreferences or any state manager
   }
 
-  // Load block status from SharedPreferences
   Future<void> _loadBlockStatus() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      isBlocked = preferences.getBool('isBlocked') ??
-          false; // Defaults to false (not blocked)
+      isBlocked = blockedUsers.contains(widget.userId);
     });
   }
 
-  // Toggle block/unblock status
   Future<void> _toggleBlockStatus(BuildContext context) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       isBlocked = !isBlocked;
-      preferences.setBool('isBlocked', isBlocked);
     });
 
-    // Show snackbar based on the new state
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(isBlocked ? 'Blocked' : 'Unblocked'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+    // Update the blockedUsers list
+    if (isBlocked) {
+      blockedUsers.add(widget.userId);
+    } else {
+      blockedUsers.remove(widget.userId);
+    }
+
+    // Call the callback to notify the parent widget that the block status has changed
+    widget.onBlockStatusChanged();
+
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   SnackBar(
+    //     content: Text(isBlocked ? 'Blocked' : 'Unblocked'),
+    //     duration: Duration(seconds: 2),
+    //   ),
+    // );
 
     Navigator.of(context).pop(); // Close the dialog
   }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      elevation: 12,
-      backgroundColor: Colors.white,
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.7, // Adjust width
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              isBlocked
-                  ? 'Are you sure you want to unblock this person?'
-                  : 'Are you sure you want to block this person?',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.w600,
-                color: Colors.blueGrey[900],
+    return PopScope(
+      onPopInvoked: (didPop) async {
+        if (didPop) {
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          preferences.setStringList('blockedUsers', blockedUsers);
+        }
+      },
+      child: Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        elevation: 12,
+        backgroundColor: Colors.white,
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.7,
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                isBlocked
+                    ? 'Are you sure you want to unblock this person?'
+                    : 'Are you sure you want to block this person?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.blueGrey[900],
+                ),
               ),
-            ),
-            const SizedBox(height: 30.0),
-            const SizedBox(height: 20.0),
-            _buildActions(context),
-          ],
+              const SizedBox(height: 30.0),
+              const SizedBox(height: 20.0),
+              _buildActions(context),
+            ],
+          ),
         ),
       ),
     );
@@ -327,7 +347,7 @@ class _BlockPersonDialogState extends State<BlockPersonDialog> {
       children: [
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop(); // Close the dialog
+            Navigator.of(context).pop();
           },
           style: TextButton.styleFrom(
             padding:
@@ -348,11 +368,10 @@ class _BlockPersonDialogState extends State<BlockPersonDialog> {
         const SizedBox(width: 12),
         ElevatedButton(
           onPressed: () {
-            _toggleBlockStatus(
-                context); // Toggle block/unblock and show snackbar
+            _toggleBlockStatus(context);
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFFE30613), // Red button color
+            backgroundColor: Color(0xFFE30613),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),
@@ -376,11 +395,15 @@ class _BlockPersonDialogState extends State<BlockPersonDialog> {
 }
 
 // Function to show the BlockPersonDialog
-void showBlockPersonDialog(BuildContext context) {
+void showBlockPersonDialog(
+    BuildContext context, String userId, VoidCallback onBlockStatusChanged) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return BlockPersonDialog();
+      return BlockPersonDialog(
+        userId: userId,
+        onBlockStatusChanged: onBlockStatusChanged,
+      );
     },
   );
 }

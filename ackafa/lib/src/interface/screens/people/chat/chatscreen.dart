@@ -93,9 +93,9 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
     return Stack(
       children: [
         Scaffold(
-          backgroundColor: Color(0xFFFCFCFC),
+          backgroundColor: const Color(0xFFFCFCFC),
           appBar: PreferredSize(
-              preferredSize: Size.fromHeight(60),
+              preferredSize: const Size.fromHeight(60),
               child: AppBar(
                 elevation: 1,
                 shadowColor: Colors.white,
@@ -105,17 +105,17 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                 leading: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     InkWell(
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_back,
                         size: 24,
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     ClipOval(
                       child: Container(
                         width: 30,
@@ -125,7 +125,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                           widget.receiver.image ?? '',
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return Icon(Icons.person);
+                            return const Icon(Icons.person);
                           },
                         ),
                       ),
@@ -134,14 +134,17 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                 ),
                 title: Text(
                   '${widget.receiver.name?.first}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last}',
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
                 actions: [
                   IconButton(
-                      icon: Icon(Icons.block),
+                      icon: const Icon(Icons.block),
                       onPressed: () {
-                        showBlockPersonDialog(context);
-                      })
+                        showBlockPersonDialog(context, widget.receiver.id ?? '',
+                            () {
+                          setState(() {}); // Trigger UI refresh
+                        });
+                      }),
                 ],
               )),
           body: Container(
@@ -181,91 +184,133 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                       },
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 70,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width - 65,
-                                child: Card(
-                                  elevation: 0,
-                                  color: Colors.white,
-                                  margin: EdgeInsets.only(
-                                      left: 15, right: 2, bottom: 22),
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color: Color.fromARGB(255, 220, 215, 215),
-                                      width: .5,
-                                    ),
-                                  ),
-                                  child: TextFormField(
-                                    controller: _controller,
-                                    focusNode: focusNode,
-                                    textAlignVertical: TextAlignVertical.center,
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 5,
-                                    minLines: 1,
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: "What would you share?",
-                                      hintStyle: TextStyle(
-                                          color: Colors.grey, fontSize: 14),
-                                      suffixIcon: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.attach_file),
-                                            onPressed: () {
-                                              showModalBottomSheet(
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  context: context,
-                                                  builder: (builder) =>
-                                                      bottomSheet());
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      contentPadding: EdgeInsets.all(5),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 20,
-                                  right: 2,
-                                  left: 2,
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Color(0xFFE30613),
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.send,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      sendMessage();
-                                    },
-                                  ),
-                                ),
+                  blockedUsers.contains(widget.receiver.id)
+                      ? Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 20,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFE30613),
+                            boxShadow: [
+                              const BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 10,
+                                offset: Offset(4, 4),
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
+                          child: const Center(
+                            child: Text(
+                              'This user is blocked',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 1.5,
+                                shadows: [
+                                  // Shadow(
+                                  //   color: Colors.black45,
+                                  //   blurRadius: 5,
+                                  //   offset: Offset(2, 2),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            height: 70,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width -
+                                          65,
+                                      child: Card(
+                                        elevation: 0,
+                                        color: Colors.white,
+                                        margin: const EdgeInsets.only(
+                                            left: 15, right: 2, bottom: 22),
+                                        shape: const RoundedRectangleBorder(
+                                          side: BorderSide(
+                                            color: Color.fromARGB(
+                                                255, 220, 215, 215),
+                                            width: .5,
+                                          ),
+                                        ),
+                                        child: TextFormField(
+                                          controller: _controller,
+                                          focusNode: focusNode,
+                                          textAlignVertical:
+                                              TextAlignVertical.center,
+                                          keyboardType: TextInputType.multiline,
+                                          maxLines: 5,
+                                          minLines: 1,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: "What would you share?",
+                                            hintStyle: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 14),
+                                            suffixIcon: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                IconButton(
+                                                  icon: const Icon(
+                                                      Icons.attach_file),
+                                                  onPressed: () {
+                                                    showModalBottomSheet(
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                        context: context,
+                                                        builder: (builder) =>
+                                                            bottomSheet());
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            contentPadding:
+                                                const EdgeInsets.all(5),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 20,
+                                        right: 2,
+                                        left: 2,
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: const Color(0xFFE30613),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.send,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: () {
+                                            sendMessage();
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                 ],
               ),
               onPopInvoked: (didPop) {
@@ -308,28 +353,28 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                 children: [
                   iconCreation(
                       Icons.insert_drive_file, Colors.indigo, "Document"),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   iconCreation(Icons.camera_alt, Colors.pink, "Camera"),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   iconCreation(Icons.insert_photo, Colors.purple, "Gallery"),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   iconCreation(Icons.headset, Colors.orange, "Audio"),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   iconCreation(Icons.location_pin, Colors.teal, "Location"),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   iconCreation(Icons.person, Colors.blue, "Contact"),
@@ -356,12 +401,12 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
               color: Colors.white,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12,
             ),
           )
