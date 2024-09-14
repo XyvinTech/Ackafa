@@ -1,3 +1,4 @@
+import 'package:ackaf/src/interface/common/customDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,12 +34,10 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
 
   void getMessageHistory() async {
     final messagesette = await getChatBetweenUsers(widget.receiver.id!);
-    if(mounted) {
+    if (mounted) {
       setState(() {
-      
         messages.addAll(messagesette);
-     
-    });
+      });
     }
   }
 
@@ -137,9 +136,13 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                   '${widget.receiver.name?.first}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last}',
                   style: TextStyle(fontSize: 18),
                 ),
-                // actions: [
-                //   IconButton(icon: Icon(Icons.call), onPressed: () {}),
-                // ],
+                actions: [
+                  IconButton(
+                      icon: Icon(Icons.block),
+                      onPressed: () {
+                        showBlockPersonDialog(context);
+                      })
+                ],
               )),
           body: Container(
             height: MediaQuery.of(context).size.height,

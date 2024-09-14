@@ -243,3 +243,144 @@ void showUploadPolicyDialog(BuildContext context) {
     },
   );
 }
+
+class BlockPersonDialog extends StatefulWidget {
+  @override
+  _BlockPersonDialogState createState() => _BlockPersonDialogState();
+}
+
+class _BlockPersonDialogState extends State<BlockPersonDialog> {
+  bool isBlocked = false; // Initially not blocked
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBlockStatus(); // Load initial block status from SharedPreferences
+  }
+
+  // Load block status from SharedPreferences
+  Future<void> _loadBlockStatus() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      isBlocked = preferences.getBool('isBlocked') ??
+          false; // Defaults to false (not blocked)
+    });
+  }
+
+  // Toggle block/unblock status
+  Future<void> _toggleBlockStatus(BuildContext context) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      isBlocked = !isBlocked;
+      preferences.setBool('isBlocked', isBlocked);
+    });
+
+    // Show snackbar based on the new state
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(isBlocked ? 'Blocked' : 'Unblocked'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+
+    Navigator.of(context).pop(); // Close the dialog
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      elevation: 12,
+      backgroundColor: Colors.white,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.7, // Adjust width
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              isBlocked
+                  ? 'Are you sure you want to unblock this person?'
+                  : 'Are you sure you want to block this person?',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.w600,
+                color: Colors.blueGrey[900],
+              ),
+            ),
+            const SizedBox(height: 30.0),
+            const SizedBox(height: 20.0),
+            _buildActions(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActions(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the dialog
+          },
+          style: TextButton.styleFrom(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
+          child: Text(
+            'Cancel',
+            style: TextStyle(
+              color: Colors.redAccent,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        ElevatedButton(
+          onPressed: () {
+            _toggleBlockStatus(
+                context); // Toggle block/unblock and show snackbar
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFFE30613), // Red button color
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 14.0),
+            shadowColor: Colors.red.withOpacity(0.3),
+            elevation: 6,
+          ),
+          child: Text(
+            isBlocked ? 'Unblock' : 'Block',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Function to show the BlockPersonDialog
+void showBlockPersonDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return BlockPersonDialog();
+    },
+  );
+}
