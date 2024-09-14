@@ -456,10 +456,10 @@ class MenuPage extends StatelessWidget {
                               delay: const Duration(milliseconds: 300),
                               child: GestureDetector(
                                 onTap: () {
-                                  _launchURL('https://www.xyvin.com');
+                                  _launchURL('https://www.skybertech.com');
                                 },
                                 child: const Text(
-                                  'Powered By SkyeberTech',
+                                  'Powered By SkyberTech',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Color(0xFFE30613),
