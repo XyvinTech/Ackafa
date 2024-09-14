@@ -33,9 +33,13 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
 
   void getMessageHistory() async {
     final messagesette = await getChatBetweenUsers(widget.receiver.id!);
-    setState(() {
-      messages.addAll(messagesette);
+    if(mounted) {
+      setState(() {
+      
+        messages.addAll(messagesette);
+     
     });
+    }
   }
 
   @override

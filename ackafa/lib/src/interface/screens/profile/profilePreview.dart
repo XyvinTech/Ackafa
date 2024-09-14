@@ -107,12 +107,14 @@ class ProfilePreview extends ConsumerWidget {
                         user.image != null
                             ? CircleAvatar(
                                 radius: 45,
-                                backgroundImage: NetworkImage(user.image!),
+                                backgroundImage: NetworkImage(
+                                  user.image ?? 'https://placehold.co/600x400',
+                                ),
                               )
                             : const Icon(Icons.person),
                         const SizedBox(height: 10),
                         Text(
-                          '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
+                          '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name?.last ?? ''}',
                           style: const TextStyle(
                             color: Color(0xFF2C2829),
                             fontSize: 20,

@@ -40,7 +40,7 @@ class ApiRoutes {
           if (middleName != null && middleName != '') "middle": middleName,
           "last": lastName
         },
-        "image": profileUrl,
+     if (profileUrl != null && profileUrl != '')    "image": profileUrl,
         "email": emailId,
         "college": college,
         "batch": batch,
@@ -266,8 +266,8 @@ class ApiRoutes {
     );
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Post Deleted Successfully')));
+      // ScaffoldMessenger.of(context)
+      //     .showSnackBar(SnackBar(content: Text('Post Deleted Successfully')));
     } else {
       final jsonResponse = json.decode(response.body);
       ScaffoldMessenger.of(context)

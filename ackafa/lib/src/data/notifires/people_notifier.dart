@@ -10,7 +10,7 @@ class PeopleNotifier extends _$PeopleNotifier {
   List<UserModel> users = [];
   bool isLoading = false;
   int pageNo = 1;
-  final int limit = 10;
+  final int limit = 20;
   bool hasMore = true;
 
   @override
@@ -40,8 +40,6 @@ class PeopleNotifier extends _$PeopleNotifier {
     }
   }
 }
-
-
 
 @riverpod
 class UsersNotifier extends _$UsersNotifier {
