@@ -499,13 +499,14 @@ class MenuPage extends StatelessWidget {
       },
     );
   }
-void _launchURL(String url) async {
-  try {
-    await launchUrl(Uri.parse(url));
-  } catch (e) {
-    print(e);
+
+  void _launchURL(String url) async {
+    try {
+      await launchUrl(Uri.parse(url));
+    } catch (e) {
+      print(e);
+    }
   }
-}
 
   ListTile _buildListTile(BuildContext context, IconData icon, String title,
       {Color textColor = const Color.fromARGB(255, 0, 0, 0),
