@@ -10,6 +10,7 @@ import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 // import 'package:ackaf/src/interface/screens/menu/my_product.dart';
 // import 'package:ackaf/src/interface/screens/menu/my_reviews.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../menu/requestNFC.dart';
 // import '../menu/myrequirementsPage.dart';
 import '../menu/terms_and_conditions.dart';
@@ -18,6 +19,7 @@ import '../menu/about.dart';
 // import '../menu/my_subscription.dart';
 import '../menu/my_events.dart';
 import '../menu/my_post.dart';
+import 'package:animate_do/animate_do.dart';
 
 void showDeleteAccountDialog(BuildContext context) {
   showDialog(
@@ -435,12 +437,57 @@ class MenuPage extends StatelessWidget {
 
                       Container(
                         color: Color(0xFFF2F2F2),
-                        child: Center(
-                          child: Text(
-                            'Version 1.0\nRate us on Playstore',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.grey),
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FadeInDown(
+                              child: const Center(
+                                child: Text(
+                                  'Version 1.0',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            FadeInUp(
+                              delay: const Duration(milliseconds: 300),
+                              child: GestureDetector(
+                                onTap: () {
+                                  _launchURL('https://www.xyvin.com');
+                                },
+                                child: const Text(
+                                  'Powered By SkyeberTech',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color(0xFFE30613),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            FadeInUp(
+                              delay: const Duration(milliseconds: 600),
+                              child: GestureDetector(
+                                onTap: () {
+                                  _launchURL('https://www.xyvin.com');
+                                },
+                                child: const Text(
+                                  'Developed By Xyvin',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color.fromARGB(221, 182, 168, 168),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Container(color: Color(0xFFF2F2F2), height: 20),
@@ -452,6 +499,13 @@ class MenuPage extends StatelessWidget {
       },
     );
   }
+void _launchURL(String url) async {
+  try {
+    await launchUrl(Uri.parse(url));
+  } catch (e) {
+    print(e);
+  }
+}
 
   ListTile _buildListTile(BuildContext context, IconData icon, String title,
       {Color textColor = const Color.fromARGB(255, 0, 0, 0),
