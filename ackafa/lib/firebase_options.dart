@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAjIqtCCm-0HyQgk1fHx4XLb1sz8YGjj7A',
-    appId: '1:1085720545332:android:8455b668f589b2de166261',
+    appId: '1:1085720545332:android:e2f587418beab115166261',
     messagingSenderId: '1085720545332',
     projectId: 'ackaf-9318f',
     storageBucket: 'ackaf-9318f.appspot.com',
@@ -60,16 +60,16 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAkKMDpYwb1Nq1_Zn1MN0IpDDfdweju9ks',
-    appId: '1:1085720545332:ios:ed4e498b9b3643f5166261',
+    appId: '1:1085720545332:ios:cd6e0ceca6b62f09166261',
     messagingSenderId: '1085720545332',
     projectId: 'ackaf-9318f',
     storageBucket: 'ackaf-9318f.appspot.com',
-    iosBundleId: 'com.skybertech.ackaf',
+    iosBundleId: 'com.skybertech.akcaf',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyAkKMDpYwb1Nq1_Zn1MN0IpDDfdweju9ks',
-    appId: '1:1085720545332:ios:ed4e498b9b3643f5166261',
+    appId: '1:1085720545332:ios:905b21a872afcf6d166261',
     messagingSenderId: '1085720545332',
     projectId: 'ackaf-9318f',
     storageBucket: 'ackaf-9318f.appspot.com',
@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'ackaf-9318f.appspot.com',
     measurementId: 'G-TBH07XN29N',
   );
+
 }

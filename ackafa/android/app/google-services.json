@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1085720545332:android:e2f587418beab115166261",
+        "android_client_info": {
+          "package_name": "com.sk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjIqtCCm-0HyQgk1fHx4XLb1sz8YGjj7A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1085720545332:android:eb7319eda4c68cb5166261",
         "android_client_info": {
           "package_name": "com.skybertech.ackaf"
