@@ -10,6 +10,7 @@ import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 // import 'package:ackaf/src/interface/screens/menu/my_product.dart';
 // import 'package:ackaf/src/interface/screens/menu/my_reviews.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../menu/requestNFC.dart';
 // import '../menu/myrequirementsPage.dart';
 import '../menu/terms_and_conditions.dart';
@@ -18,6 +19,7 @@ import '../menu/about.dart';
 // import '../menu/my_subscription.dart';
 import '../menu/my_events.dart';
 import '../menu/my_post.dart';
+import 'package:animate_do/animate_do.dart';
 
 void showDeleteAccountDialog(BuildContext context) {
   showDialog(
@@ -27,12 +29,12 @@ void showDeleteAccountDialog(BuildContext context) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        titlePadding: EdgeInsets.all(0),
-        contentPadding: EdgeInsets.symmetric(horizontal: 24.0),
-        actionsPadding: EdgeInsets.symmetric(horizontal: 10.0),
+        titlePadding: const EdgeInsets.all(0),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
+        actionsPadding: const EdgeInsets.symmetric(horizontal: 10.0),
         title: Container(
-          padding: EdgeInsets.all(20.0),
-          child: Column(
+          padding: const EdgeInsets.all(20.0),
+          child: const Column(
             children: [
               Icon(
                 Icons.help,
@@ -73,7 +75,7 @@ void showDeleteAccountDialog(BuildContext context) {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
-                      child: Text('No',
+                      child: const Text('No',
                           style: TextStyle(fontSize: 16, color: Colors.black)),
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -81,7 +83,7 @@ void showDeleteAccountDialog(BuildContext context) {
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Container(
                     height: 50,
@@ -92,7 +94,7 @@ void showDeleteAccountDialog(BuildContext context) {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
-                      child: Text('Yes, Delete',
+                      child: const Text('Yes, Delete',
                           style: TextStyle(fontSize: 16, color: Colors.red)),
                       onPressed: () {
                         // Add your delete account logic here
@@ -118,12 +120,12 @@ void showLogoutDialog(BuildContext context) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        titlePadding: EdgeInsets.all(0),
-        contentPadding: EdgeInsets.symmetric(horizontal: 24.0),
-        actionsPadding: EdgeInsets.symmetric(horizontal: 10.0),
+        titlePadding: const EdgeInsets.all(0),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
+        actionsPadding: const EdgeInsets.symmetric(horizontal: 10.0),
         title: Container(
-          padding: EdgeInsets.all(20.0),
-          child: Column(
+          padding: const EdgeInsets.all(20.0),
+          child: const Column(
             children: [
               Icon(
                 Icons.help,
@@ -165,7 +167,7 @@ void showLogoutDialog(BuildContext context) {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
-                      child: Text('No',
+                      child: const Text('No',
                           style: TextStyle(fontSize: 16, color: Colors.black)),
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -173,7 +175,7 @@ void showLogoutDialog(BuildContext context) {
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Container(
                     height: 50,
@@ -184,7 +186,7 @@ void showLogoutDialog(BuildContext context) {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
-                      child: Text('Yes, Logout',
+                      child: const Text('Yes, Logout',
                           style: TextStyle(fontSize: 16, color: Colors.red)),
                       onPressed: () async {
                         LoggedIn = false;
@@ -226,7 +228,7 @@ class MenuPage extends StatelessWidget {
               backgroundColor: Colors.white,
               scrolledUnderElevation: 0,
               leading: IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -255,7 +257,7 @@ class MenuPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(9),
                               child: Image.network(
                                 errorBuilder: (context, error, stackTrace) {
-                                  return Icon(Icons.person);
+                                  return const Icon(Icons.person);
                                 },
                                 user.image ?? 'https://placehold.co/600x400',
                                 height: 70,
@@ -263,13 +265,13 @@ class MenuPage extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            SizedBox(width: 16),
+                            const SizedBox(width: 16),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -277,21 +279,22 @@ class MenuPage extends StatelessWidget {
                                 Text(user.phone!),
                               ],
                             ),
-                            Spacer(),
+                            const Spacer(),
                             TextButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) => DetailsPage(),
+                                    pageBuilder: (_, __, ___) =>
+                                        const DetailsPage(),
                                     transitionDuration:
-                                        Duration(milliseconds: 500),
+                                        const Duration(milliseconds: 500),
                                     transitionsBuilder: (_, a, __, c) =>
                                         FadeTransition(opacity: a, child: c),
                                   ),
                                 );
                               },
-                              child: Text(
+                              child: const Text(
                                 'Edit',
                                 style: TextStyle(color: Colors.red),
                               ),
@@ -302,14 +305,14 @@ class MenuPage extends StatelessWidget {
 
                       // Account Section Label
 
-                      SizedBox(height: 13),
+                      const SizedBox(height: 13),
 
                       Container(
                         height: 50,
                         width: double.infinity,
-                        color: Color(0xFFF2F2F2),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
+                        color: const Color(0xFFF2F2F2),
+                        child: const Padding(
+                          padding: EdgeInsets.only(left: 16.0),
                           child: Row(
                             children: [
                               Text(
@@ -338,7 +341,7 @@ class MenuPage extends StatelessWidget {
                         },
                       ),
 
-                      Divider(),
+                      const Divider(),
                       _buildListTile(
                         context,
                         Icons.event,
@@ -351,7 +354,7 @@ class MenuPage extends StatelessWidget {
                           );
                         },
                       ),
-                      Divider(),
+                      const Divider(),
 
                       _buildListTile(
                         context,
@@ -366,7 +369,7 @@ class MenuPage extends StatelessWidget {
                         },
                       ),
 
-                      Divider(),
+                      const Divider(),
                       _buildListTile(
                         context,
                         Icons.info_outline,
@@ -379,7 +382,7 @@ class MenuPage extends StatelessWidget {
                           );
                         },
                       ),
-                      Divider(),
+                      const Divider(),
                       _buildListTile(
                         context,
                         Icons.article_outlined,
@@ -392,7 +395,7 @@ class MenuPage extends StatelessWidget {
                           );
                         },
                       ),
-                      Divider(),
+                      const Divider(),
                       _buildListTile(
                         context,
                         Icons.description_outlined,
@@ -407,7 +410,7 @@ class MenuPage extends StatelessWidget {
                       ),
 
                       // Spacing before Logout and Delete
-                      Container(color: Color(0xFFF2F2F2), height: 15),
+                      Container(color: const Color(0xFFF2F2F2), height: 15),
 
                       // Logout and Delete Account
                       _buildListTile(
@@ -417,7 +420,7 @@ class MenuPage extends StatelessWidget {
                         textColor: Colors.black,
                         onTap: () => showLogoutDialog(context),
                       ),
-                      Container(color: Color(0xFFF2F2F2), height: 15),
+                      Container(color: const Color(0xFFF2F2F2), height: 15),
 
                       Column(
                         children: [
@@ -431,19 +434,69 @@ class MenuPage extends StatelessWidget {
                         ],
                       ),
 
-                      Container(color: Color(0xFFF2F2F2), height: 20),
+                      Container(color: const Color(0xFFF2F2F2), height: 20),
 
                       Container(
-                        color: Color(0xFFF2F2F2),
-                        child: Center(
-                          child: Text(
-                            'Version 1.0\nRate us on Playstore',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.grey),
-                          ),
+                        color: const Color(0xFFF2F2F2),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FadeInDown(
+                              child: const Center(
+                                child: Text(
+                                  'Version 1.0',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            FadeInUp(
+                              delay: const Duration(milliseconds: 300),
+                              child: GestureDetector(
+                                onTap: () {
+                                  _launchURL('https://www.skybertech.ae');
+                                },
+                                child: const Text(
+                                  'Powered By SkyberTech',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            FadeInUp(
+                              delay: const Duration(milliseconds: 600),
+                              child: GestureDetector(
+                                onTap: () {
+                                  _launchURL('https://www.xyvin.com');
+                                },
+                                child: const Text(
+                                  'Developed By Xyvin',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Container(color: Color(0xFFF2F2F2), height: 20),
+                      Container(color: const Color(0xFFF2F2F2), height: 20),
                     ],
                   ),
                 );
@@ -451,6 +504,14 @@ class MenuPage extends StatelessWidget {
             ));
       },
     );
+  }
+
+  void _launchURL(String url) async {
+    try {
+      await launchUrl(Uri.parse(url));
+    } catch (e) {
+      print(e);
+    }
   }
 
   ListTile _buildListTile(BuildContext context, IconData icon, String title,
@@ -467,7 +528,7 @@ class MenuPage extends StatelessWidget {
         'assets/icons/polygon.svg',
         height: 16,
         width: 16,
-        color: Color(0xFFC4C4C4),
+        color: const Color(0xFFC4C4C4),
       ),
       onTap: onTap ??
           () {

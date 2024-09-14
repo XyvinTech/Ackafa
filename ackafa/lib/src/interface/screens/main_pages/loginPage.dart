@@ -95,7 +95,7 @@ class PhoneNumberScreen extends ConsumerWidget {
                     hintText: '0000000000',
                     hintStyle: TextStyle(
                       color: Colors.grey,
-                      letterSpacing: 5.0,
+                      letterSpacing: 4.0,
                       fontSize: 30,
                       fontWeight: FontWeight.w400,
                     ),
