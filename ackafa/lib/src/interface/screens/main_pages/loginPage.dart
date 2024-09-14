@@ -205,7 +205,7 @@ class PhoneNumberScreen extends ConsumerWidget {
       } else {
         ApiRoutes userApi = ApiRoutes();
         final data = await userApi.submitPhoneNumber(
-            countryCode ?? 91.toString(), context, _mobileController.text);
+            countryCode ?? 971.toString(), context, _mobileController.text);
         final verificationId = data['verificationId'];
         final resendToken = data['resendToken'];
         if (verificationId != null && verificationId.isNotEmpty) {
