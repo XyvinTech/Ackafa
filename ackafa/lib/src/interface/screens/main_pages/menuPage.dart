@@ -495,6 +495,7 @@ class MenuPage extends StatelessWidget {
                           ],
                         ),
                       ),
+                      
                       Container(color: Color(0xFFF2F2F2), height: 20),
                     ],
                   ),
