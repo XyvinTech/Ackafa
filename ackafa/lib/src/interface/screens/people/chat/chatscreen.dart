@@ -260,18 +260,18 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                                             suffixIcon: Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                IconButton(
-                                                  icon: const Icon(
-                                                      Icons.attach_file),
-                                                  onPressed: () {
-                                                    showModalBottomSheet(
-                                                        backgroundColor:
-                                                            Colors.transparent,
-                                                        context: context,
-                                                        builder: (builder) =>
-                                                            bottomSheet());
-                                                  },
-                                                ),
+                                                // IconButton(
+                                                //   icon: const Icon(
+                                                //       Icons.attach_file),
+                                                //   onPressed: () {
+                                                //     showModalBottomSheet(
+                                                //         backgroundColor:
+                                                //             Colors.transparent,
+                                                //         context: context,
+                                                //         builder: (builder) =>
+                                                //             bottomSheet());
+                                                //   },
+                                                // ),
                                               ],
                                             ),
                                             contentPadding:
