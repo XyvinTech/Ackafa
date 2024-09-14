@@ -456,7 +456,7 @@ class MenuPage extends StatelessWidget {
                               delay: const Duration(milliseconds: 300),
                               child: GestureDetector(
                                 onTap: () {
-                                  _launchURL('https://www.xyvin.com');
+                                  _launchURL('https://www.skybertech.com');
                                 },
                                 child: const Text(
                                   'Powered By SkyberTech',
@@ -499,13 +499,14 @@ class MenuPage extends StatelessWidget {
       },
     );
   }
-void _launchURL(String url) async {
-  try {
-    await launchUrl(Uri.parse(url));
-  } catch (e) {
-    print(e);
+
+  void _launchURL(String url) async {
+    try {
+      await launchUrl(Uri.parse(url));
+    } catch (e) {
+      print(e);
+    }
   }
-}
 
   ListTile _buildListTile(BuildContext context, IconData icon, String title,
       {Color textColor = const Color.fromARGB(255, 0, 0, 0),
