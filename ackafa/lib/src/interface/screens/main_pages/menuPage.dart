@@ -459,7 +459,7 @@ class MenuPage extends StatelessWidget {
                                   _launchURL('https://www.xyvin.com');
                                 },
                                 child: const Text(
-                                  'Powered By SkyeberTech',
+                                  'Powered By SkyberTech',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Color(0xFFE30613),
