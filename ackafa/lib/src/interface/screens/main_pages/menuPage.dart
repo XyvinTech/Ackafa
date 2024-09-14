@@ -452,6 +452,9 @@ class MenuPage extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            SizedBox(
+                              height: 10,
+                            ),
                             FadeInUp(
                               delay: const Duration(milliseconds: 300),
                               child: GestureDetector(
@@ -462,14 +465,16 @@ class MenuPage extends StatelessWidget {
                                   'Powered By SkyberTech',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: Color(0xFFE30613),
-                                    fontSize: 20,
+                                    color: Colors.grey,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 5),
+                            SizedBox(
+                              height: 10,
+                            ),
                             FadeInUp(
                               delay: const Duration(milliseconds: 600),
                               child: GestureDetector(
@@ -480,8 +485,8 @@ class MenuPage extends StatelessWidget {
                                   'Developed By Xyvin',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: Color.fromARGB(221, 182, 168, 168),
-                                    fontSize: 16,
+                                    color: Colors.grey,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
