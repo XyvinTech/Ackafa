@@ -34,16 +34,14 @@ Future<void> checkForUpdate(AppVersionResponse response, context) async {
   }
 }
 
-
 void showUpdateDialog(AppVersionResponse response, BuildContext context) {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => PopScope(onPopInvoked: (didPop) {
-         SystemNavigator.pop();
-
-    },
-
+    builder: (context) => PopScope(
+      onPopInvoked: (didPop) {
+        SystemNavigator.pop();
+      },
       child: AlertDialog(
         title: Text('Update Required'),
         content: Text(response.updateMessage),
