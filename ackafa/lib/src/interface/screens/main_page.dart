@@ -94,7 +94,7 @@ class _MainPageState extends ConsumerState<MainPage> {
       HomePage(
         user: user,
       ),
-      FeedView(),
+      // FeedView(),
       ProfilePage(user: user),
       Event_News_Page(),
       PeoplePage(),
@@ -103,14 +103,14 @@ class _MainPageState extends ConsumerState<MainPage> {
     ];
     _inactiveIcons = [
       'assets/icons/home_inactive.svg',
-      'assets/icons/feed_inactive.svg',
+      // 'assets/icons/feed_inactive.svg',
       user.image ?? 'https://placehold.co/600x400',
       'assets/icons/news_inactive.svg',
       'assets/icons/people_inactive.svg',
     ];
     _activeIcons = [
       'assets/icons/home_active.svg',
-      'assets/icons/feed_active.svg',
+      // 'assets/icons/feed_active.svg',
       user.image ?? 'https://placehold.co/600x400',
       'assets/icons/active_event.svg',
       'assets/icons/people_active.svg',
@@ -138,10 +138,10 @@ class _MainPageState extends ConsumerState<MainPage> {
               child: _widgetOptions.elementAt(_selectedIndex),
             ),
             bottomNavigationBar: BottomNavigationBar(
-              items: List.generate(5, (index) {
+              items: List.generate(4, (index) {
                 return BottomNavigationBarItem(
                   backgroundColor: Colors.white,
-                  icon: index == 2 // Assuming profile is the third item
+                  icon: index == 1 // Assuming profile is the third item
                       ? CircleAvatar(
                           backgroundImage: NetworkImage(
                             user.image ?? 'https://placehold.co/600x400',
@@ -154,7 +154,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                               ? Colors.blue
                               : Colors.grey,
                         ),
-                  activeIcon: index == 2
+                  activeIcon: index == 1
                       ? CircleAvatar(
                           backgroundImage: NetworkImage(
                             user.image ?? 'https://placehold.co/600x400',
@@ -167,7 +167,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                         ),
                   label: [
                     'Home',
-                    'Feed',
+                    // 'Feed',
                     'Profile',
                     'Events/news',
                     'People'
