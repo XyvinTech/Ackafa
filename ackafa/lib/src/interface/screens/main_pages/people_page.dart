@@ -7,17 +7,15 @@ import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chat.dart';
 import 'package:ackaf/src/interface/screens/people/members.dart';
 
-
 class PeoplePage extends StatelessWidget {
   const PeoplePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Number of tabs
+        length: 1, // Number of tabs
 
-
-          child:  Scaffold(
+        child: Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
               toolbarHeight: 60.0,
@@ -85,32 +83,26 @@ class PeoplePage extends StatelessWidget {
                       ),
                       tabs: [
                         Tab(text: "MEMBERS"),
-                        Tab(text: "CHAT"),
+                        // Tab(text: "CHAT"),
                       ],
                     ),
                   ),
                 ),
               ),
             ),
-            body: 
-                 Column(
-                  children: [
-                    // Wrap TabBar with a Container to adjust margin
+            body: Column(
+              children: [
+                // Wrap TabBar with a Container to adjust margin
 
-                    Expanded(
-                      child: TabBarView(
-                        children: [
-                          MembersPage( ),
-                          ChatPage(),
-                        ],
-                      ),
-                    ),
-                  ],
-                )
-            
-          )
-      
- 
-    );
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      MembersPage(),
+                      // ChatPage(),
+                    ],
+                  ),
+                ),
+              ],
+            )));
   }
 }

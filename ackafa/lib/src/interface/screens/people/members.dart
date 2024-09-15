@@ -140,16 +140,16 @@ class _MembersPageState extends ConsumerState<MembersPage> {
                             subtitle: user.company?.designation != null
                                 ? Text(user.company!.designation!)
                                 : null,
-                            trailing: IconButton(
-                              icon: Icon(Icons.chat),
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => IndividualPage(
-                                          receiver: receiver!,
-                                          sender: sender!,
-                                        )));
-                              },
-                            ),
+                            // trailing: IconButton(
+                            //   icon: Icon(Icons.chat),
+                            //   onPressed: () {
+                            //     Navigator.of(context).push(MaterialPageRoute(
+                            //         builder: (context) => IndividualPage(
+                            //               receiver: receiver!,
+                            //               sender: sender!,
+                            //             )));
+                            //   },
+                            // ),
                           ),
                         );
                       },
