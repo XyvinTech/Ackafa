@@ -355,20 +355,19 @@ class MenuPage extends StatelessWidget {
                       ),
                       Divider(),
 
-                      _buildListTile(
-                        context,
-                        Icons.notifications_none,
-                        'My Posts',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MyPostsPage()),
-                          );
-                        },
-                      ),
+                      // _buildListTile(
+                      //   context,
+                      //   Icons.notifications_none,
+                      //   'My Posts',
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => MyPostsPage()),
+                      //     );
+                      //   },
+                      // ),
 
-                      Divider(),
                       _buildListTile(
                         context,
                         Icons.info_outline,
