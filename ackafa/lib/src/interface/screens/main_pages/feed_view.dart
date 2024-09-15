@@ -252,27 +252,27 @@ class _FeedViewState extends ConsumerState<FeedView> {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
-            log('Agreed?${isAgreed.toString()}');
-            if (!isAgreed) {
-              showUploadPolicyDialog(context);
-            }
-            if (isAgreed) {
-              _openModalSheet(sheet: 'post');
-            }
-          },
-          label: const Text(
-            'Add Post',
-            style: TextStyle(color: Colors.white),
-          ),
-          icon: const Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 27,
-          ),
-          backgroundColor: Color(0xFFE30613),
-        ),
+        // floatingActionButton: FloatingActionButton.extended(
+        //   onPressed: () async {
+        //     log('Agreed?${isAgreed.toString()}');
+        //     if (!isAgreed) {
+        //       showUploadPolicyDialog(context);
+        //     }
+        //     if (isAgreed) {
+        //       _openModalSheet(sheet: 'post');
+        //     }
+        //   },
+        //   label: const Text(
+        //     'Add Post',
+        //     style: TextStyle(color: Colors.white),
+        //   ),
+        //   icon: const Icon(
+        //     Icons.add,
+        //     color: Colors.white,
+        //     size: 27,
+        //   ),
+        //   backgroundColor: Color(0xFFE30613),
+        // ),
       ),
     );
   }

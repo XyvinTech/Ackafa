@@ -66,13 +66,13 @@ class _MainPageState extends ConsumerState<MainPage> {
   void initState() {
     super.initState();
     ref.read(userProvider.notifier).refreshUser();
-    if (!isAgreed) {
-      log('Agreed? inside ${isAgreed.toString()}');
-      // Use a post-frame callback to show the dialog
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showUploadPolicyDialog(context);
-      });
-    }
+    // if (!isAgreed) {
+    //   log('Agreed? inside ${isAgreed.toString()}');
+    //   // Use a post-frame callback to show the dialog
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     showUploadPolicyDialog(context);
+    //   });
+    // }
   }
 
   int _selectedIndex = 0;
