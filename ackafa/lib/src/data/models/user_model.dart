@@ -125,7 +125,7 @@ class UserModel {
     };
   }
 
-  UserModel copyWith({
+  UserModel  copyWith({
     Name? name,
     String? id,
     String? uid,

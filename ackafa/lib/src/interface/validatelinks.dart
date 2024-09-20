@@ -14,13 +14,3 @@ String? validateYouTubeUrl(String? value) {
   return null;
 }
 
-bool? isValidUrl(String? url) {
-  if (url == null ||
-      (!url.startsWith("http://") && !url.startsWith("https://"))) {
-    log('Not a valid URL');
-    return false;
-  } else {
-    log('Valid URL');
-    return true;
-  }
-}
