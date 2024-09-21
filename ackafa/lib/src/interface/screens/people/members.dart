@@ -169,6 +169,6 @@ class _MembersPageState extends ConsumerState<MembersPage> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-    // webSocketClient.disconnect();
+    webSocketClient.disconnect();
   }
 }

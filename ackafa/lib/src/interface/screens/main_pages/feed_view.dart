@@ -48,10 +48,10 @@ class _FeedViewState extends ConsumerState<FeedView> {
     webSocketClient.connect(id, ref);
 
     _scrollController.addListener(_onScroll);
-    _fetchInitialUsers();
+    _fetchInitialFeeds();
   }
 
-  Future<void> _fetchInitialUsers() async {
+  Future<void> _fetchInitialFeeds() async {
     await ref.read(feedNotifierProvider.notifier).fetchMoreFeed();
   }
 
@@ -205,21 +205,21 @@ class _FeedViewState extends ConsumerState<FeedView> {
                   //   ),
                   // ),
                   // Horizontally scrollable Choice Chips
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          _buildChoiceChip('All'),
-                          _buildChoiceChip('Information'),
-                          _buildChoiceChip('Job'),
-                          _buildChoiceChip('Funding'),
-                          _buildChoiceChip('Requirement'),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // SingleChildScrollView(
+                  //   scrollDirection: Axis.horizontal,
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.all(8.0),
+                  //     child: Row(
+                  //       children: [
+                  //         _buildChoiceChip('All'),
+                  //         _buildChoiceChip('Information'),
+                  //         _buildChoiceChip('Job'),
+                  //         _buildChoiceChip('Funding'),
+                  //         _buildChoiceChip('Requirement'),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   // Feed list
                   Expanded(
                     child: filteredFeeds.isEmpty
@@ -282,28 +282,28 @@ class _FeedViewState extends ConsumerState<FeedView> {
   }
 
   // Method to build individual Choice Chips
-  Widget _buildChoiceChip(String label) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: ChoiceChip(
-        label: Text(label),
-        selected: selectedFilter == label,
-        onSelected: (selected) {
-          setState(() {
-            selectedFilter = label;
-          });
-        },
-        backgroundColor: Colors.white, // Light green background color
-        selectedColor: Color(0xFFD3EDCA), // When selected
+  // Widget _buildChoiceChip(String label) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 4.0),
+  //     child: ChoiceChip(
+  //       label: Text(label),
+  //       selected: selectedFilter == label,
+  //       onSelected: (selected) {
+  //         setState(() {
+  //           selectedFilter = label;
+  //         });
+  //       },
+  //       backgroundColor: Colors.white, // Light green background color
+  //       selectedColor: Color(0xFFD3EDCA), // When selected
 
-        shape: RoundedRectangleBorder(
-          side: BorderSide(color: Color.fromARGB(255, 214, 210, 210)),
-          borderRadius: BorderRadius.circular(20.0), // Circular border
-        ),
-        showCheckmark: false, // Remove tick icon
-      ),
-    );
-  }
+  //       shape: RoundedRectangleBorder(
+  //         side: BorderSide(color: Color.fromARGB(255, 214, 210, 210)),
+  //         borderRadius: BorderRadius.circular(20.0), // Circular border
+  //       ),
+  //       showCheckmark: false, // Remove tick icon
+  //     ),
+  //   );
+  // }
 
   Widget _buildPost({bool withImage = false, required Feed feed}) {
     return Consumer(
