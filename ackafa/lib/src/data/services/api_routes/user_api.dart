@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -40,7 +41,7 @@ class ApiRoutes {
           if (middleName != null && middleName != '') "middle": middleName,
           "last": lastName
         },
-     if (profileUrl != null && profileUrl != '')    "image": profileUrl,
+        if (profileUrl != null && profileUrl != '') "image": profileUrl,
         "email": emailId,
         "college": college,
         "batch": batch,

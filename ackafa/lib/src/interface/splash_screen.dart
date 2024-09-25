@@ -16,7 +16,7 @@ class SplashScreen extends ConsumerStatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> { 
   @override
   void initState() {
     super.initState();
