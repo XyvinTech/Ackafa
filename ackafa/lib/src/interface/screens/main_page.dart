@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
 import 'package:ackaf/src/interface/screens/main_pages/feed_view.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 import 'package:flutter/material.dart';
@@ -61,10 +62,22 @@ class MainPage extends ConsumerStatefulWidget {
 }
 
 class _MainPageState extends ConsumerState<MainPage> {
+    late final webSocketClient;
+
+
   @override
   void initState() {
     super.initState();
     ref.read(userProvider.notifier).refreshUser();
+        webSocketClient = ref.read(socketIoClientProvider);
+    webSocketClient.connect(id, ref);
+  }
+
+  @override
+  void dispose() {
+    webSocketClient.disconnect();
+
+    super.dispose();
   }
 
   int _selectedIndex = 0;

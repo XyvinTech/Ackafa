@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/appversion_model.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +9,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_upgrade_version/flutter_upgrade_version.dart';
 
 Future<void> checkAppVersion(context) async {
-  final response = await http
-      .get(Uri.parse('https://akcafconnect.com/api/v1/user/app-version'));
+  final response = await http.get(
+      Uri.parse('http://dev-api.akcafconnect.com/api/v1/user/app-version'));
 
   if (response.statusCode == 200) {
     final jsonResponse = json.decode(response.body);
@@ -39,7 +38,7 @@ void showUpdateDialog(AppVersionResponse response, BuildContext context) {
     context: context,
     barrierDismissible: false,
     builder: (context) => PopScope(
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, res) {
         SystemNavigator.pop();
       },
       child: AlertDialog(

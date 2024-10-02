@@ -1,3 +1,8 @@
+import 'dart:developer';
+
+import 'package:ackaf/src/data/providers/user_provider.dart';
+
+import 'package:ackaf/src/interface/common/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +24,7 @@ class IndividualPage extends ConsumerStatefulWidget {
 }
 
 class _IndividualPageState extends ConsumerState<IndividualPage> {
+  bool isBlocked = false;
   bool show = false;
   FocusNode focusNode = FocusNode();
   List<MessageModel> messages = [];
@@ -32,14 +38,32 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
   }
 
   void getMessageHistory() async {
-    final messagesette = await getChatBetweenUsers(widget.receiver.id!);
-    if(mounted) {
+    final messagesette = await getChatBetweenUsers(widget.receiver.id ?? '');
+    if (mounted) {
       setState(() {
-      
         messages.addAll(messagesette);
-     
-    });
+      });
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadBlockStatus(); // Now safe to call
+  }
+
+  Future<void> _loadBlockStatus() async {
+    final asyncUser = ref.watch(userProvider);
+    asyncUser.whenData(
+      (user) {
+        setState(() {
+          if (user.blockedUsers != null) {
+            isBlocked = user.blockedUsers!.contains(id);
+            // .any((blockedUser) => blockedUser. == widget.receiver.id);
+          }
+        });
+      },
+    );
   }
 
   @override
@@ -94,9 +118,9 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
     return Stack(
       children: [
         Scaffold(
-          backgroundColor: Color(0xFFFCFCFC),
+          backgroundColor: const Color(0xFFFCFCFC),
           appBar: PreferredSize(
-              preferredSize: Size.fromHeight(60),
+              preferredSize: const Size.fromHeight(60),
               child: AppBar(
                 elevation: 1,
                 shadowColor: Colors.white,
@@ -106,17 +130,17 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                 leading: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     InkWell(
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_back,
                         size: 24,
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     ClipOval(
                       child: Container(
                         width: 30,
@@ -126,7 +150,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                           widget.receiver.image ?? '',
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return Icon(Icons.person);
+                            return const Icon(Icons.person);
                           },
                         ),
                       ),
@@ -134,12 +158,37 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                   ],
                 ),
                 title: Text(
-                  '${widget.receiver.name?.first}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last}',
-                  style: TextStyle(fontSize: 18),
+                  '${widget.receiver.name?.first ?? ''} ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last ?? ''} ',
+                  style: const TextStyle(fontSize: 18),
                 ),
-                // actions: [
-                //   IconButton(icon: Icon(Icons.call), onPressed: () {}),
-                // ],
+                actions: [
+                  IconButton(
+                      icon: const Icon(Icons.report),
+                      onPressed: () {
+                        showReportPersonDialog(
+                            context: context,
+                            onReportStatusChanged: () {},
+                            reportType: 'User',
+                            reportedItemId: widget.receiver.id ?? '');
+                      }),
+                  IconButton(
+                      icon: const Icon(Icons.block),
+                      onPressed: () {
+                        showBlockPersonDialog(
+                            context: context,
+                            userId: widget.receiver.id ?? '',
+                            onBlockStatusChanged: () {
+                              setState(() {
+                                Future.delayed(Duration(milliseconds: 1000));
+                                if (isBlocked) {
+                                  isBlocked = false;
+                                } else {
+                                  isBlocked = true;
+                                }
+                              });
+                            });
+                      }),
+                ],
               )),
           body: Container(
             height: MediaQuery.of(context).size.height,
@@ -158,8 +207,8 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                             index]; // Reverse the index to get the latest message first
                         if (message.from == widget.sender.id) {
                           return OwnMessageCard(
-                            status: message.status!,
                             feed: message.feed,
+                            status: message.status!,
                             message: message.content ?? '',
                             time: DateFormat('h:mm a').format(
                               DateTime.parse(message.createdAt.toString())
@@ -167,102 +216,162 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                             ),
                           );
                         } else {
-                          return ReplyCard(
-                            message: message.content ?? '',
-                            time: DateFormat('h:mm a').format(
-                              DateTime.parse(message.createdAt.toString())
-                                  .toLocal(),
+                          return GestureDetector(
+                            onLongPress: () {
+                              showReportPersonDialog(
+                                  reportedItemId: message.id ?? '',
+                                  context: context,
+                                  onReportStatusChanged: () {
+                                    setState(() {
+                                      if (isBlocked) {
+                                        isBlocked = false;
+                                      } else {
+                                        isBlocked = true;
+                                      }
+                                    });
+                                  },
+                                  reportType: 'Chat');
+                            },
+                            child: ReplyCard(
+                              feed: message.feed,
+                              message: message.content ?? '',
+                              time: DateFormat('h:mm a').format(
+                                DateTime.parse(message.createdAt.toString())
+                                    .toLocal(),
+                              ),
                             ),
                           );
                         }
                       },
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 70,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width - 65,
-                                child: Card(
-                                  elevation: 0,
-                                  color: Colors.white,
-                                  margin: EdgeInsets.only(
-                                      left: 15, right: 2, bottom: 22),
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color: Color.fromARGB(255, 220, 215, 215),
-                                      width: .5,
-                                    ),
-                                  ),
-                                  child: TextFormField(
-                                    controller: _controller,
-                                    focusNode: focusNode,
-                                    textAlignVertical: TextAlignVertical.center,
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 5,
-                                    minLines: 1,
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: "What would you share?",
-                                      hintStyle: TextStyle(
-                                          color: Colors.grey, fontSize: 14),
-                                      suffixIcon: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.attach_file),
-                                            onPressed: () {
-                                              showModalBottomSheet(
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  context: context,
-                                                  builder: (builder) =>
-                                                      bottomSheet());
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      contentPadding: EdgeInsets.all(5),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 20,
-                                  right: 2,
-                                  left: 2,
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Color(0xFFE30613),
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.send,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      sendMessage();
-                                    },
-                                  ),
-                                ),
+                  isBlocked
+                      ? Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 20,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFE30613),
+                            boxShadow: [
+                              const BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 10,
+                                offset: Offset(4, 4),
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
+                          child: const Center(
+                            child: Text(
+                              'This user is blocked',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 1.5,
+                                shadows: [
+                                  // Shadow(
+                                  //   color: Colors.black45,
+                                  //   blurRadius: 5,
+                                  //   offset: Offset(2, 2),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            height: 70,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width -
+                                          65,
+                                      child: Card(
+                                        elevation: 0,
+                                        color: Colors.white,
+                                        margin: const EdgeInsets.only(
+                                            left: 15, right: 2, bottom: 22),
+                                        shape: const RoundedRectangleBorder(
+                                          side: BorderSide(
+                                            color: Color.fromARGB(
+                                                255, 220, 215, 215),
+                                            width: .5,
+                                          ),
+                                        ),
+                                        child: TextFormField(
+                                          controller: _controller,
+                                          focusNode: focusNode,
+                                          textAlignVertical:
+                                              TextAlignVertical.center,
+                                          keyboardType: TextInputType.multiline,
+                                          maxLines: 5,
+                                          minLines: 1,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: "What would you share?",
+                                            hintStyle: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 14),
+                                            suffixIcon: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                // IconButton(
+                                                //   icon: const Icon(
+                                                //       Icons.attach_file),
+                                                //   onPressed: () {
+                                                //     showModalBottomSheet(
+                                                //         backgroundColor:
+                                                //             Colors.transparent,
+                                                //         context: context,
+                                                //         builder: (builder) =>
+                                                //             bottomSheet());
+                                                //   },
+                                                // ),
+                                              ],
+                                            ),
+                                            contentPadding:
+                                                const EdgeInsets.all(5),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 20,
+                                        right: 2,
+                                        left: 2,
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Color(0xFFE30613),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.send,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: () {
+                                            sendMessage();
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                 ],
               ),
               onPopInvoked: (didPop) {
@@ -305,28 +414,28 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                 children: [
                   iconCreation(
                       Icons.insert_drive_file, Colors.indigo, "Document"),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   iconCreation(Icons.camera_alt, Colors.pink, "Camera"),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   iconCreation(Icons.insert_photo, Colors.purple, "Gallery"),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   iconCreation(Icons.headset, Colors.orange, "Audio"),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   iconCreation(Icons.location_pin, Colors.teal, "Location"),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   iconCreation(Icons.person, Colors.blue, "Contact"),
@@ -353,12 +462,12 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
               color: Colors.white,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12,
             ),
           )

@@ -300,7 +300,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
         "last": user.name!.last,
       },
       "email": user.email,
-   if(user.image!=null && user.image!='')   "image": user.image,
+      if (user.image != null && user.image != '') "image": user.image,
       "college": user.college?.id,
       if (user.address != null) "address": user.address.toString() ?? '',
       if (user.bio != null) "bio": user.bio.toString() ?? '',
@@ -587,7 +587,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                                       stackTrace) {
                                                     return Icon(Icons.person);
                                                   },
-                                                  user.image??  'https://placehold.co/600x400', // Replace with your image URL
+                                                  user.image ??
+                                                      'https://placehold.co/600x400', // Replace with your image URL
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -754,7 +755,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                     labelText: 'Enter Personal Address',
                                     maxLines: 3,
                                     prefixIcon: const Icon(Icons.location_on,
-                                        color: Color(0xFF004797)),
+                                        color: Color(0xFFE30613)),
                                   ),
                                   const SizedBox(height: 20.0),
                                   CustomTextFormField(

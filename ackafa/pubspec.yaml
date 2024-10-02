@@ -1,7 +1,7 @@
 name: ackaf
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.1.7+7
+version: 0.1.5+5
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -46,6 +46,7 @@ dependencies:
   shimmer: ^3.0.0
   shake_animation_widget: ^3.0.4
   animate_do: ^3.3.4
+  qr_flutter: ^4.1.0
 
 
   

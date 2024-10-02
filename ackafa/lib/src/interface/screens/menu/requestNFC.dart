@@ -1,3 +1,4 @@
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:flutter/material.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 
@@ -46,7 +47,13 @@ class RequestNFCPage extends StatelessWidget {
                 'assets/NFC.png', // Replace with your image URL
               ),
             ),
-            customButton(label: 'REQUEST NFC', onPressed: () {}, fontSize: 16),
+            customButton(
+                label: 'REQUEST NFC',
+                onPressed: () {
+                  ApiRoutes userApi = ApiRoutes();
+                  userApi.requestNFC(context);
+                },
+                fontSize: 16),
           ],
         ),
       ),

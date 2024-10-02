@@ -3,15 +3,10 @@ import 'dart:developer';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
-import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/interface/common/cards.dart';
 import 'package:ackaf/src/interface/common/components/svg_icon.dart';
-import 'package:ackaf/src/interface/common/customModalsheets.dart';
-import 'package:ackaf/src/interface/common/customTextfields.dart';
-import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,7 +14,7 @@ import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class ProfilePreview extends ConsumerWidget {
   final UserModel user;
-  ProfilePreview({Key? key, required this.user}) : super(key: key);
+  ProfilePreview({super.key, required this.user});
 
   final List<String> svgIcons = [
     'assets/icons/instagram.svg',
@@ -64,7 +59,7 @@ class ProfilePreview extends ConsumerWidget {
                               icon: const Icon(
                                 size: 18,
                                 Icons.edit,
-                                color: Color(0xFF004797),
+                                color: Color(0xFFE30613),
                               ),
                               onPressed: () {
                                 Navigator.push(

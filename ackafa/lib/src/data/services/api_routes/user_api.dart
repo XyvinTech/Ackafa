@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:ackaf/src/data/globals.dart';
@@ -14,7 +17,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_api.g.dart';
 
 class ApiRoutes {
-  final String baseUrl = 'https://akcafconnect.com/api/v1';
+  final String baseUrl = 'http://dev-api.akcafconnect.com/api/v1';
 
   Future<bool> registerUser(
       {required String token,
@@ -26,7 +29,7 @@ class ApiRoutes {
       required String? college,
       required String? batch,
       required context}) async {
-    final url = Uri.parse('https://akcafconnect.com/api/v1/user/update');
+    final url = Uri.parse('http://dev-api.akcafconnect.com/api/v1/user/update');
 
     final response = await http.patch(
       url,
@@ -119,6 +122,133 @@ class ApiRoutes {
         verificationId = verificationId;
       },
     );
+  }
+
+  Future<void> requestNFC(BuildContext context) async {
+    final url = Uri.parse('$baseUrl/user/request/nfc');
+    log("Requesting URL:${url}");
+    final headers = {
+      'accept': 'application/json',
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      final response = await http.post(url, headers: headers);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Review posted successfully');
+        CustomSnackbar.showSnackbar(
+            context, 'NFC requested sucessfully and we will mail you shortly');
+      } else {
+        print('Response body: ${response.body}');
+        CustomSnackbar.showSnackbar(context, 'Already requested');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> blockUser(
+      String userId, String? reason, context, WidgetRef ref) async {
+    final String url = '$baseUrl/user/block/$userId';
+
+    try {
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Success
+        ref.invalidate(userProvider);
+
+        print('User Blocked successfully');
+        CustomSnackbar.showSnackbar(context, 'User Blocked');
+      } else {
+        // Handle error
+        print('Failed to Block: ${response.statusCode}');
+        final dynamic message = json.decode(response.body)['message'];
+        log(message);
+        CustomSnackbar.showSnackbar(context, 'Failed to block');
+      }
+    } catch (e) {
+      // Handle exceptions
+      print('An error occurred: $e');
+    }
+  }
+
+  Future<void> unBlockUser(String userId, String reason, context) async {
+    final String url = '$baseUrl/user/unblock/$userId';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Success
+        print('User unBlocked successfully');
+        CustomSnackbar.showSnackbar(context, 'User unblocked');
+      } else {
+        // Handle error
+        print('Failed to unBlock: ${response.statusCode}');
+        final dynamic message = json.decode(response.body)['message'];
+        log(message);
+        CustomSnackbar.showSnackbar(context, 'Failed to block');
+      }
+    } catch (e) {
+      // Handle exceptions
+      print('An error occurred: $e');
+    }
+  }
+
+  Future<void> createReport({
+    required BuildContext context,
+    required String reportedItemId,
+    required String reportType,
+  }) async {
+    String url = '$baseUrl/report';
+    try {
+      final Map<String, dynamic> body = {
+        'content': reportedItemId != null && reportedItemId != ''
+            ? reportedItemId
+            : ' ',
+        'reportType': reportType,
+      };
+
+      // Send the POST request
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':
+              'Bearer $token', // Include your token if authentication is required
+        },
+        body: jsonEncode(body),
+      );
+
+      // Handle the response
+      if (response.statusCode == 201) {
+        CustomSnackbar.showSnackbar(context, 'Reported to admin');
+
+        print('Report created successfully');
+      } else {
+        CustomSnackbar.showSnackbar(context, 'Failed to Report');
+
+        print('Failed to create report: ${response.statusCode}');
+        print('Error: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
   }
 
   Future<String> verifyOTP(
@@ -444,7 +574,7 @@ class ApiRoutes {
   }
 }
 
-const String baseUrl = 'https://akcafconnect.com/api/v1';
+const String baseUrl = 'http://dev-api.akcafconnect.com/api/v1';
 
 @riverpod
 Future<UserModel> fetchUserDetails(FetchUserDetailsRef ref) async {

@@ -94,7 +94,7 @@ class ProfilePage extends StatelessWidget {
               Column(
                 children: [
                   SizedBox(
-                    height: 50,
+                    height: 20,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(20),
@@ -238,7 +238,6 @@ class ProfilePage extends StatelessWidget {
                             ],
                           ),
                         ),
-
                         Container(
                           padding: const EdgeInsets.only(
                               left: 35, right: 30, top: 25, bottom: 35),
@@ -293,7 +292,6 @@ class ProfilePage extends StatelessWidget {
                             ],
                           ),
                         ),
-
                         Container(
                           padding: const EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
@@ -338,56 +336,68 @@ class ProfilePage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     Container(
-                        //       width: 90,
-                        //       height: 90,
-                        //       decoration: BoxDecoration(
-                        //         color: Color(0xFFE30613),
-                        //         borderRadius: BorderRadius.circular(
-                        //             50), // Apply circular border to the outer container
-                        //       ),
-                        //       child: Padding(
-                        //         padding: const EdgeInsets.all(4.0),
-                        //         child: Container(
-                        //           decoration: BoxDecoration(
-                        //             borderRadius: BorderRadius.circular(50),
-                        //             color: Color(0xFFE30613),
-                        //           ),
-                        //           child: Icon(
-                        //             Icons.share,
-                        //             color: Colors.white,
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     const SizedBox(width: 20),
-                        //     Container(
-                        //       width: 90,
-                        //       height: 90,
-                        //       decoration: BoxDecoration(
-                        //         color: Colors.white,
-                        //         borderRadius: BorderRadius.circular(
-                        //             50), // Apply circular border to the outer container
-                        //       ),
-                        //       child: Padding(
-                        //         padding: const EdgeInsets.all(4.0),
-                        //         child: Container(
-                        //           decoration: BoxDecoration(
-                        //             borderRadius: BorderRadius.circular(50),
-                        //             color: Colors.white,
-                        //           ),
-                        //           child: Icon(
-                        //             Icons.qr_code,
-                        //             color: Colors.grey,
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     )
-                        //   ],
-                        // ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Container(
+                            //   width: 90,
+                            //   height: 90,
+                            //   decoration: BoxDecoration(
+                            //     color: Color(0xFFE30613),
+                            //     borderRadius: BorderRadius.circular(
+                            //         50), // Apply circular border to the outer container
+                            //   ),
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.all(4.0),
+                            //     child: Container(
+                            //       decoration: BoxDecoration(
+                            //         borderRadius: BorderRadius.circular(50),
+                            //         color: Color(0xFFE30613),
+                            //       ),
+                            //       child: Icon(
+                            //         Icons.share,
+                            //         color: Colors.white,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            // const SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProfileCard(
+                                      user: user,
+                                    ), // Navigate to CardPage
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: 90,
+                                height: 90,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(
+                                      50), // Apply circular border to the outer container
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: Colors.white,
+                                    ),
+                                    child: Icon(
+                                      Icons.qr_code,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ],
                     ),
                   ),

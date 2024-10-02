@@ -18,8 +18,7 @@ class ViewMoreEventPage extends ConsumerStatefulWidget {
 }
 
 class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
-  bool registered = false; // Moved to the top-level state variable
-
+  bool registered = false; 
   @override
   void initState() {
     super.initState();

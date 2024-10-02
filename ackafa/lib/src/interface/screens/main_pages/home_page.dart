@@ -546,7 +546,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
               );
             },
-            loading: () => Center(child: buildShimmerPromotionsColumn(context: context)),
+            loading: () =>
+                Center(child: buildShimmerPromotionsColumn(context: context)),
             error: (error, stackTrace) {
               return Center(
                 child: Text('NO PROMOTIONS YET'),
@@ -680,7 +681,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: Color(0xFF004797), // Set the font color to blue
+                      color: Color(0xFFE30613), // Set the font color to blue
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -700,7 +701,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 }
-
 
 Widget buildShimmerPromotionsColumn({
   required BuildContext context,

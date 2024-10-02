@@ -96,8 +96,8 @@ class SocketIoClient {
 
 Future<void> sendChatMessage(
     {required String userId, required String content, String? feedId}) async {
-  final url =
-      Uri.parse('https://akcafconnect.com/api/v1/chat/send-message/$userId');
+  final url = Uri.parse(
+      'http://dev-api.akcafconnect.com/api/v1/chat/send-message/$userId');
   final headers = {
     'accept': '*/*',
     'Authorization': 'Bearer $token',
@@ -126,8 +126,8 @@ Future<void> sendChatMessage(
 }
 
 Future<List<MessageModel>> getChatBetweenUsers(String userId) async {
-  final url =
-      Uri.parse('https://akcafconnect.com/api/v1/chat/between-users/$userId');
+  final url = Uri.parse(
+      'http://dev-api.akcafconnect.com/api/v1/chat/between-users/$userId');
   final headers = {
     'accept': '*/*',
     'Authorization': 'Bearer $token',
@@ -158,7 +158,8 @@ Future<List<MessageModel>> getChatBetweenUsers(String userId) async {
 
 @riverpod
 Future<List<ChatModel>> fetchChatThread(FetchChatThreadRef ref) async {
-  final url = Uri.parse('https://akcafconnect.com/api/v1/chat/get-chats');
+  final url =
+      Uri.parse('http://dev-api.akcafconnect.com/api/v1/chat/get-chats');
   print('Requesting URL: $url');
 
   final response = await http.get(

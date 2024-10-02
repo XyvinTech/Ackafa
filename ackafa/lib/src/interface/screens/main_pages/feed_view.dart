@@ -7,6 +7,7 @@ import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/notifires/feed_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
+import 'package:ackaf/src/interface/common/custom_drop_down_block_report.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chatscreen.dart';
@@ -592,7 +593,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
             height: 30,
             color: const Color.fromARGB(255, 255, 255, 255),
             child: Image.network(
-                    user.image??'https://placehold.co/600x400',
+              user.image ?? 'https://placehold.co/600x400',
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Icon(Icons.person);
@@ -626,7 +627,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
 
   Widget _buildActionButtons() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Row(
           children: [
@@ -648,7 +649,13 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
               ),
           ],
         ),
-        Text('${widget.feed.likes?.length ?? 0} Likes')
+        Spacer(),
+        Text('${widget.feed.likes?.length ?? 0} Likes'),
+        if (widget.feed.author != id)
+          CustomDropDown(
+            isBlocked: false,
+            feed: widget.feed,
+          )
       ],
     );
   }

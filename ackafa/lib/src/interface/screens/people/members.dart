@@ -23,12 +23,10 @@ class MembersPage extends ConsumerStatefulWidget {
 class _MembersPageState extends ConsumerState<MembersPage> {
   final ScrollController _scrollController = ScrollController();
 
-  late final webSocketClient;
   @override
   void initState() {
     super.initState();
-    webSocketClient = ref.read(socketIoClientProvider);
-    webSocketClient.connect(id, ref);
+
     _scrollController.addListener(_onScroll);
 
     _fetchInitialUsers();
@@ -169,6 +167,5 @@ class _MembersPageState extends ConsumerState<MembersPage> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-    webSocketClient.disconnect();
   }
 }
