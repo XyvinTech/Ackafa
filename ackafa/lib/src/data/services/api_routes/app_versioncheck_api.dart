@@ -10,7 +10,7 @@ import 'package:flutter_upgrade_version/flutter_upgrade_version.dart';
 
 Future<void> checkAppVersion(context) async {
   final response = await http
-      .get(Uri.parse('http://akcafconnect.com/api/v1/user/app-version'));
+      .get(Uri.parse('https://akcafconnect.com/api/v1/user/app-version'));
 
   if (response.statusCode == 200) {
     final jsonResponse = json.decode(response.body);

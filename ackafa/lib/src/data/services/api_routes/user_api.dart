@@ -17,7 +17,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_api.g.dart';
 
 class ApiRoutes {
-  final String baseUrl = 'http://akcafconnect.com/api/v1';
+  final String baseUrl = 'https://akcafconnect.com/api/v1';
 
   Future<bool> registerUser(
       {required String token,
@@ -29,7 +29,7 @@ class ApiRoutes {
       required String? college,
       required String? batch,
       required context}) async {
-    final url = Uri.parse('http://akcafconnect.com/api/v1/user/update');
+    final url = Uri.parse('https://akcafconnect.com/api/v1/user/update');
 
     final response = await http.patch(
       url,
@@ -275,12 +275,13 @@ class ApiRoutes {
         return '';
       }
     } catch (e) {
-      print("Failed to sign in: ${e.toString()}");
+      log("Failed to sign in: ${e.toString()}");
       return '';
     }
   }
 
   Future<String> verifyUserDB(String idToken, String fcmToken, context) async {
+    log('inside db');
     final response = await http.post(
       Uri.parse('$baseUrl/user/login'),
       headers: {"Content-Type": "application/json"},
@@ -574,7 +575,7 @@ class ApiRoutes {
   }
 }
 
-const String baseUrl = 'http://akcafconnect.com/api/v1';
+const String baseUrl = 'https://akcafconnect.com/api/v1';
 
 @riverpod
 Future<UserModel> fetchUserDetails(FetchUserDetailsRef ref) async {

@@ -268,7 +268,7 @@ class ProfileCard extends StatelessWidget {
                           const SizedBox(height: 20),
                           QrImageView(
                             size: 300,
-                            data: 'http://akcafconnect.com/user/${user.id}',
+                            data: 'https://akcafconnect.com/user/${user.id}',
                           ),
                           const SizedBox(height: 20),
                           if (user.phone != null)

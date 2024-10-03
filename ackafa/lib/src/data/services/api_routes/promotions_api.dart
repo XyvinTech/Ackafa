@@ -4,7 +4,7 @@ import 'package:ackaf/src/data/models/promotions_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'promotions_api.g.dart';
 
-const String baseUrl = 'http://akcafconnect.com/api/v1';
+const String baseUrl = 'https://akcafconnect.com/api/v1';
 
 @riverpod
 Future<List<Promotion>> fetchPromotions(
