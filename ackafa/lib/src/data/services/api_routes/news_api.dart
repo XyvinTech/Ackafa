@@ -5,7 +5,7 @@ import 'package:ackaf/src/data/models/news_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'news_api.g.dart';
 
-const String baseUrl = 'http://dev-api.akcafconnect.com/api/v1';
+const String baseUrl = 'http://akcafconnect.com/api/v1';
 
 @riverpod
 Future<List<News>> fetchNews(FetchNewsRef ref) async {

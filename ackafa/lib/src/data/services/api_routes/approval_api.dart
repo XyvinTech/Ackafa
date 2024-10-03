@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'approval_api.g.dart';
 
-const String baseUrl = 'http://dev-api.akcafconnect.com/api/v1';
+const String baseUrl = 'http://akcafconnect.com/api/v1';
 
 @riverpod
 Future<List<UserModel>> fetchApprovals(FetchApprovalsRef ref,

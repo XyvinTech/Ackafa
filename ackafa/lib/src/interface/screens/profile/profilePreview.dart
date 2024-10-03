@@ -193,33 +193,64 @@ class ProfilePreview extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const Icon(Icons.phone, color: Color(0xFFE30613)),
+                            const Icon(Icons.phone, color: Color(0xFF004797)),
                             const SizedBox(width: 10),
-                            Text(user.phone!),
+                            Text(user.phone.toString()),
                           ],
                         ),
                         const SizedBox(height: 10),
                         Row(
                           children: [
-                            const Icon(Icons.email, color: Color(0xFFE30613)),
+                            const Icon(Icons.email, color: Color(0xFF004797)),
                             const SizedBox(width: 10),
                             Text(user.email!),
                           ],
                         ),
                         const SizedBox(height: 10),
-                        if (user.address != null)
-                          Row(
-                            children: [
-                              const Icon(Icons.location_on,
-                                  color: Color(0xFFE30613)),
-                              const SizedBox(width: 10),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on,
+                                color: Color(0xFF004797)),
+                            const SizedBox(width: 10),
+                            if (user.address != null)
                               Expanded(
                                 child: Text(
                                   user.address!,
                                 ),
                               )
-                            ],
-                          ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        // Row(
+                        //   children: [
+                        //     const SvgIcon(
+                        //       assetName: 'assets/icons/whatsapp.svg',
+                        //       color: Color(0xFF004797),
+                        //       size: 25,
+                        //     ),
+                        //     const SizedBox(width: 10),
+                        //     if (user.whatsappNumber != null)
+                        //       Expanded(
+                        //         child: Text(user.phoneNumbers!.whatsappNumber!),
+                        //       )
+                        //   ],
+                        // ),
+                        // const SizedBox(height: 10),
+                        // Row(
+                        //   children: [
+                        //     const SvgIcon(
+                        //       assetName: 'assets/icons/whatsapp-business.svg',
+                        //       color: Color(0xFF004797),
+                        //       size: 23,
+                        //     ),
+                        //     const SizedBox(width: 10),
+                        //     if (user.phoneNumbers?.whatsappBusinessNumber !=
+                        //         null)
+                        //       Expanded(
+                        //         child: Text(user.phoneNumbers?.whatsappNumber??''),
+                        //       )
+                        //   ],
+                        // ),
                       ],
                     ),
                     const SizedBox(height: 60),
@@ -232,7 +263,9 @@ class ProfilePreview extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    if (user.bio != null)
+                    if (user.bio != null &&
+                        user.bio != '' &&
+                        user.bio != 'null')
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(

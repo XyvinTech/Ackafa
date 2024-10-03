@@ -30,7 +30,7 @@ class _PaymentWebViewState extends ConsumerState<PaymentWebView> {
           onPageStarted: (String url) async {
             // Check if the current URL starts with the success URL
             if (url.startsWith(
-                'http://dev-api.akcafconnect.com/api/v1/payment/success?session_id')) {
+                'http://akcafconnect.com/api/v1/payment/success?session_id')) {
               // Delay the pop action by 2 seconds
               await Future.delayed(const Duration(seconds: 3));
 
