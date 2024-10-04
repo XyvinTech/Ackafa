@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'group_api.g.dart';
 
-const String baseUrl = 'http://dev-api.akcafconnect.com/api/v1';
+const String baseUrl = 'https://akcafconnect.com/api/v1';
 
 @riverpod
 Future<List<GroupModel>> getGroupList(

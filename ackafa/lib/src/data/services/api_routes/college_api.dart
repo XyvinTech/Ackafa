@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'college_api.g.dart';
 
-const String baseUrl = 'http://dev-api.akcafconnect.com/api/v1';
+const String baseUrl = 'https://akcafconnect.com/api/v1';
 
 @riverpod
 Future<List<College>> fetchColleges(FetchCollegesRef ref, String token) async {
@@ -14,8 +14,7 @@ Future<List<College>> fetchColleges(FetchCollegesRef ref, String token) async {
     url,
     headers: {
       "Content-Type": "application/json",
-      "Authorization":
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmQ0OTJlY2FiNmViMDA5NTRmMzE3YjkiLCJpYXQiOjE3MjUyNjQyNzN9.iA02JhzCHKHepzAjlIRVfrWv0GOuKipK5KqIV0ieQ9A"
+      "Authorization": "Bearer $token"
     },
   );
   print('hello');
