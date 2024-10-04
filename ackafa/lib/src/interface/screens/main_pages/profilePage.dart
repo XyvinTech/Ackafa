@@ -207,8 +207,7 @@ class ProfilePage extends StatelessWidget {
                                                           width: 40,
                                                           fit: BoxFit.cover,
                                                         )
-                                                      : Image.asset(
-                                                          'assets/icons/dummy_company.png'))
+                                                      : SizedBox())
                                             ],
                                           ),
                                           const SizedBox(width: 10),
