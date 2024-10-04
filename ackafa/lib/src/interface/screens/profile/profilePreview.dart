@@ -201,13 +201,14 @@ class ProfilePreview extends ConsumerWidget {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            const Icon(Icons.email, color: Color(0xFFE30613)),
-                            const SizedBox(width: 10),
-                            Text(user.email ?? ''),
-                          ],
-                        ),
+                        if (user.email != null)
+                          Row(
+                            children: [
+                              const Icon(Icons.email, color: Color(0xFFE30613)),
+                              const SizedBox(width: 10),
+                              Text(user.email ?? ''),
+                            ],
+                          ),
                         const SizedBox(height: 10),
                         if (user.address != null)
                           Row(
