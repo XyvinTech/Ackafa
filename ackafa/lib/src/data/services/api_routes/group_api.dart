@@ -9,11 +9,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'group_api.g.dart';
 
-const String baseUrl = 'http://dev-api.akcafconnect.com/api/v1';
+const String baseUrl = 'https://akcafconnect.com/api/v1';
 
 @riverpod
-Future<List<GroupModel>> getGroupList(GetGroupListRef ref,
-   ) async {
+Future<List<GroupModel>> getGroupList(
+  GetGroupListRef ref,
+) async {
   final response = await http.get(
     Uri.parse('$baseUrl/chat/list-group'),
     headers: {
@@ -34,10 +35,9 @@ Future<List<GroupModel>> getGroupList(GetGroupListRef ref,
   }
 }
 
-
 @riverpod
 Future<List<GroupMember>> getGroupMembers(GetGroupMembersRef ref,
- {required String groupId}  ) async {
+    {required String groupId}) async {
   final response = await http.get(
     Uri.parse('$baseUrl/chat/group-details/$groupId'),
     headers: {

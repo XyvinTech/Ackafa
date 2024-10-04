@@ -14,7 +14,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/data/globals.dart';
 import 'package:flutter_upgrade_version/flutter_upgrade_version.dart';
 
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -76,8 +75,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   Future<void> checkAppVersion(context) async {
     log('Checking app version...');
-    final response = await http.get(
-        Uri.parse('http://dev-api.akcafconnect.com/api/v1/user/app-version'));
+    final response = await http
+        .get(Uri.parse('https://akcafconnect.com/api/v1/user/app-version'));
 
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
@@ -182,7 +181,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     );
   }
 }
-
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();

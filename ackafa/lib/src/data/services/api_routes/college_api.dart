@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'college_api.g.dart';
 
-const String baseUrl = 'http://dev-api.akcafconnect.com/api/v1';
+const String baseUrl = 'https://akcafconnect.com/api/v1';
 
 @riverpod
 Future<List<College>> fetchColleges(FetchCollegesRef ref, String token) async {

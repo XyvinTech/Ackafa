@@ -403,7 +403,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       height: 20,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      padding: const EdgeInsets.only(left: 20, right: 20),
                       child: PinCodeTextField(
                         appContext: context,
                         length: 6, // Number of OTP digits
