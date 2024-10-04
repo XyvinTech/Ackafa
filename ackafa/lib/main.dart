@@ -5,6 +5,7 @@ import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrat
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/interface/screens/main_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
@@ -16,6 +17,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+    initializeNotifications();
   runApp(const ProviderScope(child: MainApp()));
 }
 
@@ -67,4 +69,18 @@ class MainApp extends StatelessWidget {
           '/userReg': (context) => const UserRegistrationScreen(),
         });
   }
+}
+
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+// Initialize in your main function
+void initializeNotifications() {
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  final InitializationSettings initializationSettings =
+      InitializationSettings(android: initializationSettingsAndroid);
+
+  flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }

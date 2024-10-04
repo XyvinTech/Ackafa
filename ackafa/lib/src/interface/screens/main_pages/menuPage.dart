@@ -186,7 +186,7 @@ void showLogoutDialog(BuildContext context) {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
-                      child: const Text('Yes, Logout',
+                      child: const Text('Yes',
                           style: TextStyle(fontSize: 16, color: Colors.red)),
                       onPressed: () async {
                         LoggedIn = false;

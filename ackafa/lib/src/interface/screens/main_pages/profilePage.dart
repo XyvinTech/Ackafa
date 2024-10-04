@@ -4,7 +4,8 @@ import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:ackaf/src/interface/screens/profile/card.dart';
 import 'package:ackaf/src/interface/screens/profile/profilePreview.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Import the XCard widget
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:share_plus/share_plus.dart'; // Import the XCard widget
 
 class ProfilePage extends StatelessWidget {
   final UserModel user;
@@ -275,16 +276,16 @@ class ProfilePage extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 10),
-                              if (user.address != null)
+                              if (user.address != null && user.address != '')
                                 Row(
                                   children: [
                                     const Icon(Icons.location_on,
                                         color: Color(0xFFE30613)),
                                     const SizedBox(width: 10),
-                                    if (user.bio != null)
+                                    if (user.address != null)
                                       Expanded(
                                         child: Text(
-                                          user.bio ?? '',
+                                          user.address ?? '',
                                         ),
                                       ),
                                   ],
@@ -339,29 +340,35 @@ class ProfilePage extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // Container(
-                            //   width: 90,
-                            //   height: 90,
-                            //   decoration: BoxDecoration(
-                            //     color: Color(0xFFE30613),
-                            //     borderRadius: BorderRadius.circular(
-                            //         50), // Apply circular border to the outer container
-                            //   ),
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.all(4.0),
-                            //     child: Container(
-                            //       decoration: BoxDecoration(
-                            //         borderRadius: BorderRadius.circular(50),
-                            //         color: Color(0xFFE30613),
-                            //       ),
-                            //       child: Icon(
-                            //         Icons.share,
-                            //         color: Colors.white,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
-                            // const SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () {
+                                Share.share(
+                                    'https://admin.akcafconnect.com/user/${user.id}');
+                              },
+                              child: Container(
+                                width: 90,
+                                height: 90,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFE30613),
+                                  borderRadius: BorderRadius.circular(
+                                      50), // Apply circular border to the outer container
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: Color(0xFFE30613),
+                                    ),
+                                    child: Icon(
+                                      Icons.share,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
                             GestureDetector(
                               onTap: () {
                                 Navigator.push(

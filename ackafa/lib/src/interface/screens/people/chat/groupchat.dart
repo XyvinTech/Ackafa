@@ -1,4 +1,7 @@
 import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:ackaf/src/data/services/api_routes/group_api.dart';
+import 'package:ackaf/src/interface/screens/people/chat/groupchatscreen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,45 +11,41 @@ import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chatscreen.dart';
 
-class ChatPage extends ConsumerStatefulWidget {
-  ChatPage({super.key});
+class GroupChatPage extends ConsumerStatefulWidget {
+  GroupChatPage({super.key});
 
   @override
-  ConsumerState<ChatPage> createState() => _ChatPageState();
+  ConsumerState<GroupChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends ConsumerState<ChatPage> {
-
+class _ChatPageState extends ConsumerState<GroupChatPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
-      final asyncChats = ref.watch(fetchChatThreadProvider);
+      final asyncGroups = ref.watch(getGroupListProvider);
 
       return Scaffold(
           backgroundColor: Colors.white,
-          body: asyncChats.when(
-            data: (chats) {
+          body: asyncGroups.when(
+            data: (groups) {
               return ListView.builder(
-                itemCount: chats.length,
+                itemCount: groups.length,
                 itemBuilder: (context, index) {
-                  var receiver = chats[index].participants?.firstWhere(
-                        (participant) => participant.id != id,
-                        orElse: () => Participant(),
-                      );
-                  var sender = chats[index].participants?.firstWhere(
-                        (participant) => participant.id == id,
-                        orElse: () => Participant(),
-                      );
+                  var receiver = Participant(
+                      id: groups[index].id,
+                      name: Name(first: groups[index].groupName));
+
+                  var sender = Participant(id: id);
                   return ListTile(
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(receiver?.image ?? ''),
                     ),
                     title: Text(
                         '${receiver?.name?.first ?? ''} ${receiver?.name?.middle ?? ''} ${receiver?.name?.last ?? ''}'),
-                    subtitle: Text(chats[index].lastMessage?.content ?? ''),
-                    trailing: chats[index].unreadCount?[sender?.id] != 0 &&
-                            chats[index].unreadCount?[sender!.id] != null
+                    subtitle: Text(groups[index].lastMessage ?? ''),
+                    trailing: groups[index].unreadCount != 0 &&
+                            groups[index].unreadCount != null
                         ? SizedBox(
                             width: 24,
                             height: 24,
@@ -61,10 +60,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                 minHeight: 16,
                               ),
                               child: Center(
-                                child: chats[index].unreadCount?[sender!.id] !=
-                                        null
+                                child: groups[index].unreadCount != null
                                     ? Text(
-                                        '${chats[index].unreadCount?[sender!.id]}',
+                                        '${groups[index].unreadCount}',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,
@@ -78,9 +76,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         : const SizedBox.shrink(),
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => IndividualPage(
-                                receiver: receiver!,
-                                sender: sender!,
+                          builder: (context) => Groupchatscreen(
+                                group: receiver,
+                                sender: sender,
                               )));
                     },
                   );

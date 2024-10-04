@@ -1,5 +1,6 @@
 import 'package:ackaf/src/data/services/api_routes/image_upload.dart';
 import 'package:ackaf/src/interface/common/cards.dart';
+import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
 import 'package:ackaf/src/interface/common/website_video_card/website_video_card.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/demopage.dart';
 import 'package:flutter/cupertino.dart';
@@ -1437,9 +1438,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   if (_formKey.currentState!.validate()) {
                                     await _submitData(user: user);
                                     ref.invalidate(userProvider);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Success')),
-                                    );
+                                         CustomSnackbar.showSnackbar(context, 'Success');
                                     Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(

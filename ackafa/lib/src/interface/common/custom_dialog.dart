@@ -46,7 +46,8 @@ class _BlockPersonDialogState extends ConsumerState<BlockPersonDialog> {
       (user) {
         setState(() {
           if (user.blockedUsers != null) {
-            isBlocked = user.blockedUsers!.contains(id);
+            isBlocked = user.blockedUsers!
+                .any((blockedUser) => blockedUser == widget.userId);
           }
         });
       },
@@ -102,6 +103,47 @@ class _BlockPersonDialogState extends ConsumerState<BlockPersonDialog> {
                 color: Colors.blueGrey[900],
               ),
             ),
+            const SizedBox(height: 30.0),
+            if (!isBlocked)
+              TextFormField(
+                controller: reasonController,
+                decoration: InputDecoration(
+                  labelText: 'Reason',
+                  labelStyle: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                      width: 1.5,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Color(0xFFE30613),
+                      width: 2.0,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                ),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Reason is required'; // Error message when the field is empty
+                  }
+                  return null; // Return null if the input is valid
+                },
+              ),
             const SizedBox(height: 20.0),
             _buildActions(context),
           ],

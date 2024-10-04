@@ -37,13 +37,10 @@ class FeedView extends ConsumerStatefulWidget {
 class _FeedViewState extends ConsumerState<FeedView> {
   final TextEditingController feedContentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  late final webSocketClient;
   @override
   void initState() {
     super.initState();
 
-    webSocketClient = ref.read(socketIoClientProvider);
-    webSocketClient.connect(id, ref);
 
     _scrollController.addListener(_onScroll);
     _fetchInitialUsers();

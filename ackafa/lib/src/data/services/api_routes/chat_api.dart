@@ -95,16 +95,19 @@ class SocketIoClient {
 }
 
 Future<void> sendChatMessage(
-    {required String userId, required String content, String? feedId}) async {
-  final url =
-      Uri.parse('https://akcafconnect.com/api/v1/chat/send-message/$userId');
+    {required String userId,
+    required String content,
+    String? feedId,
+    bool isGroup = false}) async {
+  final url = Uri.parse(
+      'http://dev-api.akcafconnect.com/api/v1/chat/send-message/$userId');
   final headers = {
     'accept': '*/*',
     'Authorization': 'Bearer $token',
     'Content-Type': 'application/json',
   };
   final body =
-      jsonEncode({'content': content, 'isGroup': false, 'feed': feedId});
+      jsonEncode({'content': content, 'isGroup': isGroup, 'feed': feedId});
 
   try {
     final response = await http.post(
@@ -126,8 +129,8 @@ Future<void> sendChatMessage(
 }
 
 Future<List<MessageModel>> getChatBetweenUsers(String userId) async {
-  final url =
-      Uri.parse('https://akcafconnect.com/api/v1/chat/between-users/$userId');
+  final url = Uri.parse(
+      'http://dev-api.akcafconnect.com/api/v1/chat/between-users/$userId');
   final headers = {
     'accept': '*/*',
     'Authorization': 'Bearer $token',
@@ -156,9 +159,42 @@ Future<List<MessageModel>> getChatBetweenUsers(String userId) async {
   }
 }
 
+Future<List<MessageModel>> getGroupChatMessages(
+    {required String groupId}) async {
+  log('group: $groupId');
+  final url = Uri.parse(
+      'http://dev-api.akcafconnect.com/api/v1/chat/group-message/$groupId');
+  final headers = {
+    'accept': '*/*',
+    'Authorization': 'Bearer $token',
+  };
+
+  try {
+    final response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body)['data'];
+      print(response.body);
+      List<MessageModel> messages = [];
+      log(data.toString());
+      for (var item in data) {
+        messages.add(MessageModel.fromJson(item));
+      }
+      return messages;
+    } else {
+      print('Error: ${response.statusCode}');
+      return [];
+    }
+  } catch (e) {
+    print('Error: $e');
+    return [];
+  }
+}
+
 @riverpod
 Future<List<ChatModel>> fetchChatThread(FetchChatThreadRef ref) async {
-  final url = Uri.parse('https://akcafconnect.com/api/v1/chat/get-chats');
+  final url =
+      Uri.parse('http://dev-api.akcafconnect.com/api/v1/chat/get-chats');
   print('Requesting URL: $url');
 
   final response = await http.get(

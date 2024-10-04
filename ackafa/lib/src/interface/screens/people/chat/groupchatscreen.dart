@@ -1,24 +1,32 @@
+import 'dart:developer';
+
 import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/msg_model.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/chat_widgets/OwnMessageCard.dart';
 import 'package:ackaf/src/interface/common/chat_widgets/ReplyCard.dart';
+import 'package:ackaf/src/interface/common/chat_widgets/groupchat_reply_msg_card.dart';
 import 'package:ackaf/src/interface/common/custom_dialog.dart';
+import 'package:ackaf/src/interface/common/chat_widgets/groupchat_own_message_card.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
+import 'package:ackaf/src/interface/screens/people/chat/group_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class IndividualPage extends ConsumerStatefulWidget {
-  IndividualPage({required this.receiver, required this.sender, super.key});
-  final Participant receiver;
+class Groupchatscreen extends ConsumerStatefulWidget {
+  Groupchatscreen({required this.group, required this.sender, super.key});
+  final Participant group;
   final Participant sender;
   @override
   _IndividualPageState createState() => _IndividualPageState();
 }
 
-class _IndividualPageState extends ConsumerState<IndividualPage> {
+class _IndividualPageState extends ConsumerState<Groupchatscreen> {
   bool isBlocked = false;
   bool show = false;
   FocusNode focusNode = FocusNode();
@@ -33,7 +41,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
   }
 
   void getMessageHistory() async {
-    final messagesette = await getChatBetweenUsers(widget.receiver.id!);
+    final messagesette = await getGroupChatMessages(groupId: widget.group.id!);
     if (mounted) {
       setState(() {
         messages.addAll(messagesette);
@@ -54,7 +62,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
         setState(() {
           if (user.blockedUsers != null) {
             isBlocked = user.blockedUsers!
-                .any((blockedUser) => blockedUser == widget.receiver.id);
+                .any((blockedUser) => blockedUser == widget.group.id);
           }
         });
       },
@@ -73,7 +81,8 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
   void sendMessage() {
     if (_controller.text.isNotEmpty && mounted) {
       sendChatMessage(
-        userId: widget.receiver.id!,
+        isGroup: true,
+        userId: widget.group.id!,
         content: _controller.text,
       );
       setMessage("sent", _controller.text, widget.sender.id!);
@@ -142,7 +151,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                         height: 30,
                         color: const Color.fromARGB(255, 255, 255, 255),
                         child: Image.network(
-                          widget.receiver.image ?? '',
+                          widget.group.image ?? '',
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return const Icon(Icons.person);
@@ -152,9 +161,21 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                     ),
                   ],
                 ),
-                title: Text(
-                  '${widget.receiver.name?.first ?? ''}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last ?? ''}',
-                  style: const TextStyle(fontSize: 18),
+                title: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GroupInfoPage(
+                              groupId: widget.group.id ?? '',
+                              groupName:
+                                  '${widget.group.name?.first ?? ''} ${widget.group.name?.middle ?? ''} ${widget.group.name?.last ?? ''}')),
+                    );
+                  },
+                  child: Text(
+                    '${widget.group.name?.first ?? ''}  ${widget.group.name?.middle ?? ''} ${widget.group.name?.last ?? ''}',
+                    style: const TextStyle(fontSize: 18),
+                  ),
                 ),
                 actions: [
                   IconButton(
@@ -164,25 +185,25 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                             context: context,
                             onReportStatusChanged: () {},
                             reportType: 'user',
-                            reportedItemId: widget.receiver.id ?? '');
+                            reportedItemId: widget.group.id ?? '');
                       }),
-                  IconButton(
-                      icon: const Icon(Icons.block),
-                      onPressed: () {
-                        showBlockPersonDialog(
-                            context: context,
-                            userId: widget.receiver.id ?? '',
-                            onBlockStatusChanged: () {
-                              Future.delayed(Duration(seconds: 1));
-                              setState(() {
-                                if (isBlocked) {
-                                  isBlocked = false;
-                                } else {
-                                  isBlocked = true;
-                                }
-                              });
-                            });
-                      }),
+                  // IconButton(
+                  //     icon: const Icon(Icons.block),
+                  //     onPressed: () {
+                  //       showBlockPersonDialog(
+                  //           context: context,
+                  //           userId: widget.group.id ?? '',
+                  //           onBlockStatusChanged: () {
+                  //             Future.delayed(Duration(seconds: 1));
+                  //             setState(() {
+                  //               if (isBlocked) {
+                  //                 isBlocked = false;
+                  //               } else {
+                  //                 isBlocked = true;
+                  //               }
+                  //             });
+                  //           });
+                  //     }),
                 ],
               )),
           body: Container(
@@ -201,14 +222,31 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                             1 -
                             index]; // Reverse the index to get the latest message first
                         if (message.from == widget.sender.id) {
-                          return OwnMessageCard(
-                            feed: message.feed,
-                            status: message.status!,
-                            message: message.content ?? '',
-                            time: DateFormat('h:mm a').format(
-                              DateTime.parse(message.createdAt.toString())
-                                  .toLocal(),
-                            ),
+                          return Consumer(
+                            builder: (context, ref, child) {
+                              final asyncUser = ref.watch(userProvider);
+                              return asyncUser.when(
+                                data: (user) {
+                                  return GroupchatOwnMessageCard(
+                                    username:
+                                        '${user.name?.first ?? ''} ${user.name?.middle ?? ''} ${user.name?.last ?? ''}',
+                                    feed: message.feed,
+                                    status: message.status!,
+                                    message: message.content ?? '',
+                                    time: DateFormat('h:mm a').format(
+                                      DateTime.parse(
+                                              message.createdAt.toString())
+                                          .toLocal(),
+                                    ),
+                                  );
+                                },
+                                loading: () =>
+                                    Center(child: LoadingAnimation()),
+                                error: (error, stackTrace) {
+                                  return Text('Something went wrong');
+                                },
+                              );
+                            },
                           );
                         } else {
                           return GestureDetector(
@@ -227,13 +265,36 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                                   },
                                   reportType: 'chat');
                             },
-                            child: ReplyCard(
-                              feed: message.feed,
-                              message: message.content ?? '',
-                              time: DateFormat('h:mm a').format(
-                                DateTime.parse(message.createdAt.toString())
-                                    .toLocal(),
-                              ),
+                            child: Consumer(
+                              builder: (context, ref, child) {
+                                log('from ${messages[index].from} ');
+                                final asyncGroupUser = ref.watch(
+                                    fetchUserByIdProvider(
+                                        messages[index].from ?? ''));
+                                return asyncGroupUser.when(
+                                  data: (groupUser) {
+                                    return GroupchatReplyMsgCard(
+                                      username:
+                                          '${groupUser.name?.first ?? ''} ${groupUser.name?.middle ?? ''} ${groupUser.name?.last ?? ''}',
+                                      feed: message.feed,
+                                      message: message.content ?? '',
+                                      time: DateFormat('h:mm a').format(
+                                        DateTime.parse(
+                                                message.createdAt.toString())
+                                            .toLocal(),
+                                      ),
+                                    );
+                                  },
+                                  loading: () =>
+                                      Center(child: LoadingAnimation()),
+                                  error: (error, stackTrace) {
+                                    return Center(
+                                      child:
+                                          Text('Error loading User: $error '),
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           );
                         }

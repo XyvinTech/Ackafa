@@ -193,7 +193,7 @@ class ProfilePreview extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const Icon(Icons.phone, color: Color(0xFF004797)),
+                            const Icon(Icons.phone, color: Color(0xFFE30613)),
                             const SizedBox(width: 10),
                             Text(user.phone.toString()),
                           ],
@@ -201,31 +201,32 @@ class ProfilePreview extends ConsumerWidget {
                         const SizedBox(height: 10),
                         Row(
                           children: [
-                            const Icon(Icons.email, color: Color(0xFF004797)),
+                            const Icon(Icons.email, color: Color(0xFFE30613)),
                             const SizedBox(width: 10),
                             Text(user.email!),
                           ],
                         ),
                         const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            const Icon(Icons.location_on,
-                                color: Color(0xFF004797)),
-                            const SizedBox(width: 10),
-                            if (user.address != null)
-                              Expanded(
-                                child: Text(
-                                  user.address!,
-                                ),
-                              )
-                          ],
-                        ),
+                        if (user.address != null)
+                          Row(
+                            children: [
+                              const Icon(Icons.location_on,
+                                  color: Color(0xFFE30613)),
+                              const SizedBox(width: 10),
+                              if (user.address != null)
+                                Expanded(
+                                  child: Text(
+                                    user.address!,
+                                  ),
+                                )
+                            ],
+                          ),
                         const SizedBox(height: 10),
                         // Row(
                         //   children: [
                         //     const SvgIcon(
                         //       assetName: 'assets/icons/whatsapp.svg',
-                        //       color: Color(0xFF004797),
+                        //       color: Color(0xFFE30613),
                         //       size: 25,
                         //     ),
                         //     const SizedBox(width: 10),
@@ -240,7 +241,7 @@ class ProfilePreview extends ConsumerWidget {
                         //   children: [
                         //     const SvgIcon(
                         //       assetName: 'assets/icons/whatsapp-business.svg',
-                        //       color: Color(0xFF004797),
+                        //       color: Color(0xFFE30613),
                         //       size: 23,
                         //     ),
                         //     const SizedBox(width: 10),

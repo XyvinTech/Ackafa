@@ -17,7 +17,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_api.g.dart';
 
 class ApiRoutes {
-  final String baseUrl = 'https://akcafconnect.com/api/v1';
+  final String baseUrl = 'http://dev-api.akcafconnect.com/api/v1';
 
   Future<bool> registerUser(
       {required String token,
@@ -29,7 +29,7 @@ class ApiRoutes {
       required String? college,
       required String? batch,
       required context}) async {
-    final url = Uri.parse('https://akcafconnect.com/api/v1/user/update');
+    final url = Uri.parse('$baseUrl/api/v1/user/update');
 
     final response = await http.patch(
       url,
@@ -152,6 +152,7 @@ class ApiRoutes {
   Future<void> blockUser(
       String userId, String? reason, context, WidgetRef ref) async {
     final String url = '$baseUrl/user/block/$userId';
+    log('requesting url:$url');
 
     try {
       final response = await http.put(
@@ -183,9 +184,9 @@ class ApiRoutes {
 
   Future<void> unBlockUser(String userId, String reason, context) async {
     final String url = '$baseUrl/user/unblock/$userId';
-
+    log('requesting url:$url');
     try {
-      final response = await http.post(
+      final response = await http.put(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
@@ -202,7 +203,7 @@ class ApiRoutes {
         print('Failed to unBlock: ${response.statusCode}');
         final dynamic message = json.decode(response.body)['message'];
         log(message);
-        CustomSnackbar.showSnackbar(context, 'Failed to block');
+        CustomSnackbar.showSnackbar(context, 'Failed to unblock');
       }
     } catch (e) {
       // Handle exceptions
@@ -418,7 +419,7 @@ class ApiRoutes {
       headers: {
         'accept': 'application/json',
         'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.gw7m0eu3gxSoavEQa4aIt48YZVQz_EsuZ0nJDrjXKuI',
+            'Bearer $token',
       },
     );
 
@@ -575,7 +576,7 @@ class ApiRoutes {
   }
 }
 
-const String baseUrl = 'https://akcafconnect.com/api/v1';
+const String baseUrl = 'http://dev-api.akcafconnect.com/api/v1';
 
 @riverpod
 Future<UserModel> fetchUserDetails(FetchUserDetailsRef ref) async {

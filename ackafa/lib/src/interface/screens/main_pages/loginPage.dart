@@ -5,6 +5,7 @@ import 'package:ackaf/src/data/globals.dart';
 
 import 'package:ackaf/src/data/providers/loading_notifier.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
 
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 TextEditingController _mobileController = TextEditingController();
 TextEditingController _otpController = TextEditingController();
@@ -66,148 +68,129 @@ class PhoneNumberScreen extends ConsumerWidget {
         ref.watch(countryCodeProvider); // Watch the countryCodeProvider
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
+          SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 40),
-                Image.asset(
-                  'assets/icons/ackaf_logo.png',
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Enter your Phone Number',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-                ),
-                const SizedBox(height: 20),
-                IntlPhoneField(
-                  style: const TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 5.0,
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  readOnly: true,
-                  controller: _mobileController,
-                  disableLengthCheck: true,
-                  showCountryFlag: false,
-                  decoration: const InputDecoration(
-                    hintText: '0000000000',
-                    hintStyle: TextStyle(
-                      color: Colors.grey,
-                      letterSpacing: 5.0,
-                      fontSize: 30,
+                  height: MediaQuery.of(context).size.height *
+                      0.6, // 60% of screen height
+                  width: double.infinity, // Takes the full width
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                    ),
+                    child: Image.asset(
+                      'assets/loginImage.png',
+                      fit: BoxFit
+                          .cover, // Ensures the image covers the space proportionally
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Center(
+                  child: const Text(
+                    'Please enter your mobile number',
+                    style: TextStyle(
+                        letterSpacing: 1,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: IntlPhoneField(
+                    validator: (phone) {
+                      if (phone!.number.length > 9) {
+                        if (countryCode == '971') {
+                          return 'Phone number cannot exceed 9 digits';
+                        } else if (phone.number.length > 10) {
+                          return 'Phone number cannot exceed 10 digits';
+                        }
+                      }
+                      return null;
+                    },
+                    style: const TextStyle(
+                      letterSpacing: 9,
+                      fontSize:
+                          18, // Adjusted for a more proportional text size
                       fontWeight: FontWeight.w400,
                     ),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  onCountryChanged: (value) {
-                    // Update the provider with the new country code
-                    ref.read(countryCodeProvider.notifier).state =
-                        value.dialCode;
-                  },
-                  initialCountryCode: 'AE',
-                  onChanged: (PhoneNumber phone) {
-                    print(phone.completeNumber);
-                  },
-                  flagsButtonPadding: EdgeInsets.zero,
-                  showDropdownIcon: true,
-                  dropdownIconPosition: IconPosition.trailing,
-                  dropdownTextStyle: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w400,
+                    // Makes the phone field non-editable
+                    controller: _mobileController,
+                    disableLengthCheck: true,
+                    showCountryFlag: true, // Shows the country flag
+                    decoration: InputDecoration(
+                      hintText: 'Enter your phone number',
+                      hintStyle: const TextStyle(
+                        letterSpacing: 2,
+                        color: Colors.grey,
+                        fontSize: 14, // Adjust the hint text size
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                            8.0), // Rectangular border with slight rounding
+                        borderSide: BorderSide(
+                          color: Colors.grey.shade400, // Light grey border
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Colors.grey
+                              .shade400, // Ensure the enabled border matches
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(2.0),
+                        borderSide: BorderSide(
+                          color: Colors.grey, // Color when the input is focused
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16.0,
+                        horizontal: 10.0,
+                      ),
+                    ),
+                    onCountryChanged: (value) {
+                      // Update the provider with the new country code
+                      ref.read(countryCodeProvider.notifier).state =
+                          value.dialCode;
+                    },
+                    initialCountryCode:
+                        'AE', // India as the initial country code (adjust as needed)
+                    onChanged: (PhoneNumber phone) {
+                      print(phone.completeNumber);
+                    },
+                    flagsButtonPadding: const EdgeInsets.only(
+                        left: 10,
+                        right: 10.0), // Adjust padding around the flag
+                    showDropdownIcon: true, // Shows dropdown icon
+                    dropdownIconPosition:
+                        IconPosition.trailing, // Places the icon at the end
+                    dropdownTextStyle: const TextStyle(
+                      fontSize: 15, // Font size of the country code
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'We will send you the 6 digit Verification code',
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
-                ),
-                const Spacer(),
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildbutton(
-                          label: '1',
-                          model: 'mobile',
-                          countryCode: countryCode,
-                        ),
-                        _buildbutton(
-                          label: '2',
-                          model: 'mobile',
-                          countryCode: countryCode,
-                        ),
-                        _buildbutton(
-                          label: '3',
-                          model: 'mobile',
-                          countryCode: countryCode,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildbutton(
-                          label: '4',
-                          model: 'mobile',
-                          countryCode: countryCode,
-                        ),
-                        _buildbutton(
-                          label: '5',
-                          model: 'mobile',
-                          countryCode: countryCode,
-                        ),
-                        _buildbutton(
-                          label: '6',
-                          model: 'mobile',
-                          countryCode: countryCode,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildbutton(
-                          label: '7',
-                          model: 'mobile',
-                          countryCode: countryCode,
-                        ),
-                        _buildbutton(
-                          label: '8',
-                          model: 'mobile',
-                          countryCode: countryCode,
-                        ),
-                        _buildbutton(
-                          label: '9',
-                          model: 'mobile',
-                          countryCode: countryCode,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildbutton(label: '   ', model: ''),
-                        _buildbutton(
-                          label: '0',
-                          model: 'mobile',
-                          countryCode: countryCode,
-                        ),
-                        _buildbutton(
-                          label: 'back',
-                          icondata: Icons.arrow_back_ios,
-                          model: 'mobile',
-                        ),
-                      ],
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: const Text(
+                    'A 6 digit verification code will be sent ',
+                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(14.0),
@@ -228,7 +211,6 @@ class PhoneNumberScreen extends ConsumerWidget {
               ],
             ),
           ),
-          // Loading overlay
           if (isLoading)
             Container(
               color: Colors.black54,
@@ -248,9 +230,8 @@ class PhoneNumberScreen extends ConsumerWidget {
     try {
       if (countryCode == '971') {
         if (_mobileController.text.length != 9) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Please Enter Valid Phone number')),
-          );
+          CustomSnackbar.showSnackbar(
+              context, 'Please Enter Valid Phone numbe!');
         } else {
           ApiRoutes userApi = ApiRoutes();
 
@@ -273,16 +254,13 @@ class PhoneNumberScreen extends ConsumerWidget {
               ),
             ));
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed')),
-            );
+            CustomSnackbar.showSnackbar(context, 'Failed!');
           }
         }
       } else if (countryCode != '971') {
         if (_mobileController.text.length != 10) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Please Enter Valid Phone number')),
-          );
+          CustomSnackbar.showSnackbar(
+              context, 'Please Enter Valid Phone number!');
         } else {
           ApiRoutes userApi = ApiRoutes();
 
@@ -305,16 +283,12 @@ class PhoneNumberScreen extends ConsumerWidget {
               ),
             ));
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed')),
-            );
+            CustomSnackbar.showSnackbar(context, 'Failed!');
           }
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed')),
-      );
+      CustomSnackbar.showSnackbar(context, 'Failed');
     } finally {
       ref.read(loadingProvider.notifier).stopLoading();
     }
@@ -381,127 +355,147 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(loadingProvider);
+    final countryCode = ref.watch(countryCodeProvider);
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 40),
-                Image.asset(
-                  'assets/icons/ackaf_logo.png',
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Enter your OTP',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  style: const TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 5.0,
-                  ),
-                  readOnly: true,
-                  controller: _otpController,
-                  decoration: const InputDecoration(
-                    hintText: '000000',
-                    hintStyle: TextStyle(
-                      color: Colors.grey,
-                      letterSpacing: 5.0,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  onChanged: (value) {
-                    print(value);
-                  },
-                ),
-                const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: _isButtonDisabled
-                      ? null
-                      : () {
-                          resendCode();
-                        },
-                  child: Text(
-                    _isButtonDisabled
-                        ? 'Resend Code in $_start s'
-                        : 'Resend Code',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: _isButtonDisabled ? Colors.grey : Colors.black,
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                Column(
+          SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: IntrinsicHeight(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      width: double.infinity,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20),
+                        ),
+                        child: Image.asset(
+                          'assets/loginImage.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      child: const Text(
+                        'Please enter your OTP',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 18),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: PinCodeTextField(
+                        appContext: context,
+                        length: 6, // Number of OTP digits
+                        obscureText: false,
+                        keyboardType:
+                            TextInputType.number, // Number-only keyboard
+                        animationType: AnimationType.fade,
+                        textStyle: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w300,
+                          letterSpacing: 5.0,
+                        ),
+                        pinTheme: PinTheme(
+                          shape: PinCodeFieldShape.box,
+                          borderRadius: BorderRadius.circular(5),
+                          fieldHeight: 50,
+                          fieldWidth: 60, selectedColor: Colors.red,
+                          activeColor: Color.fromARGB(255, 232, 226, 226),
+                          inactiveColor: const Color.fromARGB(
+                              255, 232, 226, 226), // Box color when not focused
+                          activeFillColor:
+                              Colors.white, // Box color when focused
+                          selectedFillColor:
+                              Colors.white, // Box color when selected
+                          inactiveFillColor:
+                              Colors.white, // Box fill color when not selected
+                        ),
+                        animationDuration: const Duration(milliseconds: 300),
+                        backgroundColor: Colors.transparent,
+                        enableActiveFill: true,
+                        controller: _otpController,
+                        onChanged: (value) {
+                          // Handle input change
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 5),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _buildbutton(label: '1', model: 'otp'),
-                        _buildbutton(label: '2', model: 'otp'),
-                        _buildbutton(label: '3', model: 'otp')
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: Text(
+                            _isButtonDisabled
+                                ? 'Enter OTP in $_start seconds'
+                                : 'Enter your OTP',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: _isButtonDisabled
+                                  ? Colors.grey
+                                  : Colors.black,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: _isButtonDisabled ? null : resendCode,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            child: Text(
+                              _isButtonDisabled ? '' : 'Resend Code',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: _isButtonDisabled
+                                    ? Colors.grey
+                                    : Colors.red,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildbutton(label: '4', model: 'otp'),
-                        _buildbutton(label: '5', model: 'otp'),
-                        _buildbutton(label: '6', model: 'otp')
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildbutton(label: '7', model: 'otp'),
-                        _buildbutton(label: '8', model: 'otp'),
-                        _buildbutton(label: '9', model: 'otp')
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildbutton(label: '   ', model: ''),
-                        _buildbutton(label: '0', model: 'otp'),
-                        _buildbutton(
-                            label: 'back',
-                            icondata: Icons.arrow_back_ios,
-                            model: 'otp')
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: SizedBox(
+                        height: 47,
+                        width: double.infinity,
+                        child: customButton(
+                          label: 'NEXT',
+                          onPressed: isLoading
+                              ? () {}
+                              : () {
+                                  _handleOtpVerification(context, ref);
+                                },
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: SizedBox(
-                    height: 47,
-                    width: double.infinity,
-                    child: customButton(
-                      label: 'NEXT',
-                      onPressed: isLoading
-                          ? () {}
-                          : () {
-                              _handleOtpVerification(context, ref);
-                            },
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-          // Loading overlay
           if (isLoading)
             Container(
               color: Colors.black54,
@@ -538,14 +532,10 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => UserRegistrationScreen()));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Wrong OTP')),
-        );
+        CustomSnackbar.showSnackbar(context, 'Wrong OTP');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Wrong OTP')),
-      );
+      CustomSnackbar.showSnackbar(context, 'Wrong OTP');
     } finally {
       ref.read(loadingProvider.notifier).stopLoading();
     }
