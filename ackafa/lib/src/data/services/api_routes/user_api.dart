@@ -17,7 +17,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_api.g.dart';
 
 class ApiRoutes {
-  final String baseUrl = 'https://akcafconnect.com/api/v1';
+  final String baseUrl = 'http://dev-api.akcafconnect.com/api/v1';
 
   Future<bool> registerUser(
       {required String token,
@@ -304,7 +304,7 @@ class ApiRoutes {
 
   Future<void> editUser(Map<String, dynamic> profileData) async {
     final url = Uri.parse('$baseUrl/user/update');
-
+    log('updated profile data:$profileData');
     final response = await http.patch(
       url,
       headers: {
@@ -575,7 +575,7 @@ class ApiRoutes {
   }
 }
 
-const String baseUrl = 'https://akcafconnect.com/api/v1';
+const String baseUrl = 'http://dev-api.akcafconnect.com/api/v1';
 
 @riverpod
 Future<UserModel> fetchUserDetails(FetchUserDetailsRef ref) async {

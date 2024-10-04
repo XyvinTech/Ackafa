@@ -117,10 +117,12 @@ class _MembersPageState extends ConsumerState<MembersPage> {
                             width: 40,
                             child: ClipOval(
                               child: Image.network(
-                                user.image ?? 'error',
+                                user.image ?? '',
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
-                                  return Icon(Icons.person);
+                                  return Image.asset(
+                                      color: Color(0xFFE30613),
+                                      'assets/icons/dummy_person_small.png');
                                 },
                               ),
                             ),

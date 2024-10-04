@@ -41,7 +41,6 @@ class _FeedViewState extends ConsumerState<FeedView> {
   void initState() {
     super.initState();
 
-
     _scrollController.addListener(_onScroll);
     _fetchInitialUsers();
   }
@@ -593,7 +592,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
               user.image ?? 'https://placehold.co/600x400',
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
-                return Icon(Icons.person);
+                return Image.asset(color: Color(0xFFE30613),'assets/icons/dummy_person_small.png');
               },
             ),
           ),

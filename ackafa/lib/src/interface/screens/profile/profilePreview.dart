@@ -99,14 +99,16 @@ class ProfilePreview extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        user.image != null
+                        user.image != null && user.image != ''
                             ? CircleAvatar(
                                 radius: 45,
                                 backgroundImage: NetworkImage(
                                   user.image ?? 'https://placehold.co/600x400',
                                 ),
                               )
-                            : const Icon(Icons.person),
+                            : Image.asset(
+                                color: Color(0xFFE30613),
+                                'assets/icons/dummy_person.png'),
                         const SizedBox(height: 10),
                         Text(
                           '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name?.last ?? ''}',

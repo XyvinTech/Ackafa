@@ -62,14 +62,13 @@ class MainPage extends ConsumerStatefulWidget {
 }
 
 class _MainPageState extends ConsumerState<MainPage> {
-    late final webSocketClient;
-
+  late final webSocketClient;
 
   @override
   void initState() {
     super.initState();
     ref.read(userProvider.notifier).refreshUser();
-        webSocketClient = ref.read(socketIoClientProvider);
+    webSocketClient = ref.read(socketIoClientProvider);
     webSocketClient.connect(id, ref);
   }
 
@@ -147,12 +146,18 @@ class _MainPageState extends ConsumerState<MainPage> {
                 return BottomNavigationBarItem(
                   backgroundColor: Colors.white,
                   icon: index == 2 // Assuming profile is the third item
-                      ? CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            user.image ?? 'https://placehold.co/600x400',
-                          ),
-                          radius: 15,
-                        )
+                      ? user.image != null && user.image != ''
+                          ? CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                user.image ?? '',
+                              ),
+                              radius: 15,
+                            )
+                          : Image.asset(
+                              color: Color(0xFFE30613),
+                              'assets/icons/dummy_person_small.png',
+                              scale: 1.5,
+                            )
                       : IconResolver(
                           iconPath: _inactiveIcons[index],
                           color: _selectedIndex == index
@@ -160,12 +165,18 @@ class _MainPageState extends ConsumerState<MainPage> {
                               : Colors.grey,
                         ),
                   activeIcon: index == 2
-                      ? CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            user.image ?? 'https://placehold.co/600x400',
-                          ),
-                          radius: 15,
-                        )
+                      ? user.image != null && user.image != ''
+                          ? CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                user.image ?? '',
+                              ),
+                              radius: 15,
+                            )
+                          : Image.asset(
+                              color: Color(0xFFE30613),
+                              'assets/icons/dummy_person_small.png',
+                              scale: 1.5,
+                            )
                       : IconResolver(
                           iconPath: _activeIcons[index],
                           color: Color(0xFFE30613),

@@ -163,15 +163,16 @@ class ProfilePage extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      user.image != null
+                                      user.image != null && user.image != ''
                                           ? CircleAvatar(
                                               radius: 40,
                                               backgroundImage: NetworkImage(
-                                                user.image ??
-                                                    'https://placehold.co/600x400',
+                                                user.image ?? '',
                                               ),
                                             )
-                                          : const Icon(Icons.person),
+                                          : Image.asset(
+                                              color: Color(0xFFE30613),
+                                              'assets/icons/dummy_person.png'),
                                       const SizedBox(height: 10),
                                       Text(
                                         '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
@@ -195,12 +196,19 @@ class ProfilePage extends StatelessWidget {
                                                           user.company?.logo !=
                                                               ''
                                                       ? Image.network(
+                                                          errorBuilder:
+                                                              (context, error,
+                                                                  stackTrace) {
+                                                            return Image.asset(
+                                                                'assets/icons/dummy_company.png');
+                                                          },
                                                           user.company!.logo!,
                                                           height: 33,
                                                           width: 40,
                                                           fit: BoxFit.cover,
                                                         )
-                                                      : const SizedBox())
+                                                      : Image.asset(
+                                                          'assets/icons/dummy_company.png'))
                                             ],
                                           ),
                                           const SizedBox(width: 10),

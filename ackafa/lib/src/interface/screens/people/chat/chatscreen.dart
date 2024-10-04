@@ -158,7 +158,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                 ),
                 actions: [
                   IconButton(
-                      icon: const Icon(Icons.report),
+                      icon: const Icon(Icons.report_gmailerrorred),
                       onPressed: () {
                         showReportPersonDialog(
                             context: context,

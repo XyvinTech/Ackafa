@@ -312,7 +312,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
         if (user.company?.phone != null) "phone": user.company?.phone ?? '',
         if (user.company?.address != null)
           "address": user.company?.address ?? '',
-        if (user.company?.name != null) "logo": user.company?.logo ?? '',
+        if (user.company?.logo != null) "logo": user.company?.logo ?? '',
       },
       "social": [
         for (var i in user.social!) {"name": "${i.name}", "link": i.link}
@@ -425,19 +425,47 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
             },
             data: (user) {
               print(user.name?.first);
-              firstNameController.text = user.name!.first!;
-              middleNameController.text = user.name?.middle ?? '';
-              lastNameController.text = user.name!.last!;
-              collegeController.text = user.college?.collegeName ?? '';
-              batchController.text = user.batch.toString() ?? '';
-              designationController.text = user.company?.designation ?? '';
-              bioController.text = user.bio ?? '';
-              companyPhoneController.text = user.company?.phone ?? '';
-              companyNameController.text = user.company?.name ?? '';
-              companyAddressController.text = user.company?.address ?? '';
-              personalPhoneController.text = user.phone ?? '';
-              emailController.text = user.email ?? '';
-              addressController.text = user.address ?? '';
+
+              if (firstNameController.text.isEmpty) {
+                firstNameController.text = user.name!.first!;
+              }
+              if (middleNameController.text.isEmpty) {
+                middleNameController.text = user.name?.middle ?? '';
+              }
+              if (lastNameController.text.isEmpty) {
+                lastNameController.text = user.name!.last!;
+              }
+              if (collegeController.text.isEmpty) {
+                collegeController.text = user.college?.collegeName ?? '';
+              }
+              if (batchController.text.isEmpty) {
+                batchController.text = user.batch?.toString() ?? '';
+              }
+              if (designationController.text.isEmpty) {
+                designationController.text = user.company?.designation ?? '';
+              }
+              if (bioController.text.isEmpty) {
+                bioController.text = user.bio ?? '';
+              }
+              if (companyPhoneController.text.isEmpty) {
+                companyPhoneController.text = user.company?.phone ?? '';
+              }
+              if (companyNameController.text.isEmpty) {
+                companyNameController.text = user.company?.name ?? '';
+              }
+              if (companyAddressController.text.isEmpty) {
+                companyAddressController.text = user.company?.address ?? '';
+              }
+              if (personalPhoneController.text.isEmpty) {
+                personalPhoneController.text = user.phone ?? '';
+              }
+              if (emailController.text.isEmpty) {
+                emailController.text = user.email ?? '';
+              }
+              if (addressController.text.isEmpty) {
+                addressController.text = user.address ?? '';
+              }
+
               // List<TextEditingController> socialLinkControllers = [
               //   igController,
               //   linkedinController,
@@ -586,10 +614,14 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                                 child: Image.network(
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
-                                                    return Icon(Icons.person);
+                                                    return Image.asset(
+                                                        color:
+                                                            Color(0xFFE30613),
+                                                        scale: .7,
+                                                        'assets/icons/dummy_person.png');
                                                   },
                                                   user.image ??
-                                                      'https://placehold.co/600x400', // Replace with your image URL
+                                                      '', // Replace with your image URL
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -641,7 +673,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                           child: Text(
                                             state.errorText ?? '',
                                             style: const TextStyle(
-                                                color: Colors.red),
+                                                color: Color(0xFFE30613)),
                                           ),
                                         ),
                                     ],
@@ -1438,7 +1470,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   if (_formKey.currentState!.validate()) {
                                     await _submitData(user: user);
                                     ref.invalidate(userProvider);
-                                         CustomSnackbar.showSnackbar(context, 'Success');
+                                    CustomSnackbar.showSnackbar(
+                                        context, 'Success');
                                     Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(

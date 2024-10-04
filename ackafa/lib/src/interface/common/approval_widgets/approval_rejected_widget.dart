@@ -22,8 +22,25 @@ class ApprovalRejectedWidget extends StatelessWidget {
         child: ListTile(
           contentPadding: const EdgeInsets.all(0),
           leading: CircleAvatar(
-            radius: 20.0, // Adjust the size
-            backgroundImage: NetworkImage(imageUrl),
+            radius: 20.0,
+            backgroundColor:
+                Colors.transparent, // Optional: Set background color if needed
+            child: ClipOval(
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.cover,
+                width: 40.0, // Match the CircleAvatar radius
+                height: 40.0, // Match the CircleAvatar radius
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(color: Color(0xFFE30613),
+                    'assets/icons/dummy_person_small.png',
+                    fit: BoxFit.cover,
+                    width: 40.0,
+                    height: 40.0,
+                  );
+                },
+              ),
+            ),
           ),
           title: Text(
             name,

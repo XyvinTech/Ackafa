@@ -183,7 +183,7 @@ class ProfileCard extends StatelessWidget {
                                                         'https://placehold.co/600x400',
                                                   ),
                                                 )
-                                              : Icon(Icons.person),
+                                              : Image.asset( color: Color(0xFFE30613),'assets/icons/dummy_person_small.png'),
                                           const SizedBox(height: 10),
                                           Padding(
                                             padding:
