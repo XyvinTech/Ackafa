@@ -26,9 +26,7 @@ class _MembersPageState extends ConsumerState<MembersPage> {
   @override
   void initState() {
     super.initState();
-
     _scrollController.addListener(_onScroll);
-
     _fetchInitialUsers();
   }
 
@@ -48,119 +46,115 @@ class _MembersPageState extends ConsumerState<MembersPage> {
     final users = ref.watch(peopleNotifierProvider);
     final isLoading = ref.read(peopleNotifierProvider.notifier).isLoading;
     final asyncChats = ref.watch(fetchChatThreadProvider);
-    return PopScope(
-      onPopInvoked: (didPop) {
-        ref.invalidate(fetchChatThreadProvider);
-      },
-      child: Scaffold(
-          backgroundColor: Colors.white,
-          body: users.isEmpty
-              ? Center(child: LoadingAnimation()) // Show loader when no data
-              : asyncChats.when(
-                  data: (chats) {
-                    log('im inside chat');
-                    return ListView.builder(
-                      controller: _scrollController,
-                      itemCount:
-                          users.length, // Add 1 for the loading indicator
-                      itemBuilder: (context, index) {
-                        var chatForUser = chats.firstWhere(
-                          (chat) =>
-                              chat.participants?.any((participant) =>
-                                  participant.id == users[index].id) ??
-                              false,
-                          orElse: () => ChatModel(
-                            participants: [
-                              Participant(
-                                id: users[index].id,
-                                name: users[index].name,
-                                image: users[index].image,
-                              ),
-                              Participant(
-                                  id: id), // You can replace this with a default sender (current user)
-                            ],
-                          ),
+    return Scaffold(
+        backgroundColor: Colors.white,
+        body: users.isEmpty
+            ? Center(child: LoadingAnimation()) // Show loader when no data
+            : asyncChats.when(
+                data: (chats) {
+                  log('im inside chat');
+                  return ListView.builder(
+                    controller: _scrollController,
+                    itemCount: users.length +
+                        (isLoading
+                            ? 1
+                            : 0), // Add 1 to show the loading indicator
+                    itemBuilder: (context, index) {
+                      if (index == users.length) {
+                        // This is the loading indicator at the end of the list
+                        return Center(
+                          child:
+                              LoadingAnimation(), // Show loading indicator when fetching more users
                         );
+                      }
 
-                        // Get the receiver and sender for the chat
-                        var receiver = chatForUser.participants?.firstWhere(
-                          (participant) => participant.id != id,
-                          orElse: () => Participant(
-                            id: users[index].id,
-                            name: users[index].name,
-                            image: users[index].image,
-                          ),
-                        );
+                      // Regular user item
+                      var chatForUser = chats.firstWhere(
+                        (chat) =>
+                            chat.participants?.any((participant) =>
+                                participant.id == users[index].id) ??
+                            false,
+                        orElse: () => ChatModel(
+                          participants: [
+                            Participant(
+                              id: users[index].id,
+                              name: users[index].name,
+                              image: users[index].image,
+                            ),
+                            Participant(
+                                id: id), // Replace with current user if needed
+                          ],
+                        ),
+                      );
 
-                        var sender = chatForUser.participants?.firstWhere(
-                          (participant) => participant.id == id,
-                          orElse: () => Participant(),
-                        );
-                        if (index == users.length) {
-                          return isLoading
-                              ? Center(
-                                  child:
-                                      LoadingAnimation()) // Show loading when fetching more users
-                              : SizedBox.shrink(); // Hide when done
-                        }
+                      var receiver = chatForUser.participants?.firstWhere(
+                        (participant) => participant.id != id,
+                        orElse: () => Participant(
+                          id: users[index].id,
+                          name: users[index].name,
+                          image: users[index].image,
+                        ),
+                      );
 
-                        final user = users[index];
+                      var sender = chatForUser.participants?.firstWhere(
+                        (participant) => participant.id == id,
+                        orElse: () => Participant(),
+                      );
 
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ProfilePreview(
-                                  user: user,
-                                ),
-                              ),
-                            );
-                          },
-                          child: ListTile(
-                            leading: SizedBox(
-                              height: 40,
-                              width: 40,
-                              child: ClipOval(
-                                child: Image.network(
-                                  user.image ??
-                                      'https://placehold.co/600x400/png',
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Image.network(
-                                      'https://placehold.co/600x400/png',
-                                      fit: BoxFit.cover,
-                                    );
-                                  },
-                                ),
+                      final user = users[index];
+
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ProfilePreview(user: user),
+                            ),
+                          );
+                        },
+                        child: ListTile(
+                          leading: SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: ClipOval(
+                              child: Image.network(
+                                user.image ?? '',
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.asset(
+                                      color: Color(0xFFE30613),
+                                      'assets/icons/dummy_person_small.png');
+                                },
                               ),
                             ),
-                            title: Text(user.name?.first ?? 'No Name'),
-                            subtitle: user.company?.designation != null
-                                ? Text(user.company!.designation!)
-                                : null,
-                            trailing: IconButton(
-                              icon: Icon(Icons.chat),
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => IndividualPage(
-                                          receiver: receiver!,
-                                          sender: sender!,
-                                        )));
-                              },
-                            ),
                           ),
-                        );
-                      },
-                    );
-                  },
-                  loading: () => Center(child: LoadingAnimation()),
-                  error: (error, stackTrace) {
-                    return Center(
-                      child: Text('Error loading promotions: $error'),
-                    );
-                  },
-                )),
-    );
+                          title: Text(
+                              '${user.name?.first ?? ''} ${user.name?.middle ?? ''} ${user.name?.last ?? ''}'),
+                          subtitle: user.company?.designation != null
+                              ? Text(user.company?.designation ?? '')
+                              : null,
+                          trailing: IconButton(
+                            icon: Icon(Icons.chat),
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => IndividualPage(
+                                  receiver: receiver!,
+                                  sender: sender!,
+                                ),
+                              ));
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                loading: () => Center(child: LoadingAnimation()),
+                error: (error, stackTrace) {
+                  return Center(
+                    child: LoadingAnimation(),
+                  );
+                },
+              ));
   }
 
   @override

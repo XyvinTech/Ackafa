@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/services/api_routes/events_api.dart';
+import 'package:ackaf/src/data/services/launch_url.dart';
+import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -18,7 +20,7 @@ class ViewMoreEventPage extends ConsumerStatefulWidget {
 }
 
 class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
-  bool registered = false; 
+  bool registered = false;
   @override
   void initState() {
     super.initState();
@@ -36,19 +38,22 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        title: Text(
+          "Event Details",
+          style: TextStyle(fontSize: 17),
+        ),
         backgroundColor: Colors.white,
-        title: const Text('Event Details'),
+        scrolledUnderElevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
         ),
       ),
       body: Stack(
         children: [
           SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -77,7 +82,7 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                         decoration: BoxDecoration(
                           color:
                               const Color(0xFFE4483E), // Red background color
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(2),
                         ),
                         child: widget.event.status != null &&
                                 widget.event.status != ''
@@ -105,71 +110,106 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                 ),
                 const SizedBox(height: 16),
                 // Event Title
-                Text(
-                  widget.event.eventName!,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    widget.event.eventName!,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
+
                 // Date and Time
-                Row(
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.calendar_today,
-                            color: Color(0xFFE30613)),
-                        const SizedBox(width: 8),
-                        Text(
-                          date,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w400,
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Row(
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.calendar_today,
+                              size: 15, color: Color(0xFFE30613)),
+                          const SizedBox(width: 8),
+                          Text(
+                            date,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 16),
-                    Row(
-                      children: [
-                        const Icon(Icons.access_time, color: Color(0xFFE30613)),
-                        const SizedBox(width: 8),
-                        Text(
-                          time,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w400,
+                        ],
+                      ),
+                      const SizedBox(width: 16),
+                      Row(
+                        children: [
+                          const Icon(Icons.access_time,
+                              size: 15, color: Color(0xFFE30613)),
+                          const SizedBox(width: 8),
+                          Text(
+                            time,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 16),
                 const Divider(color: Color.fromARGB(255, 192, 188, 188)),
-                const Text('Organiser'),
-                Text(
-                  widget.event.organiser ?? '',
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w600),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: const Text('Organiser'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text(
+                    widget.event.organiser ?? '',
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w600),
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                 Text(
-                 widget.event.description??'',
-                  style: TextStyle(fontSize: 16, color: Colors.black87),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8, bottom: 8),
+                  child: Text(
+                    widget.event.description ?? '',
+                    style: TextStyle(fontSize: 16, color: Colors.black87),
+                  ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: const Text('Organiser company'),
+                ),
+                // ClipRRect(
+                //                                   borderRadius:
+                //                                       BorderRadius.circular(9),
+                //                                   child: widget.event.o !=
+                //                                               null &&
+                //                                           user.companyLogo != ''
+                //                                       ? Image.network(
+                //                                           user.companyLogo!,
+                //                                           height: 33,
+                //                                           width: 40,
+                //                                           fit: BoxFit.cover,
+                //                                         )
+                //                                       : const SizedBox())
                 const SizedBox(height: 24),
-                // Speakers Section
-                const Text(
-                  'Speakers',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                const Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Text(
+                    'Speakers',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -178,42 +218,65 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: widget.event.speakers!.length,
                   itemBuilder: (context, index) {
-                    return _buildSpeakerCard(
-                        widget.event.speakers![index].image,
-                        widget.event.speakers![index].name!,
-                        widget.event.speakers![index].designation!);
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: _buildSpeakerCard(
+                          widget.event.speakers?[index].image,
+                          widget.event.speakers?[index].name ?? '',
+                          widget.event.speakers?[index].designation ?? ''),
+                    );
                   },
                 ),
                 const SizedBox(height: 24),
                 // Venue Section
-                const Text(
-                  'Venue',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
                 if (widget.event.venue != null)
-                  Text(
-                    widget.event.venue ?? '',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 8,
+                    ),
+                    child: const Text(
+                      'Venue',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 const SizedBox(height: 8),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(5)),
-                  height: 200,
-                  child: Image.asset(
-                    'assets/eventlocation.png',
-                    fit: BoxFit.cover,
+                if (widget.event.venue != null)
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 8,
+                    ),
+                    child: Text(
+                      widget.event.venue ?? '',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
                   ),
-                ),
+                const SizedBox(height: 8),
+                if (widget.event.venue != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: GestureDetector(
+                      onTap: () {
+                        openGoogleMaps(widget.event.venue ?? '');
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(5)),
+                        height: 200,
+                        child: Image.asset(
+                          'assets/eventlocation.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
                 const SizedBox(
                     height: 50), // Add spacing to avoid overlap with the button
               ],
@@ -222,11 +285,12 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
           Consumer(
             builder: (context, ref, child) {
               return Positioned(
-                bottom: 16,
+                bottom: 36,
                 left: 16,
                 right: 16,
                 child: customButton(
-                  color: registered ? Colors.green : Color(0xFFE30613),
+                  buttonColor:
+                      registered ? Colors.green : const Color(0xFFE30613),
                   label: widget.event.status == 'cancelled'
                       ? 'CANCELLED'
                       : registered
@@ -236,9 +300,7 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                     if (!registered && widget.event.status != 'cancelled') {
                       ApiRoutes userApi = ApiRoutes();
                       await userApi.markEventAsRSVP(widget.event.id!);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Registered')));
-                      // Update the local rsvp list to reflect the changes immediately
+
                       setState(() {
                         widget.event.rsvp?.add(id); // Add the user to RSVP
                         registered = widget.event.rsvp?.contains(id) ?? false;
@@ -270,15 +332,13 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
       ),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor:
-              Colors.transparent, // Transparent background for the avatar
-          child: Image.network(
-            imagePath.toString(),
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return const Icon(Icons.person, size: 40);
-            },
-          ),
+          backgroundColor: Colors.transparent,
+          backgroundImage: (imagePath != null && imagePath.isNotEmpty)
+              ? NetworkImage(imagePath)
+              : null, // Use image if available
+          child: (imagePath == null || imagePath.isEmpty)
+              ? const Icon(Icons.person, size: 40)
+              : null, // Show icon if no image is provided
         ),
         title: Text(
           name,

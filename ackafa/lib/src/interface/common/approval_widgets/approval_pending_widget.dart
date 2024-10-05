@@ -1,6 +1,7 @@
 import 'package:ackaf/src/data/notifires/approval_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/approval_api.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
+import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -86,11 +87,9 @@ class ApprovalPendingWidget extends StatelessWidget {
                         userId: userId, status: 'awaiting_payment', reason: '');
 
                     if (result) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Approved')));
+                           CustomSnackbar.showSnackbar(context, 'Approved!');
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Failed')));
+                     CustomSnackbar.showSnackbar(context, 'Failed!');
                     }
                     ref
                         .read(approvalNotifierProvider.notifier)

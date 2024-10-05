@@ -8,6 +8,7 @@ import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/college_api.dart';
 import 'package:ackaf/src/data/services/api_routes/image_upload.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
+import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
 import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/custom_dropdowns/custom_dropdowns.dart';
@@ -549,13 +550,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                       }
                                                     }
                                                   } catch (e) {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                          content: Text(
-                                                              'An error occurred: $e')),
-                                                    );
+                                                          CustomSnackbar.showSnackbar(context, '$e');
                                                   }
                                                 }
                                               }))),

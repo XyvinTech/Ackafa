@@ -4,6 +4,7 @@ import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/feed_model.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
 import 'package:ackaf/src/data/services/api_routes/image_upload.dart';
+import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
 import 'package:ackaf/src/interface/common/custom_dropdowns/custom_dropdowns.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chatscreen.dart';
 import 'package:ackaf/src/interface/validatelinks.dart';
@@ -187,9 +188,7 @@ void showWebsiteSheet({
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             addWebsite();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Saved')),
-                            );
+                            CustomSnackbar.showSnackbar(context, 'Saved!');
                             Navigator.pop(context);
                           }
                         },
@@ -308,9 +307,7 @@ void showVideoLinkSheet({
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             addVideo();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Saved')),
-                            );
+                            CustomSnackbar.showSnackbar(context, 'Saved!');
                             Navigator.pop(context);
                           }
                         },
@@ -1311,11 +1308,9 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
                       );
 
                       Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content:
-                                Text('Your Post Will Be Reviewed By Admin')),
-                      );
+
+                      CustomSnackbar.showSnackbar(
+                          context, 'Your Post Will Be Reviewed By Admin');
                     }
                   },
                   style: ButtonStyle(

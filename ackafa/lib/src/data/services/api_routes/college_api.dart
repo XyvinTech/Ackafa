@@ -14,8 +14,7 @@ Future<List<College>> fetchColleges(FetchCollegesRef ref, String token) async {
     url,
     headers: {
       "Content-Type": "application/json",
-      "Authorization":
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmQ0OTJlY2FiNmViMDA5NTRmMzE3YjkiLCJpYXQiOjE3MjUyNjQyNzN9.iA02JhzCHKHepzAjlIRVfrWv0GOuKipK5KqIV0ieQ9A"
+      "Authorization": "Bearer $token"
     },
   );
   print('hello');

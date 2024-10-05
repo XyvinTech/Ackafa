@@ -99,17 +99,19 @@ class ProfilePreview extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        user.image != null
+                        user.image != null && user.image != ''
                             ? CircleAvatar(
                                 radius: 45,
                                 backgroundImage: NetworkImage(
                                   user.image ?? 'https://placehold.co/600x400',
                                 ),
                               )
-                            : const Icon(Icons.person),
+                            : Image.asset(
+                                color: Color(0xFFE30613),
+                                'assets/icons/dummy_person.png'),
                         const SizedBox(height: 10),
                         Text(
-                          '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name?.last ?? ''}',
+                          '${user.name?.first ?? ''} ${user.name?.middle ?? ''} ${user.name?.last ?? ''}',
                           style: const TextStyle(
                             color: Color(0xFF2C2829),
                             fontSize: 20,
@@ -193,39 +195,41 @@ class ProfilePreview extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const Icon(Icons.phone, color: Color(0xFF004797)),
+                            const Icon(Icons.phone, color: Color(0xFFE30613)),
                             const SizedBox(width: 10),
                             Text(user.phone.toString()),
                           ],
                         ),
                         const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            const Icon(Icons.email, color: Color(0xFF004797)),
-                            const SizedBox(width: 10),
-                            Text(user.email!),
-                          ],
-                        ),
+                        if (user.email != null)
+                          Row(
+                            children: [
+                              const Icon(Icons.email, color: Color(0xFFE30613)),
+                              const SizedBox(width: 10),
+                              Text(user.email ?? ''),
+                            ],
+                          ),
                         const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            const Icon(Icons.location_on,
-                                color: Color(0xFF004797)),
-                            const SizedBox(width: 10),
-                            if (user.address != null)
-                              Expanded(
-                                child: Text(
-                                  user.address!,
-                                ),
-                              )
-                          ],
-                        ),
+                        if (user.address != null)
+                          Row(
+                            children: [
+                              const Icon(Icons.location_on,
+                                  color: Color(0xFFE30613)),
+                              const SizedBox(width: 10),
+                              if (user.address != null)
+                                Expanded(
+                                  child: Text(
+                                    user.address!,
+                                  ),
+                                )
+                            ],
+                          ),
                         const SizedBox(height: 10),
                         // Row(
                         //   children: [
                         //     const SvgIcon(
                         //       assetName: 'assets/icons/whatsapp.svg',
-                        //       color: Color(0xFF004797),
+                        //       color: Color(0xFFE30613),
                         //       size: 25,
                         //     ),
                         //     const SizedBox(width: 10),
@@ -240,7 +244,7 @@ class ProfilePreview extends ConsumerWidget {
                         //   children: [
                         //     const SvgIcon(
                         //       assetName: 'assets/icons/whatsapp-business.svg',
-                        //       color: Color(0xFF004797),
+                        //       color: Color(0xFFE30613),
                         //       size: 23,
                         //     ),
                         //     const SizedBox(width: 10),
@@ -277,21 +281,23 @@ class ProfilePreview extends ConsumerWidget {
                     const SizedBox(
                       height: 50,
                     ),
-                    if (user.social!.isNotEmpty)
+                    if (user.social?.isNotEmpty == true)
                       const Row(
                         children: [
                           Text(
                             'Social Media',
                             style: TextStyle(
-                                color: Color(0xFF2C2829),
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500),
+                              color: Color(0xFF2C2829),
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
-                    for (int index = 0; index < user.social!.length; index++)
-                      customSocialPreview(index, social: user.social![index]),
-                    if (user.websites!.isNotEmpty)
+                    if (user.social?.isNotEmpty == true)
+                      for (int index = 0; index < user.social!.length; index++)
+                        customSocialPreview(index, social: user.social![index]),
+                    if (user.websites?.isNotEmpty == true)
                       const Padding(
                         padding: EdgeInsets.only(top: 50),
                         child: Row(
@@ -306,13 +312,16 @@ class ProfilePreview extends ConsumerWidget {
                           ],
                         ),
                       ),
-                    for (int index = 0; index < user.websites!.length; index++)
-                      customWebsitePreview(index,
-                          website: user.websites![index]),
+                    if (user.websites?.isNotEmpty == true)
+                      for (int index = 0;
+                          index < user.websites!.length;
+                          index++)
+                        customWebsitePreview(index,
+                            website: user.websites![index]),
                     const SizedBox(
                       height: 30,
                     ),
-                    if (user.videos!.isNotEmpty)
+                    if (user.videos?.isNotEmpty == true)
                       Column(
                         children: [
                           SizedBox(
@@ -349,7 +358,7 @@ class ProfilePreview extends ConsumerWidget {
                     const SizedBox(
                       height: 40,
                     ),
-                    if (user.certificates!.isNotEmpty)
+                    if (user.certificates?.isNotEmpty == true)
                       const Row(
                         children: [
                           Text(
@@ -361,24 +370,25 @@ class ProfilePreview extends ConsumerWidget {
                           ),
                         ],
                       ),
-                    ListView.builder(
-                      shrinkWrap:
-                          true, // Let ListView take up only as much space as it needs
-                      physics:
-                          const NeverScrollableScrollPhysics(), // Disable ListView's internal scrolling
-                      itemCount: user.certificates!.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4.0), // Space between items
-                          child: CertificateCard(
-                            certificate: user.certificates![index],
-                            onRemove: null,
-                          ),
-                        );
-                      },
-                    ),
-                    if (user.awards!.isNotEmpty)
+                    if (user.certificates?.isNotEmpty == true)
+                      ListView.builder(
+                        shrinkWrap:
+                            true, // Let ListView take up only as much space as it needs
+                        physics:
+                            const NeverScrollableScrollPhysics(), // Disable ListView's internal scrolling
+                        itemCount: user.certificates!.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 4.0), // Space between items
+                            child: CertificateCard(
+                              certificate: user.certificates![index],
+                              onRemove: null,
+                            ),
+                          );
+                        },
+                      ),
+                    if (user.awards?.isNotEmpty == true)
                       const Row(
                         children: [
                           Text(
@@ -390,26 +400,27 @@ class ProfilePreview extends ConsumerWidget {
                           ),
                         ],
                       ),
-                    GridView.builder(
-                      shrinkWrap:
-                          true, // Let GridView take up only as much space as it needs
-                      physics:
-                          const NeverScrollableScrollPhysics(), // Disable GridView's internal scrolling
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // Number of columns
-                        crossAxisSpacing: 8.0, // Space between columns
-                        mainAxisSpacing: 8.0, // Space between rows
-                        childAspectRatio: .9, // Aspect ratio for the cards
+                    if (user.awards?.isNotEmpty == true)
+                      GridView.builder(
+                        shrinkWrap:
+                            true, // Let GridView take up only as much space as it needs
+                        physics:
+                            const NeverScrollableScrollPhysics(), // Disable GridView's internal scrolling
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // Number of columns
+                          crossAxisSpacing: 8.0, // Space between columns
+                          mainAxisSpacing: 8.0, // Space between rows
+                          childAspectRatio: .9, // Aspect ratio for the cards
+                        ),
+                        itemCount: user.awards!.length,
+                        itemBuilder: (context, index) {
+                          return AwardCard(
+                            award: user.awards![index],
+                            onRemove: null,
+                          );
+                        },
                       ),
-                      itemCount: user.awards!.length,
-                      itemBuilder: (context, index) {
-                        return AwardCard(
-                          award: user.awards![index],
-                          onRemove: null,
-                        );
-                      },
-                    ),
                   ]),
                 ),
               ],

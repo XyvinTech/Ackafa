@@ -37,13 +37,9 @@ class FeedView extends ConsumerStatefulWidget {
 class _FeedViewState extends ConsumerState<FeedView> {
   final TextEditingController feedContentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  late final webSocketClient;
   @override
   void initState() {
     super.initState();
-
-    webSocketClient = ref.read(socketIoClientProvider);
-    webSocketClient.connect(id, ref);
 
     _scrollController.addListener(_onScroll);
     _fetchInitialUsers();
@@ -596,7 +592,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
               user.image ?? 'https://placehold.co/600x400',
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
-                return Icon(Icons.person);
+                return Image.asset(color: Color(0xFFE30613),'assets/icons/dummy_person_small.png');
               },
             ),
           ),

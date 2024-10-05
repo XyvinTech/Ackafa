@@ -1,25 +1,26 @@
 import 'package:ackaf/src/data/models/msg_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 
-class ReplyCard extends StatelessWidget {
-  const ReplyCard({
-    Key? key,
-    required this.message,
-    required this.time,
-    this.feed,
-  }) : super(key: key);
-
+class GroupchatOwnMessageCard extends StatelessWidget {
+  const GroupchatOwnMessageCard(
+      {Key? key,
+      required this.message,
+      required this.time,
+      required this.status,
+      this.feed,
+      required this.username})
+      : super(key: key);
+  final String username;
   final String message;
   final String time;
   final ChatFeed? feed;
-
+  final String status;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Align(
-        alignment: Alignment.centerLeft,
+        alignment: Alignment.centerRight,
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 0.7,
@@ -27,20 +28,21 @@ class ReplyCard extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             decoration: BoxDecoration(
-              color: const Color(0xFFF2F2F2), // Light color for reply message
+              color: Color(0xFFE6FFE2),
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.3),
                   spreadRadius: 1,
-                  blurRadius: 1,
-                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
                 ),
               ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(username,style: TextStyle(color: Colors.red),),
                 if (feed?.media != null)
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15),
@@ -61,6 +63,7 @@ class ReplyCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                // Spacing between message and time row
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -75,7 +78,7 @@ class ReplyCard extends StatelessWidget {
                     Icon(
                       Icons.done_all,
                       size: 20,
-                      color: Colors.blue[300],
+                      color: status == 'seen' ? Colors.blue[300] : Colors.grey,
                     ),
                   ],
                 ),

@@ -10,8 +10,8 @@ Future<String> imageUpload(String imageName, String imagePath) async {
     secretKey: dotenv.env['AWS_SECRET_ACCESS_KEY']!,
     region: 'ap-south-1',
   );
-  await Minio.shared.fPutObject('akcaf', basename(imageName), imagePath);
+  await Minio.shared.fPutObject('akcaf-bucket', basename(imageName), imagePath);
   final imageUrl =
-      "https://akcaf.s3.ap-south-1.amazonaws.com/${basename(imagePath)}";
+      "https://akcaf-bucket.s3.ap-south-1.amazonaws.com/${basename(imagePath)}";
   return imageUrl ?? '';
 }

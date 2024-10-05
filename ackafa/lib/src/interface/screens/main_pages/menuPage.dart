@@ -186,7 +186,7 @@ void showLogoutDialog(BuildContext context) {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
-                      child: const Text('Yes, Logout',
+                      child: const Text('Yes',
                           style: TextStyle(fontSize: 16, color: Colors.red)),
                       onPressed: () async {
                         LoggedIn = false;
@@ -257,9 +257,11 @@ class MenuPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(9),
                               child: Image.network(
                                 errorBuilder: (context, error, stackTrace) {
-                                  return const Icon(Icons.person);
+                                  return Image.asset(
+                                      color: Color(0xFFE30613),
+                                      'assets/icons/dummy_person_small.png');
                                 },
-                                user.image ?? 'https://placehold.co/600x400',
+                                user.image ?? '',
                                 height: 70,
                                 width: 75,
                                 fit: BoxFit.cover,

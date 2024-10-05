@@ -2,28 +2,31 @@ import 'package:flutter/material.dart';
 
 Widget customButton(
     {required String label,
-    Color color = const Color(0xFFE30613),
     required VoidCallback onPressed,
-    required int fontSize}) {
+    Color sideColor =  const Color(0xFFE30613),
+    Color labelColor = Colors.white,
+    int fontSize = 16,
+    int buttonHeight = 45,
+    Color buttonColor =  const Color(0xFFE30613),}) {
   return SizedBox(
-    height: 55,
+    height: buttonHeight.toDouble(),
     width: double.infinity,
     child: ElevatedButton(
         onPressed: onPressed,
         style: ButtonStyle(
-          foregroundColor: WidgetStateProperty.all<Color>(color),
-          backgroundColor: WidgetStateProperty.all<Color>(color),
+          foregroundColor: WidgetStateProperty.all<Color>(buttonColor),
+          backgroundColor: WidgetStateProperty.all<Color>(buttonColor),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(3),
-              side: BorderSide(color: color),
+              side: BorderSide(color: sideColor),
             ),
           ),
         ),
         child: Text(
           label,
           style: TextStyle(
-              color: Colors.white, fontSize: double.parse(fontSize.toString())),
+              color: labelColor, fontSize: double.parse(fontSize.toString())),
         )),
   );
 }
