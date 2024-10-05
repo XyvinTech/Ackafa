@@ -15,7 +15,7 @@ class PeoplePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2, // Number of tabs
+        length: 3, // Number of tabs
 
         child: Scaffold(
             backgroundColor: Colors.white,
@@ -85,7 +85,7 @@ class PeoplePage extends StatelessWidget {
                       ),
                       tabs: [
                         Tab(text: "CHAT"),
-                        // Tab(text: "GROUP CHAT"),
+                        Tab(text: "GROUP CHAT"),
                         Tab(text: "MEMBERS"),
                       ],
                     ),
@@ -101,7 +101,7 @@ class PeoplePage extends StatelessWidget {
                   child: TabBarView(
                     children: [
                       ChatPage(),
-                      // GroupChatPage(),
+                      GroupChatPage(),
                       MembersPage(),
                     ],
                   ),

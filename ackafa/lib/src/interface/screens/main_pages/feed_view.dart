@@ -8,6 +8,7 @@ import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/notifires/feed_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
 import 'package:ackaf/src/interface/common/custom_drop_down_block_report.dart';
+import 'package:ackaf/src/interface/common/user_tile.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chatscreen.dart';
@@ -545,7 +546,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
             SizedBox(height: 16),
             Text(widget.feed.content!, style: TextStyle(fontSize: 14)),
             SizedBox(height: 16),
-            _buildUserInfo(widget.user),
+            buildUserInfo(widget.user, widget.feed),
             SizedBox(height: 16),
             _buildActionButtons(),
           ],
@@ -575,49 +576,6 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
                 .scaleXY(begin: 1.2, end: 0.9),
         ],
       ),
-    );
-  }
-
-  Widget _buildUserInfo(UserModel user) {
-    String formattedDateTime = DateFormat('h:mm a · MMM d, yyyy')
-        .format(DateTime.parse(widget.feed.createdAt.toString()).toLocal());
-    return Row(
-      children: [
-        ClipOval(
-          child: Container(
-            width: 30,
-            height: 30,
-            color: const Color.fromARGB(255, 255, 255, 255),
-            child: Image.network(
-              user.image ?? 'https://placehold.co/600x400',
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Image.asset(color: Color(0xFFE30613),'assets/icons/dummy_person_small.png');
-              },
-            ),
-          ),
-        ),
-        SizedBox(width: 8),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${user.name?.first} ${user.name?.middle ?? ''} ${user.name?.last}',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-            if (user.company?.name != null)
-              Text(
-                user.company!.name!,
-                style: TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-          ],
-        ),
-        Spacer(),
-        Text(
-          formattedDateTime,
-          style: TextStyle(color: Colors.grey, fontSize: 12),
-        ),
-      ],
     );
   }
 

@@ -20,18 +20,6 @@ class EventPage extends StatelessWidget {
             return ListView(
               padding: const EdgeInsets.all(16.0),
               children: [
-                // Container(
-                //   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                //   child: TextField(
-                //     decoration: InputDecoration(
-                //       prefixIcon: Icon(Icons.search),
-                //       hintText: 'Search for Events',
-                //       border: OutlineInputBorder(
-                //         borderRadius: BorderRadius.circular(8.0),
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 SizedBox(height: 16),
                 ListView.builder(
                   shrinkWrap: true,

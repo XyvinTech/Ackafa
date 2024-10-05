@@ -258,7 +258,7 @@ class MenuPage extends StatelessWidget {
                               child: Image.network(
                                 errorBuilder: (context, error, stackTrace) {
                                   return Image.asset(
-                                      color: Color(0xFFE30613),
+                         
                                       'assets/icons/dummy_person_small.png');
                                 },
                                 user.image ?? '',
@@ -424,19 +424,17 @@ class MenuPage extends StatelessWidget {
                       ),
                       Container(color: const Color(0xFFF2F2F2), height: 15),
 
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(),
-                            child: _buildListTile(
-                                context, Icons.delete, 'Delete account',
-                                onTap: () => showDeleteAccountDialog(context),
-                                IconColor: Colors.red),
-                          ),
-                        ],
-                      ),
-
-                      Container(color: const Color(0xFFF2F2F2), height: 20),
+                      // Column(
+                      //   children: [
+                      //     Padding(
+                      //       padding: const EdgeInsets.symmetric(),
+                      //       child: _buildListTile(
+                      //           context, Icons.delete, 'Delete account',
+                      //           onTap: () => showDeleteAccountDialog(context),
+                      //           IconColor: Colors.red),
+                      //     ),
+                      //   ],
+                      // ),
 
                       Container(
                         color: const Color(0xFFF2F2F2),

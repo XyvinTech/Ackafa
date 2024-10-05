@@ -32,7 +32,7 @@ class ApprovalRejectedWidget extends StatelessWidget {
                 width: 40.0, // Match the CircleAvatar radius
                 height: 40.0, // Match the CircleAvatar radius
                 errorBuilder: (context, error, stackTrace) {
-                  return Image.asset(color: Color(0xFFE30613),
+                  return Image.asset(
                     'assets/icons/dummy_person_small.png',
                     fit: BoxFit.cover,
                     width: 40.0,

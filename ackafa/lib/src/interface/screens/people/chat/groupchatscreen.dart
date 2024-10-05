@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:ackaf/src/data/models/chat_model.dart';
+import 'package:ackaf/src/data/models/group_chat_model.dart';
 import 'package:ackaf/src/data/models/msg_model.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
+import 'package:ackaf/src/data/services/api_routes/group_chat_api.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/chat_widgets/OwnMessageCard.dart';
 import 'package:ackaf/src/interface/common/chat_widgets/ReplyCard.dart';
@@ -30,7 +32,7 @@ class _IndividualPageState extends ConsumerState<Groupchatscreen> {
   bool isBlocked = false;
   bool show = false;
   FocusNode focusNode = FocusNode();
-  List<MessageModel> messages = [];
+  List<GroupChatModel> messages = [];
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = ScrollController();
 
@@ -91,7 +93,14 @@ class _IndividualPageState extends ConsumerState<Groupchatscreen> {
   }
 
   void setMessage(String type, String message, String fromId) {
-    final messageModel = MessageModel(
+    final messageModel = GroupChatModel(
+      content: message,
+      from: GroupChatUserModel(id: fromId),
+      status: type,
+      createdAt: DateTime.now(),
+    );
+
+    MessageModel(
       from: fromId,
       status: type,
       content: message,
@@ -105,7 +114,7 @@ class _IndividualPageState extends ConsumerState<Groupchatscreen> {
 
   @override
   Widget build(BuildContext context) {
-    final messageStream = ref.watch(messageStreamProvider);
+    final messageStream = ref.watch(groupMessageStreamProvider);
 
     messageStream.whenData((newMessage) {
       bool messageExists = messages.any((message) =>
@@ -147,14 +156,17 @@ class _IndividualPageState extends ConsumerState<Groupchatscreen> {
                     const SizedBox(width: 10),
                     ClipOval(
                       child: Container(
-                        width: 30,
-                        height: 30,
-                        color: const Color.fromARGB(255, 255, 255, 255),
+                        width: 36,
+                        height: 36,
+                        color: Colors.red,
                         child: Image.network(
                           widget.group.image ?? '',
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.person);
+                            return const Icon(
+                              Icons.groups_2,
+                              color: Colors.white,
+                            );
                           },
                         ),
                       ),
@@ -221,7 +233,7 @@ class _IndividualPageState extends ConsumerState<Groupchatscreen> {
                         final message = messages[messages.length -
                             1 -
                             index]; // Reverse the index to get the latest message first
-                        if (message.from == widget.sender.id) {
+                        if (message.from?.id == widget.sender.id) {
                           return Consumer(
                             builder: (context, ref, child) {
                               final asyncUser = ref.watch(userProvider);
@@ -230,7 +242,6 @@ class _IndividualPageState extends ConsumerState<Groupchatscreen> {
                                   return GroupchatOwnMessageCard(
                                     username:
                                         '${user.name?.first ?? ''} ${user.name?.middle ?? ''} ${user.name?.last ?? ''}',
-                                    feed: message.feed,
                                     status: message.status!,
                                     message: message.content ?? '',
                                     time: DateFormat('h:mm a').format(
@@ -250,53 +261,30 @@ class _IndividualPageState extends ConsumerState<Groupchatscreen> {
                           );
                         } else {
                           return GestureDetector(
-                            onLongPress: () {
-                              showReportPersonDialog(
-                                  reportedItemId: message.id ?? '',
-                                  context: context,
-                                  onReportStatusChanged: () {
-                                    setState(() {
-                                      if (isBlocked) {
-                                        isBlocked = false;
-                                      } else {
-                                        isBlocked = true;
-                                      }
-                                    });
-                                  },
-                                  reportType: 'chat');
-                            },
-                            child: Consumer(
-                              builder: (context, ref, child) {
-                                log('from ${messages[index].from} ');
-                                final asyncGroupUser = ref.watch(
-                                    fetchUserByIdProvider(
-                                        messages[index].from ?? ''));
-                                return asyncGroupUser.when(
-                                  data: (groupUser) {
-                                    return GroupchatReplyMsgCard(
-                                      username:
-                                          '${groupUser.name?.first ?? ''} ${groupUser.name?.middle ?? ''} ${groupUser.name?.last ?? ''}',
-                                      feed: message.feed,
-                                      message: message.content ?? '',
-                                      time: DateFormat('h:mm a').format(
-                                        DateTime.parse(
-                                                message.createdAt.toString())
-                                            .toLocal(),
-                                      ),
-                                    );
-                                  },
-                                  loading: () =>
-                                      Center(child: LoadingAnimation()),
-                                  error: (error, stackTrace) {
-                                    return Center(
-                                      child:
-                                          Text('Error loading User: $error '),
-                                    );
-                                  },
-                                );
+                              onLongPress: () {
+                                showReportPersonDialog(
+                                    reportedItemId: message.id ?? '',
+                                    context: context,
+                                    onReportStatusChanged: () {
+                                      setState(() {
+                                        if (isBlocked) {
+                                          isBlocked = false;
+                                        } else {
+                                          isBlocked = true;
+                                        }
+                                      });
+                                    },
+                                    reportType: 'chat');
                               },
-                            ),
-                          );
+                              child: GroupchatReplyMsgCard(
+                                username:
+                                    '${message.from?.name?.first ?? ''} ${message.from?.name?.middle ?? ''} ${message.from?.name?.last ?? ''}',
+                                message: message.content ?? '',
+                                time: DateFormat('h:mm a').format(
+                                  DateTime.parse(message.createdAt.toString())
+                                      .toLocal(),
+                                ),
+                              ));
                         }
                       },
                     ),

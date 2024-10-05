@@ -15,22 +15,32 @@ class MyPostsPage extends StatelessWidget {
       builder: (context, ref, child) {
         final asyncMyPosts = ref.watch(fetchMyPostsProvider);
         return Scaffold(
+            backgroundColor: Colors.white,
             appBar: AppBar(
-              title: Text('My Posts'),
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+              backgroundColor: Colors.white,
+              title: const Text(
+                'My Posts',
+                style: TextStyle(fontSize: 17),
               ),
-              actions: [
-                IconButton(
-                  icon: FaIcon(FontAwesomeIcons.whatsapp),
-                  onPressed: () {
-                    // Handle WhatsApp button press
-                  },
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              // actions: [
+              //   IconButton(
+              //     icon: FaIcon(FontAwesomeIcons.whatsapp),
+              //     onPressed: () {
+              //       // WhatsApp action
+              //     },
+              //   ),
+              // ],
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(1.0),
+                child: Container(
+                  color: Colors.grey,
+                  height: 1.0,
                 ),
-              ],
+              ),
             ),
             body: asyncMyPosts.when(
               loading: () => Center(child: LoadingAnimation()),

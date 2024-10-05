@@ -121,7 +121,6 @@ class _MembersPageState extends ConsumerState<MembersPage> {
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return Image.asset(
-                                      color: Color(0xFFE30613),
                                       'assets/icons/dummy_person_small.png');
                                 },
                               ),

@@ -6,18 +6,29 @@ class RequestNFCPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Request NFC'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Request NFC',
+          style: TextStyle(fontSize: 17),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        // actions: [
+        //   IconButton(
+        //     icon: FaIcon(FontAwesomeIcons.whatsapp),
+        //     onPressed: () {
+        //       // WhatsApp action
+        //     },
+        //   ),
+        // ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.0),
+          preferredSize: const Size.fromHeight(1.0),
           child: Container(
-            color: Color.fromRGBO(51, 51, 51, 0.2),
+            color: Colors.grey,
             height: 1.0,
           ),
         ),

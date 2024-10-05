@@ -9,7 +9,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
 
 Future<void> saveQr(
-    {required ScreenshotController screenshotController,required BuildContext context}) async {
+    {required ScreenshotController screenshotController,
+    required BuildContext context}) async {
   // Request storage permission
   var status = await Permission.photos.request();
   if (status.isGranted) {
@@ -24,11 +25,11 @@ Future<void> saveQr(
           name: "AKCAF${DateTime.now().millisecondsSinceEpoch}",
         );
         print(result); // You can check the result if needed
-              CustomSnackbar.showSnackbar(context, 'Downloaded to gallery!');
+        CustomSnackbar.showSnackbar(context, 'Downloaded to gallery!');
       }
     }).catchError((onError) {
       print(onError);
-        CustomSnackbar.showSnackbar(context, 'Error Saving to gallery!');
+      CustomSnackbar.showSnackbar(context, 'Error Saving to gallery!');
     });
   } else {
     CustomSnackbar.showSnackbar(context, 'Permission not granted!');

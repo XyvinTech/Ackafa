@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
+import 'package:ackaf/src/interface/screens/event_news/news.dart';
 import 'package:ackaf/src/interface/screens/main_pages/feed_view.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +101,7 @@ class _MainPageState extends ConsumerState<MainPage> {
       ),
       FeedView(),
       ProfilePage(user: user),
-      Event_News_Page(),
+      NewsPage(),
       PeoplePage(),
       // Event_News_Page(),
       // PeoplePage(),
@@ -109,14 +110,14 @@ class _MainPageState extends ConsumerState<MainPage> {
       'assets/icons/home_inactive.svg',
       'assets/icons/feed_inactive.svg',
       user.image ?? 'https://placehold.co/600x400',
-      'assets/icons/news_inactive.svg',
+      'assets/icons/inactive_news.svg',
       'assets/icons/people_inactive.svg',
     ];
     _activeIcons = [
       'assets/icons/home_active.svg',
       'assets/icons/feed_active.svg',
       user.image ?? 'https://placehold.co/600x400',
-      'assets/icons/active_event.svg',
+      'assets/icons/active_news.svg',
       'assets/icons/people_active.svg',
     ];
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -154,7 +155,6 @@ class _MainPageState extends ConsumerState<MainPage> {
                               radius: 15,
                             )
                           : Image.asset(
-                              color: Color(0xFFE30613),
                               'assets/icons/dummy_person_small.png',
                               scale: 1.5,
                             )
@@ -173,7 +173,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                               radius: 15,
                             )
                           : Image.asset(
-                              color: Color(0xFFE30613),
+                       
                               'assets/icons/dummy_person_small.png',
                               scale: 1.5,
                             )
@@ -181,13 +181,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                           iconPath: _activeIcons[index],
                           color: Color(0xFFE30613),
                         ),
-                  label: [
-                    'Home',
-                    'Feed',
-                    'Profile',
-                    'Events/news',
-                    'People'
-                  ][index],
+                  label: ['Home', 'Feed', 'Profile', 'News', 'People'][index],
                 );
               }),
               currentIndex: _selectedIndex,

@@ -6,7 +6,7 @@ part of 'college_api.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchCollegesHash() => r'a169d6bbd9b0300025e7282165862e75cf0a19bf';
+String _$fetchCollegesHash() => r'ed908420d407b8137417871ad406d232ff3d0bd0';
 
 /// Copied from Dart SDK
 class _SystemHash {
