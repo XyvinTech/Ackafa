@@ -108,7 +108,7 @@ class _ChatPageState extends ConsumerState<GroupChatPage> {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stackTrace) {
               return Center(
-                child: Text('Error loading promotions: $error'),
+                child: Text('No Groups'),
               );
             },
           ));

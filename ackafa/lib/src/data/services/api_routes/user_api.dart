@@ -29,7 +29,7 @@ class ApiRoutes {
       required String? college,
       required String? batch,
       required context}) async {
-    final url = Uri.parse('$baseUrl/api/v1/user/update');
+    final url = Uri.parse('$baseUrl/user/update');
 
     final response = await http.patch(
       url,
@@ -407,26 +407,6 @@ class ApiRoutes {
           .showSnackBar(SnackBar(content: Text(jsonResponse['message'])));
       print(jsonResponse['message']);
       print('Failed to delete image: ${response.statusCode}');
-    }
-  }
-
-  Future<void> markNotificationAsRead(String notificationId, String id) async {
-    final url = Uri.parse(
-        'http://43.205.89.79/api/v1/notification/in-app/$notificationId/read/$id');
-
-    final response = await http.put(
-      url,
-      headers: {
-        'accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      print('Notification marked as read successfully.');
-    } else {
-      print(
-          'Failed to mark notification as read. Status code: ${response.statusCode}');
     }
   }
 

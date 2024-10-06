@@ -122,6 +122,7 @@ Future<void> sendChatMessage(
       print('Message sent: ${response.body}');
     } else {
       // Handle errors here
+      print(json.decode(response.body)['message']);
       print('Failed to send message: ${response.statusCode}');
     }
   } catch (e) {

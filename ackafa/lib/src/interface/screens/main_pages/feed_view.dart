@@ -409,72 +409,99 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
 
   void _openCommentModal() {
     log('comments: ${widget.feed.comments?.length}');
-    showCupertinoModalPopup(
+    showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) => CupertinoActionSheet(
-        actions: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.7, // Adjust height
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text('Comments'),
-                backgroundColor: Colors.white,
-                automaticallyImplyLeading: false,
-                actions: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
+      isScrollControlled: true, // Allows resizing of the modal
+      backgroundColor: Colors.transparent, // Make the background transparent
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: 16.0, vertical: 30), // Padding for the sides
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white, // Background color of the modal
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(20.0),
+                bottom: Radius.circular(20.0), // Curved top edges
               ),
-              body: Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: widget.feed.comments?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        return Consumer(
-                          builder: (context, ref, child) {
-                            return ListTile(
-                              leading: ClipOval(
-                                child: Container(
-                                  width: 30,
-                                  height: 30,
-                                  color:
-                                      const Color.fromARGB(255, 255, 255, 255),
-                                  child: widget.feed.comments?[index].user
-                                              ?.image !=
-                                          null
-                                      ? Image.network(
-                                          fit: BoxFit.fill,
-                                          widget.feed.comments![index].user!
-                                              .image!)
-                                      : Icon(Icons.person),
-                                ),
-                              ),
-                              title: Text(
-                                  widget.feed.comments![index].user != null
-                                      ? widget.feed.comments![index].user!.name
-                                              ?.first ??
-                                          'Unkown User'
-                                      : 'Unkown User'),
-                              subtitle: Text(
-                                  widget.feed.comments?[index].comment ?? ''),
-                            );
-                          },
-                        );
-                      },
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.7,
+              child: Scaffold(
+                backgroundColor:
+                    Colors.transparent, // Transparent background for scaffold
+                appBar: AppBar(
+                  title: Text('Comments'),
+                  backgroundColor: Colors.white,
+                  automaticallyImplyLeading: false,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20.0),
                     ),
                   ),
-                  _buildCommentInputField(),
-                ],
+                  actions: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+                body: Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: widget.feed.comments?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          return Consumer(
+                            builder: (context, ref, child) {
+                              return ListTile(
+                                leading: ClipOval(
+                                  child: Container(
+                                    width: 30,
+                                    height: 30,
+                                    color: const Color.fromARGB(
+                                        255, 255, 255, 255),
+                                    child: widget.feed.comments?[index].user
+                                                ?.image !=
+                                            null
+                                        ? Image.network(
+                                            fit: BoxFit.fill,
+                                            widget.feed.comments![index].user!
+                                                .image!)
+                                        : Icon(Icons.person),
+                                  ),
+                                ),
+                                title: Text(
+                                    widget.feed.comments![index].user != null
+                                        ? widget.feed.comments![index].user!
+                                                .name?.first ??
+                                            'Unknown User'
+                                        : 'Unknown User'),
+                                subtitle: Text(
+                                    widget.feed.comments?[index].comment ?? ''),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    _buildCommentInputField(),
+                  ],
+                ),
               ),
             ),
-          )
-        ],
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -512,7 +539,6 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
                     feedId: widget.feed.id!, comment: commentController.text);
                 await ref.read(feedNotifierProvider.notifier).refreshFeed();
                 commentController.clear();
-                Navigator.pop(context);
               }
             },
           )

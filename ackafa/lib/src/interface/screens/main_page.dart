@@ -75,8 +75,6 @@ class _MainPageState extends ConsumerState<MainPage> {
 
   @override
   void dispose() {
-    webSocketClient.disconnect();
-
     super.dispose();
   }
 
@@ -173,7 +171,6 @@ class _MainPageState extends ConsumerState<MainPage> {
                               radius: 15,
                             )
                           : Image.asset(
-                       
                               'assets/icons/dummy_person_small.png',
                               scale: 1.5,
                             )

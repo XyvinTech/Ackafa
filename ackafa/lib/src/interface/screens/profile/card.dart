@@ -184,7 +184,6 @@ class ProfileCard extends StatelessWidget {
                                                   ),
                                                 )
                                               : Image.asset(
-                                        
                                                   'assets/icons/dummy_person_small.png'),
                                           const SizedBox(height: 10),
                                           Padding(
@@ -194,12 +193,22 @@ class ProfileCard extends StatelessWidget {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                  '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
-                                                  style: const TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                                Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Flexible(
+                                                      fit: FlexFit.loose,
+                                                      child: Text(
+                                                        '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
+                                                        style: const TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                                 const SizedBox(height: 5),
                                                 Row(

@@ -72,7 +72,7 @@ Widget eventWidget({
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        'LIVE',
+                        event.status??'',
                         style: TextStyle(
                           color: const Color.fromARGB(255, 134, 163, 136),
                           fontWeight: FontWeight.bold,

@@ -1,67 +1,83 @@
 class NotificationModel {
-  final String? id;
-  final List<String>? to;
-  final String? subject;
-  final String? content;
-  final String? type;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  String? id;
+  List<User>? users;
+  String? subject;
+  String? content;
+  String? media;
+  String? type;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  int? version;
 
   NotificationModel({
     this.id,
-    this.to,
+    this.users,
     this.subject,
     this.content,
+    this.media,
     this.type,
     this.createdAt,
     this.updatedAt,
+    this.version,
   });
-
-  NotificationModel copyWith({
-    String? id,
-    List<String>? to,
-    String? subject,
-    String? content,
-    String? type,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) {
-    return NotificationModel(
-      id: id ?? this.id,
-      to: to ?? this.to,
-      subject: subject ?? this.subject,
-      content: content ?? this.content,
-      type: type ?? this.type,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-      id: json['_id'] as String?,
-      to: (json['to'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      subject: json['subject'] as String?,
-      content: json['content'] as String?,
-      type: json['type'] as String?,
+      id: json['_id'],
+      users: json['users'] != null
+          ? List<User>.from(json['users'].map((x) => User.fromJson(x)))
+          : null,
+      subject: json['subject'],
+      content: json['content'],
+      media: json['media'],
+      type: json['type'],
       createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'] as String)
+          ? DateTime.parse(json['createdAt'])
           : null,
       updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'] as String)
+          ? DateTime.parse(json['updatedAt'])
           : null,
+      version: json['__v'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
-      'to': to,
+      'users': users != null
+          ? List<dynamic>.from(users!.map((x) => x.toJson()))
+          : null,
       'subject': subject,
       'content': content,
+      'media': media,
       'type': type,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
+      '__v': version,
+    };
+  }
+}
+
+class User {
+  String? user;
+  bool? read;
+  String? id;
+
+  User({this.user, this.read, this.id});
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      user: json['user'],
+      read: json['read'],
+      id: json['_id'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'user': user,
+      'read': read,
+      '_id': id,
     };
   }
 }

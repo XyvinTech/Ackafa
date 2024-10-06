@@ -5,6 +5,7 @@ import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
 import 'package:ackaf/src/interface/common/chat_widgets/OwnMessageCard.dart';
 import 'package:ackaf/src/interface/common/chat_widgets/ReplyCard.dart';
 import 'package:ackaf/src/interface/common/custom_dialog.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -146,7 +147,6 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return Image.asset(
-                              
                                 'assets/icons/dummy_person_small.png');
                           },
                         ),
@@ -154,9 +154,22 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                     ),
                   ],
                 ),
-                title: Text(
-                  '${widget.receiver.name?.first ?? ''}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last ?? ''}',
-                  style: const TextStyle(fontSize: 18),
+                title: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => DetailsPage(),
+                        transitionDuration: Duration(milliseconds: 500),
+                        transitionsBuilder: (_, a, __, c) =>
+                            FadeTransition(opacity: a, child: c),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    '${widget.receiver.name?.first ?? ''}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last ?? ''}',
+                    style: const TextStyle(fontSize: 18),
+                  ),
                 ),
                 actions: [
                   IconButton(

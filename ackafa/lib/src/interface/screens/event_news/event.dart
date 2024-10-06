@@ -116,7 +116,7 @@ class EventPage extends StatelessWidget {
                       ),
                       child: event.status != null && event.status != ''
                           ? Text(
-                              event.status!,
+                              event.status?.toUpperCase() ?? '',
                               style: TextStyle(
                                 color:
                                     Color(0xFF0F7036), // Darker green for text

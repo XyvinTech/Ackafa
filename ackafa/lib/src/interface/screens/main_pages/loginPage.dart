@@ -403,7 +403,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       height: 20,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 30),
+                      padding: const EdgeInsets.only(left: 20, right: 20),
                       child: PinCodeTextField(
                         appContext: context,
                         length: 6, // Number of OTP digits
@@ -419,8 +419,8 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                         pinTheme: PinTheme(
                           shape: PinCodeFieldShape.box,
                           borderRadius: BorderRadius.circular(5),
-                          fieldHeight: 45,
-                          fieldWidth: 60, selectedColor: Colors.red,
+                          fieldHeight: 55,
+                          fieldWidth: 50, selectedColor: Colors.red,
                           activeColor: Color.fromARGB(255, 232, 226, 226),
                           inactiveColor: const Color.fromARGB(
                               255, 232, 226, 226), // Box color when not focused

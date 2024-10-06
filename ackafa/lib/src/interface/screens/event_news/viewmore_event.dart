@@ -89,7 +89,7 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                             ? Row(
                                 children: [
                                   Text(
-                                    widget.event.status!,
+                                    widget.event.status?.toUpperCase() ?? '',
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -161,13 +161,19 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Divider(color: Color.fromARGB(255, 192, 188, 188)),
+                const Divider(color: Color.fromARGB(255, 229, 220, 220)),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8),
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                  ),
                   child: const Text('Organiser'),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8),
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                  ),
                   child: Text(
                     widget.event.organiser ?? '',
                     style: const TextStyle(
@@ -178,16 +184,14 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                   height: 20,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, bottom: 8),
+                  padding:
+                      const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                   child: Text(
                     widget.event.description ?? '',
                     style: TextStyle(fontSize: 16, color: Colors.black87),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: const Text('Organiser company'),
-                ),
+
                 // ClipRRect(
                 //                                   borderRadius:
                 //                                       BorderRadius.circular(9),
