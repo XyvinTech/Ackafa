@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/data/services/api_routes/notification_api.dart';
@@ -16,8 +18,7 @@ class NotificationPage extends StatelessWidget {
       // },
       child: Consumer(
         builder: (context, ref, child) {
-          final asyncNotification =
-              ref.watch(fetchNotificationsProvider);
+          final asyncNotification = ref.watch(fetchNotificationsProvider);
 
           return Scaffold(
             appBar: AppBar(
@@ -36,13 +37,17 @@ class NotificationPage extends StatelessWidget {
                     data: (notifications) {
                       return ListView.builder(
                         shrinkWrap: true,
-                        physics:
-                            NeverScrollableScrollPhysics(), 
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: notifications.length,
                         itemBuilder: (context, index) {
-                          bool readed = false;
+                          bool userExists =
+                              notifications[index].users?.any((user) {
+                                    return user.user == id;
+                                  }) ??
+                                  false;
+                          log(userExists.toString());
                           return _buildNotificationCard(
-                            readed: readed,
+                            readed: userExists,
                             subject: notifications[index].subject!,
                             content: notifications[index].content!,
                             dateTime: notifications[index].updatedAt!,
@@ -58,7 +63,6 @@ class NotificationPage extends StatelessWidget {
                       );
                     },
                   ),
-                
                 ],
               ),
             ),

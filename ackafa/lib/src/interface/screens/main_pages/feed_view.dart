@@ -370,6 +370,7 @@ class ReusableFeedPost extends ConsumerStatefulWidget {
 
 class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
     with SingleTickerProviderStateMixin {
+  FocusNode commentFocusNode = FocusNode();
   bool isLiked = false;
   bool showHeartAnimation = false;
   late AnimationController _animationController;
@@ -512,6 +513,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
         children: [
           Expanded(
             child: TextField(
+              focusNode: commentFocusNode,
               controller: commentController,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -527,21 +529,23 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
           ),
           SizedBox(width: 8),
           CupertinoButton(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Text(
-              'Post',
-              style: TextStyle(color: Colors.red),
-            ),
-            onPressed: () async {
-              if (commentController.text != '') {
-                ApiRoutes userApi = ApiRoutes();
-                await userApi.postComment(
-                    feedId: widget.feed.id!, comment: commentController.text);
-                await ref.read(feedNotifierProvider.notifier).refreshFeed();
-                commentController.clear();
-              }
-            },
-          )
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                'Post',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                if (commentController.text != '') {
+                  FocusScope.of(context)
+                      .unfocus(); // Ensure the keyboard is dismissed immediately
+
+                  ApiRoutes userApi = ApiRoutes();
+                  await userApi.postComment(
+                      feedId: widget.feed.id!, comment: commentController.text);
+                  await ref.read(feedNotifierProvider.notifier).refreshFeed();
+                  commentController.clear();
+                }
+              })
         ],
       ),
     );
@@ -550,6 +554,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
   @override
   void dispose() {
     _animationController.dispose();
+    commentFocusNode.dispose();
     super.dispose();
   }
 

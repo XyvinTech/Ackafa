@@ -117,7 +117,7 @@ class MyPostsPage extends StatelessWidget {
                 Text(
                   'Status: ${status.toUpperCase()}',
                   style: TextStyle(
-                    color: Color(0xFFE30613),
+                    color: status == 'published' ? Colors.green : Colors.red,
                   ),
                 ),
                 Text(
