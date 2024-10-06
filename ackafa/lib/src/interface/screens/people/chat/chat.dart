@@ -16,7 +16,6 @@ class ChatPage extends ConsumerStatefulWidget {
 }
 
 class _ChatPageState extends ConsumerState<ChatPage> {
-
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -39,12 +38,30 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         orElse: () => Participant(),
                       );
                   return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(receiver?.image ?? ''),
+                    leading: ClipOval(
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                        child: Image.network(
+                          receiver?.image ?? '',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                                'assets/icons/dummy_person_small.png');
+                          },
+                        ),
+                      ),
                     ),
                     title: Text(
                         '${receiver?.name?.first ?? ''} ${receiver?.name?.middle ?? ''} ${receiver?.name?.last ?? ''}'),
-                    subtitle: Text(chats[index].lastMessage?.content ?? ''),
+                    subtitle: Text(
+                      chats[index].lastMessage?.content != null
+                          ? (chats[index].lastMessage!.content!.length > 10
+                              ? '${chats[index].lastMessage?.content!.substring(0, chats[index].lastMessage!.content!.length.clamp(0, 10))}...'
+                              : chats[index].lastMessage!.content!)
+                          : '',
+                    ),
                     trailing: chats[index].unreadCount?[sender?.id] != 0 &&
                             chats[index].unreadCount?[sender!.id] != null
                         ? SizedBox(

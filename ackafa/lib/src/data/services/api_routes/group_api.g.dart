@@ -21,7 +21,7 @@ final getGroupListProvider =
 );
 
 typedef GetGroupListRef = AutoDisposeFutureProviderRef<List<GroupModel>>;
-String _$getGroupMembersHash() => r'08a2b5267326ad66df9fb6856870dbfa5689046a';
+String _$fetchGroupInfoHash() => r'e869bd7582a2f215ea5fb0efdd748b596cd31f89';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -44,30 +44,30 @@ class _SystemHash {
   }
 }
 
-/// See also [getGroupMembers].
-@ProviderFor(getGroupMembers)
-const getGroupMembersProvider = GetGroupMembersFamily();
+/// See also [fetchGroupInfo].
+@ProviderFor(fetchGroupInfo)
+const fetchGroupInfoProvider = FetchGroupInfoFamily();
 
-/// See also [getGroupMembers].
-class GetGroupMembersFamily extends Family<AsyncValue<List<GroupMember>>> {
-  /// See also [getGroupMembers].
-  const GetGroupMembersFamily();
+/// See also [fetchGroupInfo].
+class FetchGroupInfoFamily extends Family<AsyncValue<GroupInfoModel>> {
+  /// See also [fetchGroupInfo].
+  const FetchGroupInfoFamily();
 
-  /// See also [getGroupMembers].
-  GetGroupMembersProvider call({
-    required String groupId,
+  /// See also [fetchGroupInfo].
+  FetchGroupInfoProvider call({
+    required String id,
   }) {
-    return GetGroupMembersProvider(
-      groupId: groupId,
+    return FetchGroupInfoProvider(
+      id: id,
     );
   }
 
   @override
-  GetGroupMembersProvider getProviderOverride(
-    covariant GetGroupMembersProvider provider,
+  FetchGroupInfoProvider getProviderOverride(
+    covariant FetchGroupInfoProvider provider,
   ) {
     return call(
-      groupId: provider.groupId,
+      id: provider.id,
     );
   }
 
@@ -83,93 +83,92 @@ class GetGroupMembersFamily extends Family<AsyncValue<List<GroupMember>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'getGroupMembersProvider';
+  String? get name => r'fetchGroupInfoProvider';
 }
 
-/// See also [getGroupMembers].
-class GetGroupMembersProvider
-    extends AutoDisposeFutureProvider<List<GroupMember>> {
-  /// See also [getGroupMembers].
-  GetGroupMembersProvider({
-    required String groupId,
+/// See also [fetchGroupInfo].
+class FetchGroupInfoProvider extends AutoDisposeFutureProvider<GroupInfoModel> {
+  /// See also [fetchGroupInfo].
+  FetchGroupInfoProvider({
+    required String id,
   }) : this._internal(
-          (ref) => getGroupMembers(
-            ref as GetGroupMembersRef,
-            groupId: groupId,
+          (ref) => fetchGroupInfo(
+            ref as FetchGroupInfoRef,
+            id: id,
           ),
-          from: getGroupMembersProvider,
-          name: r'getGroupMembersProvider',
+          from: fetchGroupInfoProvider,
+          name: r'fetchGroupInfoProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$getGroupMembersHash,
-          dependencies: GetGroupMembersFamily._dependencies,
+                  : _$fetchGroupInfoHash,
+          dependencies: FetchGroupInfoFamily._dependencies,
           allTransitiveDependencies:
-              GetGroupMembersFamily._allTransitiveDependencies,
-          groupId: groupId,
+              FetchGroupInfoFamily._allTransitiveDependencies,
+          id: id,
         );
 
-  GetGroupMembersProvider._internal(
+  FetchGroupInfoProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.groupId,
+    required this.id,
   }) : super.internal();
 
-  final String groupId;
+  final String id;
 
   @override
   Override overrideWith(
-    FutureOr<List<GroupMember>> Function(GetGroupMembersRef provider) create,
+    FutureOr<GroupInfoModel> Function(FetchGroupInfoRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: GetGroupMembersProvider._internal(
-        (ref) => create(ref as GetGroupMembersRef),
+      override: FetchGroupInfoProvider._internal(
+        (ref) => create(ref as FetchGroupInfoRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        groupId: groupId,
+        id: id,
       ),
     );
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<GroupMember>> createElement() {
-    return _GetGroupMembersProviderElement(this);
+  AutoDisposeFutureProviderElement<GroupInfoModel> createElement() {
+    return _FetchGroupInfoProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is GetGroupMembersProvider && other.groupId == groupId;
+    return other is FetchGroupInfoProvider && other.id == id;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, groupId.hashCode);
+    hash = _SystemHash.combine(hash, id.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin GetGroupMembersRef on AutoDisposeFutureProviderRef<List<GroupMember>> {
-  /// The parameter `groupId` of this provider.
-  String get groupId;
+mixin FetchGroupInfoRef on AutoDisposeFutureProviderRef<GroupInfoModel> {
+  /// The parameter `id` of this provider.
+  String get id;
 }
 
-class _GetGroupMembersProviderElement
-    extends AutoDisposeFutureProviderElement<List<GroupMember>>
-    with GetGroupMembersRef {
-  _GetGroupMembersProviderElement(super.provider);
+class _FetchGroupInfoProviderElement
+    extends AutoDisposeFutureProviderElement<GroupInfoModel>
+    with FetchGroupInfoRef {
+  _FetchGroupInfoProviderElement(super.provider);
 
   @override
-  String get groupId => (origin as GetGroupMembersProvider).groupId;
+  String get id => (origin as FetchGroupInfoProvider).id;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

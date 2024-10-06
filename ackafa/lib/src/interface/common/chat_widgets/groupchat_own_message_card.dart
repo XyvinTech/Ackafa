@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 
 class GroupchatOwnMessageCard extends StatelessWidget {
   const GroupchatOwnMessageCard(
-      {Key? key,
+      {super.key,
       required this.message,
       required this.time,
       required this.status,
-      this.feed,
-      required this.username})
-      : super(key: key);
+      // this.feed,
+      required this.username});
   final String username;
   final String message;
   final String time;
-  final ChatFeed? feed;
+  // final ChatFeed? feed;
   final String status;
   @override
   Widget build(BuildContext context) {
@@ -43,16 +42,16 @@ class GroupchatOwnMessageCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(username,style: TextStyle(color: Colors.red),),
-                if (feed?.media != null)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.network(
-                      feed!.media!,
-                      height: 160, // Adjusted height to fit better
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                // if (feed?.media != null)
+                //   ClipRRect(
+                //     borderRadius: BorderRadius.circular(15),
+                //     child: Image.network(
+                //       feed!.media!,
+                //       height: 160, // Adjusted height to fit better
+                //       width: double.infinity,
+                //       fit: BoxFit.cover,
+                //     ),
+                //   ),
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: Text(

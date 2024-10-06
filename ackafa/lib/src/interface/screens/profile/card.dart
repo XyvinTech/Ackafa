@@ -183,7 +183,9 @@ class ProfileCard extends StatelessWidget {
                                                         'https://placehold.co/600x400',
                                                   ),
                                                 )
-                                              : Image.asset( color: Color(0xFFE30613),'assets/icons/dummy_person_small.png'),
+                                              : Image.asset(
+                                        
+                                                  'assets/icons/dummy_person_small.png'),
                                           const SizedBox(height: 10),
                                           Padding(
                                             padding:
@@ -364,7 +366,7 @@ class ProfileCard extends StatelessWidget {
                                     buttonColor: const Color.fromARGB(
                                         255, 222, 218, 218),
                                     buttonHeight: 60,
-                                    fontSize: 16,
+                                    fontSize: 13,
                                     label: 'DOWNLOAD QR',
                                     onPressed: () async {
                                       saveQr(

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:ackaf/src/data/models/group_chat_model.dart';
+import 'package:ackaf/src/data/services/api_routes/group_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:ackaf/src/data/globals.dart';
@@ -10,26 +11,25 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:ackaf/src/data/models/msg_model.dart';
 
-part 'chat_api.g.dart';
-
 // Define a Socket.IO client providerr
 final socketIoClientProvider = Provider<SocketIoClient>((ref) {
   return SocketIoClient();
 });
 
 // Define a message stream provider
-final messageStreamProvider = StreamProvider.autoDispose<MessageModel>((ref) {
+final groupMessageStreamProvider =
+    StreamProvider.autoDispose<GroupChatModel>((ref) {
   final socketIoClient = ref.read(socketIoClientProvider);
   return socketIoClient.messageStream;
 });
 
 class SocketIoClient {
   late IO.Socket _socket;
-  final _controller = StreamController<MessageModel>.broadcast();
+  final _controller = StreamController<GroupChatModel>.broadcast();
 
   SocketIoClient();
 
-  Stream<MessageModel> get messageStream => _controller.stream;
+  Stream<GroupChatModel> get messageStream => _controller.stream;
 
   void connect(String senderId, WidgetRef ref) {
     final uri = 'wss://akcafconnect.com/api/v1/chat?userId=$senderId';
@@ -56,10 +56,10 @@ class SocketIoClient {
       print("im inside event listener");
       print('Received message: $data');
       log(' Received message${data.toString()}');
-      final messageModel = MessageModel.fromJson(data);
+      final messageModel = GroupChatModel.fromJson(data);
 
       // Invalidate the fetchChatThreadProvider when a new message is received
-      ref.invalidate(fetchChatThreadProvider);
+      ref.invalidate(getGroupListProvider);
 
       if (!_controller.isClosed) {
         _controller.add(messageModel);
@@ -95,43 +95,11 @@ class SocketIoClient {
   }
 }
 
-Future<void> sendChatMessage(
-    {required String userId,
-    required String content,
-    String? feedId,
-    bool isGroup = false}) async {
+Future<List<GroupChatModel>> getGroupChatMessages(
+    {required String groupId}) async {
+  log('group: $groupId');
   final url =
-      Uri.parse('https://akcafconnect.com/api/v1/chat/send-message/$userId');
-  final headers = {
-    'accept': '*/*',
-    'Authorization': 'Bearer $token',
-    'Content-Type': 'application/json',
-  };
-  final body =
-      jsonEncode({'content': content, 'isGroup': isGroup, 'feed': feedId});
-
-  try {
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: body,
-    );
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      // Successfully sent the message
-      print('Message sent: ${response.body}');
-    } else {
-      // Handle errors here
-      print('Failed to send message: ${response.statusCode}');
-    }
-  } catch (e) {
-    print('Error occurred: $e');
-  }
-}
-
-Future<List<MessageModel>> getChatBetweenUsers(String userId) async {
-  final url =
-      Uri.parse('https://akcafconnect.com/api/v1/chat/between-users/$userId');
+      Uri.parse('https://akcafconnect.com/api/v1/chat/group-message/$groupId');
   final headers = {
     'accept': '*/*',
     'Authorization': 'Bearer $token',
@@ -143,10 +111,10 @@ Future<List<MessageModel>> getChatBetweenUsers(String userId) async {
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body)['data'];
       print(response.body);
-      List<MessageModel> messages = [];
+      List<GroupChatModel> messages = [];
       log(data.toString());
       for (var item in data) {
-        messages.add(MessageModel.fromJson(item));
+        messages.add(GroupChatModel.fromJson(item));
       }
       return messages;
     } else {
@@ -154,35 +122,7 @@ Future<List<MessageModel>> getChatBetweenUsers(String userId) async {
       return [];
     }
   } catch (e) {
-    // Handle errors
     print('Error: $e');
     return [];
-  }
-}
-
-@riverpod
-Future<List<ChatModel>> fetchChatThread(FetchChatThreadRef ref) async {
-  final url = Uri.parse('https://akcafconnect.com/api/v1/chat/get-chats');
-  print('Requesting URL: $url');
-
-  final response = await http.get(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    },
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final data = json.decode(response.body)['data'];
-    log('Response data: $data');
-    final List<ChatModel> chats =
-        await data.map<ChatModel>((item) => ChatModel.fromJson(item)).toList();
-    ;
-
-    return chats;
-  } else {
-    print('Error: ${json.decode(response.body)['message']}');
-    throw Exception(json.decode(response.body)['message']);
   }
 }

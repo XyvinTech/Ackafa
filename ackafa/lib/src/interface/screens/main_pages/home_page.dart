@@ -2,13 +2,17 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:ackaf/src/data/models/promotions_model.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/notifires/approval_notifier.dart';
 import 'package:ackaf/src/data/notifires/people_notifier.dart';
+import 'package:ackaf/src/data/services/api_routes/events_api.dart';
 import 'package:ackaf/src/data/services/api_routes/promotions_api.dart';
 import 'package:ackaf/src/interface/common/custom_video.dart';
+import 'package:ackaf/src/interface/common/event_widget.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart';
 import 'package:ackaf/src/interface/screens/main_pages/approvalPages/approval_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
@@ -30,21 +34,25 @@ class _HomePageState extends ConsumerState<HomePage> {
   ScrollController _bannerScrollController = ScrollController();
   ScrollController _noticeScrollController = ScrollController();
   ScrollController _posterScrollController = ScrollController();
+  ScrollController _eventScrollController = ScrollController();
   PageController _videoCountController = PageController();
 
   Timer? _bannerScrollTimer;
   Timer? _noticeScrollTimer;
   Timer? _posterScrollTimer;
+  Timer? _eventScrollTimer;
   Timer? _restartAutoScrollTimer;
   bool _isUserInteracting = false; // To track user interaction
 
   int _currentBannerIndex = 0;
   int _currentNoticeIndex = 0;
   int _currentPosterIndex = 0;
+  int _currentEventIndex = 0;
 
   final GlobalKey _bannerKey = GlobalKey();
   final GlobalKey _noticeKey = GlobalKey();
   final GlobalKey _posterKey = GlobalKey();
+  final GlobalKey _eventKey = GlobalKey();
 
   @override
   void initState() {
@@ -54,12 +62,6 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   Future<void> _fetchInitialApprovals() async {
     await ref.read(approvalNotifierProvider.notifier).fetchMoreApprovals();
-  }
-
-  Future<void> _launchUrl({required url}) async {
-    if (!await launchUrl(Uri.parse(url))) {
-      throw Exception('Could not launch $url');
-    }
   }
 
   double _getItemWidth(GlobalKey key) {
@@ -134,6 +136,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     _bannerScrollTimer?.cancel();
     _noticeScrollTimer?.cancel();
     _posterScrollTimer?.cancel();
+    _eventScrollTimer?.cancel();
     _isUserInteracting = true;
   }
 
@@ -178,11 +181,40 @@ class _HomePageState extends ConsumerState<HomePage> {
     });
   }
 
+  void restartEventAutoScroll(List<dynamic> events) {
+    _restartAutoScrollTimer
+        ?.cancel(); // Cancel the previous restart timer if any
+    _restartAutoScrollTimer = Timer(const Duration(seconds: 7), () {
+      _isUserInteracting = false; // Reset the interaction flag
+
+      // Restart auto-scroll for all promotion types
+
+      startAutoScroll(
+        controller: _eventScrollController,
+        items: events,
+        currentIndex: _currentEventIndex,
+        itemKey: _bannerKey,
+        onIndexChanged: (index) => setState(() {
+          _currentEventIndex = index;
+        }),
+        scrollTimer: _eventScrollTimer,
+      );
+    });
+  }
+
   void _onUserGestureDetected(
       List<dynamic> banners, List<dynamic> notices, List<dynamic> posters) {
     stopAutoScroll(); // Stop auto-scroll when a gesture is detected
     restartAutoScroll(
-        banners, notices, posters); // Restart auto-scroll after 10 seconds
+      banners,
+      notices,
+      posters,
+    ); // Restart auto-scroll after 10 seconds
+  }
+
+  void _onUserEventGestureDetected(List<dynamic> events) {
+    stopAutoScroll(); // Stop auto-scroll when a gesture is detected
+    restartEventAutoScroll(events); // Restart auto-scroll after 10 seconds
   }
 
   @override
@@ -190,11 +222,13 @@ class _HomePageState extends ConsumerState<HomePage> {
     _bannerScrollTimer?.cancel();
     _noticeScrollTimer?.cancel();
     _posterScrollTimer?.cancel();
+    _eventScrollTimer?.cancel();
     _restartAutoScrollTimer?.cancel();
 
     _bannerScrollController.dispose();
     _noticeScrollController.dispose();
     _posterScrollController.dispose();
+    _eventScrollController.dispose();
 
     super.dispose();
   }
@@ -210,6 +244,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       builder: (context, ref, child) {
         final asyncPromotions = ref.watch(fetchPromotionsProvider(token));
         final nonApprovedUsers = ref.watch(approvalNotifierProvider);
+        final asyncEvents = ref.watch(fetchEventsProvider);
         log(nonApprovedUsers.toString());
         return Scaffold(
           backgroundColor: Colors.white,
@@ -265,7 +300,23 @@ class _HomePageState extends ConsumerState<HomePage> {
                   scrollTimer: _posterScrollTimer,
                 );
               }
-
+              asyncEvents.whenData(
+                (events) {
+                  events = events;
+                  if (events.isNotEmpty) {
+                    startAutoScroll(
+                      controller: _eventScrollController,
+                      items: events,
+                      currentIndex: _currentEventIndex,
+                      itemKey: _eventKey,
+                      onIndexChanged: (index) => setState(() {
+                        _currentEventIndex = index;
+                      }),
+                      scrollTimer: _eventScrollTimer,
+                    );
+                  }
+                },
+              );
               return GestureDetector(
                 onPanDown: (_) =>
                     _onUserGestureDetected(banners, notices, posters),
@@ -492,6 +543,84 @@ class _HomePageState extends ConsumerState<HomePage> {
                             },
                           ),
                         ),
+
+                      Consumer(
+                        builder: (context, ref, child) {
+                          final asyncEvents = ref.watch(fetchEventsProvider);
+                          return asyncEvents.when(
+                            data: (events) {
+                              return Column(
+                                children: [
+                                  if (events.isNotEmpty)
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 25, top: 10),
+                                          child: Text(
+                                            'Events',
+                                            style: TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  GestureDetector(
+                                      onPanDown: (_) =>
+                                          _onUserEventGestureDetected(events),
+                                      onTap: () =>
+                                          _onUserEventGestureDetected(events),
+                                      child: SizedBox(
+                                        height:
+                                            320, // Limit the total height for the ListView
+                                        child: ListView.builder(
+                                          key: _eventKey,
+                                          controller: _eventScrollController,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: events.length,
+                                          itemBuilder: (context, index) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ViewMoreEventPage(
+                                                            event:
+                                                                events[index]),
+                                                  ),
+                                                );
+                                                ref.invalidate(
+                                                    fetchEventsProvider);
+                                              },
+                                              child: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.85, // Adjust width to fit horizontally
+                                                child: eventWidget(
+                                                  withImage: true,
+                                                  context: context,
+                                                  event: events[index],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      )),
+                                ],
+                              );
+                            },
+                            loading: () => Center(child: LoadingAnimation()),
+                            error: (error, stackTrace) {
+                              return Center(
+                                child: Text('NO EVENTS'),
+                              );
+                            },
+                          );
+                        },
+                      ),
                       const SizedBox(height: 16),
                       if (posters.isNotEmpty)
                         SizedBox(

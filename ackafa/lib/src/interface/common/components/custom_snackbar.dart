@@ -10,7 +10,7 @@ class CustomSnackbar {
           Expanded(child: Text(message)),
         ],
       ),
-      backgroundColor: const Color(0xFFE30613),
+      backgroundColor: Colors.green,
       behavior:
           SnackBarBehavior.floating, // Makes the Snackbar float above the UI
       shape: RoundedRectangleBorder(

@@ -615,8 +615,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                                     return Image.asset(
-                                                        color:
-                                                            Color(0xFFE30613),
+                                                   
+                                               
                                                         scale: .7,
                                                         'assets/icons/dummy_person.png');
                                                   },
@@ -846,6 +846,66 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                                 child:
                                                     user.company?.logo != null
                                                         ? Image.network(
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                              return const Center(
+                                                                  child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Text(
+                                                                        'Upload',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                17,
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                            color: Colors.grey),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Text(
+                                                                        'Company',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                17,
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                            color: Colors.grey),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Text(
+                                                                        'Logo',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                17,
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                            color: Colors.grey),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ));
+                                                            },
                                                             user.company!
                                                                 .logo!, // Replace with your image URL
                                                             fit: BoxFit.cover,

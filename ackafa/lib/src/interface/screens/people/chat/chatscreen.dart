@@ -145,7 +145,9 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                           widget.receiver.image ?? '',
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.person);
+                            return Image.asset(
+                              
+                                'assets/icons/dummy_person_small.png');
                           },
                         ),
                       ),

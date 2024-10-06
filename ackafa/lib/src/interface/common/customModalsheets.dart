@@ -1,26 +1,19 @@
 import 'dart:io';
-
 import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/feed_model.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
 import 'package:ackaf/src/data/services/api_routes/image_upload.dart';
 import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
 import 'package:ackaf/src/interface/common/custom_dropdowns/custom_dropdowns.dart';
+import 'package:ackaf/src/interface/common/user_tile.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chatscreen.dart';
 import 'package:ackaf/src/interface/validatelinks.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:ackaf/src/data/globals.dart';
-import 'package:ackaf/src/data/models/user_model.dart';
-import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 
 void feedModalSheet({
@@ -30,7 +23,6 @@ void feedModalSheet({
   required Feed feed,
   required Participant sender,
   required Participant receiver,
-  // Made imageUrl optional
 }) {
   showModalBottomSheet(
     isScrollControlled: true,
@@ -42,76 +34,294 @@ void feedModalSheet({
       return Stack(
         clipBehavior: Clip.none,
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Conditionally render the image
-              if (feed.media != null && feed.media != '')
-                ClipRRect(
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(20.0)),
-                  child: Image.network(
-                    feed.media!,
-                    width: double.infinity,
-                    height: 200, // Adjust the height as needed
-                    fit: BoxFit.cover,
+          SingleChildScrollView(
+            // Make content scrollable
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (feed.media != null && feed.media != '')
+                  ClipRRect(
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(20.0)),
+                    child: Image.network(
+                      feed.media!,
+                      width: double.infinity,
+                      height: 200, // Adjust height as needed
+                      fit: BoxFit.cover,
+                    ),
                   ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(feed.content ?? ''),
                 ),
-              // Add spacing only if image is displayed
-              if (feed.media != null && feed.media != '')
-                const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Consumer(
+                Consumer(
                   builder: (context, ref, child) {
-                    return customButton(
-                      label: buttonText,
-                      onPressed: () async {
-                        await sendChatMessage(
-                            userId: feed.author!,
-                            content: feed.content!,
-                            feedId: feed.id);
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => IndividualPage(
-                                  receiver: receiver,
-                                  sender: sender,
-                                )));
+                    final asyncAuthor =
+                        ref.watch(fetchUserByIdProvider(feed.author ?? ''));
+                    return asyncAuthor.when(
+                      data: (author) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                              buildUserInfo(author, feed), // Reuse widget here
+                        );
                       },
-                      fontSize: 16,
+                      loading: () => Center(child: LoadingAnimation()),
+                      error: (error, stackTrace) {
+                        return const Center(child: Text('No Author'));
+                      },
                     );
                   },
                 ),
-              ),
-              const SizedBox(height: 10),
-            ],
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      return customButton(
+                        label: buttonText,
+                        onPressed: () async {
+                          messageSheet(
+                              context: context,
+                              onButtonPressed: () async {},
+                              buttonText: 'SEND MESSAGE',
+                              feed: feed,
+                              receiver: receiver,
+                              sender: sender);
+                        },
+                        fontSize: 16,
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
           ),
-          // Close button positioned at the top-right of the sheet
           Positioned(
             right: 5,
             top: -50,
-            child: Container(
-              padding: const EdgeInsets.all(0),
-              width: 40,
-              height: 40,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    offset: Offset(0, 2),
-                    blurRadius: 4.0,
-                  ),
-                ],
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                padding: const EdgeInsets.all(0),
+                width: 30,
+                height: 30,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      offset: Offset(0, 2),
+                      blurRadius: 4.0,
+                    ),
+                  ],
+                ),
+                child: const Icon(Icons.close),
               ),
             ),
           ),
         ],
+      );
+    },
+  );
+}
+
+void messageSheet({
+  required BuildContext context,
+  required VoidCallback onButtonPressed,
+  required String buttonText,
+  required Feed feed,
+  required Participant sender,
+  required Participant receiver,
+}) {
+  TextEditingController messageController = TextEditingController();
+  showModalBottomSheet(
+    isScrollControlled: true, // Ensure the sheet size changes with the keyboard
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+    ),
+    builder: (context) {
+      // Get the current view insets (keyboard height)
+      final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+
+      return Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        child: Padding(
+          padding: EdgeInsets.only(
+              bottom: bottomInset), // Adjust padding for keyboard
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(
+                          left: 20, right: 20, bottom: 10, top: 20),
+                      child: Text(
+                        'MESSAGE',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final asyncAuthor =
+                            ref.watch(fetchUserByIdProvider(feed.author ?? ''));
+                        return asyncAuthor.when(
+                          data: (author) {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, bottom: 10, top: 10),
+                              child: buildUserInfo(
+                                  author, feed), // Reuse widget here
+                            );
+                          },
+                          loading: () => Center(child: LoadingAnimation()),
+                          error: (error, stackTrace) {
+                            return const Center(child: Text('No Author'));
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    // Feed content in a row with image on the left and content on the right
+                    if (feed.media != null && feed.media != '')
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: const Color.fromARGB(255, 241, 236, 236),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Feed Image (50x50)
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: Container(
+                                    width: 50,
+                                    height: 50,
+                                    child: Image.network(
+                                      feed.media!,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                // Feed Content
+                                Expanded(
+                                  child: Text(
+                                    feed.content ?? '',
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 20),
+                    // Message input field
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: TextField(
+                        controller: messageController,
+                        decoration: const InputDecoration(
+                          hintText: 'Add your text',
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        maxLines: 6,
+                        enabled: true, // Set to false to disable the TextField
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    // Send button
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          return customButton(
+                            label: buttonText,
+                            onPressed: () async {
+                              await sendChatMessage(
+                                  userId: feed.author!,
+                                  content: feed.content!,
+                                  feedId: feed.id);
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => IndividualPage(
+                                        receiver: receiver,
+                                        sender: sender,
+                                      )));
+                              await sendChatMessage(
+                                  userId: feed.author!,
+                                  content: messageController.text);
+                            },
+                            fontSize: 16,
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+              // Close button at the top right
+              Positioned(
+                right: 5,
+                top: -50,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(0),
+                    width: 30,
+                    height: 30,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          offset: Offset(0, 2),
+                          blurRadius: 4.0,
+                        ),
+                      ],
+                    ),
+                    child: const Icon(Icons.close),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       );
     },
   );

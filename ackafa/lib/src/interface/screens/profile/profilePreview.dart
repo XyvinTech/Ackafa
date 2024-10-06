@@ -1,12 +1,17 @@
 import 'dart:developer';
 
+import 'package:ackaf/src/data/models/chat_model.dart';
+import 'package:ackaf/src/data/services/save_contact.dart';
+import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
+import 'package:ackaf/src/interface/screens/people/chat/chatscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/interface/common/cards.dart';
 import 'package:ackaf/src/interface/common/components/svg_icon.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -106,9 +111,7 @@ class ProfilePreview extends ConsumerWidget {
                                   user.image ?? 'https://placehold.co/600x400',
                                 ),
                               )
-                            : Image.asset(
-                                color: Color(0xFFE30613),
-                                'assets/icons/dummy_person.png'),
+                            : Image.asset('assets/icons/dummy_person.png'),
                         const SizedBox(height: 10),
                         Text(
                           '${user.name?.first ?? ''} ${user.name?.middle ?? ''} ${user.name?.last ?? ''}',
@@ -119,48 +122,56 @@ class ProfilePreview extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                user.company?.logo != null &&
-                                        user.company?.logo != ''
-                                    ? ClipRRect(
+                        if (user.company != null)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Column(
+                                children: [
+                                  if (user.company?.designation != null ||
+                                      user.company?.name != null)
+                                    ClipRRect(
                                         borderRadius: BorderRadius.circular(9),
-                                        child: Image.network(
-                                          user.company!.logo!,
-                                          height: 33,
-                                          width: 40,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )
-                                    : SizedBox()
-                              ],
-                            ),
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  user.company?.designation ?? '',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: Color.fromARGB(255, 42, 41, 41),
+                                        child: user.company?.logo != null &&
+                                                user.company?.logo != ''
+                                            ? Image.network(
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return Image.asset(
+                                                      'assets/icons/dummy_company.png');
+                                                },
+                                                user.company!.logo!,
+                                                height: 33,
+                                                width: 40,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Image.asset(
+                                                'assets/icons/dummy_company.png'))
+                                ],
+                              ),
+                              const SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    user.company?.designation ?? '',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      color: Color.fromARGB(255, 42, 41, 41),
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  user.company?.name ?? '',
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
+                                  Text(
+                                    user.company?.name ?? '',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                                ],
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                     const SizedBox(
@@ -173,100 +184,96 @@ class ProfilePreview extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                               color: const Color.fromARGB(255, 234, 226, 226))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: 80,
-                            height: 40,
-                            child: Image.asset(
-                              'assets/icons/ackaf_logo.png',
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                                child: Text(
+                                    'College: ${user.college?.collegeName ?? ''}'))
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(
                       height: 20,
                     ),
+                    const Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            'Personal',
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Icon(Icons.phone, color: Color(0xFFE30613)),
-                            const SizedBox(width: 10),
-                            Text(user.phone.toString()),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Icon(Icons.phone, color: Color(0xFFE30613)),
+                              const SizedBox(width: 10),
+                              Text(user.phone.toString()),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 10),
                         if (user.email != null)
-                          Row(
-                            children: [
-                              const Icon(Icons.email, color: Color(0xFFE30613)),
-                              const SizedBox(width: 10),
-                              Text(user.email ?? ''),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.email,
+                                    color: Color(0xFFE30613)),
+                                const SizedBox(width: 10),
+                                Text(user.email ?? ''),
+                              ],
+                            ),
                           ),
                         const SizedBox(height: 10),
                         if (user.address != null)
-                          Row(
-                            children: [
-                              const Icon(Icons.location_on,
-                                  color: Color(0xFFE30613)),
-                              const SizedBox(width: 10),
-                              if (user.address != null)
-                                Expanded(
-                                  child: Text(
-                                    user.address!,
-                                  ),
-                                )
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.location_on,
+                                    color: Color(0xFFE30613)),
+                                const SizedBox(width: 10),
+                                if (user.address != null)
+                                  Expanded(
+                                    child: Text(
+                                      user.address!,
+                                    ),
+                                  )
+                              ],
+                            ),
                           ),
                         const SizedBox(height: 10),
-                        // Row(
-                        //   children: [
-                        //     const SvgIcon(
-                        //       assetName: 'assets/icons/whatsapp.svg',
-                        //       color: Color(0xFFE30613),
-                        //       size: 25,
-                        //     ),
-                        //     const SizedBox(width: 10),
-                        //     if (user.whatsappNumber != null)
-                        //       Expanded(
-                        //         child: Text(user.phoneNumbers!.whatsappNumber!),
-                        //       )
-                        //   ],
-                        // ),
-                        // const SizedBox(height: 10),
-                        // Row(
-                        //   children: [
-                        //     const SvgIcon(
-                        //       assetName: 'assets/icons/whatsapp-business.svg',
-                        //       color: Color(0xFFE30613),
-                        //       size: 23,
-                        //     ),
-                        //     const SizedBox(width: 10),
-                        //     if (user.phoneNumbers?.whatsappBusinessNumber !=
-                        //         null)
-                        //       Expanded(
-                        //         child: Text(user.phoneNumbers?.whatsappNumber??''),
-                        //       )
-                        //   ],
-                        // ),
                       ],
                     ),
                     const SizedBox(height: 60),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Image.asset('assets/icons/qoutes.png'),
-                        ),
-                      ],
-                    ),
+                    if (user.bio != null &&
+                        user.bio != '' &&
+                        user.bio != 'null')
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Image.asset('assets/icons/qoutes.png'),
+                          ),
+                        ],
+                      ),
                     if (user.bio != null &&
                         user.bio != '' &&
                         user.bio != 'null')
@@ -280,6 +287,59 @@ class ProfilePreview extends ConsumerWidget {
                       ),
                     const SizedBox(
                       height: 50,
+                    ),
+                    if (user.company?.designation != null ||
+                        user.company?.name != null ||
+                        user.company?.address != null ||
+                        user.company?.phone != null)
+                      const Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text(
+                              'Company',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
+                      ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Column(
+                      children: [
+                        if (user.company?.phone != null)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Icon(Icons.phone,
+                                    color: Color(0xFFE30613)),
+                                const SizedBox(width: 10),
+                                Text(user.company?.phone ?? ''),
+                              ],
+                            ),
+                          ),
+                        const SizedBox(height: 10),
+                        if (user.company?.address != null)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.location_on,
+                                    color: Color(0xFFE30613)),
+                                const SizedBox(width: 10),
+                                if (user.company?.address != null)
+                                  Expanded(
+                                    child: Text(user.company?.address ?? ''),
+                                  )
+                              ],
+                            ),
+                          ),
+                        const SizedBox(height: 30),
+                      ],
                     ),
                     if (user.social?.isNotEmpty == true)
                       const Row(
@@ -411,7 +471,6 @@ class ProfilePreview extends ConsumerWidget {
                           crossAxisCount: 2, // Number of columns
                           crossAxisSpacing: 8.0, // Space between columns
                           mainAxisSpacing: 8.0, // Space between rows
-                          childAspectRatio: .9, // Aspect ratio for the cards
                         ),
                         itemCount: user.awards!.length,
                         itemBuilder: (context, index) {
@@ -426,31 +485,61 @@ class ProfilePreview extends ConsumerWidget {
               ],
             ),
           ),
-          // if (user.id != id)
-          //   Positioned(
-          //       bottom: 20,
-          //       left: 20,
-          //       right: 20,
-          //       child: SizedBox(
-          //           height: 50,
-          //           child: Row(
-          //             mainAxisSize: MainAxisSize.max,
-          //             children: [
-          //               Flexible(
-          //                 child: customButton(
-          //                     fontSize: 16, label: 'SAY HI', onPressed: () {}),
-          //               ),
-          //               const SizedBox(
-          //                 width: 10,
-          //               ),
-          //               Flexible(
-          //                 child: customButton(
-          //                     fontSize: 16,
-          //                     label: 'SAVE CONTACT',
-          //                     onPressed: () {}),
-          //               ),
-          //             ],
-          //           ))),
+          if (user.id != id)
+            Positioned(
+                bottom: 40,
+                left: 15,
+                right: 15,
+                child: SizedBox(
+                    height: 50,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Flexible(
+                          child: customButton(
+                              buttonHeight: 60,
+                              fontSize: 16,
+                              label: 'SAY HI',
+                              onPressed: () {
+                                final Participant receiver = Participant(
+                                  id: user.id,
+                                  image: user.image ?? '',
+                                  name: user.name,
+                                );
+                                final Participant sender = Participant(id: id);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => IndividualPage(
+                                          receiver: receiver,
+                                          sender: sender,
+                                        )));
+                              }),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Flexible(
+                          child: customButton(
+                              sideColor:
+                                  const Color.fromARGB(255, 219, 217, 217),
+                              labelColor: Color(0xFF2C2829),
+                              buttonColor: Color.fromARGB(255, 222, 218, 218),
+                              buttonHeight: 60,
+                              fontSize: 13,
+                              label: 'SAVE CONTACT',
+                              onPressed: () {
+                                if (user.phone != null) {
+                                  saveContact(
+                                      firstName:
+                                          '${user.name?.first ?? ''} ${user.name?.middle ?? ''}',
+                                      number: user.phone ?? '',
+                                      lastName: '${user.name?.last ?? ''}',
+                                      email: user.email ?? '',
+                                      context: context);
+                                }
+                              }),
+                        ),
+                      ],
+                    ))),
         ],
       ),
     );

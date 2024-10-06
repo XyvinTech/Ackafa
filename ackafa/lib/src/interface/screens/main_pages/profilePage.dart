@@ -171,7 +171,6 @@ class ProfilePage extends StatelessWidget {
                                               ),
                                             )
                                           : Image.asset(
-                                              color: Color(0xFFE30613),
                                               'assets/icons/dummy_person.png'),
                                       const SizedBox(height: 10),
                                       Text(
@@ -188,26 +187,30 @@ class ProfilePage extends StatelessWidget {
                                         children: [
                                           Column(
                                             children: [
-                                              ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(9),
-                                                  child: user.company?.logo !=
-                                                              null &&
-                                                          user.company?.logo !=
-                                                              ''
-                                                      ? Image.network(
-                                                          errorBuilder:
-                                                              (context, error,
-                                                                  stackTrace) {
-                                                            return Image.asset(
-                                                                'assets/icons/dummy_company.png');
-                                                          },
-                                                          user.company!.logo!,
-                                                          height: 33,
-                                                          width: 40,
-                                                          fit: BoxFit.cover,
-                                                        )
-                                                      : SizedBox())
+                                              if (user.company != null)
+                                                ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            9),
+                                                    child: user.company?.logo !=
+                                                                null &&
+                                                            user.company
+                                                                    ?.logo !=
+                                                                ''
+                                                        ? Image.network(
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                              return Image.asset(
+                                                                  'assets/icons/dummy_company.png');
+                                                            },
+                                                            user.company!.logo!,
+                                                            height: 33,
+                                                            width: 40,
+                                                            fit: BoxFit.cover,
+                                                          )
+                                                        : Image.asset(
+                                                            'assets/icons/dummy_company.png'))
                                             ],
                                           ),
                                           const SizedBox(width: 10),

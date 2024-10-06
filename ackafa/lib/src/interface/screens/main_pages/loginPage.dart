@@ -121,7 +121,7 @@ class PhoneNumberScreen extends ConsumerWidget {
                       return null;
                     },
                     style: const TextStyle(
-                      letterSpacing: 9,
+                      letterSpacing: 8,
                       fontSize:
                           18, // Adjusted for a more proportional text size
                       fontWeight: FontWeight.w400,
@@ -403,7 +403,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       height: 20,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      padding: const EdgeInsets.only(left: 20, right: 30),
                       child: PinCodeTextField(
                         appContext: context,
                         length: 6, // Number of OTP digits
@@ -419,7 +419,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                         pinTheme: PinTheme(
                           shape: PinCodeFieldShape.box,
                           borderRadius: BorderRadius.circular(5),
-                          fieldHeight: 50,
+                          fieldHeight: 45,
                           fieldWidth: 60, selectedColor: Colors.red,
                           activeColor: Color.fromARGB(255, 232, 226, 226),
                           inactiveColor: const Color.fromARGB(

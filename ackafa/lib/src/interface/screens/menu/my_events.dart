@@ -16,12 +16,25 @@ class MyEventsPage extends StatelessWidget {
       builder: (context, ref, child) {
         final asyncEvents = ref.watch(fetchMyEventsProvider);
         return Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
-            title: const Text('My Events'),
+            backgroundColor: Colors.white,
+            title: const Text(
+              'My Events',
+              style: TextStyle(fontSize: 17),
+            ),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () => Navigator.of(context).pop(),
             ),
+            // actions: [
+            //   IconButton(
+            //     icon: FaIcon(FontAwesomeIcons.whatsapp),
+            //     onPressed: () {
+            //       // WhatsApp action
+            //     },
+            //   ),
+            // ],
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(1.0),
               child: Container(
@@ -172,7 +185,7 @@ class MyEventsPage extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                     event.description??'',
+                        event.description ?? '',
                         style: TextStyle(fontSize: 14),
                       ),
                     ),

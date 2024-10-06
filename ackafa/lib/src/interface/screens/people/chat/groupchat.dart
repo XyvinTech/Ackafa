@@ -38,12 +38,32 @@ class _ChatPageState extends ConsumerState<GroupChatPage> {
 
                   var sender = Participant(id: id);
                   return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(receiver?.image ?? ''),
+                    leading: ClipOval(
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        color: Colors.red,
+                        child: Image.network(
+                          '',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(
+                              Icons.groups_2,
+                              color: Colors.white,
+                            );
+                          },
+                        ),
+                      ),
                     ),
                     title: Text(
                         '${receiver?.name?.first ?? ''} ${receiver?.name?.middle ?? ''} ${receiver?.name?.last ?? ''}'),
-                    subtitle: Text(groups[index].lastMessage ?? ''),
+                    subtitle: Text(
+                      groups[index].lastMessage != null
+                          ? (groups[index].lastMessage!.length > 10
+                              ? '${groups[index].lastMessage?.substring(0, groups[index].lastMessage!.length.clamp(0, 10))}...'
+                              : groups[index].lastMessage!)
+                          : '',
+                    ),
                     trailing: groups[index].unreadCount != 0 &&
                             groups[index].unreadCount != null
                         ? SizedBox(
