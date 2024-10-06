@@ -1,4 +1,6 @@
 PODS:
+  - contact_add (0.0.3):
+    - Flutter
   - Firebase/Auth (11.0.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 11.0.0)
@@ -111,6 +113,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - contact_add (from `.symlinks/plugins/contact_add/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -145,6 +148,8 @@ SPEC REPOS:
     - RecaptchaInterop
 
 EXTERNAL SOURCES:
+  contact_add:
+    :path: ".symlinks/plugins/contact_add/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
@@ -175,6 +180,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
+  contact_add: 50b81c9e6553348ff8129353dc25fde0fb6c0437
   Firebase: 9f574c08c2396885b5e7e100ed4293d956218af9
   firebase_auth: 16ac5db3d064db837ecd845080d7e18e4be7c66d
   firebase_core: ba84e940cf5cbbc601095f86556560937419195c
