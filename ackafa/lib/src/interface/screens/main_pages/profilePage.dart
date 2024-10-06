@@ -173,12 +173,18 @@ class ProfilePage extends StatelessWidget {
                                           : Image.asset(
                                               'assets/icons/dummy_person.png'),
                                       const SizedBox(height: 10),
-                                      Text(
-                                        '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      Row(
+                                        children: [
+                                          Flexible(
+                                            child: Text(
+                                              '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
+                                              style: const TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       const SizedBox(height: 5),
                                       Row(
