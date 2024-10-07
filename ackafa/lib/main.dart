@@ -28,7 +28,7 @@ Future<void> main() async {
   );
   initializeNotifications();
 
-  runApp( ProviderScope(child: MyApp()));
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -40,10 +40,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-  
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +107,8 @@ void initializeNotifications() {
       // Handle the notification tap event
       String? payload = response.payload;
       if (payload != null) {
-        launchURL(payload); // Trigger the deep link URL when the notification is tapped
+        launchURL(
+            payload); // Trigger the deep link URL when the notification is tapped
       }
     },
   );

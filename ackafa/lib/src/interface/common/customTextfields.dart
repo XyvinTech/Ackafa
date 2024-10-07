@@ -24,6 +24,7 @@ class ModalSheetTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLength: 15,
       controller: textController,
       maxLines: maxLines,
       validator: validator,
@@ -76,14 +77,16 @@ class CustomTextFormField extends StatelessWidget {
     this.suffixIcon,
     required this.textController,
     this.validator,
-    this.onChanged, this.enabled,
+    this.onChanged,
+    this.enabled,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        return TextFormField(enabled:enabled,
+        return TextFormField(
+          enabled: enabled,
           onChanged: (value) {
             switch (labelText) {
               case 'Enter your First name':

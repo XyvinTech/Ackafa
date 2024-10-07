@@ -470,7 +470,7 @@ class ProfilePreview extends ConsumerWidget {
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2, // Number of columns
                           crossAxisSpacing: 8.0, // Space between columns
-                          mainAxisSpacing: 8.0, // Space between rows
+                          mainAxisSpacing: 20.0, // Space between rows
                         ),
                         itemCount: user.awards!.length,
                         itemBuilder: (context, index) {

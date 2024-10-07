@@ -21,10 +21,16 @@ class NotificationPage extends StatelessWidget {
           final asyncNotification = ref.watch(fetchNotificationsProvider);
 
           return Scaffold(
+            backgroundColor: Colors.white,
             appBar: AppBar(
-              title: Text('Notifications'),
+              title: Text(
+                "Notifications",
+                style: TextStyle(fontSize: 17),
+              ),
+              backgroundColor: Colors.white,
+              scrolledUnderElevation: 0,
               leading: IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

@@ -1380,7 +1380,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   crossAxisCount: 2, // Number of columns
                                   crossAxisSpacing:
                                       8.0, // Space between columns
-                                  mainAxisSpacing: 8.0, // Space between rows
+                                  mainAxisSpacing: 10.0, // Space between rows
                                 ),
                                 itemCount: user.awards!.length,
                                 itemBuilder: (context, index) {
@@ -1390,6 +1390,9 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   );
                                 },
                               ),
+                            ),
+                            SizedBox(
+                              height: 40,
                             ),
                             // if (isAwardsDetailsVisible)
                             GestureDetector(

@@ -17,29 +17,17 @@ class MyPostsPage extends StatelessWidget {
         return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-              backgroundColor: Colors.white,
-              title: const Text(
-                'My Posts',
+              title: Text(
+                "My Posts",
                 style: TextStyle(fontSize: 17),
               ),
+              backgroundColor: Colors.white,
+              scrolledUnderElevation: 0,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-              // actions: [
-              //   IconButton(
-              //     icon: FaIcon(FontAwesomeIcons.whatsapp),
-              //     onPressed: () {
-              //       // WhatsApp action
-              //     },
-              //   ),
-              // ],
-              bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(1.0),
-                child: Container(
-                  color: Colors.grey,
-                  height: 1.0,
-                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
             ),
             body: asyncMyPosts.when(

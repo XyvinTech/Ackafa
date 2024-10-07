@@ -18,29 +18,17 @@ class MyEventsPage extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Colors.white,
-            title: const Text(
-              'My Events',
+            title: Text(
+              "My Events",
               style: TextStyle(fontSize: 17),
             ),
+            backgroundColor: Colors.white,
+            scrolledUnderElevation: 0,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            // actions: [
-            //   IconButton(
-            //     icon: FaIcon(FontAwesomeIcons.whatsapp),
-            //     onPressed: () {
-            //       // WhatsApp action
-            //     },
-            //   ),
-            // ],
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(1.0),
-              child: Container(
-                color: Colors.grey,
-                height: 1.0,
-              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
           ),
           body: asyncEvents.when(
@@ -49,8 +37,11 @@ class MyEventsPage extends StatelessWidget {
               return ListView.builder(
                 itemCount: registeredEvents.length,
                 itemBuilder: (context, index) {
-                  return eventCard(
-                      context: context, event: registeredEvents[index]);
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: eventCard(
+                        context: context, event: registeredEvents[index]),
+                  );
                 },
               );
             },
@@ -73,6 +64,7 @@ class MyEventsPage extends StatelessWidget {
     String endDate = DateFormat('hh:mm a').format(event.endDate!);
     String endTime = DateFormat('yyyy-MM-dd').format(event.endTime!);
     return Card(
+      color: Colors.white,
       margin: const EdgeInsets.all(10),
       child: Column(
         children: [
