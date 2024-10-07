@@ -59,7 +59,7 @@ class NotificationPage extends StatelessWidget {
                     loading: () => Center(child: LoadingAnimation()),
                     error: (error, stackTrace) {
                       return Center(
-                        child: Text('Error loading promotions: $error'),
+                        child: Text(''),
                       );
                     },
                   ),

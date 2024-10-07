@@ -9,6 +9,7 @@ import 'package:ackaf/src/data/notifires/approval_notifier.dart';
 import 'package:ackaf/src/data/notifires/people_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/events_api.dart';
 import 'package:ackaf/src/data/services/api_routes/promotions_api.dart';
+import 'package:ackaf/src/data/services/dynamic_links.dart';
 import 'package:ackaf/src/interface/common/custom_video.dart';
 import 'package:ackaf/src/interface/common/event_widget.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
@@ -614,9 +615,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             },
                             loading: () => Center(child: LoadingAnimation()),
                             error: (error, stackTrace) {
-                              return Center(
-                                child: Text('NO EVENTS'),
-                              );
+                              return SizedBox();
                             },
                           );
                         },

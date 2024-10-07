@@ -615,8 +615,6 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                                     return Image.asset(
-                                                   
-                                               
                                                         scale: .7,
                                                         'assets/icons/dummy_person.png');
                                                   },
@@ -1380,8 +1378,6 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   crossAxisSpacing:
                                       8.0, // Space between columns
                                   mainAxisSpacing: 8.0, // Space between rows
-                                  childAspectRatio:
-                                      .9, // Aspect ratio for the cards
                                 ),
                                 itemCount: user.awards!.length,
                                 itemBuilder: (context, index) {

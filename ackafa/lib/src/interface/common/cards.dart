@@ -19,7 +19,7 @@ class AwardCard extends StatelessWidget {
       elevation: 0,
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
       child: SizedBox(
-        height: 150.0, // Set the desired fixed height for the card
+        height: 200.0, // Set the desired fixed height for the card
         width: double.infinity, // Ensure the card width fits the screen
         child: Column(
           mainAxisSize:
@@ -30,7 +30,7 @@ class AwardCard extends StatelessWidget {
               children: [
                 // Upper part: Image fitted to the card
                 Container(
-                  height: 100.0, // Adjusted height to fit within the 150px card
+                  height: 90.0, // Adjusted height to fit within the 150px card
                   width: double.infinity,
                   decoration: BoxDecoration(
                     image: DecorationImage(

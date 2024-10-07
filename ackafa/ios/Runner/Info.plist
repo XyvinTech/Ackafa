@@ -31,6 +31,11 @@
 			</array>
 		</dict>
 	</array>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+    	<string>https:/akcaf.page.link/notifications_page</string>
+    	<string>https://akcaf.page.link/path2</string>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>FLTEnableImpeller</key>

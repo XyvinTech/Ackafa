@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:ackaf/src/data/services/launch_url.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 
@@ -27,6 +28,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    initDynamicLinks();
     checkAppVersion(context).then((_) {
       if (!isAppUpdateRequired) {
         initialize();
@@ -145,6 +147,27 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         token = savedtoken;
         id = savedId ?? '';
       });
+    }
+  }
+
+  Future<void> initDynamicLinks() async {
+    // Handle dynamic link when the app is opened from a terminated state
+    final PendingDynamicLinkData? initialLink =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    _handleDynamicLink(initialLink?.link);
+
+    // Handle dynamic link when the app is in the foreground
+    FirebaseDynamicLinks.instance.onLink
+        .listen((PendingDynamicLinkData dynamicLink) {
+      _handleDynamicLink(dynamicLink.link);
+    }).onError((error) {
+      print('onLink error: $error');
+    });
+  }
+
+  void _handleDynamicLink(Uri? deepLink) {
+    if (deepLink != null && deepLink.path == '/notifications_page') {
+      Navigator.pushNamed(context, '/notifications_page');
     }
   }
 

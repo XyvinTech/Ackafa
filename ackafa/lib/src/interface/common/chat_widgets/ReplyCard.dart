@@ -42,13 +42,17 @@ class ReplyCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (feed?.media != null)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.network(
-                      feed!.media!,
-                      height: 160, // Adjusted height to fit better
-                      width: double.infinity,
-                      fit: BoxFit.cover,
+                  GestureDetector( onTap: () {
+                    Navigator.pushNamed(context, '/my_posts');
+                  },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.network(
+                        feed!.media!,
+                        height: 160, // Adjusted height to fit better
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 Padding(

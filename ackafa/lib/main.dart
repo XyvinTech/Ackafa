@@ -1,8 +1,16 @@
+import 'dart:developer';
+
 import 'package:ackaf/firebase_options.dart';
 import 'package:ackaf/src/interface/screens/main_pages/home_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
+import 'package:ackaf/src/interface/screens/menu/my_events.dart';
+import 'package:ackaf/src/interface/screens/menu/my_post.dart';
+import 'package:ackaf/src/interface/screens/people/chat/chat.dart';
+import 'package:ackaf/src/interface/screens/people/chat/groupchat.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -17,57 +25,68 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-    initializeNotifications();
-  runApp(const ProviderScope(child: MainApp()));
+  initializeNotifications();
+
+  runApp( ProviderScope(child: MyApp()));
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+  
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          fontFamily: 'Inter',
-          textTheme: const TextTheme(
-            bodyLarge: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-            bodyMedium:
-                TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-            displayLarge:
-                TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-            displayMedium:
-                TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-            displaySmall:
-                TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-            headlineMedium:
-                TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-            headlineSmall:
-                TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-            titleLarge:
-                TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-            titleMedium:
-                TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-            titleSmall:
-                TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-            labelLarge:
-                TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-            labelMedium:
-                TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-            labelSmall:
-                TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-            bodySmall: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-          ),
-          primarySwatch: Colors.blue,
-          secondaryHeaderColor: Colors.blue,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'Inter',
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          bodyMedium: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          displayLarge:
+              TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          displayMedium:
+              TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          displaySmall:
+              TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          headlineMedium:
+              TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          headlineSmall:
+              TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          titleLarge: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          titleMedium: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          titleSmall: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          labelLarge: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          labelMedium: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          labelSmall: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          bodySmall: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
         ),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => SplashScreen(),
-          '/login_screen': (context) => LoginPage(),
-          '/userReg': (context) => const UserRegistrationScreen(),
-        });
+        primarySwatch: Colors.blue,
+        secondaryHeaderColor: Colors.blue,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => SplashScreen(),
+        '/login_screen': (context) => LoginPage(),
+        '/userReg': (context) => const UserRegistrationScreen(),
+        '/notifications_page': (context) => NotificationPage(),
+        '/my_events': (context) => MyEventsPage(),
+        '/my_posts': (context) => MyPostsPage(),
+        '/chat_page': (context) => ChatPage(),
+        '/group_chat_page': (context) => GroupChatPage(),
+      },
+    );
   }
 }
 
