@@ -1,3 +1,4 @@
+import 'package:ackaf/src/interface/common/components/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
@@ -15,67 +16,10 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: CustomAppBar(),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          offset: const Offset(0, 2),
-                          blurRadius: 4,
-                        ),
-                      ],
-                    ),
-                    child: AppBar(
-                      toolbarHeight: 45.0,
-                      scrolledUnderElevation: 0,
-                      backgroundColor: Colors.white,
-                      elevation: 0,
-                      leadingWidth: 100,
-                      leading: Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: Image.asset(
-                            'assets/icons/ackaf_logo.png',
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                      actions: [
-                        IconButton(
-                          icon: const Icon(Icons.notifications_none_outlined),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const NotificationPage()),
-                            );
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.menu),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      MenuPage()), // Navigate to MenuPage
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
               Column(
                 children: [
                   SizedBox(

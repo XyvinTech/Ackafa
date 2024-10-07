@@ -7,6 +7,7 @@ import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/notifires/feed_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
+import 'package:ackaf/src/interface/common/components/app_bar.dart';
 import 'package:ackaf/src/interface/common/custom_drop_down_block_report.dart';
 import 'package:ackaf/src/interface/common/user_tile.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
@@ -114,50 +115,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
       color: Colors.red,
       onRefresh: () => ref.read(feedNotifierProvider.notifier).refreshFeed(),
       child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 40.0,
-          backgroundColor: Colors.white,
-          scrolledUnderElevation: 0,
-          leadingWidth: 100,
-          leading: Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: SizedBox(
-              width: 100,
-              height: 100,
-              child: Image.asset(
-                'assets/icons/ackaf_logo.png',
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.notifications_none_outlined,
-                size: 21,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NotificationPage()),
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.menu,
-                size: 21,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MenuPage()), // Navigate to MenuPage
-                );
-              },
-            ),
-          ],
-        ),
+        appBar: CustomAppBar(),
         body: Column(
           children: [
             // Container(

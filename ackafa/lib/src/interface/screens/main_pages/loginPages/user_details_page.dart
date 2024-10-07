@@ -472,15 +472,18 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
               //   twtitterController,
               //   facebookController
               // ];
-              for (var i in user.social!) {
-                if (i.name == 'instagram') {
-                  igController.text = i.link ?? '';
-                } else if (i.name == 'linkedin') {
-                  linkedinController.text = i.link ?? '';
-                } else if (i.name == 'twitter') {
-                  twtitterController.text = i.link ?? '';
-                } else if (i.name == 'facebook') {
-                  facebookController.text = i.link ?? '';
+              for (Link social in user.social ?? []) {
+                if (social.name == 'instagram' && igController.text.isEmpty) {
+                  igController.text = social.link ?? '';
+                } else if (social.name == 'linkedin' &&
+                    linkedinController.text.isEmpty) {
+                  linkedinController.text = social.link ?? '';
+                } else if (social.name == 'twitter' &&
+                    twtitterController.text.isEmpty) {
+                  twtitterController.text = social.link ?? '';
+                } else if (social.name == 'facebook' &&
+                    facebookController.text.isEmpty) {
+                  facebookController.text = social.link ?? '';
                 }
               }
 

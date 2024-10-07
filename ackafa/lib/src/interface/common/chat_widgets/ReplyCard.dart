@@ -1,7 +1,6 @@
 import 'package:ackaf/src/data/models/msg_model.dart';
 import 'package:flutter/material.dart';
 
-
 class ReplyCard extends StatelessWidget {
   const ReplyCard({
     Key? key,
@@ -42,9 +41,10 @@ class ReplyCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (feed?.media != null)
-                  GestureDetector( onTap: () {
-                    Navigator.pushNamed(context, '/my_posts');
-                  },
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/my_posts');
+                    },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: Image.network(
@@ -76,11 +76,11 @@ class ReplyCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 5),
-                    Icon(
-                      Icons.done_all,
-                      size: 20,
-                      color: Colors.blue[300],
-                    ),
+                    // Icon(
+                    //   Icons.done_all,
+                    //   size: 20,
+                    //   color: Colors.blue[300],
+                    // ),
                   ],
                 ),
               ],
