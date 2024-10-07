@@ -48,8 +48,8 @@ class NotificationPage extends StatelessWidget {
                           log(userExists.toString());
                           return _buildNotificationCard(
                             readed: userExists,
-                            subject: notifications[index].subject!,
-                            content: notifications[index].content!,
+                            subject: notifications[index].subject ?? '',
+                            content: notifications[index].content ?? '',
                             dateTime: notifications[index].updatedAt!,
                           );
                         },

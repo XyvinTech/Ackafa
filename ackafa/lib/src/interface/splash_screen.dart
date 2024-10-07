@@ -28,7 +28,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    initDynamicLinks();
+    // initDynamicLinks();
     checkAppVersion(context).then((_) {
       if (!isAppUpdateRequired) {
         initialize();
@@ -39,31 +39,32 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       print("New FCM Token: $newToken");
       // Save or send the new token to your server
     });
+FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  if (message.notification != null) {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'your_channel_id',
+      'your_channel_name',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
+    );
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (message.notification != null) {
-        const AndroidNotificationDetails androidPlatformChannelSpecifics =
-            AndroidNotificationDetails(
-          'your_channel_id',
-          'your_channel_name',
-          importance: Importance.max,
-          priority: Priority.high,
-          showWhen: false,
-        );
-        const NotificationDetails platformChannelSpecifics =
-            NotificationDetails(android: androidPlatformChannelSpecifics);
-
-        flutterLocalNotificationsPlugin.show(
-          0, // Notification ID
-          message.notification?.title,
-          message.notification?.body,
-          platformChannelSpecifics,
-        );
-      }
-    });
+    flutterLocalNotificationsPlugin.show(
+      0, // Notification ID
+      message.notification?.title,
+      message.notification?.body,
+      platformChannelSpecifics,
+      payload: message.data['deepLinkUrl'], // Pass deep link URL as payload
+    );
+  }
+});
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('Notification opened: ${message.data}');
+      launchURL((message.data['deepLinkUrl']));
     });
 
     FirebaseMessaging.instance
@@ -150,26 +151,34 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     }
   }
 
-  Future<void> initDynamicLinks() async {
-    // Handle dynamic link when the app is opened from a terminated state
-    final PendingDynamicLinkData? initialLink =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    _handleDynamicLink(initialLink?.link);
+//   Future<void> initDynamicLinks() async {
+//     // Handle dynamic link when the app is opened from a terminated state
+//     final PendingDynamicLinkData? initialLink =
+//         await FirebaseDynamicLinks.instance.getInitialLink();
+//     _handleDynamicLink(initialLink?.link);
 
-    // Handle dynamic link when the app is in the foreground
-    FirebaseDynamicLinks.instance.onLink
-        .listen((PendingDynamicLinkData dynamicLink) {
-      _handleDynamicLink(dynamicLink.link);
-    }).onError((error) {
-      print('onLink error: $error');
-    });
-  }
+//     // Handle dynamic link when the app is in the foreground
+//     FirebaseDynamicLinks.instance.onLink
+//         .listen((PendingDynamicLinkData dynamicLink) {
+//       _handleDynamicLink(dynamicLink.link);
+//     }).onError((error) {
+//       print('onLink error: $error');
+//     });
+//   }
 
-  void _handleDynamicLink(Uri? deepLink) {
-    if (deepLink != null && deepLink.path == '/notifications_page') {
-      Navigator.pushNamed(context, '/notifications_page');
-    }
-  }
+// void _handleDynamicLink(Uri? deepLink) {
+//   if (deepLink != null && deepLink.path == '/notifications_page' && mounted) {
+//    Navigator.pushNamed(
+//   context,
+//   '/home_page',
+// ).then((_) {
+//   Navigator.pushNamed(
+//     context,
+//     '/notifications_page',
+//   );
+// });
+//   }
+// }
 
   @override
   Widget build(BuildContext context) {

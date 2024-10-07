@@ -40,50 +40,6 @@ class NewsPage extends StatelessWidget {
 
               return Scaffold(
                 backgroundColor: Colors.white,
-                appBar: AppBar(
-                  toolbarHeight: 60.0,
-                  backgroundColor: Colors.white,
-                  scrolledUnderElevation: 0,
-                  leadingWidth: 100,
-                  leading: Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Image.asset(
-                        'assets/icons/ackaf_logo.png',
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  actions: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.notifications_none_outlined,
-                        size: 21,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NotificationPage()),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.menu,
-                        size: 21,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MenuPage()),
-                        );
-                      },
-                    ),
-                  ],
-                ),
                 body: GestureDetector(
                   onHorizontalDragEnd: (details) {
                     // Detect the swipe direction
@@ -99,6 +55,61 @@ class NewsPage extends StatelessWidget {
                   },
                   child: Column(
                     children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              offset: const Offset(0, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: AppBar(
+                          toolbarHeight: 45.0,
+                          scrolledUnderElevation: 0,
+                          backgroundColor: Colors.white,
+                          elevation: 0,
+                          leadingWidth: 100,
+                          leading: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: SizedBox(
+                              width: 100,
+                              height: 100,
+                              child: Image.asset(
+                                'assets/icons/ackaf_logo.png',
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                          actions: [
+                            IconButton(
+                              icon:
+                                  const Icon(Icons.notifications_none_outlined),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const NotificationPage()),
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.menu),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          MenuPage()), // Navigate to MenuPage
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                       Expanded(
                         child: SingleChildScrollView(
                           child: Column(

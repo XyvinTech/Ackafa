@@ -21,76 +21,60 @@ class ProfilePage extends StatelessWidget {
               Column(
                 children: [
                   Container(
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            scale: 1.5,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          offset: const Offset(0, 2),
+                          blurRadius: 4,
+                        ),
+                      ],
+                    ),
+                    child: AppBar(
+                      toolbarHeight: 45.0,
+                      scrolledUnderElevation: 0,
+                      backgroundColor: Colors.white,
+                      elevation: 0,
+                      leadingWidth: 100,
+                      leading: Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: Image.asset(
                             'assets/icons/ackaf_logo.png',
-                            fit: BoxFit.scaleDown,
+                            fit: BoxFit.contain,
                           ),
-                          const Spacer(),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.notifications_none_outlined,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const NotificationPage()),
-                              );
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.menu,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        MenuPage()), // Navigate to MenuPage
-                              );
-                            },
-                          ),
-                        ],
+                        ),
                       ),
+                      actions: [
+                        IconButton(
+                          icon: const Icon(Icons.notifications_none_outlined),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const NotificationPage()),
+                            );
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.menu),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MenuPage()), // Navigate to MenuPage
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ],
-              ),
-              Container(
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10, bottom: 4),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Profile',
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
-                    ),
-                    PreferredSize(
-                      preferredSize: const Size.fromHeight(1.0),
-                      child: Container(
-                        color: const Color.fromARGB(255, 202, 198, 198),
-                        height: 1.0,
-                      ),
-                    ),
-                  ],
-                ),
               ),
               Column(
                 children: [

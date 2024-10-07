@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:ackaf/firebase_options.dart';
+import 'package:ackaf/src/data/services/launch_url.dart';
 import 'package:ackaf/src/interface/screens/main_pages/home_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
@@ -82,6 +83,7 @@ class _MyAppState extends State<MyApp> {
         '/userReg': (context) => const UserRegistrationScreen(),
         '/notifications_page': (context) => NotificationPage(),
         '/my_events': (context) => MyEventsPage(),
+        '/main_page': (context) => MainPage(),
         '/my_posts': (context) => MyPostsPage(),
         '/chat_page': (context) => ChatPage(),
         '/group_chat_page': (context) => GroupChatPage(),
@@ -90,6 +92,7 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
+// Initialize in your main function
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -101,5 +104,14 @@ void initializeNotifications() {
   final InitializationSettings initializationSettings =
       InitializationSettings(android: initializationSettingsAndroid);
 
-  flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse: (NotificationResponse response) async {
+      // Handle the notification tap event
+      String? payload = response.payload;
+      if (payload != null) {
+        launchURL(payload); // Trigger the deep link URL when the notification is tapped
+      }
+    },
+  );
 }
