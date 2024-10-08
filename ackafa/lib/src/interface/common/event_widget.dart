@@ -1,6 +1,7 @@
 import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 Widget eventWidget({
   bool withImage = false,
@@ -49,6 +50,25 @@ Widget eventWidget({
                         top: Radius.circular(16),
                       ),
                       child: Image.network(
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            // If the image is fully loaded, show the image
+                            return child;
+                          }
+                          // While the image is loading, show shimmer effect
+                          return Container(
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                         event.image!,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
