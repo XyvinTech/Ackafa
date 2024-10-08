@@ -116,15 +116,16 @@ class _NewsPageViewState extends ConsumerState<NewsPageView> {
                   children: [
                     OutlinedButton(
                       onPressed: () {
-                        // Navigate to the previous page using the PageController
                         int currentIndex = ref.read(currentIndexProvider);
                         if (currentIndex > 0) {
-                          _pageController.previousPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                          ref.read(currentIndexProvider.notifier).state =
-                              currentIndex - 1;
+                          setState(() {
+                            ref.read(currentIndexProvider.notifier).state =
+                                currentIndex - 1;
+                            _pageController.previousPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          });
                         }
                       },
                       style: OutlinedButton.styleFrom(
@@ -148,15 +149,16 @@ class _NewsPageViewState extends ConsumerState<NewsPageView> {
                     const SizedBox(width: 20),
                     OutlinedButton(
                       onPressed: () {
-                        // Navigate to the next page using the PageController
                         int currentIndex = ref.read(currentIndexProvider);
                         if (currentIndex < widget.news.length - 1) {
-                          _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                          ref.read(currentIndexProvider.notifier).state =
-                              currentIndex + 1;
+                          setState(() {
+                            ref.read(currentIndexProvider.notifier).state =
+                                currentIndex + 1;
+                            _pageController.nextPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          });
                         }
                       },
                       style: OutlinedButton.styleFrom(
