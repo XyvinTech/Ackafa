@@ -72,9 +72,17 @@ Widget eventWidget({
                         event.image!,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
-                          return Image.network(
-                            'https://placehold.co/600x400/png',
-                            fit: BoxFit.cover,
+                          return Container(
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                            ),
                           );
                         },
                       ),
