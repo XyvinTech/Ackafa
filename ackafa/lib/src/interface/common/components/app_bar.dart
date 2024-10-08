@@ -107,7 +107,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     },
                   );
                 },
-                loading: () => Center(child: LoadingAnimation()),
+                loading: () => Center(
+                  child: Icon(Icons.notifications_none_outlined),
+                ),
                 error: (error, stackTrace) {
                   return Center(
                     child: Text(''),

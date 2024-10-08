@@ -29,8 +29,11 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
 
   @override
   Widget build(BuildContext context) {
-    String time = DateFormat('hh:mm a').format(widget.event.startTime!);
-    String date = DateFormat('yyyy-MM-dd').format(widget.event.startDate!);
+    DateTime dateTime =
+        DateTime.parse(widget.event.startTime.toString()).toLocal();
+    String formattedTime = DateFormat('hh:mm a').format(dateTime);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+
     log('rsvp : ${widget.event.rsvp}');
     log('my id : ${id}');
     bool registered = widget.event.rsvp?.contains(id) ?? false;
@@ -132,7 +135,7 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                               size: 15, color: Color(0xFFE30613)),
                           const SizedBox(width: 8),
                           Text(
-                            date,
+                            formattedDate,
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.grey,
@@ -148,7 +151,7 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                               size: 15, color: Color(0xFFE30613)),
                           const SizedBox(width: 8),
                           Text(
-                            time,
+                            formattedTime,
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.grey,

@@ -37,7 +37,7 @@ class NewsPage extends StatelessWidget {
               String minsToRead = calculateReadingTimeAndWordCount(
                   news[currentIndex].content ?? '');
               String formattedDate =
-                  '${DateFormat('MMM dd, yyyy, hh:mm a').format(news[currentIndex].updatedAt!)} IST';
+                  '${DateFormat('MMM dd, yyyy, hh:mm a').format(news[currentIndex].updatedAt!)}';
 
               return Scaffold(
                 appBar: CustomAppBar(),

@@ -1,8 +1,5 @@
 import 'package:ackaf/src/data/models/events_model.dart';
-import 'package:ackaf/src/data/services/api_routes/events_api.dart';
-import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 Widget eventWidget({
@@ -10,8 +7,10 @@ Widget eventWidget({
   required BuildContext context,
   required Event event,
 }) {
-  String time = DateFormat('hh:mm a').format(event.startTime!);
-  String date = DateFormat('dd MMM yyyy').format(event.startDate!);
+  DateTime dateTime = DateTime.parse(event.startTime.toString()).toLocal();
+  String formattedTime = DateFormat('hh:mm a').format(dateTime);
+  String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20),
     child: Transform.translate(
@@ -72,7 +71,7 @@ Widget eventWidget({
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        event.status??'',
+                        event.status ?? '',
                         style: TextStyle(
                           color: const Color.fromARGB(255, 134, 163, 136),
                           fontWeight: FontWeight.bold,
@@ -115,7 +114,7 @@ Widget eventWidget({
                                     size: 16, color: Colors.black),
                                 const SizedBox(width: 4),
                                 Text(
-                                  date,
+                                  formattedDate,
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.black,
@@ -137,7 +136,7 @@ Widget eventWidget({
                                     size: 16, color: Colors.blue),
                                 const SizedBox(width: 4),
                                 Text(
-                                  time,
+                                  formattedTime,
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.blue[800],
