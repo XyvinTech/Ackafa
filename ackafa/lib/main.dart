@@ -90,26 +90,4 @@ class _MyAppState extends State<MyApp> {
 }
 
 // Initialize in your main function
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
 
-// Initialize in your main function
-void initializeNotifications() {
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-
-  final InitializationSettings initializationSettings =
-      InitializationSettings(android: initializationSettingsAndroid);
-
-  flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-    onDidReceiveNotificationResponse: (NotificationResponse response) async {
-      // Handle the notification tap event
-      String? payload = response.payload;
-      if (payload != null) {
-        launchURL(
-            payload); // Trigger the deep link URL when the notification is tapped
-      }
-    },
-  );
-}

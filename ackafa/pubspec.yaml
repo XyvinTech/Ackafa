@@ -1,7 +1,7 @@
 name: ackaf
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.1.16+16
+version: 0.1.17+17
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -51,7 +51,7 @@ dependencies:
   screenshot: ^3.0.0
   path_provider: ^2.1.4
   share_plus: ^10.0.2
-  image_gallery_saver: ^2.0.3
+  # image_gallery_saver: ^2.0.3
   flutter_local_notifications: ^17.2.3
   pin_code_fields: ^8.0.1
   contact_add: ^0.0.3

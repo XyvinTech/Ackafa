@@ -123,7 +123,7 @@ class CustomTextFormField extends StatelessWidget {
                     .updateAddress(textController!.text);
                 break;
 
-              case 'Enter Company designation':
+              case 'Enter Designation':
                 ref
                     .read(userProvider.notifier)
                     .updateCompany(Company(designation: textController!.text));
@@ -142,7 +142,7 @@ class CustomTextFormField extends StatelessWidget {
                     .read(userProvider.notifier)
                     .updateCompany(Company(address: textController!.text));
 
-              case 'Enter Ig':
+              case 'Enter Instagram':
                 ref.read(userProvider.notifier).updateSocialMedia(
                     [...?ref.read(userProvider).value?.social],
                     'instagram',

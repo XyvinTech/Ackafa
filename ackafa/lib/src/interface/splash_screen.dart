@@ -39,31 +39,32 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       print("New FCM Token: $newToken");
       // Save or send the new token to your server
     });
-FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  if (message.notification != null) {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'your_channel_id',
-      'your_channel_name',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: false,
-    );
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        const AndroidNotificationDetails androidPlatformChannelSpecifics =
+            AndroidNotificationDetails(
+          'your_channel_id',
+          'your_channel_name',
+          importance: Importance.max,
+          priority: Priority.high,
+          showWhen: false,
+        );
+        const NotificationDetails platformChannelSpecifics =
+            NotificationDetails(android: androidPlatformChannelSpecifics);
 
-    flutterLocalNotificationsPlugin.show(
-      0, // Notification ID
-      message.notification?.title,
-      message.notification?.body,
-      platformChannelSpecifics,
-      payload: message.data['deepLinkUrl'], // Pass deep link URL as payload
-    );
-  }
-});
+        flutterLocalNotificationsPlugin.show(
+          0, // Notification ID
+          message.notification?.title,
+          message.notification?.body,
+          platformChannelSpecifics,
+          payload: message.data['deepLinkUrl'], // Pass deep link URL as payload
+        );
+      }
+    });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('Notification opened: ${message.data}');
+      log('deeeeeeeeeeeeeeeeep :${message.data['deepLinkUrl']}');
       launchURL((message.data['deepLinkUrl']));
     });
 
@@ -225,5 +226,15 @@ void initializeNotifications() {
   final InitializationSettings initializationSettings =
       InitializationSettings(android: initializationSettingsAndroid);
 
-  flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse: (NotificationResponse response) async {
+      String? payload = response.payload;
+      log('payload = $payload');
+      if (payload != null && payload.isNotEmpty && payload != ' ') {
+        launchURL(
+            payload); // Trigger the deep link URL when the notification is tapped
+      }
+    },
+  );
 }

@@ -1040,7 +1040,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   //   }
                                   //   return null;
                                   // },
-                                  labelText: 'Enter Company designation',
+                                  labelText: 'Enter Designation',
                                   textController: designationController),
                             ),
                             Padding(
@@ -1125,7 +1125,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   left: 20, right: 20, top: 20, bottom: 10),
                               child: CustomTextFormField(
                                 textController: igController,
-                                labelText: 'Enter Ig',
+                                labelText: 'Enter Instagram',
                                 prefixIcon: const SvgIcon(
                                   assetName: 'assets/icons/instagram.svg',
                                   size: 10,

@@ -2,10 +2,13 @@ import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/msg_model.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/chat_widgets/OwnMessageCard.dart';
 import 'package:ackaf/src/interface/common/chat_widgets/ReplyCard.dart';
 import 'package:ackaf/src/interface/common/custom_dialog.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
+import 'package:ackaf/src/interface/screens/profile/profilePreview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -154,22 +157,45 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                     ),
                   ],
                 ),
-                title: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => DetailsPage(),
-                        transitionDuration: Duration(milliseconds: 500),
-                        transitionsBuilder: (_, a, __, c) =>
-                            FadeTransition(opacity: a, child: c),
+                title: Consumer(
+                  builder: (context, ref, child) {
+                    final asyncUser = ref
+                        .watch(fetchUserByIdProvider(widget.receiver.id ?? ''));
+                    return asyncUser.when(
+                      data: (user) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (_, __, ___) => ProfilePreview(
+                                  user: user,
+                                ),
+                                transitionDuration: Duration(milliseconds: 500),
+                                transitionsBuilder: (_, a, __, c) =>
+                                    FadeTransition(opacity: a, child: c),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            '${widget.receiver.name?.first ?? ''}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last ?? ''}',
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                        );
+                      },
+                      loading: () => Text(
+                        '${widget.receiver.name?.first ?? ''}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last ?? ''}',
+                        style: const TextStyle(fontSize: 18),
                       ),
+                      error: (error, stackTrace) {
+                        // Handle error state
+                        return Center(
+                          child: Text(
+                              'Something went wrong please try again later'),
+                        );
+                      },
                     );
                   },
-                  child: Text(
-                    '${widget.receiver.name?.first ?? ''}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last ?? ''}',
-                    style: const TextStyle(fontSize: 18),
-                  ),
                 ),
                 actions: [
                   IconButton(
@@ -207,53 +233,61 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
               child: Column(
                 children: [
                   Expanded(
-                    child: ListView.builder(
-                      reverse: true,
-                      controller: _scrollController,
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) {
-                        final message = messages[messages.length -
-                            1 -
-                            index]; // Reverse the index to get the latest message first
-                        if (message.from == widget.sender.id) {
-                          return OwnMessageCard(
-                            feed: message.feed,
-                            status: message.status!,
-                            message: message.content ?? '',
-                            time: DateFormat('h:mm a').format(
-                              DateTime.parse(message.createdAt.toString())
-                                  .toLocal(),
-                            ),
-                          );
-                        } else {
-                          return GestureDetector(
-                            onLongPress: () {
-                              showReportPersonDialog(
-                                  reportedItemId: message.id ?? '',
-                                  context: context,
-                                  onReportStatusChanged: () {
-                                    setState(() {
-                                      if (isBlocked) {
-                                        isBlocked = false;
-                                      } else {
-                                        isBlocked = true;
-                                      }
-                                    });
+                    child: messages.isNotEmpty
+                        ? ListView.builder(
+                            reverse: true,
+                            controller: _scrollController,
+                            itemCount: messages.length,
+                            itemBuilder: (context, index) {
+                              final message = messages[messages.length -
+                                  1 -
+                                  index]; // Reverse the index to get the latest message first
+                              if (message.from == widget.sender.id) {
+                                return OwnMessageCard(
+                                  feed: message.feed,
+                                  status: message.status!,
+                                  message: message.content ?? '',
+                                  time: DateFormat('h:mm a').format(
+                                    DateTime.parse(message.createdAt.toString())
+                                        .toLocal(),
+                                  ),
+                                );
+                              } else {
+                                return GestureDetector(
+                                  onLongPress: () {
+                                    showReportPersonDialog(
+                                        reportedItemId: message.id ?? '',
+                                        context: context,
+                                        onReportStatusChanged: () {
+                                          setState(() {
+                                            if (isBlocked) {
+                                              isBlocked = false;
+                                            } else {
+                                              isBlocked = true;
+                                            }
+                                          });
+                                        },
+                                        reportType: 'chat');
                                   },
-                                  reportType: 'chat');
+                                  child: ReplyCard(
+                                    feed: message.feed,
+                                    message: message.content ?? '',
+                                    time: DateFormat('h:mm a').format(
+                                      DateTime.parse(
+                                              message.createdAt.toString())
+                                          .toLocal(),
+                                    ),
+                                  ),
+                                );
+                              }
                             },
-                            child: ReplyCard(
-                              feed: message.feed,
-                              message: message.content ?? '',
-                              time: DateFormat('h:mm a').format(
-                                DateTime.parse(message.createdAt.toString())
-                                    .toLocal(),
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                                child: Image.asset(
+                                    'assets/startConversation.png')),
+                          ),
                   ),
                   isBlocked
                       ? Container(

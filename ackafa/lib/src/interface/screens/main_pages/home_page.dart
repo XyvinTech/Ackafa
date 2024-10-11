@@ -85,7 +85,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       final double itemHeight =
           titleHeight + descriptionHeight; // Adding padding
       if (itemHeight > maxHeight) {
-        maxHeight = itemHeight + 20;
+        maxHeight = itemHeight;
       }
     }
     return maxHeight;
@@ -190,17 +190,18 @@ class _HomePageState extends ConsumerState<HomePage> {
       _isUserInteracting = false; // Reset the interaction flag
 
       // Restart auto-scroll for all promotion types
-
-      startAutoScroll(
-        controller: _eventScrollController,
-        items: events,
-        currentIndex: _currentEventIndex,
-        itemKey: _bannerKey,
-        onIndexChanged: (index) => setState(() {
-          _currentEventIndex = index;
-        }),
-        scrollTimer: _eventScrollTimer,
-      );
+      if (_eventScrollController.hasClients) {
+        startAutoScroll(
+          controller: _eventScrollController,
+          items: events,
+          currentIndex: _currentEventIndex,
+          itemKey: _bannerKey,
+          onIndexChanged: (index) => setState(() {
+            _currentEventIndex = index;
+          }),
+          scrollTimer: _eventScrollTimer,
+        );
+      }
     });
   }
 

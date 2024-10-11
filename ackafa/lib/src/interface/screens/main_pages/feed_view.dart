@@ -289,7 +289,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
               loading: () => ReusableFeedPostSkeleton(),
               error: (error, stackTrace) {
                 return Center(
-                  child: Text('Error loading promotions: $error'),
+                  child: Text('$error'),
                 );
               },
             );
@@ -502,6 +502,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
                       feedId: widget.feed.id!, comment: commentController.text);
                   await ref.read(feedNotifierProvider.notifier).refreshFeed();
                   commentController.clear();
+                  commentFocusNode.unfocus();
                 }
               })
         ],
@@ -553,6 +554,25 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
           AspectRatio(
             aspectRatio: 4 / 4,
             child: Image.network(
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  // If the image is fully loaded, show the image
+                  return child;
+                }
+                // While the image is loading, show shimmer effect
+                return Container(
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                );
+              },
               imageUrl,
               fit: BoxFit.contain,
             ),

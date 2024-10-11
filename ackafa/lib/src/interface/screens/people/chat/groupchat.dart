@@ -29,81 +29,94 @@ class _ChatPageState extends ConsumerState<GroupChatPage> {
           backgroundColor: Colors.white,
           body: asyncGroups.when(
             data: (groups) {
-              return ListView.builder(
-                itemCount: groups.length,
-                itemBuilder: (context, index) {
-                  var receiver = Participant(
-                      id: groups[index].id,
-                      name: Name(first: groups[index].groupName));
+              if (groups.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: groups.length,
+                  itemBuilder: (context, index) {
+                    var receiver = Participant(
+                        id: groups[index].id,
+                        name: Name(first: groups[index].groupName));
 
-                  var sender = Participant(id: id);
-                  return ListTile(
-                    leading: ClipOval(
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        color: Colors.red,
-                        child: Image.network(
-                          '',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              Icons.groups_2,
-                              color: Colors.white,
-                            );
-                          },
+                    var sender = Participant(id: id);
+                    return ListTile(
+                      leading: ClipOval(
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          color: Colors.red,
+                          child: Image.network(
+                            '',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(
+                                Icons.groups_2,
+                                color: Colors.white,
+                              );
+                            },
+                          ),
                         ),
                       ),
+                      title: Text(
+                          '${receiver?.name?.first ?? ''} ${receiver?.name?.middle ?? ''} ${receiver?.name?.last ?? ''}'),
+                      subtitle: Text(
+                        groups[index].lastMessage != null
+                            ? (groups[index].lastMessage!.length > 10
+                                ? '${groups[index].lastMessage?.substring(0, groups[index].lastMessage!.length.clamp(0, 10))}...'
+                                : groups[index].lastMessage!)
+                            : '',
+                      ),
+                      trailing: groups[index].unreadCount != 0 &&
+                              groups[index].unreadCount != null
+                          ? SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: Container(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                constraints: BoxConstraints(
+                                  minWidth: 16,
+                                  minHeight: 16,
+                                ),
+                                child: Center(
+                                  child: groups[index].unreadCount != null
+                                      ? Text(
+                                          '${groups[index].unreadCount}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : null,
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Groupchatscreen(
+                                  group: receiver,
+                                  sender: sender,
+                                )));
+                      },
+                    );
+                  },
+                );
+              } else {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(child: Image.asset('assets/nochat.png')),
                     ),
-                    title: Text(
-                        '${receiver?.name?.first ?? ''} ${receiver?.name?.middle ?? ''} ${receiver?.name?.last ?? ''}'),
-                    subtitle: Text(
-                      groups[index].lastMessage != null
-                          ? (groups[index].lastMessage!.length > 10
-                              ? '${groups[index].lastMessage?.substring(0, groups[index].lastMessage!.length.clamp(0, 10))}...'
-                              : groups[index].lastMessage!)
-                          : '',
-                    ),
-                    trailing: groups[index].unreadCount != 0 &&
-                            groups[index].unreadCount != null
-                        ? SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: Container(
-                              padding: EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              constraints: BoxConstraints(
-                                minWidth: 16,
-                                minHeight: 16,
-                              ),
-                              child: Center(
-                                child: groups[index].unreadCount != null
-                                    ? Text(
-                                        '${groups[index].unreadCount}',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      )
-                                    : null,
-                              ),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => Groupchatscreen(
-                                group: receiver,
-                                sender: sender,
-                              )));
-                    },
-                  );
-                },
-              );
+                    Text('No group chat yet!')
+                  ],
+                );
+              }
             },
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stackTrace) {

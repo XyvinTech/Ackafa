@@ -26,7 +26,7 @@ class AwardCard extends StatelessWidget {
             children: [
               // Upper part: Image fitted to the card
               Container(
-                height: 90.0, // Height of the image section
+                height: 110, // Height of the image section
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -64,20 +64,22 @@ class AwardCard extends StatelessWidget {
             ],
           ),
           // Lower part: Text
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(10.0),
-                bottomRight: Radius.circular(10.0),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(10.0),
+                  bottomRight: Radius.circular(10.0),
+                ),
+                color: const Color(0xFFF2F2F2),
               ),
-              color: const Color(0xFFF2F2F2),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  SizedBox(
+                    height: 5,
+                  ),
                   Text(
                     award.name ?? '',
                     style: const TextStyle(
@@ -86,7 +88,6 @@ class AwardCard extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 4.0),
                   Text(
                     award.authority ?? '',
                     style: const TextStyle(

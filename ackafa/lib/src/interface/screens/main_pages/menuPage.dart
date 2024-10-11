@@ -239,7 +239,7 @@ class MenuPage extends StatelessWidget {
               error: (error, stackTrace) {
                 // Handle error state
                 return Center(
-                  child: Text('Error loading promotions: $error'),
+                  child: Text('$error'),
                 );
               },
               data: (user) {
@@ -253,35 +253,48 @@ class MenuPage extends StatelessWidget {
                         padding: const EdgeInsets.all(16.0),
                         child: Row(
                           children: [
+                            // Profile Image
                             ClipRRect(
                               borderRadius: BorderRadius.circular(9),
                               child: Image.network(
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Image.asset(
-                         
-                                      'assets/icons/dummy_person_small.png');
-                                },
                                 user.image ?? '',
                                 height: 70,
                                 width: 75,
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.asset(
+                                      'assets/icons/dummy_person_small.png');
+                                },
                               ),
                             ),
                             const SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+
+                            // User Info (Name and Phone)
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow
+                                        .ellipsis, // Truncate text if too long
                                   ),
-                                ),
-                                Text(user.phone!),
-                              ],
+                                  Text(
+                                    user.phone!,
+                                    style: const TextStyle(
+                                        fontSize: 16, color: Colors.grey),
+                                    overflow: TextOverflow
+                                        .ellipsis, // Truncate phone number if necessary
+                                  ),
+                                ],
+                              ),
                             ),
-                            const Spacer(),
+
+                            // "Edit" Button
                             TextButton(
                               onPressed: () {
                                 Navigator.push(

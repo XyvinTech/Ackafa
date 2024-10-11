@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MyPostsPage extends StatelessWidget {
   @override
@@ -90,7 +91,26 @@ class MyPostsPage extends StatelessWidget {
             if (imageUrl != "")
               Column(
                 children: [
-                  Image.network(imageUrl!),
+                  Image.network(imageUrl!,
+                      loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      // If the image is fully loaded, show the image
+                      return child;
+                    }
+                    // While the image is loading, show shimmer effect
+                    return Container(
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
                   SizedBox(height: 10),
                 ],
               ),

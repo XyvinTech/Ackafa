@@ -6,12 +6,14 @@ import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chatscreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/interface/screens/profile/profilePreview.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MembersPage extends ConsumerStatefulWidget {
   const MembersPage({super.key});
@@ -132,7 +134,11 @@ class _MembersPageState extends ConsumerState<MembersPage> {
                               ? Text(user.company?.designation ?? '')
                               : null,
                           trailing: IconButton(
-                            icon: Icon(Icons.chat),
+                            icon: Icon(
+                              FontAwesomeIcons.message,
+                              size: 17,
+                              color: Colors.grey,
+                            ),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => IndividualPage(

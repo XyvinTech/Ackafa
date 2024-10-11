@@ -26,83 +26,97 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           backgroundColor: Colors.white,
           body: asyncChats.when(
             data: (chats) {
-              return ListView.builder(
-                itemCount: chats.length,
-                itemBuilder: (context, index) {
-                  var receiver = chats[index].participants?.firstWhere(
-                        (participant) => participant.id != id,
-                        orElse: () => Participant(),
-                      );
-                  var sender = chats[index].participants?.firstWhere(
-                        (participant) => participant.id == id,
-                        orElse: () => Participant(),
-                      );
-                  return ListTile(
-                    leading: ClipOval(
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        child: Image.network(
-                          receiver?.image ?? '',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                                'assets/icons/dummy_person_small.png');
-                          },
+              if (chats.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: chats.length,
+                  itemBuilder: (context, index) {
+                    var receiver = chats[index].participants?.firstWhere(
+                          (participant) => participant.id != id,
+                          orElse: () => Participant(),
+                        );
+                    var sender = chats[index].participants?.firstWhere(
+                          (participant) => participant.id == id,
+                          orElse: () => Participant(),
+                        );
+                    return ListTile(
+                      leading: ClipOval(
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          child: Image.network(
+                            receiver?.image ?? '',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                  'assets/icons/dummy_person_small.png');
+                            },
+                          ),
                         ),
                       ),
+                      title: Text(
+                          '${receiver?.name?.first ?? ''} ${receiver?.name?.middle ?? ''} ${receiver?.name?.last ?? ''}'),
+                      subtitle: Text(
+                        chats[index].lastMessage?.content != null
+                            ? (chats[index].lastMessage!.content!.length > 10
+                                ? '${chats[index].lastMessage?.content!.substring(0, chats[index].lastMessage!.content!.length.clamp(0, 10))}...'
+                                : chats[index].lastMessage!.content!)
+                            : '',
+                      ),
+                      trailing: chats[index].unreadCount?[sender?.id] != 0 &&
+                              chats[index].unreadCount?[sender!.id] != null
+                          ? SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: Container(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                constraints: BoxConstraints(
+                                  minWidth: 16,
+                                  minHeight: 16,
+                                ),
+                                child: Center(
+                                  child:
+                                      chats[index].unreadCount?[sender!.id] !=
+                                              null
+                                          ? Text(
+                                              '${chats[index].unreadCount?[sender!.id]}',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            )
+                                          : null,
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => IndividualPage(
+                                  receiver: receiver!,
+                                  sender: sender!,
+                                )));
+                      },
+                    );
+                  },
+                );
+              } else {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(child: Image.asset('assets/nochat.png')),
                     ),
-                    title: Text(
-                        '${receiver?.name?.first ?? ''} ${receiver?.name?.middle ?? ''} ${receiver?.name?.last ?? ''}'),
-                    subtitle: Text(
-                      chats[index].lastMessage?.content != null
-                          ? (chats[index].lastMessage!.content!.length > 10
-                              ? '${chats[index].lastMessage?.content!.substring(0, chats[index].lastMessage!.content!.length.clamp(0, 10))}...'
-                              : chats[index].lastMessage!.content!)
-                          : '',
-                    ),
-                    trailing: chats[index].unreadCount?[sender?.id] != 0 &&
-                            chats[index].unreadCount?[sender!.id] != null
-                        ? SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: Container(
-                              padding: EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              constraints: BoxConstraints(
-                                minWidth: 16,
-                                minHeight: 16,
-                              ),
-                              child: Center(
-                                child: chats[index].unreadCount?[sender!.id] !=
-                                        null
-                                    ? Text(
-                                        '${chats[index].unreadCount?[sender!.id]}',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      )
-                                    : null,
-                              ),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => IndividualPage(
-                                receiver: receiver!,
-                                sender: sender!,
-                              )));
-                    },
-                  );
-                },
-              );
+                    Text('No group chat yet!')
+                  ],
+                );
+              }
             },
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stackTrace) {
