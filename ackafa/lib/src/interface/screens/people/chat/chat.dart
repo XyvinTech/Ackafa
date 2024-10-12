@@ -45,25 +45,26 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                           width: 40,
                           height: 40,
                           color: const Color.fromARGB(255, 255, 255, 255),
-                          child: Image.network(      loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) {
-                            // If the image is fully loaded, show the image
-                            return child;
-                          }
-                          // While the image is loading, show shimmer effect
-                          return Container(
-                            child: Shimmer.fromColors(
-                              baseColor: Colors.grey[300]!,
-                              highlightColor: Colors.grey[100]!,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) {
+                                // If the image is fully loaded, show the image
+                                return child;
+                              }
+                              // While the image is loading, show shimmer effect
+                              return Container(
+                                child: Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          );
-                        },
+                              );
+                            },
                             receiver?.image ?? '',
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
@@ -132,7 +133,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Center(child: Image.asset('assets/nochat.png')),
                     ),
-                    Text('No group chat yet!')
+                    Text('No chat yet!')
                   ],
                 );
               }
@@ -140,7 +141,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stackTrace) {
               return Center(
-                child: Text('Error loading promotions: $error'),
+                child: Text('$error'),
               );
             },
           ));
