@@ -688,7 +688,7 @@ class _ShowEnterAwardtSheetState extends State<ShowEnterAwardtSheet> {
               },
             ),
             const SizedBox(height: 20),
-            ModalSheetTextFormField(
+            ModalSheetTextFormField(isAward: true,
               label: 'Add name',
               textController: widget.textController1,
               validator: (value) {
@@ -699,7 +699,7 @@ class _ShowEnterAwardtSheetState extends State<ShowEnterAwardtSheet> {
               },
             ),
             const SizedBox(height: 10),
-            ModalSheetTextFormField(
+            ModalSheetTextFormField(isAward: true,
               label: 'Add Authority name',
               textController: widget.textController2,
               validator: (value) {

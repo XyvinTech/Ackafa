@@ -909,7 +909,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                                             },
                                                             user.company!
                                                                 .logo!, // Replace with your image URL
-                                                            fit: BoxFit.cover,
+                                                            fit: BoxFit.contain,
                                                           )
                                                         : const Center(
                                                             child: Column(

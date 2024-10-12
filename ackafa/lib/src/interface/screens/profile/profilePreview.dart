@@ -143,7 +143,7 @@ class ProfilePreview extends ConsumerWidget {
                                                 user.company!.logo!,
                                                 height: 33,
                                                 width: 40,
-                                                fit: BoxFit.cover,
+                                                fit: BoxFit.contain,
                                               )
                                             : Image.asset(
                                                 'assets/icons/dummy_company.png'))
