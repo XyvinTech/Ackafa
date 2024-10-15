@@ -20,7 +20,7 @@ class PeoplePage extends StatelessWidget {
 
         child: Scaffold(
             backgroundColor: Colors.white,
-            appBar: CustomAppBar(
+            appBar: const CustomAppBar(
               iselevationNeeded: false,
             ),
             body: Column(

@@ -5,7 +5,7 @@ import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/main_page.dart';
-import 'package:ackaf/src/interface/screens/main_pages/loginPages/demopage.dart';
+
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
