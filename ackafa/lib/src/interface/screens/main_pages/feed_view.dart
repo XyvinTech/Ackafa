@@ -370,18 +370,17 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
     log('comments: ${widget.feed.comments?.length}');
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Allows resizing of the modal
-      backgroundColor: Colors.transparent, // Make the background transparent
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: 16.0, vertical: 30), // Padding for the sides
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white, // Background color of the modal
+              color: Colors.white,
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(20.0),
-                bottom: Radius.circular(20.0), // Curved top edges
+                bottom: Radius.circular(20.0),
               ),
               boxShadow: [
                 BoxShadow(
@@ -394,8 +393,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.7,
               child: Scaffold(
-                backgroundColor:
-                    Colors.transparent, // Transparent background for scaffold
+                backgroundColor: Colors.transparent,
                 appBar: AppBar(
                   title: Text('Comments'),
                   backgroundColor: Colors.white,
@@ -525,22 +523,26 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
       margin: const EdgeInsets.only(bottom: 16.0),
       shape: RoundedRectangleBorder(
         side: BorderSide(color: Color.fromARGB(255, 213, 208, 208)),
-        borderRadius: BorderRadius.circular(6.0),
+        borderRadius: BorderRadius.circular(10.0),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (widget.withImage) _buildPostImage(widget.feed.media!),
-            SizedBox(height: 16),
-            Text(widget.feed.content!, style: TextStyle(fontSize: 14)),
-            SizedBox(height: 16),
-            buildUserInfo(widget.user, widget.feed),
-            SizedBox(height: 16),
-            _buildActionButtons(),
-          ],
-        ),
+      child: Column(
+        children: [
+          if (widget.withImage) _buildPostImage(widget.feed.media!),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 5),
+                Text(widget.feed.content!, style: TextStyle(fontSize: 14)),
+                SizedBox(height: 16),
+                buildUserInfo(widget.user, widget.feed),
+                SizedBox(height: 16),
+                _buildActionButtons(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

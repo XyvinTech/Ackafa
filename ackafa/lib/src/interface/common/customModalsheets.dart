@@ -51,10 +51,6 @@ void feedModalSheet({
                       fit: BoxFit.cover,
                     ),
                   ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(feed.content ?? ''),
-                ),
                 Consumer(
                   builder: (context, ref, child) {
                     final asyncAuthor =
@@ -62,7 +58,8 @@ void feedModalSheet({
                     return asyncAuthor.when(
                       data: (author) {
                         return Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(
+                              left: 10, right: 10, top: 10),
                           child:
                               buildUserInfo(author, feed), // Reuse widget here
                         );
@@ -73,6 +70,10 @@ void feedModalSheet({
                       },
                     );
                   },
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(feed.content ?? ''),
                 ),
                 const SizedBox(
                   height: 10,
@@ -688,7 +689,8 @@ class _ShowEnterAwardtSheetState extends State<ShowEnterAwardtSheet> {
               },
             ),
             const SizedBox(height: 20),
-            ModalSheetTextFormField(isAward: true,
+            ModalSheetTextFormField(
+              isAward: true,
               label: 'Add name',
               textController: widget.textController1,
               validator: (value) {
@@ -699,7 +701,8 @@ class _ShowEnterAwardtSheetState extends State<ShowEnterAwardtSheet> {
               },
             ),
             const SizedBox(height: 10),
-            ModalSheetTextFormField(isAward: true,
+            ModalSheetTextFormField(
+              isAward: true,
               label: 'Add Authority name',
               textController: widget.textController2,
               validator: (value) {

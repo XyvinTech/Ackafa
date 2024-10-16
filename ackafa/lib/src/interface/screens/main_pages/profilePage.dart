@@ -89,7 +89,7 @@ class ProfilePage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     user.image != null && user.image != ''
-                                        ? CircleAvatar(
+                                        ? CircleAvatar( 
                                             radius: 40,
                                             backgroundImage: NetworkImage(
                                               user.image ?? '',
