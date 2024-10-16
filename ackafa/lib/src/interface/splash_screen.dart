@@ -197,7 +197,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           ),
           Center(
             child: Image.asset(
-              'assets/icons/akcaf_icon.png',
+              'assets/splashAkcaf.png',
               scale: 1.2,
             ),
           ),

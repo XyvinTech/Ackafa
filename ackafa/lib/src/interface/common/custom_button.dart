@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
-Widget customButton(
-    {required String label,
-    required VoidCallback onPressed,
-    Color sideColor =  const Color(0xFFE30613),
-    Color labelColor = Colors.white,
-    int fontSize = 16,
-    int buttonHeight = 45,
-    Color buttonColor =  const Color(0xFFE30613),}) {
+Widget customButton({
+  required String label,
+  required VoidCallback onPressed,
+  Color sideColor = const Color(0xFFE30613),
+  Color labelColor = Colors.white,
+  int fontSize = 16,
+  int buttonHeight = 45,
+  Color buttonColor = const Color(0xFFE30613),
+}) {
   return SizedBox(
     height: buttonHeight.toDouble(),
     width: double.infinity,
@@ -18,7 +19,7 @@ Widget customButton(
           backgroundColor: WidgetStateProperty.all<Color>(buttonColor),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(3),
+              borderRadius: BorderRadius.circular(5),
               side: BorderSide(color: sideColor),
             ),
           ),

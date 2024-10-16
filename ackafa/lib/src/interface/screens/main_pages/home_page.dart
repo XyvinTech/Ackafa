@@ -85,7 +85,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       final double itemHeight =
           titleHeight + descriptionHeight; // Adding padding
       if (itemHeight > maxHeight) {
-        maxHeight = itemHeight;
+        maxHeight = itemHeight + 10;
       }
     }
     return maxHeight;
