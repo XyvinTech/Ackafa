@@ -90,6 +90,6 @@ flutter_icons:
   android: true
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/icons/akcaf_icon.png"
+  image_path: "assets/akcaf_logo.png"
 
    
