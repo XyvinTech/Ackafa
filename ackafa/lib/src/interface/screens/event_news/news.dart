@@ -2,6 +2,7 @@ import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/news_model.dart';
 import 'package:ackaf/src/data/services/api_routes/news_api.dart';
 import 'package:ackaf/src/interface/common/components/app_bar.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +30,7 @@ class NewsPage extends ConsumerWidget {
           return const Center(child: Text('No News'));
         }
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: LoadingAnimation()),
       error: (error, stackTrace) =>
           const Center(child: Text('Failed to load news')),
     );

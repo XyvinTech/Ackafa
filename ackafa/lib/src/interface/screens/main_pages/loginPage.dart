@@ -6,6 +6,7 @@ import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/providers/loading_notifier.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
 import 'package:flutter/material.dart';
@@ -222,7 +223,7 @@ class PhoneNumberScreen extends ConsumerWidget {
               Container(
                 color: Colors.black54,
                 child: const Center(
-                  child: CircularProgressIndicator(),
+                  child: LoadingAnimation(),
                 ),
               ),
           ],
@@ -512,7 +513,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
             Container(
               color: Colors.black54,
               child: const Center(
-                child: CircularProgressIndicator(),
+                child: LoadingAnimation(),
               ),
             ),
         ],

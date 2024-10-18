@@ -1,4 +1,5 @@
 import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -138,7 +139,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 );
               }
             },
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const Center(child: LoadingAnimation()),
             error: (error, stackTrace) {
               return Center(
                 child: Text('$error'),
