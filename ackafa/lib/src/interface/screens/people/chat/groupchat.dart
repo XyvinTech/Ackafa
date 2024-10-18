@@ -1,6 +1,7 @@
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/services/api_routes/group_api.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/people/chat/groupchatscreen.dart';
 
 import 'package:flutter/material.dart';
@@ -118,7 +119,7 @@ class _ChatPageState extends ConsumerState<GroupChatPage> {
                 );
               }
             },
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const Center(child: LoadingAnimation()),
             error: (error, stackTrace) {
               return Center(
                 child: Text('No Groups'),

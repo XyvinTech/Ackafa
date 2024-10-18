@@ -1,13 +1,12 @@
-import 'package:ackaf/src/interface/common/components/app_bar.dart';
-import 'package:ackaf/src/interface/common/loading.dart';
-import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
-import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ackaf/src/data/services/api_routes/news_api.dart';
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/news_model.dart';
+import 'package:ackaf/src/data/services/api_routes/news_api.dart';
+import 'package:ackaf/src/interface/common/components/app_bar.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+
 import 'package:shimmer/shimmer.dart';
 
 // Riverpod Provider for current index tracking
@@ -31,7 +30,7 @@ class NewsPage extends ConsumerWidget {
           return const Center(child: Text('No News'));
         }
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: LoadingAnimation()),
       error: (error, stackTrace) =>
           const Center(child: Text('Failed to load news')),
     );
@@ -85,26 +84,28 @@ class _NewsPageViewState extends ConsumerState<NewsPageView> {
           children: [
             // PageView Section
             Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: widget.news.length,
-                onPageChanged: (index) {
-                  ref.read(currentIndexProvider.notifier).state = index;
-                },
-                itemBuilder: (context, index) {
-                  // Calculate opacity based on the current scroll position
-                  double opacity =
-                      (1 - (_currentPage - index).abs()).clamp(0.0, 1.0);
-
-                  return AnimatedOpacity(
-                    duration: const Duration(milliseconds: 500),
-                    opacity: opacity,
-                    child: NewsContent(newsItem: widget.news[index]),
-                  );
-                },
-              ),
-            ),
+                child: PageView.builder(
+                    controller: _pageController,
+                    itemCount: widget.news.length,
+                    onPageChanged: (index) {
+                      ref.read(currentIndexProvider.notifier).state = index;
+                    },
+                    itemBuilder: (context, index) {
+                      return ClipRect(
+                        child: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 500),
+                          opacity: (1 - (_currentPage - index).abs())
+                              .clamp(0.0, 1.0),
+                          child: NewsContent(
+                            key: PageStorageKey<int>(
+                                index), // Unique key for the page
+                            newsItem: widget.news[index],
+                          ),
+                        ),
+                      );
+                    })),
             // Navigation Buttons Section
+
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
               child: AnimatedOpacity(
@@ -115,52 +116,6 @@ class _NewsPageViewState extends ConsumerState<NewsPageView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     OutlinedButton(
-                      onPressed: () {
-                        int currentIndex = ref.read(currentIndexProvider);
-                        if (currentIndex > 0) {
-                          setState(() {
-                            ref.read(currentIndexProvider.notifier).state =
-                                currentIndex - 1;
-                            _pageController.previousPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                          });
-                        }
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(
-                            color: Color.fromARGB(255, 224, 219, 219)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
-                      ),
-                      child: const Row(
-                        children: [
-                          Icon(Icons.arrow_back, color: Color(0xFFE30613)),
-                          SizedBox(width: 8),
-                          Text('Previous',
-                              style: TextStyle(color: Color(0xFFE30613))),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    OutlinedButton(
-                      onPressed: () {
-                        int currentIndex = ref.read(currentIndexProvider);
-                        if (currentIndex < widget.news.length - 1) {
-                          setState(() {
-                            ref.read(currentIndexProvider.notifier).state =
-                                currentIndex + 1;
-                            _pageController.nextPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                          });
-                        }
-                      },
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(
                             color: Color.fromARGB(255, 224, 219, 219)),
@@ -170,6 +125,48 @@ class _NewsPageViewState extends ConsumerState<NewsPageView> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 25, vertical: 10),
                       ),
+                      onPressed: () {
+                        int currentIndex = ref.read(currentIndexProvider);
+                        if (currentIndex > 0) {
+                          _pageController.previousPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      },
+                      // Button styling remains unchanged
+                      child: const Row(
+                        children: [
+                          Icon(Icons.arrow_back, color: Color(0xFFE30613)),
+                          SizedBox(width: 8),
+                          Text('Previous',
+                              style: TextStyle(color: Color(0xFFE30613))),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                            color: Color.fromARGB(255, 224, 219, 219)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25, vertical: 10),
+                      ),
+                      onPressed: () {
+                        int currentIndex = ref.read(currentIndexProvider);
+                        if (currentIndex < widget.news.length - 1) {
+                          _pageController.nextPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      },
+                      // Button styling remains unchanged
                       child: const Row(
                         children: [
                           Text('Next',
@@ -191,10 +188,14 @@ class _NewsPageViewState extends ConsumerState<NewsPageView> {
 }
 
 // Widget for displaying individual news content
+
 class NewsContent extends StatelessWidget {
   final News newsItem;
 
-  const NewsContent({Key? key, required this.newsItem}) : super(key: key);
+  const NewsContent({
+    Key? key,
+    required this.newsItem,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -202,113 +203,112 @@ class NewsContent extends StatelessWidget {
         DateFormat('MMM dd, yyyy, hh:mm a').format(newsItem.updatedAt!);
     final minsToRead = calculateReadingTimeAndWordCount(newsItem.content ?? '');
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image Section
-          SizedBox(
-            height: 250,
-            width: double.infinity,
-            child: Image.network(
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) {
-                  // If the image is fully loaded, show the image
-                  return child;
-                }
-                // While the image is loading, show shimmer effect
-                return Container(
-                  width: double.infinity,
-                  height: 250,
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
+    return Stack(
+      children: [
+        // News Content
+        SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image Section
+              SizedBox(
+                height: 250,
+                width: double.infinity,
+                child: Image.network(
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: double.infinity,
+                        height: 250,
                         color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    );
+                  },
+                  newsItem.media ?? 'https://placehold.co/600x400/png',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.network(
+                      'https://placehold.co/600x400/png',
+                      fit: BoxFit.cover,
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Category Section
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: const Color.fromARGB(255, 192, 252, 194),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 2, horizontal: 10),
+                        child: Text(
+                          newsItem.category ?? '',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
-              newsItem.media ?? 'https://placehold.co/600x400/png',
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Image.network(
-                  'https://placehold.co/600x400/png',
-                  fit: BoxFit.cover,
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Category Section
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: const Color.fromARGB(255, 192, 252, 194),
-                  ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                    child: Text(
-                      newsItem.category ?? '',
+                    const SizedBox(height: 8),
+                    // Title Section
+                    Text(
+                      newsItem.title ?? '',
                       style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.green,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // Title Section
-                Text(
-                  newsItem.title ?? '',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // Date and Reading Time Row
-                Row(
-                  children: [
-                    Text(
-                      formattedDate,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
+                    const SizedBox(height: 8),
+                    // Date and Reading Time Row
+                    Row(
+                      children: [
+                        Text(
+                          formattedDate,
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          minsToRead,
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                     ),
-                    const Spacer(),
+                    const SizedBox(height: 16),
+                    // Content Section
                     Text(
-                      minsToRead,
+                      newsItem.content ?? '',
                       style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
+                        color: Color(0xFF4F4F4F),
+                        fontSize: 16,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                // Content Section
-                Text(
-                  newsItem.content ?? '',
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+
+        // Premium Lock Overlay (Shown only if locked)
+      ],
     );
   }
 }
