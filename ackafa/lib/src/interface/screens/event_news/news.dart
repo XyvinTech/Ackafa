@@ -20,6 +20,7 @@ class NewsPage extends ConsumerWidget {
     final asyncNews = ref.watch(fetchNewsProvider);
 
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: CustomAppBar(),
         body: asyncNews.when(
           data: (news) {

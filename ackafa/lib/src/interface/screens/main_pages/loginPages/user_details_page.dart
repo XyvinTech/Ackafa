@@ -131,7 +131,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     if (image != null) {
       if (imageType == 'profile') {
         setState(() {
-          _profileImageFile = File(image.path!);
+          _profileImageFile = File(image.path);
           imageUpload(Path.basename(_profileImageFile!.path),
                   _profileImageFile!.path)
               .then((url) {
@@ -638,12 +638,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                             right: 4,
                                             child: InkWell(
                                               onTap: () {
-                                                showModalBottomSheet(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      _buildImagePickerOptions(
-                                                          context, 'profile'),
-                                                );
+                                                 _pickFile(imageType: 'profile');
                                               },
                                               child: Container(
                                                 decoration: BoxDecoration(
@@ -986,12 +981,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                             right: -4,
                                             child: InkWell(
                                               onTap: () {
-                                                showModalBottomSheet(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      _buildImagePickerOptions(
-                                                          context, 'company'),
-                                                );
+                                                _pickFile(imageType: 'company');
                                               },
                                               child: Container(
                                                 decoration: BoxDecoration(
