@@ -8,6 +8,7 @@ import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/notifires/feed_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
 import 'package:ackaf/src/interface/common/components/app_bar.dart';
+import 'package:ackaf/src/interface/common/components/svg_icon.dart';
 import 'package:ackaf/src/interface/common/custom_drop_down_block_report.dart';
 import 'package:ackaf/src/interface/common/user_tile.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
@@ -24,6 +25,7 @@ import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/customModalsheets.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -116,108 +118,92 @@ class _FeedViewState extends ConsumerState<FeedView> {
       onRefresh: () => ref.read(feedNotifierProvider.notifier).refreshFeed(),
       child: Scaffold(
         appBar: const CustomAppBar(),
-        body: Column(
+        body: Stack(
           children: [
-            // Container(
-            //   padding:
-            //       const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
-            //   child: Material(
-            //     elevation: 2.0, // Adjust elevation to control shadow depth
-            //     shadowColor:
-            //         Colors.black.withOpacity(0.25), // Shadow color with opacity
-            //     borderRadius: BorderRadius.circular(
-            //         8.0), // Same border radius as TextField
-            //     child: TextField(
-            //       decoration: InputDecoration(
-            //         filled: true, // Ensures the background is fully white
-            //         fillColor:
-            //             Colors.white, // Background color inside TextField
-            //         prefixIcon: Icon(Icons.search),
-            //         hintText: 'Search Feed',
-            //         border: OutlineInputBorder(
-            //           borderRadius: BorderRadius.circular(8.0),
-            //           borderSide: BorderSide(
-            //               color: const Color.fromARGB(255, 215, 212, 212)),
-            //         ),
-            //         enabledBorder: OutlineInputBorder(
-            //           borderRadius: BorderRadius.circular(8.0),
-            //           borderSide: BorderSide(
-            //               color: const Color.fromARGB(255, 215, 212, 212)),
-            //         ),
-            //         focusedBorder: OutlineInputBorder(
-            //           borderRadius: BorderRadius.circular(8.0),
-            //           borderSide: BorderSide(
-            //               color: const Color.fromARGB(255, 215, 212, 212)),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            // Horizontally scrollable Choice Chips
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    _buildChoiceChip('All'),
-                    _buildChoiceChip('Information'),
-                    _buildChoiceChip('Job'),
-                    _buildChoiceChip('Funding'),
-                    _buildChoiceChip('Requirement'),
-                  ],
+            Column(
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        _buildChoiceChip('All'),
+                        _buildChoiceChip('Information'),
+                        _buildChoiceChip('Job'),
+                        _buildChoiceChip('Funding'),
+                        _buildChoiceChip('Requirement'),
+                      ],
+                    ),
+                  ),
+                ),
+                // Feed list
+                Expanded(
+                  child: filteredFeeds.isEmpty
+                      ? const Center(child: Text('No FEEDS'))
+                      : ListView.builder(
+                          padding: const EdgeInsets.all(16.0),
+                          itemCount:
+                              filteredFeeds.length + 2, // +2 for Ad and spacer
+                          itemBuilder: (context, index) {
+                            if (index == filteredFeeds.length) {
+                              return isLoading
+                                  ? const ReusableFeedPostSkeleton()
+                                  : const SizedBox.shrink();
+                            }
+
+                            if (index == filteredFeeds.length + 1) {
+                              // SizedBox to add space at the bottom
+                              return const SizedBox(
+                                  height: 80); // Adjust height as needed
+                            }
+
+                            final feed = filteredFeeds[index];
+                            if (feed.status == 'published') {
+                              return _buildPost(
+                                withImage: feed.media != null &&
+                                    feed.media!.isNotEmpty,
+                                feed: feed,
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          },
+                        ),
+                ),
+              ],
+            ),
+            Positioned(
+              right: 30,
+              bottom: 30,
+              child: Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xFFE30613),
+                ),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 27,
                 ),
               ),
             ),
-            // Feed list
-            Expanded(
-              child: filteredFeeds.isEmpty
-                  ? const Center(child: Text('No FEEDS'))
-                  : ListView.builder(
-                      padding: const EdgeInsets.all(16.0),
-                      itemCount:
-                          filteredFeeds.length + 2, // +2 for Ad and spacer
-                      itemBuilder: (context, index) {
-                        if (index == filteredFeeds.length) {
-                          return isLoading
-                              ? const ReusableFeedPostSkeleton()
-                              : const SizedBox.shrink();
-                        }
-
-                        if (index == filteredFeeds.length + 1) {
-                          // SizedBox to add space at the bottom
-                          return const SizedBox(
-                              height: 80); // Adjust height as needed
-                        }
-
-                        final feed = filteredFeeds[index];
-                        if (feed.status == 'published') {
-                          return _buildPost(
-                            withImage:
-                                feed.media != null && feed.media!.isNotEmpty,
-                            feed: feed,
-                          );
-                        } else {
-                          return const SizedBox.shrink();
-                        }
-                      },
-                    ),
-            ),
           ],
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => _openModalSheet(sheet: 'post'),
-          label: const Text(
-            'Add Post',
-            style: TextStyle(color: Colors.white),
-          ),
-          icon: const Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 27,
-          ),
-          backgroundColor: const Color(0xFFE30613),
-        ),
+        // floatingActionButton: FloatingActionButton.extended(
+        //   onPressed: () => _openModalSheet(sheet: 'post'),
+        //   label: const Text(
+        //     '',
+        //     style: TextStyle(color: Colors.white),
+        //   ),
+        //   icon: const Icon(
+        //     Icons.add,
+        //     color: Colors.white,
+        //     size: 27,
+        //   ),
+        //   backgroundColor: const Color(0xFFE30613),
+        // ),
       ),
     );
   }
@@ -699,13 +685,13 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
                   onPressed: _toggleLike,
                 ),
                 IconButton(
-                  icon: const Icon(FontAwesomeIcons.comment),
+                  icon: SvgPicture.asset('assets/icons/comment.svg'),
                   onPressed: _openCommentModal,
                 ),
                 if (widget.feed.author != id)
                   IconButton(
-                    icon: const Icon(Icons.arrow_forward),
-                    onPressed: () => widget.onShare(), // External share handler
+                    icon: SvgPicture.asset('assets/icons/share.svg'),
+                    onPressed: () => widget.onShare(),
                   ),
               ],
             ),
