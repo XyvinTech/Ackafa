@@ -38,6 +38,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   ScrollController _posterScrollController = ScrollController();
   ScrollController _eventScrollController = ScrollController();
   PageController _videoCountController = PageController();
+  PageController _noticeCountController = PageController();
 
   Timer? _bannerScrollTimer;
   Timer? _noticeScrollTimer;
@@ -495,6 +496,21 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ),
                         ),
 
+                      const SizedBox(height: 16),
+                      if (posters.isNotEmpty)
+                        SizedBox(
+                          height: 420,
+                          child: ListView.builder(
+                            key: _posterKey,
+                            controller: _posterScrollController,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: posters.length,
+                            itemBuilder: (context, index) {
+                              return customPoster(
+                                  context: context, poster: posters[index]);
+                            },
+                          ),
+                        ),
                       Consumer(
                         builder: (context, ref, child) {
                           final asyncEvents = ref.watch(fetchEventsProvider);
@@ -522,42 +538,31 @@ class _HomePageState extends ConsumerState<HomePage> {
                                           _onUserEventGestureDetected(events),
                                       onTap: () =>
                                           _onUserEventGestureDetected(events),
-                                      child: SizedBox(
-                                        height:
-                                            320, // Limit the total height for the ListView
-                                        child: ListView.builder(
-                                          key: _eventKey,
-                                          controller: _eventScrollController,
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: events.length,
-                                          itemBuilder: (context, index) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ViewMoreEventPage(
-                                                            event:
-                                                                events[index]),
-                                                  ),
-                                                );
-                                                ref.invalidate(
-                                                    fetchEventsProvider);
-                                              },
-                                              child: Container(
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 20),
+                                        child: SizedBox(
+                                          height:
+                                              360, // Limit the total height for the ListView
+                                          child: ListView.builder(
+                                            key: _eventKey,
+                                            controller: _eventScrollController,
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: events.length,
+                                            itemBuilder: (context, index) {
+                                              return Container(
                                                 width: MediaQuery.of(context)
                                                         .size
                                                         .width *
-                                                    0.85, // Adjust width to fit horizontally
+                                                    0.78, // Adjust width to fit horizontally
                                                 child: eventWidget(
                                                   withImage: true,
                                                   context: context,
                                                   event: events[index],
                                                 ),
-                                              ),
-                                            );
-                                          },
+                                              );
+                                            },
+                                          ),
                                         ),
                                       )),
                                 ],
@@ -571,26 +576,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      if (posters.isNotEmpty)
-                        SizedBox(
-                          height: 380,
-                          child: ListView.builder(
-                            key: _posterKey,
-                            controller: _posterScrollController,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: posters.length,
-                            itemBuilder: (context, index) {
-                              return customPoster(
-                                  context: context, poster: posters[index]);
-                            },
-                          ),
-                        ),
-                      const SizedBox(height: 16),
                       if (filteredVideos.isNotEmpty)
                         Column(
                           children: [
                             SizedBox(
-                              height: 265,
+                              height: 225,
                               child: ListView.builder(
                                 controller: _videoCountController,
                                 scrollDirection: Axis.horizontal,
@@ -610,7 +600,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   count: videos.length,
                                   effect: const ExpandingDotsEffect(
                                     dotHeight: 8,
-                                    dotWidth: 6,
+                                    dotWidth: 5,
                                     activeDotColor: Colors.black,
                                     dotColor: Colors.grey,
                                   ),
@@ -694,37 +684,34 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   Widget customPoster(
       {required BuildContext context, required Promotion poster}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 16), // Adjust spacing between notices
-      child: Container(
-        width: MediaQuery.of(context).size.width -
-            32, // Poster width matches screen width
-        child: Image.network(
-          poster.media ?? 'https://placehold.co/600x400/png',
-          fit: BoxFit.fill,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) {
-              return child; // Image loaded successfully
-            } else {
-              return Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
-                highlightColor: Colors.grey[100]!,
-                child: Container(
-                  width: double.infinity,
-                  height: 400, // Adjust height based on your poster size
-                  color: Colors.white,
-                ),
-              );
-            }
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return Image.network(
-              'https://placehold.co/600x400/png',
-              fit: BoxFit.contain,
+    return Container(
+      width: MediaQuery.of(context)
+          .size
+          .width, // Poster width matches screen width
+      child: Image.network(
+        poster.media ?? '',
+        fit: BoxFit.fill,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) {
+            return child; // Image loaded successfully
+          } else {
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                width: double.infinity,
+                height: 400, // Adjust height based on your poster size
+                color: Colors.white,
+              ),
             );
-          },
-        ),
+          }
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Image.network(
+            'https://placehold.co/600x400/png',
+            fit: BoxFit.contain,
+          );
+        },
       ),
     );
   }
@@ -738,7 +725,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         width: MediaQuery.of(context).size.width - 32,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white, // Set the background color to white
+          color: Color(0xFFEDDCF3), // Set the background color to white
           borderRadius: BorderRadius.circular(8.0),
           border: Border.all(
             color: const Color.fromARGB(
@@ -759,16 +746,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: Color(0xFFE30613), // Set the font color to blue
+                      color: Color(0xFF661E92), // Set the font color to blue
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     notice.description!,
-                    style: const TextStyle(
-                      color: Color.fromRGBO(
-                          0, 0, 0, 1), // Set the font color to blue
-                    ),
+                    style: const TextStyle(color: Color(0xFF6A6A6A)
+                        // Set the font color to blue
+                        ),
                   ),
                 ],
               ),

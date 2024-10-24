@@ -303,20 +303,19 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       "email": user.email,
       if (user.image != null && user.image != '') "image": user.image,
       "college": user.college?.id,
-      if (user.address != null && user.address != '')
-        "address": user.address.toString() ?? '',
-      if (user.bio != null && user.bio != '') "bio": user.bio.toString() ?? '',
+      if (user.address != null )
+        "address": user.address ?? '',
+      if (user.bio != null ) "bio": user.bio ?? '',
       "company": {
-        if (user.company?.name != null && user.company?.name != '')
+        if (user.company?.name != null )
           "name": user.company?.name ?? '',
-        if (user.company?.designation != null &&
-            user.company?.designation != '')
+        if (user.company?.designation != null )
           "designation": user.company?.designation ?? '',
-        if (user.company?.phone != null && user.company?.phone != '')
+        if (user.company?.phone != null )
           "phone": user.company?.phone ?? '',
-        if (user.company?.address != null && user.company?.address != '')
+        if (user.company?.address != null )
           "address": user.company?.address ?? '',
-        if (user.company?.logo != null && user.company?.logo != '')
+        if (user.company?.logo != null )
           "logo": user.company?.logo ?? '',
       },
       "social": [
