@@ -115,7 +115,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
       color: Colors.red,
       onRefresh: () => ref.read(feedNotifierProvider.notifier).refreshFeed(),
       child: Scaffold(
-        appBar: CustomAppBar(),
+        appBar: const CustomAppBar(),
         body: Column(
           children: [
             // Container(
@@ -172,7 +172,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
             // Feed list
             Expanded(
               child: filteredFeeds.isEmpty
-                  ? Center(child: Text('No FEEDS'))
+                  ? const Center(child: Text('No FEEDS'))
                   : ListView.builder(
                       padding: const EdgeInsets.all(16.0),
                       itemCount:
@@ -180,13 +180,13 @@ class _FeedViewState extends ConsumerState<FeedView> {
                       itemBuilder: (context, index) {
                         if (index == filteredFeeds.length) {
                           return isLoading
-                              ? ReusableFeedPostSkeleton()
-                              : SizedBox.shrink();
+                              ? const ReusableFeedPostSkeleton()
+                              : const SizedBox.shrink();
                         }
 
                         if (index == filteredFeeds.length + 1) {
                           // SizedBox to add space at the bottom
-                          return SizedBox(
+                          return const SizedBox(
                               height: 80); // Adjust height as needed
                         }
 
@@ -198,7 +198,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
                             feed: feed,
                           );
                         } else {
-                          return SizedBox.shrink();
+                          return const SizedBox.shrink();
                         }
                       },
                     ),
@@ -216,7 +216,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
             color: Colors.white,
             size: 27,
           ),
-          backgroundColor: Color(0xFFE30613),
+          backgroundColor: const Color(0xFFE30613),
         ),
       ),
     );
@@ -235,10 +235,10 @@ class _FeedViewState extends ConsumerState<FeedView> {
           });
         },
         backgroundColor: Colors.white, // Light green background color
-        selectedColor: Color(0xFFD3EDCA), // When selected
+        selectedColor: const Color(0xFFD3EDCA), // When selected
 
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: Color.fromARGB(255, 214, 210, 210)),
+          side: const BorderSide(color: Color.fromARGB(255, 214, 210, 210)),
           borderRadius: BorderRadius.circular(20.0), // Circular border
         ),
         showCheckmark: false, // Remove tick icon
@@ -286,7 +286,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
                           sender: sender);
                     });
               },
-              loading: () => ReusableFeedPostSkeleton(),
+              loading: () => const ReusableFeedPostSkeleton(),
               error: (error, stackTrace) {
                 return Center(
                   child: Text('$error'),
@@ -294,9 +294,9 @@ class _FeedViewState extends ConsumerState<FeedView> {
               },
             );
           },
-          loading: () => ReusableFeedPostSkeleton(),
+          loading: () => const ReusableFeedPostSkeleton(),
           error: (error, stackTrace) {
-            return ReusableFeedPostSkeleton();
+            return const ReusableFeedPostSkeleton();
           },
         );
       },
@@ -376,7 +376,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30),
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(20.0),
@@ -395,17 +395,17 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
               child: Scaffold(
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(
-                  title: Text('Comments'),
+                  title: const Text('Comments'),
                   backgroundColor: Colors.white,
                   automaticallyImplyLeading: false,
-                  shape: RoundedRectangleBorder(
+                  shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(20.0),
                     ),
                   ),
                   actions: [
                     IconButton(
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -434,7 +434,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
                                             fit: BoxFit.fill,
                                             widget.feed.comments![index].user!
                                                 .image!)
-                                        : Icon(Icons.person),
+                                        : const Icon(Icons.person),
                                   ),
                                 ),
                                 title: Text(
@@ -472,7 +472,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
               focusNode: commentFocusNode,
               controller: commentController,
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
                 hintText: "Add a comment...",
                 filled: true,
                 fillColor: Colors.grey[200],
@@ -483,10 +483,10 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
               ),
             ),
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           CupertinoButton(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: const Text(
                 'Post',
                 style: TextStyle(color: Colors.red),
               ),
@@ -522,23 +522,107 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 16.0),
       shape: RoundedRectangleBorder(
-        side: BorderSide(color: Color.fromARGB(255, 213, 208, 208)),
+        side: const BorderSide(color: Color.fromARGB(255, 213, 208, 208)),
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
         children: [
-          if (widget.withImage) _buildPostImage(widget.feed.media!),
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: buildUserInfo(widget.user, widget.feed),
+          ),
+          if (widget.withImage)
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: _buildPostImage(widget.feed.media!),
+            ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 5),
-                Text(widget.feed.content!, style: TextStyle(fontSize: 14)),
-                SizedBox(height: 16),
-                buildUserInfo(widget.user, widget.feed),
-                SizedBox(height: 16),
+                const SizedBox(height: 5),
+                Text(widget.feed.content!,
+                    style: const TextStyle(fontSize: 14)),
+                const SizedBox(height: 16),
                 _buildActionButtons(),
+                GestureDetector(
+                  onTap: () => _openCommentModal(),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
+                    child: Text(
+                      'View all ${widget.feed.likes?.length ?? 0} comments',
+                      style:
+                          const TextStyle(color: Colors.grey, fontSize: 14.5),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                  child: Row(
+                    children: [
+                      ClipOval(
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          child: Image.network(
+                            widget.user.image ?? 'https://placehold.co/600x400',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                  'assets/icons/dummy_person_small.png');
+                            },
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => _openCommentModal(),
+                        child: const Padding(
+                          padding: EdgeInsets.only(
+                            left: 10,
+                          ),
+                          child: Text(
+                            'Add a comment...',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 129, 128, 128)),
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () => _openCommentModal(),
+                        child: const Row(
+                          children: [
+                            Text(
+                              '❤️',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text('🙌'),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(
+                              Icons.add_circle_outline_sharp,
+                              color: Colors.grey,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                  child: Text(
+                    '${timeAgo(widget.feed.createdAt!)}',
+                    style: const TextStyle(fontSize: 13),
+                  ),
+                ),
               ],
             ),
           ),
@@ -555,28 +639,36 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
         children: [
           AspectRatio(
             aspectRatio: 4 / 4,
-            child: Image.network(
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) {
-                  // If the image is fully loaded, show the image
-                  return child;
-                }
-                // While the image is loading, show shimmer effect
-                return Container(
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8.0),
+            child: ClipRRect(
+              borderRadius:
+                  BorderRadius.circular(10), // Ensure border radius is applied
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.grey[200],
+                ),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit
+                      .cover, // Changed to BoxFit.cover for better rendering inside the border
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child; // Image fully loaded
+                    }
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                            10), // Shimmer respects border radius
+                        child: Container(
+                          color: Colors.grey[300],
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              },
-              imageUrl,
-              fit: BoxFit.contain,
+                    );
+                  },
+                ),
+              ),
             ),
           ),
           if (showHeartAnimation)
@@ -594,28 +686,39 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Row(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            IconButton(
-              icon: Icon(
-                isLiked ? Icons.favorite : Icons.favorite_border,
-                color: isLiked ? Colors.red : Colors.black,
-              ),
-              onPressed: _toggleLike,
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: isLiked ? Colors.red : Colors.black,
+                  ),
+                  onPressed: _toggleLike,
+                ),
+                IconButton(
+                  icon: const Icon(FontAwesomeIcons.comment),
+                  onPressed: _openCommentModal,
+                ),
+                if (widget.feed.author != id)
+                  IconButton(
+                    icon: const Icon(Icons.arrow_forward),
+                    onPressed: () => widget.onShare(), // External share handler
+                  ),
+              ],
             ),
-            IconButton(
-              icon: Icon(FontAwesomeIcons.comment),
-              onPressed: _openCommentModal,
-            ),
-            if (widget.feed.author != id)
-              IconButton(
-                icon: Icon(Icons.arrow_forward),
-                onPressed: () => widget.onShare(), // External share handler
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Text(
+                '${widget.feed.likes?.length ?? 0} Likes',
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
+            ),
           ],
         ),
-        Spacer(),
-        Text('${widget.feed.likes?.length ?? 0} Likes'),
+        const Spacer(),
         if (widget.feed.author != id)
           CustomDropDown(
             isBlocked: false,
@@ -636,7 +739,7 @@ class ReusableFeedPostSkeleton extends StatelessWidget {
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 16.0),
       shape: RoundedRectangleBorder(
-        side: BorderSide(color: Color.fromARGB(255, 213, 208, 208)),
+        side: const BorderSide(color: Color.fromARGB(255, 213, 208, 208)),
         borderRadius: BorderRadius.circular(6.0),
       ),
       child: Padding(
@@ -646,10 +749,10 @@ class ReusableFeedPostSkeleton extends StatelessWidget {
           children: [
             // Image Skeleton
             _buildShimmerContainer(height: 200.0, width: double.infinity),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // Content Text Skeleton
             _buildShimmerContainer(height: 14, width: double.infinity),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // User Info Skeleton
             Row(
               children: [
@@ -657,22 +760,22 @@ class ReusableFeedPostSkeleton extends StatelessWidget {
                 ClipOval(
                   child: _buildShimmerContainer(height: 30, width: 30),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 // User Info (Name, Company)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildShimmerContainer(height: 12, width: 100),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     _buildShimmerContainer(height: 12, width: 60),
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 // Post Date Skeleton
                 _buildShimmerContainer(height: 12, width: 80),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // Action Buttons Skeleton
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -680,9 +783,9 @@ class ReusableFeedPostSkeleton extends StatelessWidget {
                 Row(
                   children: [
                     _buildShimmerCircle(height: 30, width: 30),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     _buildShimmerCircle(height: 30, width: 30),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     _buildShimmerCircle(height: 30, width: 30),
                   ],
                 ),

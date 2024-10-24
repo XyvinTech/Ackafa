@@ -19,21 +19,15 @@ class NewsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncNews = ref.watch(fetchNewsProvider);
 
-    return asyncNews.when(
-      data: (news) {
-        if (news.isNotEmpty) {
-          return Scaffold(
-            appBar: CustomAppBar(),
-            body: NewsPageView(news: news),
-          );
-        } else {
-          return const Center(child: Text('No News'));
-        }
-      },
-      loading: () => const Center(child: LoadingAnimation()),
-      error: (error, stackTrace) =>
-          const Center(child: Text('Failed to load news')),
-    );
+    return Scaffold(
+        appBar: CustomAppBar(),
+        body: asyncNews.when(
+          data: (news) {
+            return NewsPageView(news: news);
+          },
+          loading: () => const Center(child: LoadingAnimation()),
+          error: (error, stackTrace) => const Center(child: Text('No news')),
+        ));
   }
 }
 

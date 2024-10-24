@@ -15,7 +15,9 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(
+        isThreeDashNeeded: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -89,8 +91,8 @@ class ProfilePage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     user.image != null && user.image != ''
-                                        ? CircleAvatar( 
-                                            radius: 40,
+                                        ? CircleAvatar(
+                                            radius: 37,
                                             backgroundImage: NetworkImage(
                                               user.image ?? '',
                                             ),
@@ -104,7 +106,7 @@ class ProfilePage extends StatelessWidget {
                                           child: Text(
                                             '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
                                             style: const TextStyle(
-                                              fontSize: 20,
+                                              fontSize: 18,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -135,7 +137,7 @@ class ProfilePage extends StatelessWidget {
                                                           },
                                                           user.company!.logo!,
                                                           height: 33,
-                                                          width: 40,
+                                                          width: 35,
                                                           fit: BoxFit.contain,
                                                         )
                                                       : SizedBox())
@@ -152,7 +154,7 @@ class ProfilePage extends StatelessWidget {
                                                 user.company?.designation ?? '',
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.w600,
-                                                  fontSize: 16,
+                                                  fontSize: 15,
                                                   color: Color.fromARGB(
                                                       255, 42, 41, 41),
                                                 ),
@@ -161,7 +163,7 @@ class ProfilePage extends StatelessWidget {
                                               Text(
                                                 user.company?.name ?? '',
                                                 style: const TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize: 13,
                                                   color: Colors.grey,
                                                 ),
                                               ),
@@ -270,77 +272,77 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Share.share(
-                                  'https://admin.akcafconnect.com/user/${user.id}');
-                            },
-                            child: Container(
-                              width: 90,
-                              height: 90,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFE30613),
-                                borderRadius: BorderRadius.circular(
-                                    50), // Apply circular border to the outer container
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Color(0xFFE30613),
-                                  ),
-                                  child: Icon(
-                                    Icons.share,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProfileCard(
-                                    user: user,
-                                  ), // Navigate to CardPage
-                                ),
-                              );
-                            },
-                            child: Container(
-                              width: 90,
-                              height: 90,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(
-                                    50), // Apply circular border to the outer container
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Colors.white,
-                                  ),
-                                  child: Icon(
-                                    Icons.qr_code,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
                     ],
                   ),
                 ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Share.share(
+                        'https://admin.akcafconnect.com/user/${user.id}');
+                  },
+                  child: Container(
+                    width: 90,
+                    height: 90,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFE30613),
+                      borderRadius: BorderRadius.circular(
+                          50), // Apply circular border to the outer container
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Color(0xFFE30613),
+                        ),
+                        child: Icon(
+                          Icons.share,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 20),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfileCard(
+                          user: user,
+                        ), // Navigate to CardPage
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: 90,
+                    height: 90,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(
+                          50), // Apply circular border to the outer container
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.white,
+                        ),
+                        child: Icon(
+                          Icons.qr_code,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ],

@@ -358,103 +358,103 @@ class _HomePageState extends ConsumerState<HomePage> {
                       // const SizedBox(
                       //   height: 20,
                       // ),
-                      if (widget.user.role != 'member')
-                        Consumer(
-                          builder: (context, ref, child) {
-                            if (nonApprovedUsers.isNotEmpty) {
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 20, right: 20, bottom: 16),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 16),
-                                  decoration: BoxDecoration(
-                                      color: const Color(
-                                          0xFFFFE0E2), // Background color
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                          color: const Color.fromARGB(
-                                              255, 222, 178, 181),
-                                          width: 1,
-                                          strokeAlign:
-                                              BorderSide.strokeAlignInside)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'Approvals Pending',
-                                            style: TextStyle(
-                                              color: Color(
-                                                  0xFFE30613), // Text color
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          SizedBox(width: 8),
-                                          CircleAvatar(
-                                            radius: 12,
-                                            backgroundColor: Colors.white,
-                                            child: Text(
-                                              nonApprovedUsers.length
-                                                  .toString(),
-                                              style: TextStyle(
-                                                color: Color(
-                                                    0xFFE30613), // Text color for number
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      IconButton(
-                                        onPressed: () => Navigator.push(
-                                          context,
-                                          PageRouteBuilder(
-                                            pageBuilder: (context, animation,
-                                                    secondaryAnimation) =>
-                                                ApprovalPage(),
-                                            transitionsBuilder: (context,
-                                                animation,
-                                                secondaryAnimation,
-                                                child) {
-                                              const begin = Offset(1.0,
-                                                  0.0); // Slide from right to left
-                                              const end = Offset.zero;
-                                              const curve = Curves
-                                                  .fastEaseInToSlowEaseOut;
+                      // if (widget.user.role != 'member')
+                      //   Consumer(
+                      //     builder: (context, ref, child) {
+                      //       if (nonApprovedUsers.isNotEmpty) {
+                      //         return Padding(
+                      //           padding: const EdgeInsets.only(
+                      //               left: 20, right: 20, bottom: 16),
+                      //           child: Container(
+                      //             padding: const EdgeInsets.symmetric(
+                      //                 horizontal: 20, vertical: 16),
+                      //             decoration: BoxDecoration(
+                      //                 color: const Color(
+                      //                     0xFFFFE0E2), // Background color
+                      //                 borderRadius: BorderRadius.circular(12),
+                      //                 border: Border.all(
+                      //                     color: const Color.fromARGB(
+                      //                         255, 222, 178, 181),
+                      //                     width: 1,
+                      //                     strokeAlign:
+                      //                         BorderSide.strokeAlignInside)),
+                      //             child: Row(
+                      //               mainAxisAlignment:
+                      //                   MainAxisAlignment.spaceBetween,
+                      //               children: [
+                      //                 Row(
+                      //                   children: [
+                      //                     Text(
+                      //                       'Approvals Pending',
+                      //                       style: TextStyle(
+                      //                         color: Color(
+                      //                             0xFFE30613), // Text color
+                      //                         fontWeight: FontWeight.w600,
+                      //                         fontSize: 16,
+                      //                       ),
+                      //                     ),
+                      //                     SizedBox(width: 8),
+                      //                     CircleAvatar(
+                      //                       radius: 12,
+                      //                       backgroundColor: Colors.white,
+                      //                       child: Text(
+                      //                         nonApprovedUsers.length
+                      //                             .toString(),
+                      //                         style: TextStyle(
+                      //                           color: Color(
+                      //                               0xFFE30613), // Text color for number
+                      //                           fontWeight: FontWeight.bold,
+                      //                         ),
+                      //                       ),
+                      //                     ),
+                      //                   ],
+                      //                 ),
+                      //                 IconButton(
+                      //                   onPressed: () => Navigator.push(
+                      //                     context,
+                      //                     PageRouteBuilder(
+                      //                       pageBuilder: (context, animation,
+                      //                               secondaryAnimation) =>
+                      //                           ApprovalPage(),
+                      //                       transitionsBuilder: (context,
+                      //                           animation,
+                      //                           secondaryAnimation,
+                      //                           child) {
+                      //                         const begin = Offset(1.0,
+                      //                             0.0); // Slide from right to left
+                      //                         const end = Offset.zero;
+                      //                         const curve = Curves
+                      //                             .fastEaseInToSlowEaseOut;
 
-                                              var tween = Tween(
-                                                      begin: begin, end: end)
-                                                  .chain(
-                                                      CurveTween(curve: curve));
-                                              var offsetAnimation =
-                                                  animation.drive(tween);
+                      //                         var tween = Tween(
+                      //                                 begin: begin, end: end)
+                      //                             .chain(
+                      //                                 CurveTween(curve: curve));
+                      //                         var offsetAnimation =
+                      //                             animation.drive(tween);
 
-                                              return SlideTransition(
-                                                position: offsetAnimation,
-                                                child: child,
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        icon: const Icon(
-                                          Icons.arrow_forward,
-                                          color:
-                                              Color(0xFFE30613), // Arrow color
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            } else {
-                              return SizedBox();
-                            }
-                          },
-                        ),
+                      //                         return SlideTransition(
+                      //                           position: offsetAnimation,
+                      //                           child: child,
+                      //                         );
+                      //                       },
+                      //                     ),
+                      //                   ),
+                      //                   icon: const Icon(
+                      //                     Icons.arrow_forward,
+                      //                     color:
+                      //                         Color(0xFFE30613), // Arrow color
+                      //                   ),
+                      //                 ),
+                      //               ],
+                      //             ),
+                      //           ),
+                      //         );
+                      //       } else {
+                      //         return SizedBox();
+                      //       }
+                      //     },
+                      //   ),
                       if (banners.isNotEmpty)
                         Card(
                           color: Colors.transparent,
@@ -469,7 +469,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                               itemCount: banners.length,
                               itemBuilder: (context, index) {
                                 return Padding(
-                                  padding: const EdgeInsets.only(right: 20.0),
+                                  padding: banners.length > 1
+                                      ? const EdgeInsets.only(right: 20.0)
+                                      : const EdgeInsets.only(left: 20.0),
                                   child: _buildBanners(
                                       context: context, banner: banners[index]),
                                 );
@@ -638,7 +640,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget _buildBanners(
       {required BuildContext context, required Promotion banner}) {
     return Container(
-      width: MediaQuery.sizeOf(context).width / 1.15,
+      width: MediaQuery.sizeOf(context).width / 1.12,
       child: Stack(
         clipBehavior: Clip.none, // This allows overflow
         children: [
