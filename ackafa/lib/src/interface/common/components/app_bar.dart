@@ -34,16 +34,22 @@
 // }
 
 import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/notifires/approval_notifier.dart';
+import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/notification_api.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/main_pages/approvalPages/approval_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool iselevationNeeded;
-  const CustomAppBar({Key? key, this.iselevationNeeded = true})
+  final bool isThreeDashNeeded;
+  const CustomAppBar(
+      {Key? key, this.iselevationNeeded = true, this.isThreeDashNeeded = false})
       : super(key: key);
 
   @override
@@ -77,6 +83,86 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
         actions: [
+          Consumer(
+            builder: (context, ref, child) {
+              final asyncUser = ref.watch(userProvider);
+              final nonApprovedUsers = ref.watch(approvalNotifierProvider);
+              return asyncUser.when(
+                data: (user) {
+                  return Stack(
+                    children: <Widget>[
+                      if (user.role != 'member' && nonApprovedUsers.length > 0)
+                        IconButton(
+                            iconSize: 17,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      ApprovalPage(),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    const begin = Offset(
+                                        1.0, 0.0); // Slide from right to left
+                                    const end = Offset.zero;
+                                    const curve =
+                                        Curves.fastEaseInToSlowEaseOut;
+
+                                    var tween = Tween(begin: begin, end: end)
+                                        .chain(CurveTween(curve: curve));
+                                    var offsetAnimation =
+                                        animation.drive(tween);
+
+                                    return SlideTransition(
+                                      position: offsetAnimation,
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                            icon: Icon(
+                              FontAwesomeIcons.userGroup,
+                              color: Colors.grey,
+                            )),
+                      if (nonApprovedUsers.length > 0)
+                        Positioned(
+                          right: 4,
+                          bottom: 2,
+                          child: Container(
+                            padding: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              '${nonApprovedUsers.length}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+                loading: () => Center(
+                  child: IconButton(
+                      iconSize: 17,
+                      onPressed: () {},
+                      icon: Icon(
+                        FontAwesomeIcons.userGroup,
+                        color: Colors.grey,
+                      )),
+                ),
+                error: (error, stackTrace) {
+                  return SizedBox();
+                },
+              );
+            },
+          ),
           Consumer(
             builder: (context, ref, child) {
               final asyncNotifications = ref.watch(fetchNotificationsProvider);
@@ -118,16 +204,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               );
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MenuPage()), // Hardcoded action
-              );
-            },
-          ),
+          if (isThreeDashNeeded)
+            IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MenuPage()), // Hardcoded action
+                );
+              },
+            ),
         ],
       ),
     );

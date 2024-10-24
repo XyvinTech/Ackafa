@@ -68,7 +68,6 @@ class ApprovalRejectedWidget extends StatelessWidget {
               ),
             ],
           ),
-          trailing: IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
         ));
   }
 }

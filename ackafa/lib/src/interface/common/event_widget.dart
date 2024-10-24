@@ -117,66 +117,6 @@ Widget eventWidget({
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'TOPIC',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.yellow[200],
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            padding: const EdgeInsets.all(4),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.calendar_today,
-                                    size: 16, color: Colors.black),
-                                const SizedBox(width: 4),
-                                Text(
-                                  formattedDate,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.blue[100],
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            padding: const EdgeInsets.all(4),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.access_time,
-                                    size: 16, color: Colors.blue),
-                                const SizedBox(width: 4),
-                                Text(
-                                  formattedTime,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.blue[800],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 4),
                   Text(
                     event.eventName!,
@@ -198,6 +138,56 @@ Widget eventWidget({
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // const Text(
+                      //   'TOPIC',
+                      //   style: TextStyle(
+                      //     color: Colors.grey,
+                      //     fontWeight: FontWeight.bold,
+                      //     fontSize: 12,
+                      //   ),
+                      // ),
+                      Row(
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.calendar_today,
+                                  size: 16, color: Color(0xFF700F0F)),
+                              const SizedBox(width: 4),
+                              Text(
+                                formattedDate,
+                                style: const TextStyle(
+                                    fontSize: 12, color: Color(0xFF700F0F)),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            width: 1, // width of the vertical line
+                            height: 16, // height to match the Icon
+                            color: Colors.grey, // color of the vertical line
+                          ),
+                          const SizedBox(width: 8),
+                          Row(
+                            children: [
+                              const Icon(Icons.access_time,
+                                  size: 16, color: Color(0xFF0E1877)),
+                              const SizedBox(width: 4),
+                              Text(
+                                formattedTime,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xFF0E1877),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
