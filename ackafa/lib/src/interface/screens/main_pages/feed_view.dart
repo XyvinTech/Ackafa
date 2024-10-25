@@ -176,16 +176,19 @@ class _FeedViewState extends ConsumerState<FeedView> {
             Positioned(
               right: 30,
               bottom: 30,
-              child: Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Color(0xFFE30613),
-                ),
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 27,
+              child: GestureDetector(
+                onTap: () => _openModalSheet(sheet: 'post'),
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Color(0xFFE30613),
+                  ),
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                    size: 27,
+                  ),
                 ),
               ),
             ),
