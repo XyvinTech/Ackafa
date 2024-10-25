@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 // Riverpod Provider for current index tracking
-final currentIndexProvider = StateProvider<int>((ref) => 0);
+final currentNewsIndexProvider = StateProvider<int>((ref) => 0);
 
 class NewsPage extends ConsumerWidget {
   const NewsPage({super.key});
@@ -49,7 +49,7 @@ class _NewsPageViewState extends ConsumerState<NewsPageView> {
   void initState() {
     super.initState();
     _pageController = PageController(
-      initialPage: ref.read(currentIndexProvider),
+      initialPage: ref.read(currentNewsIndexProvider),
     );
 
     // Adding listener to update current page value for transitions
@@ -69,7 +69,7 @@ class _NewsPageViewState extends ConsumerState<NewsPageView> {
   @override
   Widget build(BuildContext context) {
     // Listen to index changes in the provider and update PageController
-    ref.listen<int>(currentIndexProvider, (_, nextIndex) {
+    ref.listen<int>(currentNewsIndexProvider, (_, nextIndex) {
       _pageController.jumpToPage(nextIndex);
     });
 
@@ -83,7 +83,7 @@ class _NewsPageViewState extends ConsumerState<NewsPageView> {
                     controller: _pageController,
                     itemCount: widget.news.length,
                     onPageChanged: (index) {
-                      ref.read(currentIndexProvider.notifier).state = index;
+                      ref.read(currentNewsIndexProvider.notifier).state = index;
                     },
                     itemBuilder: (context, index) {
                       return ClipRect(
@@ -121,7 +121,7 @@ class _NewsPageViewState extends ConsumerState<NewsPageView> {
                             horizontal: 25, vertical: 10),
                       ),
                       onPressed: () {
-                        int currentIndex = ref.read(currentIndexProvider);
+                        int currentIndex = ref.read(currentNewsIndexProvider);
                         if (currentIndex > 0) {
                           _pageController.previousPage(
                             duration: const Duration(milliseconds: 300),
@@ -153,7 +153,7 @@ class _NewsPageViewState extends ConsumerState<NewsPageView> {
                             horizontal: 25, vertical: 10),
                       ),
                       onPressed: () {
-                        int currentIndex = ref.read(currentIndexProvider);
+                        int currentIndex = ref.read(currentNewsIndexProvider);
                         if (currentIndex < widget.news.length - 1) {
                           _pageController.nextPage(
                             duration: const Duration(milliseconds: 300),
