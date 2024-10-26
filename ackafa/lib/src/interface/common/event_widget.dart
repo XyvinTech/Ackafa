@@ -121,33 +121,33 @@ Widget eventWidget({
                               color: event.status == 'live'
                                   ? Colors.green
                                   : const Color.fromARGB(255, 134, 163, 136),
-                              fontSize: 11, // Reduced font size
+                              fontSize: 10, // Reduced font size
                             ),
                           ),
-                          const SizedBox(width: 6), // Reduced space
+                          const SizedBox(width: 4), // Reduced space
                           Container(
                             width: 1,
                             height: 14, // Reduced height of vertical line
                             color: const Color.fromARGB(255, 210, 205, 205),
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: 4),
                           Row(
                             children: [
                               const Icon(Icons.calendar_today,
-                                  size: 14,
+                                  size: 12,
                                   color:
                                       Color(0xFF700F0F)), // Reduced icon size
                               const SizedBox(width: 4),
                               Text(
                                 formattedDate,
                                 style: const TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 10,
                                   color: Color(0xFF700F0F),
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: 4),
                           Container(
                             width: 1,
                             height: 14,
@@ -157,14 +157,14 @@ Widget eventWidget({
                           Row(
                             children: [
                               const Icon(Icons.access_time,
-                                  size: 14,
+                                  size: 12,
                                   color:
                                       Color(0xFF0E1877)), // Reduced icon size
                               const SizedBox(width: 4),
                               Text(
                                 formattedTime,
                                 style: const TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 10,
                                   color: Color(0xFF0E1877),
                                 ),
                               ),
