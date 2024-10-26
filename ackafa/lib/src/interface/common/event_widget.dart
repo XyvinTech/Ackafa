@@ -156,27 +156,7 @@ Widget eventWidget({
                     children: [
                       Row(
                         children: [
-                          if (event.status == 'completed')
-                            SvgPicture.asset('assets/icons/completed.svg'),
-                          if (event.status == 'live')
-                            SvgPicture.asset('assets/icons/live.svg'),
-                          const SizedBox(width: 2),
-                          Text(
-                            event.status?.toUpperCase() ?? '',
-                            style: TextStyle(
-                              color: event.status == 'live'
-                                  ? Colors.green
-                                  : const Color.fromARGB(255, 134, 163, 136),
-                              fontSize: 10, // Reduced font size
-                            ),
-                          ),
-                          const SizedBox(width: 4), // Reduced space
-                          Container(
-                            width: 1,
-                            height: 14, // Reduced height of vertical line
-                            color: const Color.fromARGB(255, 210, 205, 205),
-                          ),
-                          const SizedBox(width: 4),
+                         
                           Row(
                             children: [
                               const Icon(Icons.calendar_today,
