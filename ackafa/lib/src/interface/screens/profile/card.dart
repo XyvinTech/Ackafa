@@ -103,12 +103,15 @@ class ProfileCard extends StatelessWidget {
                                   Icon(
                                     Icons.arrow_back,
                                     color: Colors.red,
-                                    size: 15,
+                                    size: 18,
                                   ),
                                   SizedBox(
                                     width: 10,
                                   ),
-                                  Text('Profile')
+                                  Text(
+                                    'Profile',
+                                    style: TextStyle(fontSize: 16),
+                                  )
                                 ],
                               ),
                             ],
@@ -171,96 +174,75 @@ class ProfileCard extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      user.image != null && user.image != ''
-                                          ? CircleAvatar(
-                                              radius: 40,
-                                              backgroundImage: NetworkImage(
-                                                user.image ?? '',
-                                              ),
-                                            )
-                                          : Image.asset(
-                                              'assets/icons/dummy_person.png'),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Flexible(
-                                            child: Text(
-                                              '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
-                                              style: const TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
+                                  child: SizedBox(
+                                    width: double
+                                        .infinity, // Sets a bounded width constraint
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 30,
+                                        ),
+                                        Row(
+                                          children: [
+                                            SizedBox(width: 20),
+                                            Column(
+                                              children: [
+                                                user.image != null &&
+                                                        user.image != ''
+                                                    ? CircleAvatar(
+                                                        radius: 37,
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                                user.image ??
+                                                                    ''),
+                                                      )
+                                                    : Image.asset(
+                                                        'assets/icons/dummy_person.png'),
+                                              ],
+                                            ),
+                                            SizedBox(width: 10),
+                                            Expanded(
+                                              // Use Expanded here to take up remaining space
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  if (user.college != null)
+                                                    Text(
+                                                      user.college
+                                                              ?.collegeName ??
+                                                          '',
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 15,
+                                                      ),
+                                                    ),
+                                                  if (user.batch != null)
+                                                    Text(
+                                                      '${user.batch ?? ''}',
+                                                      style: const TextStyle(
+                                                        fontSize: 15,
+                                                      ),
+                                                    ),
+                                                ],
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Column(
-                                            children: [
-                                              if (user.company != null)
-                                                ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            9),
-                                                    child: user.company?.logo !=
-                                                                null &&
-                                                            user.company
-                                                                    ?.logo !=
-                                                                ''
-                                                        ? Image.network(
-                                                            errorBuilder:
-                                                                (context, error,
-                                                                    stackTrace) {
-                                                              return Image.asset(
-                                                                  'assets/icons/dummy_company.png');
-                                                            },
-                                                            user.company!.logo!,
-                                                            height: 33,
-                                                            width: 40,
-                                                            fit: BoxFit.cover,
-                                                          )
-                                                        : Image.asset(
-                                                            'assets/icons/dummy_company.png'))
-                                            ],
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              if (user.company?.designation !=
-                                                  null)
-                                                Text(
-                                                  user.company?.designation ??
-                                                      '',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 16,
-                                                    color: Color.fromARGB(
-                                                        255, 42, 41, 41),
-                                                  ),
-                                                ),
-                                              if (user.company?.name != null)
-                                                Text(
-                                                  user.company?.name ?? '',
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],

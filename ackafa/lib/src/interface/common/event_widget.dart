@@ -38,45 +38,91 @@ Widget eventWidget({
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (withImage) ...[
-              Container(
-                padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                width: MediaQuery.sizeOf(context).width * .85,
-                height: 190, // Reduced image height
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      );
-                    },
-                    event.image!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      );
-                    },
+              Stack(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                    width: MediaQuery.sizeOf(context).width * .85,
+                    height: 190, // Reduced image height
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          );
+                        },
+                        event.image!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
-                ),
+                  Positioned(
+                    top: 16,
+                    left: 16,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: event.status == 'completed'
+                            ? Color(0xFF434343)
+                            : event.status == 'live'
+                                ? Color(0xFF2D8D00)
+                                : Color(0xFF596AFF),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Row(
+                        children: [
+                          if (event.status == 'completed')
+                            SvgPicture.asset(
+                              'assets/icons/completed.svg',
+                              color: Colors.white,
+                            ),
+                          if (event.status == 'live')
+                            SvgPicture.asset(
+                              'assets/icons/live.svg',
+                              color: Colors.white,
+                            ),
+                          if (event.status == 'upcoming')
+                            Icon(
+                              Icons.access_time,
+                              color: Colors.white,
+                            ),
+                          Text(
+                            event.status?.toUpperCase() ?? '',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
             Container(
