@@ -5,6 +5,7 @@ import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:ackaf/src/interface/screens/profile/card.dart';
 import 'package:ackaf/src/interface/screens/profile/profilePreview.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart'; // Import the XCard widget
 
@@ -27,12 +28,12 @@ class ProfilePage extends StatelessWidget {
                   height: 20,
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(40.0),
+                        padding: const EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
                           border: Border.all(
                               color: const Color.fromARGB(255, 237, 231, 231)),
@@ -54,8 +55,9 @@ class ProfilePage extends StatelessWidget {
                           children: [
                             Stack(
                               children: [
-                                Align(
-                                  alignment: Alignment.topRight,
+                                Positioned(
+                                  top: 10,
+                                  right: 10,
                                   child: Container(
                                     decoration: BoxDecoration(
                                         color: Color(0xFFF2F2F2),
@@ -87,92 +89,77 @@ class ProfilePage extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    user.image != null && user.image != ''
-                                        ? CircleAvatar(
-                                            radius: 37,
-                                            backgroundImage: NetworkImage(
-                                              user.image ?? '',
-                                            ),
-                                          )
-                                        : Image.asset(
-                                            'assets/icons/dummy_person.png'),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          child: Text(
-                                            '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
+                                SizedBox(
+                                  height: 40,
+                                ),
+                                SizedBox(
+                                  width: double
+                                      .infinity, // Sets a bounded width constraint
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 60,
+                                      ),
+                                      Row(
+                                        children: [
+                                          SizedBox(width: 20),
+                                          Column(
+                                            children: [
+                                              user.image != null &&
+                                                      user.image != ''
+                                                  ? CircleAvatar(
+                                                      radius: 37,
+                                                      backgroundImage:
+                                                          NetworkImage(
+                                                              user.image ?? ''),
+                                                    )
+                                                  : Image.asset(
+                                                      'assets/icons/dummy_person.png'),
+                                            ],
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            // Use Expanded here to take up remaining space
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
+                                                  style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                if (user.college != null)
+                                                  Text(
+                                                    user.college?.collegeName ??
+                                                        '',
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 15,
+                                                    ),
+                                                  ),
+                                                if (user.batch != null)
+                                                  Text(
+                                                    '${user.batch ?? ''}',
+                                                    style: const TextStyle(
+                                                      fontSize: 15,
+                                                    ),
+                                                  ),
+                                              ],
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            if (user.company != null)
-                                              ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(9),
-                                                  child: user.company?.logo !=
-                                                              null &&
-                                                          user.company?.logo !=
-                                                              ''
-                                                      ? Image.network(
-                                                          errorBuilder:
-                                                              (context, error,
-                                                                  stackTrace) {
-                                                            return Image.asset(
-                                                                'assets/icons/dummy_company.png');
-                                                          },
-                                                          user.company!.logo!,
-                                                          height: 33,
-                                                          width: 35,
-                                                          fit: BoxFit.contain,
-                                                        )
-                                                      : SizedBox())
-                                          ],
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            if (user.company?.designation !=
-                                                null)
-                                              Text(
-                                                user.company?.designation ?? '',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 15,
-                                                  color: Color.fromARGB(
-                                                      255, 42, 41, 41),
-                                                ),
-                                              ),
-                                            if (user.company?.name != null)
-                                              Text(
-                                                user.company?.name ?? '',
-                                                style: const TextStyle(
-                                                  fontSize: 13,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 40,
+                                      ),
+                                    ],
+                                  ),
                                 ),
+                                const SizedBox(height: 10),
                               ],
                             ),
                           ],
@@ -285,64 +272,66 @@ class ProfilePage extends StatelessWidget {
                     Share.share(
                         'https://admin.akcafconnect.com/user/${user.id}');
                   },
-                  child: Container(
-                    width: 90,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFE30613),
-                      borderRadius: BorderRadius.circular(
-                          50), // Apply circular border to the outer container
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Color(0xFFE30613),
-                        ),
-                        child: Icon(
-                          Icons.share,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
+                  child: SvgPicture.asset('assets/icons/shareButton.svg'),
+                  // child: Container(
+                  //   width: 90,
+                  //   height: 90,
+                  //   decoration: BoxDecoration(
+                  //     color: Color(0xFFE30613),
+                  //     borderRadius: BorderRadius.circular(
+                  //         50), // Apply circular border to the outer container
+                  //   ),
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.all(4.0),
+                  //     child: Container(
+                  //       decoration: BoxDecoration(
+                  //         borderRadius: BorderRadius.circular(50),
+                  //         color: Color(0xFFE30613),
+                  //       ),
+                  //       child: Icon(
+                  //         Icons.share,
+                  //         color: Colors.white,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ),
-                const SizedBox(width: 20),
+                const SizedBox(width: 40),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfileCard(
-                          user: user,
-                        ), // Navigate to CardPage
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: 90,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(
-                          50), // Apply circular border to the outer container
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.white,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileCard(
+                            user: user,
+                          ), // Navigate to CardPage
                         ),
-                        child: Icon(
-                          Icons.qr_code,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
+                      );
+                    },
+                    child: SvgPicture.asset('assets/icons/qrButton.svg')
+                    // Container(
+                    //   width: 90,
+                    //   height: 90,
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.white,
+                    //     borderRadius: BorderRadius.circular(
+                    //         50), // Apply circular border to the outer container
+                    //   ),
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.all(4.0),
+                    //     child: Container(
+                    //       decoration: BoxDecoration(
+                    //         borderRadius: BorderRadius.circular(50),
+                    //         color: Colors.white,
+                    //       ),
+                    //       child: Icon(
+                    //         Icons.qr_code,
+                    //         color: Colors.grey,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    )
               ],
             ),
           ],
