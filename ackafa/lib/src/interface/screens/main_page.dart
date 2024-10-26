@@ -84,6 +84,7 @@ class _MainPageState extends ConsumerState<MainPage> {
 
   void _onItemTapped(int index) {
     setState(() {
+      ref.read(currentNewsIndexProvider.notifier).state = 0;
       _selectedIndex = index;
     });
   }
@@ -109,14 +110,14 @@ class _MainPageState extends ConsumerState<MainPage> {
       'assets/icons/feed_inactive.svg',
       user.image ?? 'https://placehold.co/600x400',
       'assets/icons/inactive_news.svg',
-      'assets/icons/people_inactive.svg',
+      'assets/icons/inactive_chat.svg',
     ];
     _activeIcons = [
       'assets/icons/home_active.svg',
       'assets/icons/feed_active.svg',
       user.image ?? 'https://placehold.co/600x400',
       'assets/icons/active_news.svg',
-      'assets/icons/people_active.svg',
+      'assets/icons/active_chat.svg',
     ];
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString('id', user.id!);
@@ -178,7 +179,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                           iconPath: _activeIcons[index],
                           color: Color(0xFFE30613),
                         ),
-                  label: ['Home', 'Feed', 'Profile', 'News', 'People'][index],
+                  label: ['Home', 'Feed', 'Profile', 'News', 'Chats'][index],
                 );
               }),
               currentIndex: _selectedIndex,
