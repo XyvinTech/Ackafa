@@ -226,13 +226,13 @@ class ProfileCard extends StatelessWidget {
                                                         fontSize: 15,
                                                       ),
                                                     ),
-                                                  if (user.batch != null)
-                                                    Text(
-                                                      '${user.batch ?? ''}',
-                                                      style: const TextStyle(
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
+                                                  // if (user.batch != null)
+                                                  //   Text(
+                                                  //     '${user.batch ?? ''}',
+                                                  //     style: const TextStyle(
+                                                  //       fontSize: 15,
+                                                  //     ),
+                                                  //   ),
                                                 ],
                                               ),
                                             ),
