@@ -23,6 +23,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   final UserModel user;
@@ -33,29 +34,11 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  ScrollController _bannerScrollController = ScrollController();
-  ScrollController _noticeScrollController = ScrollController();
-  ScrollController _posterScrollController = ScrollController();
-  ScrollController _eventScrollController = ScrollController();
-  PageController _videoCountController = PageController();
-  PageController _noticeCountController = PageController();
-
-  Timer? _bannerScrollTimer;
-  Timer? _noticeScrollTimer;
-  Timer? _posterScrollTimer;
-  Timer? _eventScrollTimer;
-  Timer? _restartAutoScrollTimer;
-  bool _isUserInteracting = false; // To track user interaction
-
   int _currentBannerIndex = 0;
   int _currentNoticeIndex = 0;
   int _currentPosterIndex = 0;
   int _currentEventIndex = 0;
-
-  final GlobalKey _bannerKey = GlobalKey();
-  final GlobalKey _noticeKey = GlobalKey();
-  final GlobalKey _posterKey = GlobalKey();
-  final GlobalKey _eventKey = GlobalKey();
+  int _currentVideoIndex = 0;
 
   @override
   void initState() {
@@ -65,12 +48,6 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   Future<void> _fetchInitialApprovals() async {
     await ref.read(approvalNotifierProvider.notifier).fetchMoreApprovals();
-  }
-
-  double _getItemWidth(GlobalKey key) {
-    final RenderBox? renderBox =
-        key.currentContext?.findRenderObject() as RenderBox?;
-    return renderBox?.size.width ?? 200.0;
   }
 
   double _calculateDynamicHeight(List<Promotion> notices) {
@@ -93,677 +70,388 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   double _estimateTextHeight(String text, double fontSize) {
-    // Estimate text height based on string length, font size, and max width
-    final double screenWidth =
-        MediaQuery.sizeOf(context).width; // Adjust based on available space
+    final double screenWidth = MediaQuery.sizeOf(context).width;
     final int numLines = (text.length / (screenWidth / fontSize)).ceil();
-    return numLines * fontSize * 1.2; // Multiplying by 1.2 for line height
+    return numLines * fontSize * 1.2;
   }
 
-  // Updated auto-scroll start
-  void startAutoScroll({
-    required ScrollController controller,
-    required List<dynamic> items,
-    required int currentIndex,
-    required GlobalKey itemKey,
-    required Function(int) onIndexChanged,
-    required Timer? scrollTimer,
-    Duration scrollInterval = const Duration(seconds: 5),
-  }) {
-    // Ensure the timer is cleared before starting a new one
-    scrollTimer?.cancel();
-    scrollTimer = Timer.periodic(scrollInterval, (timer) {
-      if (!_isUserInteracting && mounted) {
-        currentIndex++;
-        if (currentIndex >= items.length) {
-          currentIndex = 0;
-        }
-        final itemWidth = _getItemWidth(itemKey);
-        if (controller.hasClients) {
-          controller.animateTo(
-            currentIndex * itemWidth,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          );
-        }
-        if (mounted) {
-          setState(() {
-            onIndexChanged(currentIndex);
-          });
-        }
-      }
-    });
-  }
-
-  void stopAutoScroll() {
-    _bannerScrollTimer?.cancel();
-    _noticeScrollTimer?.cancel();
-    _posterScrollTimer?.cancel();
-    _eventScrollTimer?.cancel();
-    _isUserInteracting = true;
-  }
-
-  void restartAutoScroll(
-      List<dynamic> banners, List<dynamic> notices, List<dynamic> posters) {
-    _restartAutoScrollTimer
-        ?.cancel(); // Cancel the previous restart timer if any
-    _restartAutoScrollTimer = Timer(const Duration(seconds: 7), () {
-      _isUserInteracting = false; // Reset the interaction flag
-
-      // Restart auto-scroll for all promotion types
-      startAutoScroll(
-        controller: _bannerScrollController,
-        items: banners,
-        currentIndex: _currentBannerIndex,
-        itemKey: _bannerKey,
-        onIndexChanged: (index) => setState(() {
-          _currentBannerIndex = index;
-        }),
-        scrollTimer: _bannerScrollTimer,
-      );
-      startAutoScroll(
-        controller: _noticeScrollController,
-        items: notices,
-        currentIndex: _currentNoticeIndex,
-        itemKey: _noticeKey,
-        onIndexChanged: (index) => setState(() {
-          _currentNoticeIndex = index;
-        }),
-        scrollTimer: _noticeScrollTimer,
-      );
-      startAutoScroll(
-        controller: _posterScrollController,
-        items: posters,
-        currentIndex: _currentPosterIndex,
-        itemKey: _posterKey,
-        onIndexChanged: (index) => setState(() {
-          _currentPosterIndex = index;
-        }),
-        scrollTimer: _posterScrollTimer,
-      );
-    });
-  }
-
-  void restartEventAutoScroll(List<dynamic> events) {
-    _restartAutoScrollTimer
-        ?.cancel(); // Cancel the previous restart timer if any
-    _restartAutoScrollTimer = Timer(const Duration(seconds: 7), () {
-      _isUserInteracting = false; // Reset the interaction flag
-
-      // Restart auto-scroll for all promotion types
-      if (_eventScrollController.hasClients) {
-        startAutoScroll(
-          controller: _eventScrollController,
-          items: events,
-          currentIndex: _currentEventIndex,
-          itemKey: _bannerKey,
-          onIndexChanged: (index) => setState(() {
-            _currentEventIndex = index;
-          }),
-          scrollTimer: _eventScrollTimer,
-        );
-      }
-    });
-  }
-
-  void _onUserGestureDetected(
-      List<dynamic> banners, List<dynamic> notices, List<dynamic> posters) {
-    stopAutoScroll(); // Stop auto-scroll when a gesture is detected
-    restartAutoScroll(
-      banners,
-      notices,
-      posters,
-    ); // Restart auto-scroll after 10 seconds
-  }
-
-  void _onUserEventGestureDetected(List<dynamic> events) {
-    stopAutoScroll(); // Stop auto-scroll when a gesture is detected
-    restartEventAutoScroll(events); // Restart auto-scroll after 10 seconds
-  }
-
-  @override
-  void dispose() {
-    _bannerScrollTimer?.cancel();
-    _noticeScrollTimer?.cancel();
-    _posterScrollTimer?.cancel();
-    _eventScrollTimer?.cancel();
-    _restartAutoScrollTimer?.cancel();
-
-    _bannerScrollController.dispose();
-    _noticeScrollController.dispose();
-    _posterScrollController.dispose();
-    _eventScrollController.dispose();
-
-    super.dispose();
-  }
-
-  final ValueNotifier<int> _currentVideo = ValueNotifier<int>(0);
-
+  CarouselController controller = CarouselController();
   @override
   Widget build(BuildContext context) {
-    _videoCountController.addListener(() {
-      _currentVideo.value = _videoCountController.page!.round();
-    });
     return Consumer(
       builder: (context, ref, child) {
         final asyncPromotions = ref.watch(fetchPromotionsProvider(token));
-        final nonApprovedUsers = ref.watch(approvalNotifierProvider);
         final asyncEvents = ref.watch(fetchEventsProvider);
-        log(nonApprovedUsers.toString());
+
         return Scaffold(
           backgroundColor: Colors.white,
           body: asyncPromotions.when(
             data: (promotions) {
               final banners =
                   promotions.where((promo) => promo.type == 'banner').toList();
-              final posters =
-                  promotions.where((promo) => promo.type == 'poster').toList();
               final notices =
                   promotions.where((promo) => promo.type == 'notice').toList();
+              final posters =
+                  promotions.where((promo) => promo.type == 'poster').toList();
               final videos =
                   promotions.where((promo) => promo.type == 'video').toList();
               final filteredVideos = videos
                   .where((video) => video.link!.startsWith('http'))
                   .toList();
-              // Start auto-scroll for all promotions when data is ready
-              if (banners.isNotEmpty) {
-                startAutoScroll(
-                  controller: _bannerScrollController,
-                  items: banners,
-                  currentIndex: _currentBannerIndex,
-                  itemKey: _bannerKey,
-                  onIndexChanged: (index) => setState(() {
-                    _currentBannerIndex = index;
-                  }),
-                  scrollTimer: _bannerScrollTimer,
-                );
-              }
 
-              if (notices.isNotEmpty) {
-                startAutoScroll(
-                  controller: _noticeScrollController,
-                  items: notices,
-                  currentIndex: _currentNoticeIndex,
-                  itemKey: _noticeKey,
-                  onIndexChanged: (index) => setState(() {
-                    _currentNoticeIndex = index;
-                  }),
-                  scrollTimer: _noticeScrollTimer,
-                );
-              }
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomAppBar(),
+                    const SizedBox(height: 20),
 
-              if (posters.isNotEmpty) {
-                startAutoScroll(
-                  controller: _posterScrollController,
-                  items: posters,
-                  currentIndex: _currentPosterIndex,
-                  itemKey: _posterKey,
-                  onIndexChanged: (index) => setState(() {
-                    _currentPosterIndex = index;
-                  }),
-                  scrollTimer: _posterScrollTimer,
-                );
-              }
-              asyncEvents.whenData(
-                (events) {
-                  events = events;
-                  if (events.isNotEmpty) {
-                    startAutoScroll(
-                      controller: _eventScrollController,
-                      items: events,
-                      currentIndex: _currentEventIndex,
-                      itemKey: _eventKey,
-                      onIndexChanged: (index) => setState(() {
-                        _currentEventIndex = index;
-                      }),
-                      scrollTimer: _eventScrollTimer,
-                    );
-                  }
-                },
-              );
-              return GestureDetector(
-                onPanDown: (_) =>
-                    _onUserGestureDetected(banners, notices, posters),
-                onTap: () => _onUserGestureDetected(banners, notices, posters),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomAppBar(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      // Padding(
-                      //   padding:
-                      //       const EdgeInsets.only(top: 8, left: 8, right: 8),
-                      //   child: TextField(
-                      //     decoration: InputDecoration(
-                      //       prefixIcon: const Icon(Icons.search),
-                      //       hintText: 'Search promotions',
-                      //       enabledBorder: OutlineInputBorder(
-                      //         borderSide: const BorderSide(
-                      //             color: Color.fromARGB(255, 214, 211, 211)),
-                      //         borderRadius: BorderRadius.circular(8.0),
-                      //       ),
-                      //       focusedBorder: OutlineInputBorder(
-                      //         borderSide: const BorderSide(
-                      //             color: Color.fromARGB(255, 217, 212, 212)),
-                      //         borderRadius: BorderRadius.circular(8.0),
-                      //       ),
-                      //       border: OutlineInputBorder(
-                      //         borderRadius: BorderRadius.circular(8.0),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      // const SizedBox(
-                      //   height: 20,
-                      // ),
-                      // if (widget.user.role != 'member')
-                      //   Consumer(
-                      //     builder: (context, ref, child) {
-                      //       if (nonApprovedUsers.isNotEmpty) {
-                      //         return Padding(
-                      //           padding: const EdgeInsets.only(
-                      //               left: 20, right: 20, bottom: 16),
-                      //           child: Container(
-                      //             padding: const EdgeInsets.symmetric(
-                      //                 horizontal: 20, vertical: 16),
-                      //             decoration: BoxDecoration(
-                      //                 color: const Color(
-                      //                     0xFFFFE0E2), // Background color
-                      //                 borderRadius: BorderRadius.circular(12),
-                      //                 border: Border.all(
-                      //                     color: const Color.fromARGB(
-                      //                         255, 222, 178, 181),
-                      //                     width: 1,
-                      //                     strokeAlign:
-                      //                         BorderSide.strokeAlignInside)),
-                      //             child: Row(
-                      //               mainAxisAlignment:
-                      //                   MainAxisAlignment.spaceBetween,
-                      //               children: [
-                      //                 Row(
-                      //                   children: [
-                      //                     Text(
-                      //                       'Approvals Pending',
-                      //                       style: TextStyle(
-                      //                         color: Color(
-                      //                             0xFFE30613), // Text color
-                      //                         fontWeight: FontWeight.w600,
-                      //                         fontSize: 16,
-                      //                       ),
-                      //                     ),
-                      //                     SizedBox(width: 8),
-                      //                     CircleAvatar(
-                      //                       radius: 12,
-                      //                       backgroundColor: Colors.white,
-                      //                       child: Text(
-                      //                         nonApprovedUsers.length
-                      //                             .toString(),
-                      //                         style: TextStyle(
-                      //                           color: Color(
-                      //                               0xFFE30613), // Text color for number
-                      //                           fontWeight: FontWeight.bold,
-                      //                         ),
-                      //                       ),
-                      //                     ),
-                      //                   ],
-                      //                 ),
-                      //                 IconButton(
-                      //                   onPressed: () => Navigator.push(
-                      //                     context,
-                      //                     PageRouteBuilder(
-                      //                       pageBuilder: (context, animation,
-                      //                               secondaryAnimation) =>
-                      //                           ApprovalPage(),
-                      //                       transitionsBuilder: (context,
-                      //                           animation,
-                      //                           secondaryAnimation,
-                      //                           child) {
-                      //                         const begin = Offset(1.0,
-                      //                             0.0); // Slide from right to left
-                      //                         const end = Offset.zero;
-                      //                         const curve = Curves
-                      //                             .fastEaseInToSlowEaseOut;
-
-                      //                         var tween = Tween(
-                      //                                 begin: begin, end: end)
-                      //                             .chain(
-                      //                                 CurveTween(curve: curve));
-                      //                         var offsetAnimation =
-                      //                             animation.drive(tween);
-
-                      //                         return SlideTransition(
-                      //                           position: offsetAnimation,
-                      //                           child: child,
-                      //                         );
-                      //                       },
-                      //                     ),
-                      //                   ),
-                      //                   icon: const Icon(
-                      //                     Icons.arrow_forward,
-                      //                     color:
-                      //                         Color(0xFFE30613), // Arrow color
-                      //                   ),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //           ),
-                      //         );
-                      //       } else {
-                      //         return SizedBox();
-                      //       }
-                      //     },
-                      //   ),
-                      if (banners.isNotEmpty)
-                        Card(
-                          color: Colors.transparent,
-                          elevation: 0,
-                          child: Container(
-                            color: Colors.transparent,
-                            height: 175,
-                            child: ListView.builder(
-                              key: _bannerKey,
-                              controller: _bannerScrollController,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: banners.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: banners.length > 1
-                                      ? const EdgeInsets.only(right: 20.0)
-                                      : const EdgeInsets.only(left: 20.0),
-                                  child: _buildBanners(
-                                      context: context, banner: banners[index]),
-                                );
+                    // Banner Carousel
+                    if (banners.isNotEmpty)
+                      Column(
+                        children: [
+                          CarouselSlider(
+                            items: banners.map((banner) {
+                              return _buildBanners(
+                                  context: context, banner: banner);
+                            }).toList(),
+                            options: CarouselOptions(
+                              height: 175,
+                              scrollPhysics: banners.length > 1
+                                  ? null
+                                  : NeverScrollableScrollPhysics(),
+                              autoPlay: banners.length > 1 ? true : false,
+                              viewportFraction: 1,
+                              autoPlayInterval: Duration(seconds: 3),
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  _currentBannerIndex = index;
+                                });
                               },
                             ),
                           ),
-                        ),
-                      const SizedBox(height: 16),
-                      if (notices.isNotEmpty)
-                        SizedBox(
-                          height: _calculateDynamicHeight(notices),
-                          child: ListView.builder(
-                            key: _noticeKey,
-                            controller: _noticeScrollController,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: notices.length,
-                            itemBuilder: (context, index) {
-                              return customNotice(
-                                  context: context, notice: notices[index]);
-                            },
-                          ),
-                        ),
-
-                      const SizedBox(height: 16),
-                      if (posters.isNotEmpty)
-                        SizedBox(
-                          height: 420,
-                          child: ListView.builder(
-                            key: _posterKey,
-                            controller: _posterScrollController,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: posters.length,
-                            itemBuilder: (context, index) {
-                              return customPoster(
-                                  context: context, poster: posters[index]);
-                            },
-                          ),
-                        ),
-                      Consumer(
-                        builder: (context, ref, child) {
-                          final asyncEvents = ref.watch(fetchEventsProvider);
-                          return asyncEvents.when(
-                            data: (events) {
-                              return Column(
-                                children: [
-                                  if (events.isNotEmpty)
-                                    Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 25, top: 10),
-                                          child: Text(
-                                            'Events',
-                                            style: TextStyle(
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  GestureDetector(
-                                      onPanDown: (_) =>
-                                          _onUserEventGestureDetected(events),
-                                      onTap: () =>
-                                          _onUserEventGestureDetected(events),
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 20),
-                                        child: SizedBox(
-                                          height:
-                                              360, // Limit the total height for the ListView
-                                          child: ListView.builder(
-                                            key: _eventKey,
-                                            controller: _eventScrollController,
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: events.length,
-                                            itemBuilder: (context, index) {
-                                              return Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.78, // Adjust width to fit horizontally
-                                                child: eventWidget(
-                                                  withImage: true,
-                                                  context: context,
-                                                  event: events[index],
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      )),
-                                ],
-                              );
-                            },
-                            loading: () => Center(child: LoadingAnimation()),
-                            error: (error, stackTrace) {
-                              return SizedBox();
-                            },
-                          );
-                        },
+                        ],
                       ),
-                      const SizedBox(height: 16),
-                      if (filteredVideos.isNotEmpty)
-                        Column(
+
+                    const SizedBox(height: 16),
+
+                    // Notices Carousel
+                    if (notices.isNotEmpty)
+                      Column(
+                        children: [
+                          CarouselSlider(
+                            items: notices.map((notice) {
+                              return customNotice(
+                                  context: context, notice: notice);
+                            }).toList(),
+                            options: CarouselOptions(
+                              scrollPhysics: notices.length > 1
+                                  ? null
+                                  : NeverScrollableScrollPhysics(),
+                              autoPlay: notices.length > 1 ? true : false,
+                              viewportFraction: 1,
+                              height: _calculateDynamicHeight(notices),
+                              autoPlayInterval: Duration(seconds: 3),
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  _currentNoticeIndex = index;
+                                });
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          _buildDotIndicator(
+                              _currentNoticeIndex,
+                              notices.length,
+                              const Color.fromARGB(255, 39, 38, 38)),
+                        ],
+                      ),
+
+                    // Posters Carousel
+                    if (posters.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Column(
                           children: [
-                            SizedBox(
-                              height: 225,
-                              child: ListView.builder(
-                                controller: _videoCountController,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: filteredVideos.length,
-                                itemBuilder: (context, index) {
-                                  return customVideo(
-                                      context: context,
-                                      video: filteredVideos[index]);
+                            CarouselSlider(
+                              items: posters.map((poster) {
+                                return customPoster(
+                                    context: context, poster: poster);
+                              }).toList(),
+                              options: CarouselOptions(
+                                height: 420,
+                                scrollPhysics: posters.length > 1
+                                    ? null
+                                    : NeverScrollableScrollPhysics(),
+                                autoPlay: posters.length > 1 ? true : false,
+                                viewportFraction: 1,
+                                autoPlayInterval: Duration(seconds: 3),
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _currentPosterIndex = index;
+                                  });
                                 },
                               ),
                             ),
-                            ValueListenableBuilder<int>(
-                              valueListenable: _currentVideo,
-                              builder: (context, value, child) {
-                                return SmoothPageIndicator(
-                                  controller: _videoCountController,
-                                  count: videos.length,
-                                  effect: const ExpandingDotsEffect(
-                                    dotHeight: 8,
-                                    dotWidth: 5,
-                                    activeDotColor: Colors.black,
-                                    dotColor: Colors.grey,
-                                  ),
-                                );
-                              },
-                            ),
                           ],
                         ),
-                    ],
-                  ),
+                      ),
+
+                    // Events Carousel
+                    asyncEvents.when(
+                      data: (events) {
+                        return events.isNotEmpty
+                            ? Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 25, top: 10),
+                                        child: Text(
+                                          'Events',
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  CarouselSlider(
+                                    items: events.map((event) {
+                                      return Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.95,
+                                        child: eventWidget(
+                                          withImage: true,
+                                          context: context,
+                                          event: event,
+                                        ),
+                                      );
+                                    }).toList(),
+                                    options: CarouselOptions(
+                                      height: 365,
+                                      scrollPhysics: events.length > 1
+                                          ? null
+                                          : NeverScrollableScrollPhysics(),
+                                      autoPlay:
+                                          events.length > 1 ? true : false,
+                                      viewportFraction: 1,
+                                      autoPlayInterval: Duration(seconds: 3),
+                                      onPageChanged: (index, reason) {
+                                        setState(() {
+                                          _currentEventIndex = index;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  _buildDotIndicator(_currentEventIndex,
+                                      events.length, Colors.red),
+                                ],
+                              )
+                            : SizedBox();
+                      },
+                      loading: () => Center(child: LoadingAnimation()),
+                      error: (error, stackTrace) => SizedBox(),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Videos Carousel
+                    if (filteredVideos.isNotEmpty)
+                      Column(
+                        children: [
+                          CarouselSlider(
+                            items: filteredVideos.map((video) {
+                              return customVideo(
+                                  context: context, video: video);
+                            }).toList(),
+                            options: CarouselOptions(
+                              height: 225,
+                              scrollPhysics: notices.length > 1
+                                  ? null
+                                  : NeverScrollableScrollPhysics(),
+                              viewportFraction: 1,
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  _currentVideoIndex = index;
+                                });
+                              },
+                            ),
+                          ),
+                          _buildDotIndicator(_currentVideoIndex,
+                              filteredVideos.length, Colors.black),
+                        ],
+                      ),
+                  ],
                 ),
               );
             },
             loading: () =>
                 Center(child: buildShimmerPromotionsColumn(context: context)),
-            error: (error, stackTrace) {
-              return Center(
-                child: Text('NO PROMOTIONS YET'),
-              );
-            },
+            error: (error, stackTrace) =>
+                Center(child: Text('NO PROMOTIONS YET')),
           ),
         );
       },
     );
   }
 
-  Widget _buildBanners(
-      {required BuildContext context, required Promotion banner}) {
-    return Container(
-      width: MediaQuery.sizeOf(context).width / 1.12,
-      child: Stack(
-        clipBehavior: Clip.none, // This allows overflow
-        children: [
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 175,
-              // decoration: BoxDecoration(
-              //   gradient: const LinearGradient(
-              //     colors: [
-              //       Color.fromARGB(41, 249, 180, 6),
-              //       Color.fromARGB(113, 249, 180, 6)
-              //     ],
-              //     begin: Alignment.topLeft,
-              //     end: Alignment.bottomRight,
-              //   ),
-              //   borderRadius: BorderRadius.circular(8.0),
-              // ),
-              child: Image.network(
-                banner.media ?? 'https://placehold.co/600x400/png',
-                width: double.infinity,
-                fit: BoxFit.fill,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    // If the image is fully loaded, show the image
-                    return child;
-                  }
-                  // While the image is loading, show shimmer effect
-                  return Container(
-                    width: MediaQuery.sizeOf(context).width / 1.15,
-                    height: 175,
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
+  // Method to build a dot indicator for carousels
+  Widget _buildDotIndicator(int currentIndex, int itemCount, Color color) {
+    return Center(
+      child: SmoothPageIndicator(
+        controller: PageController(initialPage: currentIndex),
+        count: itemCount,
+        effect: WormEffect(
+          dotHeight: 10,
+          dotWidth: 10,
+          activeDotColor: color,
+          dotColor: Colors.grey,
+        ),
+      ),
+    );
+  }
+}
+
+Widget _buildBanners(
+    {required BuildContext context, required Promotion banner}) {
+  return Container(
+    width: MediaQuery.sizeOf(context).width / 1.12,
+    child: Stack(
+      clipBehavior: Clip.none, // This allows overflow
+      children: [
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            height: 175,
+            // decoration: BoxDecoration(
+            //   gradient: const LinearGradient(
+            //     colors: [
+            //       Color.fromARGB(41, 249, 180, 6),
+            //       Color.fromARGB(113, 249, 180, 6)
+            //     ],
+            //     begin: Alignment.topLeft,
+            //     end: Alignment.bottomRight,
+            //   ),
+            //   borderRadius: BorderRadius.circular(8.0),
+            // ),
+            child: Image.network(
+              banner.media ?? 'https://placehold.co/600x400/png',
+              width: double.infinity,
+              fit: BoxFit.fill,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  // If the image is fully loaded, show the image
+                  return child;
+                }
+                // While the image is loading, show shimmer effect
+                return Container(
+                  width: MediaQuery.sizeOf(context).width / 1.15,
+                  height: 175,
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget customPoster(
+    {required BuildContext context, required Promotion poster}) {
+  return Container(
+    width:
+        MediaQuery.of(context).size.width, // Poster width matches screen width
+    child: Image.network(
+      poster.media ?? '',
+      fit: BoxFit.fill,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) {
+          return child; // Image loaded successfully
+        } else {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: double.infinity,
+              height: 400, // Adjust height based on your poster size
+              color: Colors.white,
+            ),
+          );
+        }
+      },
+      errorBuilder: (context, error, stackTrace) {
+        return Image.network(
+          'https://placehold.co/600x400/png',
+          fit: BoxFit.contain,
+        );
+      },
+    ),
+  );
+}
+
+Widget customNotice(
+    {required BuildContext context, required Promotion notice}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(
+        horizontal: 16), // Adjust spacing between posters
+    child: Container(
+      width: MediaQuery.of(context).size.width - 32,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Color(0xFFEDDCF3), // Set the background color to white
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(
+          color: const Color.fromARGB(
+              255, 225, 231, 236), // Set the border color to blue
+          width: 2.0, // Adjust the width as needed
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  notice.title!,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Color(0xFF661E92), // Set the font color to blue
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  notice.description!,
+                  style: const TextStyle(color: Color(0xFF6A6A6A)
+                      // Set the font color to blue
+                      ),
+                ),
+              ],
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget customPoster(
-      {required BuildContext context, required Promotion poster}) {
-    return Container(
-      width: MediaQuery.of(context)
-          .size
-          .width, // Poster width matches screen width
-      child: Image.network(
-        poster.media ?? '',
-        fit: BoxFit.fill,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) {
-            return child; // Image loaded successfully
-          } else {
-            return Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Container(
-                width: double.infinity,
-                height: 400, // Adjust height based on your poster size
-                color: Colors.white,
-              ),
-            );
-          }
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return Image.network(
-            'https://placehold.co/600x400/png',
-            fit: BoxFit.contain,
-          );
-        },
-      ),
-    );
-  }
-
-  Widget customNotice(
-      {required BuildContext context, required Promotion notice}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 16), // Adjust spacing between posters
-      child: Container(
-        width: MediaQuery.of(context).size.width - 32,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Color(0xFFEDDCF3), // Set the background color to white
-          borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(
-            color: const Color.fromARGB(
-                255, 225, 231, 236), // Set the border color to blue
-            width: 2.0, // Adjust the width as needed
-          ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    notice.title!,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Color(0xFF661E92), // Set the font color to blue
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    notice.description!,
-                    style: const TextStyle(color: Color(0xFF6A6A6A)
-                        // Set the font color to blue
-                        ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+    ),
+  );
 }
 
 Widget buildShimmerPromotionsColumn({

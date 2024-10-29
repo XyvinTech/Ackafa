@@ -42,7 +42,7 @@ Widget eventWidget({
                 children: [
                   Container(
                     padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                    width: MediaQuery.sizeOf(context).width * .85,
+                    width: MediaQuery.sizeOf(context).width * .95,
                     height: 190, // Reduced image height
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
@@ -131,20 +131,26 @@ Widget eventWidget({
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 4),
-                  Text(
-                    event.eventName!,
-                    style: const TextStyle(
-                      fontSize: 14, // Reduced font size
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          event.eventName ?? '',
+                          style: const TextStyle(
+                            fontSize: 16, // Reduced font size
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 2), // Reduced space
                   Text(
                     event.description ?? '',
                     style: const TextStyle(
-                      fontSize: 12, // Reduced font size
+                      fontSize: 14, // Reduced font size
                       color: Colors.grey,
                     ),
                     maxLines: 2,
@@ -156,18 +162,17 @@ Widget eventWidget({
                     children: [
                       Row(
                         children: [
-                         
                           Row(
                             children: [
                               const Icon(Icons.calendar_today,
-                                  size: 12,
+                                  size: 13,
                                   color:
                                       Color(0xFF700F0F)), // Reduced icon size
                               const SizedBox(width: 4),
                               Text(
                                 formattedDate,
                                 style: const TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   color: Color(0xFF700F0F),
                                 ),
                               ),
@@ -183,14 +188,14 @@ Widget eventWidget({
                           Row(
                             children: [
                               const Icon(Icons.access_time,
-                                  size: 12,
+                                  size: 13,
                                   color:
                                       Color(0xFF0E1877)), // Reduced icon size
                               const SizedBox(width: 4),
                               Text(
                                 formattedTime,
                                 style: const TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   color: Color(0xFF0E1877),
                                 ),
                               ),
