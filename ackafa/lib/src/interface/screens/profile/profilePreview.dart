@@ -105,10 +105,12 @@ class ProfilePreview extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         user.image != null && user.image != ''
-                            ? CircleAvatar(
-                                radius: 45,
-                                backgroundImage: NetworkImage(
+                            ? ClipOval(
+                                child: Image.network(
                                   user.image ?? 'https://placehold.co/600x400',
+                                  width: 90,
+                                  height: 90,
+                                  fit: BoxFit.contain,
                                 ),
                               )
                             : Image.asset('assets/icons/dummy_person.png'),

@@ -157,14 +157,22 @@ class CertificateCard extends StatelessWidget {
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              certificate.name!,
-                              style: const TextStyle(
-                                  fontSize: 20.0, fontWeight: FontWeight.w600),
+                            Expanded(
+                              child: Text(
+                                certificate.name ?? '',
+                                style: const TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                overflow: TextOverflow
+                                    .ellipsis, // Adds "..." if the text is too long
+                                maxLines: 1, // Limits to a single line
+                              ),
                             ),
                             IconButton(
-                                onPressed: () => onRemove!(),
-                                icon: Icon(Icons.close))
+                              onPressed: () => onRemove!(),
+                              icon: Icon(Icons.close),
+                            ),
                           ],
                         )
                       : Row(

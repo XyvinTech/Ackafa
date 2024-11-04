@@ -206,10 +206,11 @@ class NewsContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Image Section
-              SizedBox(
-                height: 250,
-                width: double.infinity,
+              AspectRatio(
+                aspectRatio: 16 / 9, // Set aspect ratio to 16:9
                 child: Image.network(
+                  newsItem.media ?? 'https://placehold.co/600x400/png',
+                  fit: BoxFit.cover,
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
                     return Shimmer.fromColors(
@@ -217,13 +218,10 @@ class NewsContent extends StatelessWidget {
                       highlightColor: Colors.grey[100]!,
                       child: Container(
                         width: double.infinity,
-                        height: 250,
                         color: Colors.grey[300],
                       ),
                     );
                   },
-                  newsItem.media ?? 'https://placehold.co/600x400/png',
-                  fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Image.network(
                       'https://placehold.co/600x400/png',

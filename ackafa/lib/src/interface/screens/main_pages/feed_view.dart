@@ -89,7 +89,6 @@ class _FeedViewState extends ConsumerState<FeedView> {
             pickImage: _pickFile,
             textController: feedContentController,
             imageType: sheet,
-            postImage: _feedImage,
           );
         });
   }
@@ -627,7 +626,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
         alignment: Alignment.center,
         children: [
           AspectRatio(
-            aspectRatio: 4 / 4,
+            aspectRatio: 4 / 5,
             child: ClipRRect(
               borderRadius:
                   BorderRadius.circular(10), // Ensure border radius is applied

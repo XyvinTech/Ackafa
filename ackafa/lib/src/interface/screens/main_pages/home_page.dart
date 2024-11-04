@@ -317,90 +317,96 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 }
 
-Widget _buildBanners(
-    {required BuildContext context, required Promotion banner}) {
-  return Container(
-    width: MediaQuery.sizeOf(context).width / 1.12,
-    child: Stack(
-      clipBehavior: Clip.none, // This allows overflow
-      children: [
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            height: 175,
-            // decoration: BoxDecoration(
-            //   gradient: const LinearGradient(
-            //     colors: [
-            //       Color.fromARGB(41, 249, 180, 6),
-            //       Color.fromARGB(113, 249, 180, 6)
-            //     ],
-            //     begin: Alignment.topLeft,
-            //     end: Alignment.bottomRight,
-            //   ),
-            //   borderRadius: BorderRadius.circular(8.0),
-            // ),
-            child: Image.network(
-              banner.media ?? 'https://placehold.co/600x400/png',
-              width: double.infinity,
-              fit: BoxFit.fill,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) {
-                  // If the image is fully loaded, show the image
-                  return child;
-                }
-                // While the image is loading, show shimmer effect
-                return Container(
-                  width: MediaQuery.sizeOf(context).width / 1.15,
-                  height: 175,
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8.0),
+ Widget _buildBanners(
+      {required BuildContext context, required Promotion banner}) {
+    return Container(
+      width: MediaQuery.sizeOf(context).width / 1.15,
+      child: AspectRatio(
+        aspectRatio: 2 / 1, // Custom aspect ratio as 2:1
+        child: Stack(
+          clipBehavior: Clip.none, // This allows overflow
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Image.network(errorBuilder: (context, error, stackTrace) {
+                  return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              },
+                    );
+                },
+                  banner.media??'' ,
+                  width: double.infinity,
+                  fit: BoxFit.fill,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child; // Image loaded successfully
+                    }
+                    // While the image is loading, show shimmer effect
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-      ],
-    ),
-  );
-}
+      ),
+    );
+  }
 
 Widget customPoster(
     {required BuildContext context, required Promotion poster}) {
-  return Container(
-    width:
-        MediaQuery.of(context).size.width, // Poster width matches screen width
-    child: Image.network(
-      poster.media ?? '',
-      fit: BoxFit.fill,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) {
-          return child; // Image loaded successfully
-        } else {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: AspectRatio(
+      aspectRatio: 19 / 20, // Approximate aspect ratio as 19:20
+      child: Image.network(
+        poster.media ?? '',
+        fit: BoxFit.fill,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) {
+            return child; // Image loaded successfully
+          } else {
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                width: double.infinity,
+                color: Colors.white,
+              ),
+            );
+          }
+        },
+        errorBuilder: (context, error, stackTrace) {
           return Shimmer.fromColors(
             baseColor: Colors.grey[300]!,
             highlightColor: Colors.grey[100]!,
             child: Container(
-              width: double.infinity,
-              height: 400, // Adjust height based on your poster size
-              color: Colors.white,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+              ),
             ),
           );
-        }
-      },
-      errorBuilder: (context, error, stackTrace) {
-        return Image.network(
-          'https://placehold.co/600x400/png',
-          fit: BoxFit.contain,
-        );
-      },
+        },
+      ),
     ),
   );
 }

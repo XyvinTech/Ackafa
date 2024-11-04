@@ -107,11 +107,14 @@ class ProfilePage extends StatelessWidget {
                                             children: [
                                               user.image != null &&
                                                       user.image != ''
-                                                  ? CircleAvatar(
-                                                      radius: 37,
-                                                      backgroundImage:
-                                                          NetworkImage(
-                                                              user.image ?? ''),
+                                                  ? ClipOval(
+                                                      child: Image.network(
+                                                        user.image ?? '',
+                                                        width:
+                                                            74, // Diameter of the circle (2 * radius)
+                                                        height: 74,
+                                                        fit: BoxFit.contain,
+                                                      ),
                                                     )
                                                   : Image.asset(
                                                       'assets/icons/dummy_person.png'),
