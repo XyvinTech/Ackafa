@@ -271,7 +271,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             }).toList(),
                             options: CarouselOptions(
                               height: 225,
-                              scrollPhysics: notices.length > 1
+                              scrollPhysics: videos.length > 1
                                   ? null
                                   : NeverScrollableScrollPhysics(),
                               viewportFraction: 1,
