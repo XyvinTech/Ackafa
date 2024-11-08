@@ -4,6 +4,7 @@ import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 
 Widget eventWidget({
@@ -16,24 +17,16 @@ Widget eventWidget({
   String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
 
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 12), // Reduced padding
+    padding: const EdgeInsets.symmetric(horizontal: 12),
     child: Transform.translate(
-      offset: const Offset(0, 6), // Adjusted vertical offset
+      offset: const Offset(0, 6),
       child: Container(
-        margin: const EdgeInsets.only(
-            bottom: 12.0), // Reduced space between containers
+        margin: const EdgeInsets.only(bottom: 12.0),
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12.0), // Reduced border radius
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: Colors.black12,
-            //     blurRadius: 3, // Slightly smaller shadow blur
-            //     offset: const Offset(0, 1), // Reduced shadow offset
-            //   ),
-            // ],
-            border:
-                Border.all(color: const Color.fromARGB(255, 226, 222, 222))),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.0),
+          border: Border.all(color: const Color.fromARGB(255, 226, 222, 222)),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -43,40 +36,36 @@ Widget eventWidget({
                   Container(
                     padding: EdgeInsets.only(left: 10, right: 10, top: 10),
                     width: MediaQuery.sizeOf(context).width * .95,
-                    height: 190, // Reduced image height
+                    height: 190,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                          );
-                        },
-                        event.image!,
+                      child: CachedNetworkImage(
+                        imageUrl: event.image!,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
+                        placeholder: (context, url) => Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                          );
-                        },
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -126,7 +115,7 @@ Widget eventWidget({
               ),
             ],
             Container(
-              padding: const EdgeInsets.all(8.0), // Reduced padding
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -137,26 +126,25 @@ Widget eventWidget({
                         child: Text(
                           event.eventName ?? '',
                           style: const TextStyle(
-                            fontSize: 16, // Reduced font size
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
-                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 2), // Reduced space
+                  const SizedBox(height: 2),
                   Text(
                     event.description ?? '',
                     style: const TextStyle(
-                      fontSize: 14, // Reduced font size
+                      fontSize: 14,
                       color: Colors.grey,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 6), // Reduced space
+                  const SizedBox(height: 6),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -166,8 +154,7 @@ Widget eventWidget({
                             children: [
                               const Icon(Icons.calendar_today,
                                   size: 13,
-                                  color:
-                                      Color(0xFF700F0F)), // Reduced icon size
+                                  color: Color(0xFF700F0F)),
                               const SizedBox(width: 4),
                               Text(
                                 formattedDate,
@@ -189,8 +176,7 @@ Widget eventWidget({
                             children: [
                               const Icon(Icons.access_time,
                                   size: 13,
-                                  color:
-                                      Color(0xFF0E1877)), // Reduced icon size
+                                  color: Color(0xFF0E1877)),
                               const SizedBox(width: 4),
                               Text(
                                 formattedTime,
@@ -225,7 +211,7 @@ Widget eventWidget({
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {
                           const begin =
-                              Offset(1.0, 0.0); // Slide from right to left
+                              Offset(1.0, 0.0);
                           const end = Offset.zero;
                           const curve = Curves.fastEaseInToSlowEaseOut;
 

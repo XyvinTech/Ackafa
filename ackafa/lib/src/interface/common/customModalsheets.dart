@@ -1503,7 +1503,7 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
                                   )
                                 : Image.file(
                                     postImage!,
-                                    fit: BoxFit.fill,
+                                    fit: BoxFit.contain,
                                     width: 120,
                                     height: 120,
                                   ),

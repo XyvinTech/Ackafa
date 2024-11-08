@@ -30,6 +30,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class FeedView extends ConsumerStatefulWidget {
   FeedView({super.key});
@@ -69,11 +70,33 @@ class _FeedViewState extends ConsumerState<FeedView> {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
-      setState(() {
-        _feedImage = File(image.path);
-        _feedImageSource = ImageSource.gallery;
-      });
-      return _feedImage;
+      // Crop the image to 4:5 aspect ratio
+      final croppedImage = await ImageCropper().cropImage(
+        sourcePath: image.path,
+        aspectRatio: CropAspectRatio(ratioX: 4, ratioY: 5),
+        compressQuality: 100,
+        uiSettings: [
+          AndroidUiSettings(
+            activeControlsWidgetColor: Color(0xFFE30613),
+            toolbarTitle: 'Crop Image',
+            toolbarColor: Color(0xFFE30613),
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: true,
+          ),
+          IOSUiSettings(
+            title: 'Crop Image',
+          ),
+        ],
+      );
+
+      if (croppedImage != null) {
+        setState(() {
+          _feedImage = File(croppedImage.path);
+          _feedImageSource = ImageSource.gallery;
+        });
+        return _feedImage;
+      }
     }
     return null;
   }
