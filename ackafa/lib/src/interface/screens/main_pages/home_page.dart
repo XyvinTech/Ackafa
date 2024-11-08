@@ -222,7 +222,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       data: (events) {
                         events.forEach((event) {
                           if (event.image != null) {
-                            CachedNetworkImageProvider(event.image !)
+                            CachedNetworkImageProvider(event.image!)
                                 .resolve(ImageConfiguration());
                           }
                         });
@@ -391,7 +391,7 @@ Widget customPoster(
       aspectRatio: 19 / 20,
       child: CachedNetworkImage(
         imageUrl: poster.media ?? '',
-        fit: BoxFit.fill,
+        fit: BoxFit.cover,
         placeholder: (context, url) => Shimmer.fromColors(
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,

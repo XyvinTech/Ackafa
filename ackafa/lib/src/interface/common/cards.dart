@@ -26,7 +26,7 @@ class AwardCard extends StatelessWidget {
             children: [
               // Upper part: Image fitted to the card
               Container(
-                height: 100, // Height of the image section
+                height: 90, // Height of the image section
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: DecorationImage(
