@@ -156,7 +156,7 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
     state = state.whenData((user) {
       final updatedVideo =
           user.videos!.where((video) => video != videoToRemove).toList();
-      return user.copyWith(websites: updatedVideo);
+      return user.copyWith(videos: updatedVideo);
     });
   }
 

@@ -24,6 +24,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   final UserModel user;
@@ -98,6 +99,18 @@ class _HomePageState extends ConsumerState<HomePage> {
               final filteredVideos = videos
                   .where((video) => video.link!.startsWith('http'))
                   .toList();
+              posters.forEach((poster) {
+                if (poster.media != null) {
+                  CachedNetworkImageProvider(poster.media!)
+                      .resolve(ImageConfiguration());
+                }
+              });
+              banners.forEach((banner) {
+                if (banner.media != null) {
+                  CachedNetworkImageProvider(banner.media!)
+                      .resolve(ImageConfiguration());
+                }
+              });
 
               return SingleChildScrollView(
                 child: Column(
@@ -169,23 +182,28 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ],
                       ),
 
-                    // Posters Carousel
                     if (posters.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 20),
                         child: Column(
                           children: [
                             CarouselSlider(
-                              items: posters.map((poster) {
-                                return customPoster(
-                                    context: context, poster: poster);
+                              items: posters.asMap().entries.map((entry) {
+                                int index = entry.key;
+                                Promotion poster = entry.value;
+
+                                return KeyedSubtree(
+                                  key: ValueKey(index),
+                                  child: customPoster(
+                                      context: context, poster: poster),
+                                );
                               }).toList(),
                               options: CarouselOptions(
                                 height: 420,
                                 scrollPhysics: posters.length > 1
                                     ? null
                                     : NeverScrollableScrollPhysics(),
-                                autoPlay: posters.length > 1 ? true : false,
+                                autoPlay: posters.length > 1,
                                 viewportFraction: 1,
                                 autoPlayInterval: Duration(seconds: 3),
                                 onPageChanged: (index, reason) {
@@ -194,7 +212,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   });
                                 },
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ),
@@ -202,6 +220,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                     // Events Carousel
                     asyncEvents.when(
                       data: (events) {
+                        events.forEach((event) {
+                          if (event.image != null) {
+                            CachedNetworkImageProvider(event.image!)
+                                .resolve(ImageConfiguration());
+                          }
+                        });
                         return events.isNotEmpty
                             ? Column(
                                 children: [
@@ -233,7 +257,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                       );
                                     }).toList(),
                                     options: CarouselOptions(
-                                      height: 365,
+                                      height: 380,
                                       scrollPhysics: events.length > 1
                                           ? null
                                           : NeverScrollableScrollPhysics(),
@@ -271,7 +295,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             }).toList(),
                             options: CarouselOptions(
                               height: 225,
-                              scrollPhysics: notices.length > 1
+                              scrollPhysics: videos.length > 1
                                   ? null
                                   : NeverScrollableScrollPhysics(),
                               viewportFraction: 1,
@@ -320,87 +344,70 @@ class _HomePageState extends ConsumerState<HomePage> {
 Widget _buildBanners(
     {required BuildContext context, required Promotion banner}) {
   return Container(
-    width: MediaQuery.sizeOf(context).width / 1.12,
-    child: Stack(
-      clipBehavior: Clip.none, // This allows overflow
-      children: [
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            height: 175,
-            // decoration: BoxDecoration(
-            //   gradient: const LinearGradient(
-            //     colors: [
-            //       Color.fromARGB(41, 249, 180, 6),
-            //       Color.fromARGB(113, 249, 180, 6)
-            //     ],
-            //     begin: Alignment.topLeft,
-            //     end: Alignment.bottomRight,
-            //   ),
-            //   borderRadius: BorderRadius.circular(8.0),
-            // ),
-            child: Image.network(
-              banner.media ?? 'https://placehold.co/600x400/png',
-              width: double.infinity,
-              fit: BoxFit.fill,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) {
-                  // If the image is fully loaded, show the image
-                  return child;
-                }
-                // While the image is loading, show shimmer effect
-                return Container(
-                  width: MediaQuery.sizeOf(context).width / 1.15,
-                  height: 175,
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
+    width: MediaQuery.sizeOf(context).width / 1.15,
+    child: AspectRatio(
+      aspectRatio: 2 / 1, // Custom aspect ratio as 2:1
+      child: Stack(
+        clipBehavior: Clip.none, // This allows overflow
+        children: [
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: CachedNetworkImage(
+                imageUrl: banner.media ?? '',
+                fit: BoxFit.fill,
+                placeholder: (context, url) => Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    width: double.infinity,
+                    color: Colors.white,
                   ),
-                );
-              },
+                ),
+                errorWidget: (context, url, error) => Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    color: Colors.grey[300],
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }
 
 Widget customPoster(
     {required BuildContext context, required Promotion poster}) {
-  return Container(
-    width:
-        MediaQuery.of(context).size.width, // Poster width matches screen width
-    child: Image.network(
-      poster.media ?? '',
-      fit: BoxFit.fill,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) {
-          return child; // Image loaded successfully
-        } else {
-          return Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
-            child: Container(
-              width: double.infinity,
-              height: 400, // Adjust height based on your poster size
-              color: Colors.white,
-            ),
-          );
-        }
-      },
-      errorBuilder: (context, error, stackTrace) {
-        return Image.network(
-          'https://placehold.co/600x400/png',
-          fit: BoxFit.contain,
-        );
-      },
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: AspectRatio(
+      aspectRatio: 19 / 20,
+      child: CachedNetworkImage(
+        imageUrl: poster.media ?? '',
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: double.infinity,
+            color: Colors.white,
+          ),
+        ),
+        errorWidget: (context, url, error) => Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            color: Colors.grey[300],
+          ),
+        ),
+      ),
     ),
   );
 }

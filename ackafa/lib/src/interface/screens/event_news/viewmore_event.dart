@@ -62,18 +62,22 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
               children: [
                 Stack(
                   children: [
-                    Container(
-                      width: double.infinity,
-                      height: 200,
-                      color: Colors.grey[300],
-                      child: Image.network(
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.network(
+                    AspectRatio(
+                      aspectRatio: 16 / 9, // Set aspect ratio to 16:9
+                      child: Container(
+                        width: double.infinity,
+                        color: Colors.grey[300],
+                        child: Image.network(
+                          widget.event.image ??
+                              'https://placehold.co/600x400/png', // Replace with your image URL
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.network(
+                              'https://placehold.co/600x400/png',
                               fit: BoxFit.fill,
-                              'https://placehold.co/600x400/png');
-                        },
-                        widget.event.image!, // Replace with your image URL
-                        fit: BoxFit.cover,
+                            );
+                          },
+                        ),
                       ),
                     ),
                     Positioned(
@@ -295,7 +299,9 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                 bottom: 36,
                 left: 16,
                 right: 16,
-                child: customButton(sideColor: registered ? Colors.green : const Color(0xFFE30613),
+                child: customButton(
+                  sideColor:
+                      registered ? Colors.green : const Color(0xFFE30613),
                   buttonColor:
                       registered ? Colors.green : const Color(0xFFE30613),
                   label: widget.event.status == 'cancelled'

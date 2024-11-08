@@ -564,9 +564,9 @@ void showVideoLinkSheet({
 class ShowEnterAwardtSheet extends StatefulWidget {
   final TextEditingController textController1;
   final TextEditingController textController2;
-  final VoidCallback addAwardCard;
+  final Future<void> Function() addAwardCard;
   final String imageType;
-  File? awardImage;
+
   final Future<File?> Function({required String imageType}) pickImage;
 
   ShowEnterAwardtSheet({
@@ -575,7 +575,6 @@ class ShowEnterAwardtSheet extends StatefulWidget {
     required this.addAwardCard,
     required this.pickImage,
     required this.imageType,
-    this.awardImage,
     super.key,
   });
 
@@ -584,6 +583,7 @@ class ShowEnterAwardtSheet extends StatefulWidget {
 }
 
 class _ShowEnterAwardtSheetState extends State<ShowEnterAwardtSheet> {
+  File? awardImage;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -619,7 +619,7 @@ class _ShowEnterAwardtSheetState extends State<ShowEnterAwardtSheet> {
             ),
             const SizedBox(height: 10),
             FormField<File>(
-              initialValue: widget.awardImage,
+              initialValue: awardImage,
               validator: (value) {
                 if (value == null) {
                   return 'Please upload an image';
@@ -634,7 +634,7 @@ class _ShowEnterAwardtSheetState extends State<ShowEnterAwardtSheet> {
                         final pickedFile =
                             await widget.pickImage(imageType: widget.imageType);
                         setState(() {
-                          widget.awardImage = pickedFile;
+                          awardImage = pickedFile;
                           state.didChange(pickedFile);
                         });
                       },
@@ -647,7 +647,7 @@ class _ShowEnterAwardtSheetState extends State<ShowEnterAwardtSheet> {
                               ? Border.all(color: Colors.red)
                               : null,
                         ),
-                        child: widget.awardImage == null
+                        child: awardImage == null
                             ? const Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -666,7 +666,7 @@ class _ShowEnterAwardtSheetState extends State<ShowEnterAwardtSheet> {
                               )
                             : Center(
                                 child: Image.file(
-                                widget.awardImage!,
+                                awardImage!,
                                 fit: BoxFit.cover,
                                 width: 120,
                                 height: 120,
@@ -715,10 +715,30 @@ class _ShowEnterAwardtSheetState extends State<ShowEnterAwardtSheet> {
             const SizedBox(height: 10),
             customButton(
               label: 'SAVE',
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  widget.addAwardCard();
-                  Navigator.pop(context);
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) =>
+                        const Center(child: LoadingAnimation()),
+                  );
+
+                  try {
+                    // Pass awardImage to addAwardCard
+                    await widget.addAwardCard();
+                    widget.textController1.clear();
+                    widget.textController2.clear();
+
+                    if (awardImage != null) {
+                      setState(() {
+                        awardImage = null; // Clear the image after saving
+                      });
+                    }
+                  } finally {
+                    Navigator.of(context).pop();
+                    Navigator.pop(context);
+                  }
                 }
               },
               fontSize: 16,
@@ -734,16 +754,14 @@ class _ShowEnterAwardtSheetState extends State<ShowEnterAwardtSheet> {
 class ShowAddCertificateSheet extends StatefulWidget {
   final TextEditingController textController;
   final String imageType;
-  File? certificateImage;
 
   final Future<File?> Function({required String imageType}) pickImage;
-  final VoidCallback addCertificateCard;
+  final Future<void> Function() addCertificateCard;
 
   ShowAddCertificateSheet({
     super.key,
     required this.textController,
     required this.imageType,
-    this.certificateImage,
     required this.pickImage,
     required this.addCertificateCard,
   });
@@ -754,6 +772,7 @@ class ShowAddCertificateSheet extends StatefulWidget {
 }
 
 class _ShowAddCertificateSheetState extends State<ShowAddCertificateSheet> {
+  File? certificateImage;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -789,7 +808,7 @@ class _ShowAddCertificateSheetState extends State<ShowAddCertificateSheet> {
             ),
             const SizedBox(height: 10),
             FormField<File>(
-              initialValue: widget.certificateImage,
+              initialValue: certificateImage,
               validator: (value) {
                 if (value == null) {
                   return 'Please upload an image';
@@ -804,7 +823,7 @@ class _ShowAddCertificateSheetState extends State<ShowAddCertificateSheet> {
                         final pickedFile =
                             await widget.pickImage(imageType: widget.imageType);
                         setState(() {
-                          widget.certificateImage = pickedFile;
+                          certificateImage = pickedFile;
                           state
                               .didChange(pickedFile); // Update form field state
                         });
@@ -818,7 +837,7 @@ class _ShowAddCertificateSheetState extends State<ShowAddCertificateSheet> {
                               ? Border.all(color: Colors.red)
                               : null,
                         ),
-                        child: widget.certificateImage == null
+                        child: certificateImage == null
                             ? const Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -837,7 +856,7 @@ class _ShowAddCertificateSheetState extends State<ShowAddCertificateSheet> {
                               )
                             : Center(
                                 child: Image.file(
-                                  widget.certificateImage!,
+                                  certificateImage!,
                                   fit: BoxFit.cover,
                                   width: 120,
                                   height: 120,
@@ -874,10 +893,29 @@ class _ShowAddCertificateSheetState extends State<ShowAddCertificateSheet> {
             const SizedBox(height: 10),
             customButton(
               label: 'SAVE',
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  widget.addCertificateCard();
-                  Navigator.pop(context);
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) =>
+                        const Center(child: LoadingAnimation()),
+                  );
+
+                  try {
+                    // Pass awardImage to addAwardCard
+                    await widget.addCertificateCard();
+                    widget.textController.clear();
+
+                    if (certificateImage != null) {
+                      setState(() {
+                        certificateImage = null; // Clear the image after saving
+                      });
+                    }
+                  } finally {
+                    Navigator.of(context).pop();
+                    Navigator.pop(context);
+                  }
                 }
               },
               fontSize: 16,
@@ -1048,319 +1086,317 @@ class _ShowAddBrochureSheetState extends State<ShowAddBrochureSheet> {
   }
 }
 
-class ShowEnterProductsSheet extends StatefulWidget {
-  String productPriceType;
-  final TextEditingController productNameText;
-  final TextEditingController descriptionText;
-  final TextEditingController moqText;
-  final TextEditingController actualPriceText;
-  final TextEditingController offerPriceText;
+// class ShowEnterProductsSheet extends StatefulWidget {
+//   String productPriceType;
+//   final TextEditingController productNameText;
+//   final TextEditingController descriptionText;
+//   final TextEditingController moqText;
+//   final TextEditingController actualPriceText;
+//   final TextEditingController offerPriceText;
 
-  final VoidCallback addProductCard;
-  final String imageType;
-  File? productImage;
-  final Future<File?> Function({required String imageType}) pickImage;
+//   final VoidCallback addProductCard;
+//   final String imageType;
+//   File? productImage;
+//   final Future<File?> Function({required String imageType}) pickImage;
 
-  ShowEnterProductsSheet({
-    super.key,
-    required this.productPriceType,
-    required this.productNameText,
-    required this.descriptionText,
-    required this.moqText,
-    required this.actualPriceText,
-    required this.offerPriceText,
-    required this.addProductCard,
-    required this.imageType,
-    this.productImage,
-    required this.pickImage,
-  });
+//   ShowEnterProductsSheet({
+//     super.key,
+//     required this.productPriceType,
+//     required this.productNameText,
+//     required this.descriptionText,
+//     required this.moqText,
+//     required this.actualPriceText,
+//     required this.offerPriceText,
+//     required this.addProductCard,
+//     required this.imageType,
+//     this.productImage,
+//     required this.pickImage,
+//   });
 
-  @override
-  State<ShowEnterProductsSheet> createState() => _ShowEnterProductsSheetState();
-}
+//   @override
+//   State<ShowEnterProductsSheet> createState() => _ShowEnterProductsSheetState();
+// }
 
-class _ShowEnterProductsSheetState extends State<ShowEnterProductsSheet> {
-  final _formKey = GlobalKey<FormState>();
+// class _ShowEnterProductsSheetState extends State<ShowEnterProductsSheet> {
+//   final _formKey = GlobalKey<FormState>();
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 16,
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      child: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Add Products',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              FormField<File>(
-                initialValue: widget.productImage,
-                validator: (value) {
-                  if (value == null) {
-                    return 'Please upload an image';
-                  }
-                  return null;
-                },
-                builder: (FormFieldState<File> state) {
-                  return Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              return Center(
-                                child: LoadingAnimation(),
-                              );
-                            },
-                          );
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: EdgeInsets.only(
+//         left: 16,
+//         right: 16,
+//         top: 16,
+//         bottom: MediaQuery.of(context).viewInsets.bottom,
+//       ),
+//       child: SingleChildScrollView(
+//         child: Form(
+//           key: _formKey,
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             crossAxisAlignment: CrossAxisAlignment.stretch,
+//             children: [
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   const Text(
+//                     'Add Products',
+//                     style: TextStyle(
+//                       fontSize: 18,
+//                       fontWeight: FontWeight.bold,
+//                     ),
+//                   ),
+//                   IconButton(
+//                     icon: const Icon(Icons.close),
+//                     onPressed: () => Navigator.of(context).pop(),
+//                   ),
+//                 ],
+//               ),
+//               const SizedBox(height: 10),
+//               FormField<File>(
+//                 initialValue: widget.productImage,
+//                 validator: (value) {
+//                   if (value == null) {
+//                     return 'Please upload an image';
+//                   }
+//                   return null;
+//                 },
+//                 builder: (FormFieldState<File> state) {
+//                   return Column(
+//                     children: [
+//                       GestureDetector(
+//                         onTap: () async {
+//                           showDialog(
+//                             context: context,
+//                             barrierDismissible: false,
+//                             builder: (BuildContext context) {
+//                               return Center(
+//                                 child: LoadingAnimation(),
+//                               );
+//                             },
+//                           );
 
-                          final pickedFile = await widget.pickImage(
-                              imageType: widget.imageType);
-                          setState(() {
-                            widget.productImage = pickedFile;
-                            state.didChange(pickedFile); // Update form state
-                          });
+//                           final pickedFile = await widget.pickImage(
+//                               imageType: widget.imageType);
+//                           setState(() {
+//                             widget.productImage = pickedFile;
+//                             state.didChange(pickedFile); // Update form state
+//                           });
 
-                          Navigator.of(context).pop();
-                        },
-                        child: Container(
-                          height: 110,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(10),
-                            border: state.hasError
-                                ? Border.all(color: Colors.red)
-                                : null,
-                          ),
-                          child: widget.productImage == null
-                              ? const Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.add,
-                                          size: 27, color: Color(0xFFE30613)),
-                                      SizedBox(height: 10),
-                                      Text(
-                                        'Upload Image',
-                                        style: TextStyle(
-                                            color: Color.fromARGB(
-                                                255, 102, 101, 101)),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : Center(
-                                  child: Image.file(
-                                    widget.productImage!,
-                                    fit: BoxFit.cover,
-                                    width: 120,
-                                    height: 120,
-                                  ),
-                                ),
-                        ),
-                      ),
-                      if (state.hasError)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            state.errorText!,
-                            style: const TextStyle(
-                              color: Colors.red,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                    ],
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-              ModalSheetTextFormField(
-                textController: widget.productNameText,
-                label: 'Add name',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a product name';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              ModalSheetTextFormField(
-                textController: widget.descriptionText,
-                label: 'Add description',
-                maxLines: 4,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a description';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              ModalSheetTextFormField(
-                textController: widget.moqText,
-                label: 'Add MOQ',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the MOQ';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Flexible(
-                    child: ModalSheetTextFormField(
-                      textController: widget.actualPriceText,
-                      label: 'Actual price',
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter the actual price';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Flexible(
-                    child: ModalSheetTextFormField(
-                      textController: widget.offerPriceText,
-                      label: 'Offer price',
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter the offer price';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    side: const BorderSide(
-                      color: Color.fromARGB(255, 185, 181, 181),
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  _showProductPriceTypeDialog(context).then((value) {
-                    if (value != null) {
-                      widget.productPriceType = value;
-                    }
-                  });
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      widget.productPriceType,
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 94, 93, 93)),
-                    ),
-                    const Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.grey,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              customButton(
-                label: 'Save',
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    widget.addProductCard();
-                    Navigator.pop(context);
-                  }
-                },
-                fontSize: 16,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+//                           Navigator.of(context).pop();
+//                         },
+//                         child: Container(
+//                           height: 110,
+//                           decoration: BoxDecoration(
+//                             color: Colors.grey[200],
+//                             borderRadius: BorderRadius.circular(10),
+//                             border: state.hasError
+//                                 ? Border.all(color: Colors.red)
+//                                 : null,
+//                           ),
+//                           child: widget.productImage == null
+//                               ? const Center(
+//                                   child: Column(
+//                                     mainAxisAlignment: MainAxisAlignment.center,
+//                                     children: [
+//                                       Icon(Icons.add,
+//                                           size: 27, color: Color(0xFFE30613)),
+//                                       SizedBox(height: 10),
+//                                       Text(
+//                                         'Upload Image',
+//                                         style: TextStyle(
+//                                             color: Color.fromARGB(
+//                                                 255, 102, 101, 101)),
+//                                       ),
+//                                     ],
+//                                   ),
+//                                 )
+//                               : Center(
+//                                   child: Image.file(
+//                                     widget.productImage!,
+//                                     fit: BoxFit.cover,
+//                                     width: 120,
+//                                     height: 120,
+//                                   ),
+//                                 ),
+//                         ),
+//                       ),
+//                       if (state.hasError)
+//                         Padding(
+//                           padding: const EdgeInsets.only(top: 8.0),
+//                           child: Text(
+//                             state.errorText!,
+//                             style: const TextStyle(
+//                               color: Colors.red,
+//                               fontSize: 12,
+//                             ),
+//                           ),
+//                         ),
+//                     ],
+//                   );
+//                 },
+//               ),
+//               const SizedBox(height: 20),
+//               ModalSheetTextFormField(
+//                 textController: widget.productNameText,
+//                 label: 'Add name',
+//                 validator: (value) {
+//                   if (value == null || value.isEmpty) {
+//                     return 'Please enter a product name';
+//                   }
+//                   return null;
+//                 },
+//               ),
+//               const SizedBox(height: 10),
+//               ModalSheetTextFormField(
+//                 textController: widget.descriptionText,
+//                 label: 'Add description',
+//                 maxLines: 4,
+//                 validator: (value) {
+//                   if (value == null || value.isEmpty) {
+//                     return 'Please enter a description';
+//                   }
+//                   return null;
+//                 },
+//               ),
+//               const SizedBox(height: 10),
+//               ModalSheetTextFormField(
+//                 textController: widget.moqText,
+//                 label: 'Add MOQ',
+//                 validator: (value) {
+//                   if (value == null || value.isEmpty) {
+//                     return 'Please enter the MOQ';
+//                   }
+//                   return null;
+//                 },
+//               ),
+//               const SizedBox(height: 10),
+//               Row(
+//                 children: [
+//                   Flexible(
+//                     child: ModalSheetTextFormField(
+//                       textController: widget.actualPriceText,
+//                       label: 'Actual price',
+//                       validator: (value) {
+//                         if (value == null || value.isEmpty) {
+//                           return 'Please enter the actual price';
+//                         }
+//                         return null;
+//                       },
+//                     ),
+//                   ),
+//                   const SizedBox(width: 10),
+//                   Flexible(
+//                     child: ModalSheetTextFormField(
+//                       textController: widget.offerPriceText,
+//                       label: 'Offer price',
+//                       validator: (value) {
+//                         if (value == null || value.isEmpty) {
+//                           return 'Please enter the offer price';
+//                         }
+//                         return null;
+//                       },
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//               const SizedBox(height: 10),
+//               ElevatedButton(
+//                 style: ElevatedButton.styleFrom(
+//                   padding:
+//                       const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+//                   shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.circular(10.0),
+//                     side: const BorderSide(
+//                       color: Color.fromARGB(255, 185, 181, 181),
+//                       width: 1.0,
+//                     ),
+//                   ),
+//                 ),
+//                 onPressed: () {
+//                   _showProductPriceTypeDialog(context).then((value) {
+//                     if (value != null) {
+//                       widget.productPriceType = value;
+//                     }
+//                   });
+//                 },
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: [
+//                     Text(
+//                       widget.productPriceType,
+//                       style: const TextStyle(
+//                           color: Color.fromARGB(255, 94, 93, 93)),
+//                     ),
+//                     const Icon(
+//                       Icons.arrow_drop_down,
+//                       color: Colors.grey,
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               const SizedBox(height: 10),
+//               customButton(
+//                 label: 'Save',
+//                 onPressed: () {
+//                   if (_formKey.currentState!.validate()) {
+//                     widget.addProductCard();
+//                     Navigator.pop(context);
+//                   }
+//                 },
+//                 fontSize: 16,
+//               ),
+//               const SizedBox(
+//                 height: 10,
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-Future<String?> _showProductPriceTypeDialog(BuildContext context) {
-  return showDialog<String>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        title: const Text('Select an Option'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: const Text('Price per unit'),
-              onTap: () {
-                Navigator.of(context).pop('Price per unit');
-              },
-            ),
-            ListTile(
-              title: const Text('Option 2'),
-              onTap: () {
-                Navigator.of(context).pop('Option 2');
-              },
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
+// Future<String?> _showProductPriceTypeDialog(BuildContext context) {
+//   return showDialog<String>(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         shape: RoundedRectangleBorder(
+//           borderRadius: BorderRadius.circular(15.0),
+//         ),
+//         title: const Text('Select an Option'),
+//         content: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             ListTile(
+//               title: const Text('Price per unit'),
+//               onTap: () {
+//                 Navigator.of(context).pop('Price per unit');
+//               },
+//             ),
+//             ListTile(
+//               title: const Text('Option 2'),
+//               onTap: () {
+//                 Navigator.of(context).pop('Option 2');
+//               },
+//             ),
+//           ],
+//         ),
+//       );
+//     },
+//   );
+// }
 
 class ShowAddPostSheet extends StatefulWidget {
   final Future<File?> Function({required String imageType}) pickImage;
   final TextEditingController textController;
   final String imageType;
-  File? postImage;
 
   ShowAddPostSheet({
     super.key,
     required this.textController,
     required this.imageType,
-    required this.postImage,
     required this.pickImage,
   });
 
@@ -1369,6 +1405,7 @@ class ShowAddPostSheet extends StatefulWidget {
 }
 
 class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
+  File? postImage;
   String? selectedType;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? mediaUrl;
@@ -1423,7 +1460,7 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
                 ),
                 const SizedBox(height: 20),
                 FormField<File>(
-                  initialValue: widget.postImage,
+                  initialValue: postImage,
                   builder: (FormFieldState<File> state) {
                     return Column(
                       children: [
@@ -1432,7 +1469,7 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
                             final pickedFile = await widget.pickImage(
                                 imageType: widget.imageType);
                             setState(() {
-                              widget.postImage = pickedFile;
+                              postImage = pickedFile;
                               state.didChange(pickedFile);
                             });
                           },
@@ -1446,7 +1483,7 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
                                   ? Border.all(color: Colors.red)
                                   : null,
                             ),
-                            child: widget.postImage == null
+                            child: postImage == null
                                 ? const Center(
                                     child: Column(
                                       mainAxisAlignment:
@@ -1465,8 +1502,8 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
                                     ),
                                   )
                                 : Image.file(
-                                    widget.postImage!,
-                                    fit: BoxFit.fill,
+                                    postImage!,
+                                    fit: BoxFit.contain,
                                     width: 120,
                                     height: 120,
                                   ),
@@ -1508,22 +1545,39 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      print(selectedType);
-                      if (widget.postImage != null) {
-                        mediaUrl = await imageUpload(
-                            basename(widget.postImage!.path),
-                            widget.postImage!.path);
-                      }
-                      api.uploaPost(
-                        type: selectedType ?? '',
-                        media: mediaUrl,
-                        content: widget.textController.text,
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) =>
+                            const Center(child: LoadingAnimation()),
                       );
 
-                      Navigator.pop(context);
+                      try {
+                        print(selectedType);
 
-                      CustomSnackbar.showSnackbar(
-                          context, 'Your Post Will Be Reviewed By Admin');
+                        if (postImage != null) {
+                          mediaUrl = await imageUpload(
+                            basename(postImage!.path),
+                            postImage!.path,
+                          );
+                        }
+
+                        await api.uploaPost(
+                          type: selectedType ?? '',
+                          media: mediaUrl,
+                          content: widget.textController.text,
+                        );
+                        widget.textController.clear();
+                        postImage = null;
+                        Navigator.pop(
+                            context); // Close the dialog after completion
+
+                        CustomSnackbar.showSnackbar(
+                            context, 'Your Post Will Be Reviewed By Admin');
+                      } finally {
+                        Navigator.of(context, rootNavigator: true)
+                            .pop(); // Ensure dialog is dismissed
+                      }
                     }
                   },
                   style: ButtonStyle(
