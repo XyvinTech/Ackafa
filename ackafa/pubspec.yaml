@@ -1,7 +1,7 @@
 name: ackaf
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.2.4+33
+version: 0.2.5+34
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -61,6 +61,7 @@ dependencies:
   carousel_slider: ^5.0.0
   cached_network_image: ^3.4.1
   image_cropper: ^8.0.2
+  flutter_image_compress: ^2.3.0
 
 
   

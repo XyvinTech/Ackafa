@@ -47,6 +47,17 @@ class _HomePageState extends ConsumerState<HomePage> {
     _fetchInitialApprovals();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _clearImageCache();
+  }
+
+  void _clearImageCache() {
+    imageCache.clear(); // Clears all cached images
+    imageCache.clearLiveImages();
+  }
+
   Future<void> _fetchInitialApprovals() async {
     await ref.read(approvalNotifierProvider.notifier).fetchMoreApprovals();
   }
@@ -84,240 +95,252 @@ class _HomePageState extends ConsumerState<HomePage> {
         final asyncPromotions = ref.watch(fetchPromotionsProvider(token));
         final asyncEvents = ref.watch(fetchEventsProvider);
 
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: asyncPromotions.when(
-            data: (promotions) {
-              final banners =
-                  promotions.where((promo) => promo.type == 'banner').toList();
-              final notices =
-                  promotions.where((promo) => promo.type == 'notice').toList();
-              final posters =
-                  promotions.where((promo) => promo.type == 'poster').toList();
-              final videos =
-                  promotions.where((promo) => promo.type == 'video').toList();
-              final filteredVideos = videos
-                  .where((video) => video.link!.startsWith('http'))
-                  .toList();
-              posters.forEach((poster) {
-                if (poster.media != null) {
-                  CachedNetworkImageProvider(poster.media!)
-                      .resolve(ImageConfiguration());
-                }
-              });
-              banners.forEach((banner) {
-                if (banner.media != null) {
-                  CachedNetworkImageProvider(banner.media!)
-                      .resolve(ImageConfiguration());
-                }
-              });
+        return RefreshIndicator(
+          color: Color(0xFFE30613),
+          onRefresh: () async {
+            _clearImageCache();
+            ref.invalidate(fetchPromotionsProvider);
+            ref.invalidate(fetchEventsProvider);
+          },
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: asyncPromotions.when(
+              data: (promotions) {
+                final banners = promotions
+                    .where((promo) => promo.type == 'banner')
+                    .toList();
+                final notices = promotions
+                    .where((promo) => promo.type == 'notice')
+                    .toList();
+                final posters = promotions
+                    .where((promo) => promo.type == 'poster')
+                    .toList();
+                final videos =
+                    promotions.where((promo) => promo.type == 'video').toList();
+                final filteredVideos = videos
+                    .where((video) => video.link!.startsWith('http'))
+                    .toList();
+                posters.forEach((poster) {
+                  if (poster.media != null) {
+                    CachedNetworkImageProvider(poster.media!)
+                        .resolve(ImageConfiguration());
+                  }
+                });
+                banners.forEach((banner) {
+                  if (banner.media != null) {
+                    CachedNetworkImageProvider(banner.media!)
+                        .resolve(ImageConfiguration());
+                  }
+                });
 
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomAppBar(),
-                    const SizedBox(height: 20),
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomAppBar(),
+                      const SizedBox(height: 20),
 
-                    // Banner Carousel
-                    if (banners.isNotEmpty)
-                      Column(
-                        children: [
-                          CarouselSlider(
-                            items: banners.map((banner) {
-                              return _buildBanners(
-                                  context: context, banner: banner);
-                            }).toList(),
-                            options: CarouselOptions(
-                              height: 175,
-                              scrollPhysics: banners.length > 1
-                                  ? null
-                                  : NeverScrollableScrollPhysics(),
-                              autoPlay: banners.length > 1 ? true : false,
-                              viewportFraction: 1,
-                              autoPlayInterval: Duration(seconds: 3),
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _currentBannerIndex = index;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-
-                    const SizedBox(height: 16),
-
-                    // Notices Carousel
-                    if (notices.isNotEmpty)
-                      Column(
-                        children: [
-                          CarouselSlider(
-                            items: notices.map((notice) {
-                              return customNotice(
-                                  context: context, notice: notice);
-                            }).toList(),
-                            options: CarouselOptions(
-                              scrollPhysics: notices.length > 1
-                                  ? null
-                                  : NeverScrollableScrollPhysics(),
-                              autoPlay: notices.length > 1 ? true : false,
-                              viewportFraction: 1,
-                              height: _calculateDynamicHeight(notices),
-                              autoPlayInterval: Duration(seconds: 3),
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _currentNoticeIndex = index;
-                                });
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _buildDotIndicator(
-                              _currentNoticeIndex,
-                              notices.length,
-                              const Color.fromARGB(255, 39, 38, 38)),
-                        ],
-                      ),
-
-                    if (posters.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Column(
+                      // Banner Carousel
+                      if (banners.isNotEmpty)
+                        Column(
                           children: [
                             CarouselSlider(
-                              items: posters.asMap().entries.map((entry) {
-                                int index = entry.key;
-                                Promotion poster = entry.value;
-
-                                return KeyedSubtree(
-                                  key: ValueKey(index),
-                                  child: customPoster(
-                                      context: context, poster: poster),
-                                );
+                              items: banners.map((banner) {
+                                return _buildBanners(
+                                    context: context, banner: banner);
                               }).toList(),
                               options: CarouselOptions(
-                                height: 420,
-                                scrollPhysics: posters.length > 1
+                                height: 175,
+                                scrollPhysics: banners.length > 1
                                     ? null
                                     : NeverScrollableScrollPhysics(),
-                                autoPlay: posters.length > 1,
+                                autoPlay: banners.length > 1 ? true : false,
                                 viewportFraction: 1,
                                 autoPlayInterval: Duration(seconds: 3),
                                 onPageChanged: (index, reason) {
                                   setState(() {
-                                    _currentPosterIndex = index;
+                                    _currentBannerIndex = index;
                                   });
                                 },
                               ),
-                            )
+                            ),
                           ],
                         ),
-                      ),
 
-                    // Events Carousel
-                    asyncEvents.when(
-                      data: (events) {
-                        events.forEach((event) {
-                          if (event.image != null) {
-                            CachedNetworkImageProvider(event.image!)
-                                .resolve(ImageConfiguration());
-                          }
-                        });
-                        return events.isNotEmpty
-                            ? Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 25, top: 10),
-                                        child: Text(
-                                          'Events',
-                                          style: TextStyle(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  CarouselSlider(
-                                    items: events.map((event) {
-                                      return Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.95,
-                                        child: eventWidget(
-                                          withImage: true,
-                                          context: context,
-                                          event: event,
-                                        ),
-                                      );
-                                    }).toList(),
-                                    options: CarouselOptions(
-                                      height: 380,
-                                      scrollPhysics: events.length > 1
-                                          ? null
-                                          : NeverScrollableScrollPhysics(),
-                                      autoPlay:
-                                          events.length > 1 ? true : false,
-                                      viewportFraction: 1,
-                                      autoPlayInterval: Duration(seconds: 3),
-                                      onPageChanged: (index, reason) {
-                                        setState(() {
-                                          _currentEventIndex = index;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  _buildDotIndicator(_currentEventIndex,
-                                      events.length, Colors.red),
-                                ],
-                              )
-                            : SizedBox();
-                      },
-                      loading: () => Center(child: LoadingAnimation()),
-                      error: (error, stackTrace) => SizedBox(),
-                    ),
+                      const SizedBox(height: 16),
 
-                    const SizedBox(height: 16),
-
-                    // Videos Carousel
-                    if (filteredVideos.isNotEmpty)
-                      Column(
-                        children: [
-                          CarouselSlider(
-                            items: filteredVideos.map((video) {
-                              return customVideo(
-                                  context: context, video: video);
-                            }).toList(),
-                            options: CarouselOptions(
-                              height: 225,
-                              scrollPhysics: videos.length > 1
-                                  ? null
-                                  : NeverScrollableScrollPhysics(),
-                              viewportFraction: 1,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _currentVideoIndex = index;
-                                });
-                              },
+                      // Notices Carousel
+                      if (notices.isNotEmpty)
+                        Column(
+                          children: [
+                            CarouselSlider(
+                              items: notices.map((notice) {
+                                return customNotice(
+                                    context: context, notice: notice);
+                              }).toList(),
+                              options: CarouselOptions(
+                                scrollPhysics: notices.length > 1
+                                    ? null
+                                    : NeverScrollableScrollPhysics(),
+                                autoPlay: notices.length > 1 ? true : false,
+                                viewportFraction: 1,
+                                height: _calculateDynamicHeight(notices),
+                                autoPlayInterval: Duration(seconds: 3),
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _currentNoticeIndex = index;
+                                  });
+                                },
+                              ),
                             ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _buildDotIndicator(
+                                _currentNoticeIndex,
+                                notices.length,
+                                const Color.fromARGB(255, 39, 38, 38)),
+                          ],
+                        ),
+
+                      if (posters.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Column(
+                            children: [
+                              CarouselSlider(
+                                items: posters.asMap().entries.map((entry) {
+                                  int index = entry.key;
+                                  Promotion poster = entry.value;
+
+                                  return KeyedSubtree(
+                                    key: ValueKey(index),
+                                    child: customPoster(
+                                        context: context, poster: poster),
+                                  );
+                                }).toList(),
+                                options: CarouselOptions(
+                                  height: 420,
+                                  scrollPhysics: posters.length > 1
+                                      ? null
+                                      : NeverScrollableScrollPhysics(),
+                                  autoPlay: posters.length > 1,
+                                  viewportFraction: 1,
+                                  autoPlayInterval: Duration(seconds: 3),
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      _currentPosterIndex = index;
+                                    });
+                                  },
+                                ),
+                              )
+                            ],
                           ),
-                          _buildDotIndicator(_currentVideoIndex,
-                              filteredVideos.length, Colors.black),
-                        ],
+                        ),
+
+                      // Events Carousel
+                      asyncEvents.when(
+                        data: (events) {
+                          events.forEach((event) {
+                            if (event.image != null) {
+                              CachedNetworkImageProvider(event.image!)
+                                  .resolve(ImageConfiguration());
+                            }
+                          });
+                          return events.isNotEmpty
+                              ? Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 25, top: 10),
+                                          child: Text(
+                                            'Events',
+                                            style: TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    CarouselSlider(
+                                      items: events.map((event) {
+                                        return Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.95,
+                                          child: eventWidget(
+                                            withImage: true,
+                                            context: context,
+                                            event: event,
+                                          ),
+                                        );
+                                      }).toList(),
+                                      options: CarouselOptions(
+                                        height: 380,
+                                        scrollPhysics: events.length > 1
+                                            ? null
+                                            : NeverScrollableScrollPhysics(),
+                                        autoPlay:
+                                            events.length > 1 ? true : false,
+                                        viewportFraction: 1,
+                                        autoPlayInterval: Duration(seconds: 3),
+                                        onPageChanged: (index, reason) {
+                                          setState(() {
+                                            _currentEventIndex = index;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    _buildDotIndicator(_currentEventIndex,
+                                        events.length, Colors.red),
+                                  ],
+                                )
+                              : SizedBox();
+                        },
+                        loading: () => Center(child: LoadingAnimation()),
+                        error: (error, stackTrace) => SizedBox(),
                       ),
-                  ],
-                ),
-              );
-            },
-            loading: () =>
-                Center(child: buildShimmerPromotionsColumn(context: context)),
-            error: (error, stackTrace) =>
-                Center(child: Text('NO PROMOTIONS YET')),
+
+                      const SizedBox(height: 16),
+
+                      // Videos Carousel
+                      if (filteredVideos.isNotEmpty)
+                        Column(
+                          children: [
+                            CarouselSlider(
+                              items: filteredVideos.map((video) {
+                                return customVideo(
+                                    context: context, video: video);
+                              }).toList(),
+                              options: CarouselOptions(
+                                height: 225,
+                                scrollPhysics: videos.length > 1
+                                    ? null
+                                    : NeverScrollableScrollPhysics(),
+                                viewportFraction: 1,
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _currentVideoIndex = index;
+                                  });
+                                },
+                              ),
+                            ),
+                            _buildDotIndicator(_currentVideoIndex,
+                                filteredVideos.length, Colors.black),
+                          ],
+                        ),
+                    ],
+                  ),
+                );
+              },
+              loading: () =>
+                  Center(child: buildShimmerPromotionsColumn(context: context)),
+              error: (error, stackTrace) =>
+                  Center(child: Text('NO PROMOTIONS YET')),
+            ),
           ),
         );
       },
