@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/college_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'college_api.g.dart';
 
-const String baseUrl = 'https://akcafconnect.com/api/v1';
+
 
 @riverpod
 Future<List<College>> fetchColleges(FetchCollegesRef ref, String token) async {

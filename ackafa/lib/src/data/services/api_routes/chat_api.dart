@@ -100,8 +100,7 @@ Future<void> sendChatMessage(
     required String content,
     String? feedId,
     bool isGroup = false}) async {
-  final url =
-      Uri.parse('https://akcafconnect.com/api/v1/chat/send-message/$userId');
+  final url = Uri.parse('$baseUrl/chat/send-message/$userId');
   final headers = {
     'accept': '*/*',
     'Authorization': 'Bearer $token',
@@ -131,8 +130,7 @@ Future<void> sendChatMessage(
 }
 
 Future<List<MessageModel>> getChatBetweenUsers(String userId) async {
-  final url =
-      Uri.parse('https://akcafconnect.com/api/v1/chat/between-users/$userId');
+  final url = Uri.parse('$baseUrl/chat/between-users/$userId');
   final headers = {
     'accept': '*/*',
     'Authorization': 'Bearer $token',
@@ -163,7 +161,7 @@ Future<List<MessageModel>> getChatBetweenUsers(String userId) async {
 
 @riverpod
 Future<List<ChatModel>> fetchChatThread(FetchChatThreadRef ref) async {
-  final url = Uri.parse('https://akcafconnect.com/api/v1/chat/get-chats');
+  final url = Uri.parse('$baseUrl/chat/get-chats');
   print('Requesting URL: $url');
 
   final response = await http.get(

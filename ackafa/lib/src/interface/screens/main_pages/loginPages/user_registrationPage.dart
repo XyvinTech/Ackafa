@@ -489,14 +489,17 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                   try {
                                                     ApiRoutes userApi =
                                                         ApiRoutes();
-                                                        if(_profileImageFile!=null&& _profileImageFile!='') {
-                                                          profileImageUrl =
-                                                        await imageUpload(
-                                                            _profileImageFile!
-                                                                .path,
-                                                            _profileImageFile!
-                                                                .path);
-                                                        }
+                                                    if (_profileImageFile !=
+                                                            null &&
+                                                        _profileImageFile !=
+                                                            '') {
+                                                      profileImageUrl =
+                                                          await imageUpload(
+                                                              _profileImageFile!
+                                                                  .path,
+                                                              _profileImageFile!
+                                                                  .path);
+                                                    }
 
                                                     print(profileImageUrl);
                                                     log(token);
@@ -550,7 +553,8 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                       }
                                                     }
                                                   } catch (e) {
-                                                          CustomSnackbar.showSnackbar(context, '$e');
+                                                    CustomSnackbar.showSnackbar(
+                                                        context, '$e');
                                                   }
                                                 }
                                               }))),
@@ -581,7 +585,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
               return PaymentConfirmationPage();
             }
           },
-          loading: () => Center(child: LoadingAnimation()),
+          loading: () => Scaffold(body: Center(child: LoadingAnimation())),
           error: (error, stackTrace) {
             // Handle error state
             return LoginPage();

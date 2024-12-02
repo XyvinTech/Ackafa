@@ -232,10 +232,3 @@ class MyEventsPage extends StatelessWidget {
   }
 }
 
-void _launchURL(String url) async {
-  try {
-    await launchUrl(Uri.parse(url));
-  } catch (e) {
-    print(e);
-  }
-}

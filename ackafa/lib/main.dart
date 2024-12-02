@@ -1,9 +1,5 @@
-import 'dart:developer';
 
 import 'package:ackaf/firebase_options.dart';
-import 'package:ackaf/src/data/services/launch_url.dart';
-import 'package:ackaf/src/interface/screens/main_pages/home_page.dart';
-import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:ackaf/src/interface/screens/menu/my_events.dart';
@@ -11,7 +7,6 @@ import 'package:ackaf/src/interface/screens/menu/my_post.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chat.dart';
 import 'package:ackaf/src/interface/screens/people/chat/groupchat.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,3 +1,4 @@
+import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,8 +30,7 @@ class _PaymentWebViewState extends ConsumerState<PaymentWebView> {
         NavigationDelegate(
           onPageStarted: (String url) async {
             // Check if the current URL starts with the success URL
-            if (url.startsWith(
-                'https://akcafconnect.com/api/v1/payment/success?session_id')) {
+            if (url.startsWith('$baseUrl/payment/success?session_id')) {
               // Delay the pop action by 2 seconds
               await Future.delayed(const Duration(seconds: 3));
 
