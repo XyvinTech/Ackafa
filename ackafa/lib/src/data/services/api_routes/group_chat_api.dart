@@ -98,8 +98,7 @@ class SocketIoClient {
 Future<List<GroupChatModel>> getGroupChatMessages(
     {required String groupId}) async {
   log('group: $groupId');
-  final url =
-      Uri.parse('https://akcafconnect.com/api/v1/chat/group-message/$groupId');
+  final url = Uri.parse('$baseUrl/chat/group-message/$groupId');
   final headers = {
     'accept': '*/*',
     'Authorization': 'Bearer $token',

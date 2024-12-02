@@ -130,7 +130,7 @@ class _MainPageState extends ConsumerState<MainPage> {
     return Consumer(builder: (context, ref, child) {
       final asyncUser = ref.watch(userProvider);
       return asyncUser.when(
-        loading: () => Center(child: LoadingAnimation()),
+        loading: () => Scaffold(body: Center(child: LoadingAnimation())),
         error: (error, stackTrace) {
           return LoginPage();
         },

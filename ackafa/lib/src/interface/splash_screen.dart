@@ -79,12 +79,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   Future<void> checkAppVersion(context) async {
     log('Checking app version...');
-    final response = await http
-        .get(Uri.parse('https://akcafconnect.com/api/v1/user/app-version'));
+    final response = await http.get(Uri.parse('$baseUrl/user/app-version'));
 
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       final appVersionResponse = AppVersionResponse.fromJson(jsonResponse);
+
       await checkForUpdate(appVersionResponse, context);
     } else {
       log('Failed to fetch app version');
@@ -97,9 +97,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     final currentVersion = int.parse(packageInfo.version.split('.').join());
     log('Current version: $currentVersion');
     log('New version: ${response.version}');
-
+    log('Payment enabled?: ${response.isPaymentEnabled}');
+    isPaymentEnabled = response.isPaymentEnabled ?? false;
     if (currentVersion < response.version && response.force) {
-      // Pause initialization and show update dialog
       isAppUpdateRequired = true;
       showUpdateDialog(response, context);
     }

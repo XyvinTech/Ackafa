@@ -37,7 +37,6 @@ import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/notifires/approval_notifier.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/notification_api.dart';
-import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/main_pages/approvalPages/approval_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';

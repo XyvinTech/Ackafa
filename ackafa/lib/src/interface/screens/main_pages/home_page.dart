@@ -98,7 +98,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         return RefreshIndicator(
           color: Color(0xFFE30613),
           onRefresh: () async {
-            _clearImageCache();
+   
             ref.invalidate(fetchPromotionsProvider);
             ref.invalidate(fetchEventsProvider);
           },
@@ -126,12 +126,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         .resolve(ImageConfiguration());
                   }
                 });
-                banners.forEach((banner) {
-                  if (banner.media != null) {
-                    CachedNetworkImageProvider(banner.media!)
-                        .resolve(ImageConfiguration());
-                  }
-                });
+    
 
                 return SingleChildScrollView(
                   child: Column(
@@ -241,12 +236,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       // Events Carousel
                       asyncEvents.when(
                         data: (events) {
-                          events.forEach((event) {
-                            if (event.image != null) {
-                              CachedNetworkImageProvider(event.image!)
-                                  .resolve(ImageConfiguration());
-                            }
-                          });
+                   
                           return events.isNotEmpty
                               ? Column(
                                   children: [
@@ -379,24 +369,36 @@ Widget _buildBanners(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8.0),
               ),
-              child: CachedNetworkImage(
-                imageUrl: banner.media ?? '',
+              child: Image.network(
+                banner.media ?? '',
                 fit: BoxFit.fill,
-                placeholder: (context, url) => Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    width: double.infinity,
-                    color: Colors.white,
-                  ),
-                ),
-                errorWidget: (context, url, error) => Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    color: Colors.grey[300],
-                  ),
-                ),
+                errorBuilder: (context, error, stackTrace) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                      ),
+                    ),
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child; // Image loaded successfully
+                  }
+                  // While the image is loading, show shimmer effect
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -412,24 +414,36 @@ Widget customPoster(
     padding: const EdgeInsets.symmetric(horizontal: 16),
     child: AspectRatio(
       aspectRatio: 19 / 20,
-      child: CachedNetworkImage(
-        imageUrl: poster.media ?? '',
+      child: Image.network(
+         poster.media ?? '',
         fit: BoxFit.cover,
-        placeholder: (context, url) => Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: Container(
-            width: double.infinity,
-            color: Colors.white,
-          ),
-        ),
-        errorWidget: (context, url, error) => Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: Container(
-            color: Colors.grey[300],
-          ),
-        ),
+        errorBuilder: (context, error, stackTrace) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                      ),
+                    ),
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child; // Image loaded successfully
+                  }
+                  // While the image is loading, show shimmer effect
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  );
+                },
       ),
     ),
   );

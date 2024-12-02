@@ -78,7 +78,8 @@ class ProfileCompletionScreen extends StatelessWidget {
                   ),
                 ),
               );
-            } else {
+            }
+             else {
               return MainPage();
             }
           },

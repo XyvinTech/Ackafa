@@ -5,7 +5,7 @@ import 'package:ackaf/src/data/models/notification_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'notification_api.g.dart';
 
-const String baseUrl = 'https://akcafconnect.com/api/v1';
+
 
 @riverpod
 Future<List<NotificationModel>> fetchNotifications(

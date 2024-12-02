@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
@@ -8,9 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PaymentConfirmationPage extends StatelessWidget {
+  const PaymentConfirmationPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    if (!LoggedIn) {
+    log("Paymetn enabled?:$isPaymentEnabled");
+    if (isPaymentEnabled) {
+      log('Im in not logged in condition');
       return Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -19,11 +25,9 @@ class PaymentConfirmationPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 40), // Spacing from top
-                // Congratulations Icon and Text
+                const SizedBox(height: 40),
                 Column(
                   children: [
-                    // Icon for congratulation (can be replaced with an asset image)
                     Image.asset('assets/success.png'),
                     const SizedBox(height: 20),
                     const Text(
@@ -34,7 +38,6 @@ class PaymentConfirmationPage extends StatelessWidget {
                         color: Color(0xFF6D6D6D),
                       ),
                     ),
-
                     const Text(
                       'Your request has been approved',
                       style: TextStyle(
@@ -51,24 +54,6 @@ class PaymentConfirmationPage extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Coming Soon!',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'You Will Receive Payment Link SOon',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-
                     const SizedBox(height: 30),
                     // Checklist
                     _buildCheckListItem(
@@ -84,31 +69,20 @@ class PaymentConfirmationPage extends StatelessWidget {
                 // Continue to Payment Button
                 Consumer(
                   builder: (context, ref, child) {
-                    if (isPaymentEnabled) {
-                      return customButton(
-                          label: 'Continue to Payment',
-                          onPressed: () async {
-                            ApiRoutes userApi = ApiRoutes();
-                            String? paymentUrl = await userApi.makePayment();
-                            if (paymentUrl != null) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => PaymentWebView(
-                                        paymentUrl: paymentUrl,
-                                      )));
-                            }
-                          },
-                          fontSize: 16);
-                    } else {
-                      return customButton(
-                          label: 'CONTINUE TO APP',
-                          onPressed: () async {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ProfileCompletionScreen()));
-                          },
-                          fontSize: 16);
-                    }
+                    log('im inside continue to payment');
+                    return customButton(
+                        label: 'Continue to Payment',
+                        onPressed: () async {
+                          ApiRoutes userApi = ApiRoutes();
+                          String? paymentUrl = await userApi.makePayment();
+                          if (paymentUrl != null) {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => PaymentWebView(
+                                      paymentUrl: paymentUrl,
+                                    )));
+                          }
+                        },
+                        fontSize: 16);
                   },
                 ),
                 const SizedBox(height: 30), // Bottom padding
@@ -118,7 +92,98 @@ class PaymentConfirmationPage extends StatelessWidget {
         ),
       );
     } else {
-      return ProfileCompletionScreen();
+      if (!LoggedIn) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40),
+                  Column(
+                    children: [
+                      Image.asset('assets/success.png'),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Congratulations!',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF6D6D6D),
+                        ),
+                      ),
+                      const Text(
+                        'Your request has been approved',
+                        style: TextStyle(
+                          fontSize: 19,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 40), // Space between sections
+                  // Next Steps
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Coming Soon!',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'You Will Receive Payment Link SOon',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+
+                      const SizedBox(height: 30),
+                      // Checklist
+                      _buildCheckListItem(
+                          'Get your request approved', true), // Checked
+                      _buildCheckListItem(
+                          'Make payment of 10 AED', false), // Unchecked
+                      _buildCheckListItem(
+                          'Receive payment confirmation', false), // Unchecked
+                      _buildCheckListItem(
+                          'You are all in!', false), // Unchecked
+                    ],
+                  ),
+                  const Spacer(),
+                  // Continue to Payment Button
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return customButton(
+                          label: 'CONTINUE TO APP',
+                          onPressed: () async {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProfileCompletionScreen()));
+                          },
+                          fontSize: 16);
+                    },
+                  ),
+                  const SizedBox(height: 30), // Bottom padding
+                ],
+              ),
+            ),
+          ),
+        );
+      } else {
+        return ProfileCompletionScreen();
+      }
     }
   }
 

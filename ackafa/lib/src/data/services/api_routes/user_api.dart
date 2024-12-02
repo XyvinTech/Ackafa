@@ -17,7 +17,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_api.g.dart';
 
 class ApiRoutes {
-  final String baseUrl = 'https://akcafconnect.com/api/v1';
 
   Future<bool> registerUser(
       {required String token,
@@ -555,7 +554,6 @@ class ApiRoutes {
   }
 }
 
-const String baseUrl = 'https://akcafconnect.com/api/v1';
 
 @riverpod
 Future<UserModel> fetchUserDetails(FetchUserDetailsRef ref) async {
