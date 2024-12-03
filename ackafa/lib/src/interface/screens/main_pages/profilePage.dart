@@ -55,38 +55,13 @@ class ProfilePage extends StatelessWidget {
                           children: [
                             Stack(
                               children: [
-                                Positioned(
-                                  top: 10,
-                                  right: 10,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Color(0xFFF2F2F2),
-                                        borderRadius:
-                                            BorderRadius.circular(30)),
-                                    child: IconButton(
-                                      icon: Icon(Icons.remove_red_eye),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          PageRouteBuilder(
-                                            pageBuilder: (context, animation,
-                                                    secondaryAnimation) =>
-                                                ProfilePreview(
-                                              user: user,
-                                            ),
-                                            transitionsBuilder: (context,
-                                                animation,
-                                                secondaryAnimation,
-                                                child) {
-                                              return FadeTransition(
-                                                opacity: animation,
-                                                child: child,
-                                              );
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    ),
+                                Positioned.fill(
+                                  child: Image.asset(
+                                    color: Colors.black.withOpacity(0.6),
+                                    'assets/triangles.png',
+                                    fit: BoxFit.cover,
+                                    height: 240,
+                                    width: double.infinity,
                                   ),
                                 ),
                                 SizedBox(
@@ -275,66 +250,90 @@ class ProfilePage extends StatelessWidget {
                     Share.share(
                         'https://admin.akcafconnect.com/user/${user.id}');
                   },
-                  child: SvgPicture.asset('assets/icons/shareButton.svg'),
-                  // child: Container(
-                  //   width: 90,
-                  //   height: 90,
-                  //   decoration: BoxDecoration(
-                  //     color: Color(0xFFE30613),
-                  //     borderRadius: BorderRadius.circular(
-                  //         50), // Apply circular border to the outer container
-                  //   ),
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.all(4.0),
-                  //     child: Container(
-                  //       decoration: BoxDecoration(
-                  //         borderRadius: BorderRadius.circular(50),
-                  //         color: Color(0xFFE30613),
-                  //       ),
-                  //       child: Icon(
-                  //         Icons.share,
-                  //         color: Colors.white,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                ),
-                const SizedBox(width: 40),
-                GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfileCard(
-                            user: user,
-                          ), // Navigate to CardPage
+                  child: Container(
+                    height: 70,
+                    width: 70,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Color(0xFFE30613),
                         ),
-                      );
-                    },
-                    child: SvgPicture.asset('assets/icons/qrButton.svg')
-                    // Container(
-                    //   width: 90,
-                    //   height: 90,
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.white,
-                    //     borderRadius: BorderRadius.circular(
-                    //         50), // Apply circular border to the outer container
-                    //   ),
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.all(4.0),
-                    //     child: Container(
-                    //       decoration: BoxDecoration(
-                    //         borderRadius: BorderRadius.circular(50),
-                    //         color: Colors.white,
-                    //       ),
-                    //       child: Icon(
-                    //         Icons.qr_code,
-                    //         color: Colors.grey,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    )
+                        shape: BoxShape.circle,
+                        color: Color(0xFFFEECED)),
+                    child: Center(
+                        child: Icon(
+                      Icons.share,
+                      color: Color(0xFFE30613),
+                    )),
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfileCard(
+                          user: user,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: 80,
+                    width: 80,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Color(0xFFE30613),
+                        ),
+                        shape: BoxShape.circle,
+                        color: Color(0xFFFEECED)),
+                    child: Center(
+                        child: Icon(
+                      Icons.qr_code_2,
+                      color: Color(0xFFE30613),
+                    )),
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            ProfilePreview(
+                          user: user,
+                        ),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: 70,
+                    width: 70,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Color(0xFFE30613),
+                        ),
+                        shape: BoxShape.circle,
+                        color: Color(0xFFFEECED)),
+                    child: Center(
+                        child: Icon(
+                      Icons.remove_red_eye,
+                      color: Color(0xFFE30613),
+                    )),
+                  ),
+                ),
               ],
             ),
           ],

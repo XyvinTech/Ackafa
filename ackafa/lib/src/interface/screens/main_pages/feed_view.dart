@@ -578,7 +578,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
                           height: 30,
                           color: const Color.fromARGB(255, 255, 255, 255),
                           child: Image.network(
-                            widget.user.image ?? 'https://placehold.co/600x400',
+                            widget.user.image ?? '',
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Image.asset(

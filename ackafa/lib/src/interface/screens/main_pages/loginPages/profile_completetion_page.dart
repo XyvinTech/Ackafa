@@ -56,9 +56,11 @@ class ProfileCompletionScreen extends StatelessWidget {
                                   SharedPreferences preferences =
                                       await SharedPreferences.getInstance();
                                   preferences.setString('id', user.id ?? '');
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) => DetailsPage()));
+                                 Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    settings: RouteSettings(
+                                        name: 'ProfileCompletion'),
+                                    builder: (context) => const DetailsPage()));
                                 },
                                 fontSize: 16)),
                       ),

@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ViewMoreEventPage extends ConsumerStatefulWidget {
   final Event event;
@@ -69,14 +70,35 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                         color: Colors.grey[300],
                         child: Image.network(
                           widget.event.image ??
-                              'https://placehold.co/600x400/png', // Replace with your image URL
+                              '', // Replace with your image URL
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.network(
-                              'https://placehold.co/600x400/png',
-                              fit: BoxFit.fill,
-                            );
-                          },
+                           errorBuilder: (context, error, stackTrace) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                      ),
+                    ),
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child; // Image loaded successfully
+                  }
+                  // While the image is loading, show shimmer effect
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  );
+                },
                         ),
                       ),
                     ),

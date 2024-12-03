@@ -98,7 +98,6 @@ class _HomePageState extends ConsumerState<HomePage> {
         return RefreshIndicator(
           color: Color(0xFFE30613),
           onRefresh: () async {
-   
             ref.invalidate(fetchPromotionsProvider);
             ref.invalidate(fetchEventsProvider);
           },
@@ -126,7 +125,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                         .resolve(ImageConfiguration());
                   }
                 });
-    
 
                 return SingleChildScrollView(
                   child: Column(
@@ -145,6 +143,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     context: context, banner: banner);
                               }).toList(),
                               options: CarouselOptions(
+                                enableInfiniteScroll: false,
                                 height: 175,
                                 scrollPhysics: banners.length > 1
                                     ? null
@@ -174,13 +173,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     context: context, notice: notice);
                               }).toList(),
                               options: CarouselOptions(
+                                enableInfiniteScroll: false,
                                 scrollPhysics: notices.length > 1
                                     ? null
                                     : NeverScrollableScrollPhysics(),
                                 autoPlay: notices.length > 1 ? true : false,
                                 viewportFraction: 1,
                                 height: _calculateDynamicHeight(notices),
-                                autoPlayInterval: Duration(seconds: 3),
+                                autoPlayInterval: Duration(seconds: 4),
                                 onPageChanged: (index, reason) {
                                   setState(() {
                                     _currentNoticeIndex = index;
@@ -215,13 +215,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   );
                                 }).toList(),
                                 options: CarouselOptions(
+                                  enableInfiniteScroll: false,
                                   height: 420,
                                   scrollPhysics: posters.length > 1
                                       ? null
                                       : NeverScrollableScrollPhysics(),
                                   autoPlay: posters.length > 1,
                                   viewportFraction: 1,
-                                  autoPlayInterval: Duration(seconds: 3),
+                                  autoPlayInterval: Duration(seconds: 5),
                                   onPageChanged: (index, reason) {
                                     setState(() {
                                       _currentPosterIndex = index;
@@ -236,7 +237,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                       // Events Carousel
                       asyncEvents.when(
                         data: (events) {
-                   
                           return events.isNotEmpty
                               ? Column(
                                   children: [
@@ -269,6 +269,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                         );
                                       }).toList(),
                                       options: CarouselOptions(
+                                        enableInfiniteScroll: false,
                                         height: 380,
                                         scrollPhysics: events.length > 1
                                             ? null
@@ -415,35 +416,35 @@ Widget customPoster(
     child: AspectRatio(
       aspectRatio: 19 / 20,
       child: Image.network(
-         poster.media ?? '',
+        poster.media ?? '',
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                  );
-                },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child; // Image loaded successfully
-                  }
-                  // While the image is loading, show shimmer effect
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  );
-                },
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+              ),
+            ),
+          );
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) {
+            return child; // Image loaded successfully
+          }
+          // While the image is loading, show shimmer effect
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
+          );
+        },
       ),
     ),
   );
