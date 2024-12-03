@@ -107,7 +107,7 @@ class ProfilePreview extends ConsumerWidget {
                         user.image != null && user.image != ''
                             ? ClipOval(
                                 child: Image.network(
-                                  user.image ?? 'https://placehold.co/600x400',
+                                  user.image ?? '',
                                   width: 90,
                                   height: 90,
                                   fit: BoxFit.contain,

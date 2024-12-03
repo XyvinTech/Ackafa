@@ -1,3 +1,4 @@
+import 'package:ackaf/src/interface/common/shimmer.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -235,7 +236,7 @@ class MenuPage extends StatelessWidget {
               ),
             ),
             body: asyncUser.when(
-              loading: () => Center(child: LoadingAnimation()),
+              loading: () => MenuPageShimmer(),
               error: (error, stackTrace) {
                 // Handle error state
                 return Center(

@@ -400,6 +400,20 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     );
   }
 
+  void navigateBasedOnPreviousPage() {
+    final previousPage = ModalRoute.of(context)?.settings.name;
+    log('previousPage: $previousPage');
+    if (previousPage == 'ProfileCompletion') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MainPage()),
+      );
+    } else {
+      Navigator.pop(context);
+      ref.read(userProvider.notifier).refreshUser();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final asyncUser = ref.watch(userProvider);
@@ -578,12 +592,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                     TextButton(
                                         onPressed: () {
                                           ref.invalidate(userProvider);
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder:
-                                                      (BuildContext context) =>
-                                                          MainPage()));
+                                          navigateBasedOnPreviousPage();
                                         },
                                         child: Icon(
                                           Icons.close,
@@ -1534,11 +1543,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                       ref.invalidate(userProvider);
                                       CustomSnackbar.showSnackbar(
                                           context, 'Success');
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  MainPage()));
+                                      navigateBasedOnPreviousPage();
                                     }
                                   }))),
                     ],

@@ -5,7 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:ackaf/src/data/services/api_routes/events_api.dart';
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/events_model.dart';
-import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart'; // Import the ViewMoreEventPage
+import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart';
+import 'package:shimmer/shimmer.dart'; // Import the ViewMoreEventPage
 
 class EventPage extends StatelessWidget {
   const EventPage({super.key});
@@ -84,10 +85,32 @@ class EventPage extends StatelessWidget {
                           ),
                           child: Image.network(
                             errorBuilder: (context, error, stackTrace) {
-                              return Image.network(
-                                  fit: BoxFit.cover,
-                                  'https://placehold.co/600x400/png');
-                            },
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                      ),
+                    ),
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child; // Image loaded successfully
+                  }
+                  // While the image is loading, show shimmer effect
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  );
+                },
                             event.image!, // Replace with your image URL
                             fit: BoxFit.cover,
                           ),

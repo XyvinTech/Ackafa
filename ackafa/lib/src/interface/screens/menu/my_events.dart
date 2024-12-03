@@ -73,29 +73,35 @@ class MyEventsPage extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Image.network(
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    // If the image is fully loaded, show the image
-                    return child;
-                  }
-                  // While the image is loading, show shimmer effect
-                  return Container(
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
+ errorBuilder: (context, error, stackTrace) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
                       ),
                     ),
                   );
                 },
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.network('https://placehold.co/600x400');
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child; // Image loaded successfully
+                  }
+                  // While the image is loading, show shimmer effect
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  );
                 },
-                event.image ?? 'https://via.placeholder.com/400x200',
+              
+                event.image ?? '',
                 width: double.infinity,
                 height: 200,
                 fit: BoxFit.cover,
