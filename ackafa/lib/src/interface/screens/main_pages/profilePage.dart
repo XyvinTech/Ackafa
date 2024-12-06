@@ -33,7 +33,6 @@ class ProfilePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
                           border: Border.all(
                               color: const Color.fromARGB(255, 237, 231, 231)),
@@ -51,22 +50,20 @@ class ProfilePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: Column(
+                        child: Stack(
                           children: [
-                            Stack(
+                            Positioned.fill(
+                              top: -100,
+                              left: -19,
+                              child: Image.asset(
+                                color: Color(0xFFE30613).withOpacity(0.07),
+                                'assets/profile_background.png',
+                                fit: BoxFit.fitWidth,
+                                width: double.infinity,
+                              ),
+                            ),
+                            Column(
                               children: [
-                                Positioned.fill(
-                                  child: Image.asset(
-                                    color: Colors.black.withOpacity(0.6),
-                                    'assets/triangles.png',
-                                    fit: BoxFit.cover,
-                                    height: 240,
-                                    width: double.infinity,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 40,
-                                ),
                                 SizedBox(
                                   width: double
                                       .infinity, // Sets a bounded width constraint

@@ -41,6 +41,16 @@ class ProfilePreview extends ConsumerWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
+          Positioned(
+            top: -10,
+            left: -39,
+            right: -39,
+            child: Image.asset(
+              color: Color(0xFFE30613).withOpacity(0.1),
+              'assets/profile_background.png',
+              width: double.infinity,
+            ),
+          ),
           SingleChildScrollView(
             child: Column(
               children: [
