@@ -1,3 +1,4 @@
+import 'package:ackaf/src/data/services/share_with_qr.dart';
 import 'package:ackaf/src/interface/common/components/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
@@ -244,8 +245,7 @@ class ProfilePage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Share.share(
-                        'https://admin.akcafconnect.com/user/${user.id}');
+                    captureAndShareWidgetScreenshot(context);
                   },
                   child: Container(
                     height: 70,
