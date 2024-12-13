@@ -196,6 +196,6 @@ Future<void> captureAndShareWidgetScreenshot(BuildContext context) async {
   Share.shareXFiles(
     [XFile(file.path)],
     text:
-        'Check out my profile on KSSIA!:\n https://admin.kssiathrissur.com/user/${userId}',
+        'Check out my profile on AKCAF!:\n https://admin.akcafconnect.com/user/${userId}',
   );
 }
