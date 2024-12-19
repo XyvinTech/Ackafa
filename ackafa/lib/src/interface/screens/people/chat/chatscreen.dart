@@ -178,13 +178,13 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                             );
                           },
                           child: Text(
-                            '${widget.receiver.name?.first ?? ''}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last ?? ''}',
+                            '${widget.receiver.name?? ''}',
                             style: const TextStyle(fontSize: 18),
                           ),
                         );
                       },
                       loading: () => Text(
-                        '${widget.receiver.name?.first ?? ''}  ${widget.receiver.name?.middle ?? ''} ${widget.receiver.name?.last ?? ''}',
+                        '${widget.receiver.name?? ''}',
                         style: const TextStyle(fontSize: 18),
                       ),
                       error: (error, stackTrace) {

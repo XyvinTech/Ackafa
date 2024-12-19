@@ -267,16 +267,16 @@ class _FeedViewState extends ConsumerState<FeedView> {
           data: (postOwner) {
             var receiver = Participant(
               id: feed.author,
-              name: postOwner.name,
+              name: postOwner.fullName,
               image: postOwner.image,
             );
-            log('receiver:${receiver.id}\n${receiver.image}\n${receiver.name?.first}');
+            log('receiver:${receiver.id}\n${receiver.image}\n${receiver.name}');
 
             return asyncUser.when(
               data: (user) {
                 var sender = Participant(
-                    id: user.id, image: user.image, name: user.name);
-                log('sender:${sender.id}\n${sender.image}\n${sender.name?.first}');
+                    id: user.id, image: user.image, name: user.fullName);
+                log('sender:${sender.id}\n${sender.image}\n${sender.name}');
 
                 return ReusableFeedPost(
                     withImage: feed.media != null ? true : false,
@@ -451,7 +451,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
                                 title: Text(
                                     widget.feed.comments![index].user != null
                                         ? widget.feed.comments![index].user!
-                                                .name?.first ??
+                                                .name ??
                                             'Unknown User'
                                         : 'Unknown User'),
                                 subtitle: Text(

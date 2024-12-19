@@ -7,7 +7,7 @@ part of 'notification_api.dart';
 // **************************************************************************
 
 String _$fetchNotificationsHash() =>
-    r'8902485f7b69f44de0e656859877605ae8ffe473';
+    r'f3247a030bdf57e241b4a1493e098ff0a43b6adb';
 
 /// See also [fetchNotifications].
 @ProviderFor(fetchNotifications)

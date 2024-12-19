@@ -80,7 +80,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                             ),
                           ),
                           title: Text(
-                              '${receiver?.name?.first ?? ''} ${receiver?.name?.middle ?? ''} ${receiver?.name?.last ?? ''}'),
+                              '${receiver?.name?? ''}'),
                           subtitle: Text(
                             chats[index].lastMessage?.content != null
                                 ? (chats[index].lastMessage!.content!.length >

@@ -35,9 +35,8 @@ class UserRegistrationScreen extends StatefulWidget {
 
 class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
   File? _profileImageFile;
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
-  final TextEditingController middleNameController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emirateIDController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   Future<void> _pickImage(ImageSource source, context) async {
     PermissionStatus status;
@@ -171,20 +170,20 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                                     255,
                                                                     255,
                                                                     255),
-                                                                child:
-                                                                    _profileImageFile !=
-                                                                            null
-                                                                        ? Image
-                                                                            .file(
-                                                                            _profileImageFile!,
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          )
-                                                                        : Icon(
-                                                                            Icons.person,
-                                                                            size:
-                                                                                50,
-                                                                          )),
+                                                                child: _profileImageFile !=
+                                                                        null
+                                                                    ? Image
+                                                                        .file(
+                                                                        _profileImageFile!,
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                      )
+                                                                    : const Icon(
+                                                                        Icons
+                                                                            .person,
+                                                                        size:
+                                                                            50,
+                                                                      )),
                                                           ),
                                                         ),
                                                         Positioned(
@@ -270,7 +269,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                   style: TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
-                                                          FontWeight.w500),
+                                                          FontWeight.bold),
                                                 ),
                                               ),
                                             ],
@@ -283,46 +282,22 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                 bottom: 10),
                                             child: Column(
                                               children: [
+                                                _createLabel('Full Name', true),
                                                 CustomTextFormField(
                                                   validator: (value) {
                                                     if (value == null ||
                                                         value.isEmpty) {
-                                                      return 'Please Enter your First Name';
+                                                      return 'Please Enter your Full Name';
                                                     }
                                                     return null;
                                                   },
                                                   textController:
-                                                      firstNameController,
+                                                      nameController,
                                                   labelText:
-                                                      'Enter your First name',
+                                                      'Enter Your Full name',
                                                 ),
                                                 const SizedBox(height: 20.0),
-                                                CustomTextFormField(
-                                                    // validator: (value) {
-                                                    //   if (value == null ||
-                                                    //       value.isEmpty) {
-                                                    //     return 'Please Enter your Middle name';
-                                                    //   }
-                                                    //   return null;
-                                                    // },
-                                                    textController:
-                                                        middleNameController,
-                                                    labelText:
-                                                        'Enter your Middle name'),
-                                                const SizedBox(height: 20.0),
-                                                CustomTextFormField(
-                                                    validator: (value) {
-                                                      if (value == null ||
-                                                          value.isEmpty) {
-                                                        return 'Please Enter your Last name';
-                                                      }
-                                                      return null;
-                                                    },
-                                                    textController:
-                                                        lastNameController,
-                                                    labelText:
-                                                        'Enter your Last name'),
-                                                const SizedBox(height: 20.0),
+                                                _createLabel('Email ID', true),
                                                 CustomTextFormField(
                                                     validator: (value) {
                                                       if (value == null ||
@@ -336,6 +311,22 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                     labelText:
                                                         'Enter your  Email ID'),
                                                 const SizedBox(height: 20.0),
+                                                _createLabel(
+                                                    'Emirates ID', true),
+                                                CustomTextFormField(
+                                                    validator: (value) {
+                                                      if (value == null ||
+                                                          value.isEmpty) {
+                                                        return 'Please Enter your Emirates ID';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    textController:
+                                                        emirateIDController,
+                                                    labelText:
+                                                        'Enter your  Emirates ID'),
+                                                const SizedBox(height: 20.0),
+                                                _createLabel('College', true),
                                                 FormField<College>(
                                                   validator: (value) {
                                                     if (selectedCollege ==
@@ -393,7 +384,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                                     top: 8.0),
                                                             child: Text(
                                                               state.errorText!,
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                   color: Colors
                                                                       .red),
                                                             ),
@@ -403,6 +394,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                   },
                                                 ),
                                                 const SizedBox(height: 20.0),
+                                                _createLabel('Batch', true),
                                                 FormField<String>(
                                                   validator: (value) {
                                                     if (selectedBatch == null) {
@@ -457,7 +449,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                                     top: 8.0),
                                                             child: Text(
                                                               state.errorText!,
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                   color: Colors
                                                                       .red),
                                                             ),
@@ -504,25 +496,21 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                     print(profileImageUrl);
                                                     log(token);
 
-                                                    final response = await userApi.registerUser(
-                                                        token: token,
-                                                        profileUrl:
-                                                            profileImageUrl,
-                                                        firstName:
-                                                            firstNameController
+                                                    final response = await userApi
+                                                        .registerUser(emiratesID: emirateIDController.text,
+                                                            token: token,
+                                                            profileUrl:
+                                                                profileImageUrl,
+                                                            name: nameController
                                                                 .text,
-                                                        middleName:
-                                                            middleNameController
-                                                                .text,
-                                                        lastName:
-                                                            lastNameController
-                                                                .text,
-                                                        emailId: emailController
-                                                            .text,
-                                                        college:
-                                                            selectedCollegeId,
-                                                        batch: selectedBatch,
-                                                        context: context);
+                                                            emailId:
+                                                                emailController
+                                                                    .text,
+                                                            college:
+                                                                selectedCollegeId,
+                                                            batch:
+                                                                selectedBatch,
+                                                            context: context);
 
                                                     if (response) {
                                                       log('user status: ${user.status}');
@@ -542,14 +530,14 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                                 MaterialPageRoute(
                                                                     builder:
                                                                         (context) =>
-                                                                            PaymentConfirmationPage()));
+                                                                            const PaymentConfirmationPage()));
                                                       } else {
                                                         Navigator.of(context)
                                                             .pushReplacement(
                                                                 MaterialPageRoute(
                                                                     builder:
                                                                         (context) =>
-                                                                            UserInactivePage()));
+                                                                            const UserInactivePage()));
                                                       }
                                                     }
                                                   } catch (e) {
@@ -562,7 +550,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                               )),
                         );
                       },
-                      loading: () => Center(child: LoadingAnimation()),
+                      loading: () => const Center(child: LoadingAnimation()),
                       error: (error, stackTrace) {
                         return Center(
                           child: Text('$error'),
@@ -582,16 +570,44 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
               return const UserInactivePage();
             } else {
               log('im in payment condition');
-              return PaymentConfirmationPage();
+              return const PaymentConfirmationPage();
             }
           },
-          loading: () => Scaffold(body: Center(child: LoadingAnimation())),
+          loading: () =>
+              const Scaffold(body: Center(child: LoadingAnimation())),
           error: (error, stackTrace) {
             // Handle error state
             return LoginPage();
           },
         );
       },
+    );
+  }
+
+  Widget _createLabel(String label, bool isMandatory) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              label,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            if (isMandatory)
+              Text(
+                '*',
+                style: TextStyle(color: Colors.red),
+              )
+          ],
+        ),
+        SizedBox(
+          height: 10,
+        )
+      ],
     );
   }
 

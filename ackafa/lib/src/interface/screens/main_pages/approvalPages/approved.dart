@@ -68,7 +68,7 @@ class _PendingApprovalPageState extends ConsumerState<ApprovedApprovalPage> {
                       imageUrl:
                           approval.image ?? 'https://placehold.co/600x400/png',
                       name:
-                          '${approval.name?.first} ${approval.name?.middle} ${approval.name?.last}',
+                          '${approval.fullName??''}',
                       college: approval.college?.collegeName ?? '',
                       batch: 'Batch of: ${approval.batch.toString() ?? ''}',
                     ),

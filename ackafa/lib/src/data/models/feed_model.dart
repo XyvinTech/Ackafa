@@ -94,7 +94,7 @@ class Comment {
 class FeedUser {
   String? id;
   String? image;
-  Name? name;
+  String? name;
 
   FeedUser({this.id, this.image, this.name});
 
@@ -102,7 +102,7 @@ class FeedUser {
     return FeedUser(
       id: json['_id'] as String?,
       image: json['image'] as String?,
-      name: json['name'] != null ? Name.fromJson(json['name']) : null,
+      name: json['name'] as String?,
     );
   }
 
@@ -110,7 +110,7 @@ class FeedUser {
     return {
       '_id': id,
       'image': image,
-      'name': name?.toJson(),
+      'name': name,
     };
   }
 }

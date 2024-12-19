@@ -66,7 +66,7 @@ class _PendingApprovalPageState extends ConsumerState<RejectedApprovalPage> {
                       imageUrl:
                           user.image ?? 'https://placehold.co/600x400/png',
                       name:
-                          '${user.name?.first} ${user.name?.middle} ${user.name?.last}',
+                          '${user.fullName??''}',
                       college: user.college?.collegeName ?? '',
                       batch: 'Batch of: ${user.batch.toString() ?? ''}',
                     ),

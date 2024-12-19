@@ -34,7 +34,7 @@ Widget buildUserInfo(UserModel user, Feed feed) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${user.name?.first} ${user.name?.middle ?? ''} ${user.name?.last}',
+                    '${user.fullName??''}',
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 12),
                     overflow:

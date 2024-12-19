@@ -90,6 +90,7 @@ class ProfilePage extends StatelessWidget {
                                                       ),
                                                     )
                                                   : Image.asset(
+                                                      scale: 1.2,
                                                       'assets/icons/dummy_person.png'),
                                             ],
                                           ),
@@ -101,7 +102,7 @@ class ProfilePage extends StatelessWidget {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
+                                                  '${user.fullName ?? ''}',
                                                   style: const TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.bold,
