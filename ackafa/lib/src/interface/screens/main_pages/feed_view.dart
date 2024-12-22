@@ -27,10 +27,10 @@ import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hl_image_picker/hl_image_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:image_cropper/image_cropper.dart';
 
 class FeedView extends ConsumerStatefulWidget {
   FeedView({super.key});
@@ -66,38 +66,37 @@ class _FeedViewState extends ConsumerState<FeedView> {
   ApiRoutes api = ApiRoutes();
 
   Future<File?> _pickFile({required String imageType}) async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final _picker = HLImagePicker();
 
-    if (image != null) {
-      // Crop the image to 4:5 aspect ratio
-      final croppedImage = await ImageCropper().cropImage(
-        sourcePath: image.path,
-        aspectRatio: CropAspectRatio(ratioX: 4, ratioY: 5),
-        compressQuality: 100,
-        uiSettings: [
-          AndroidUiSettings(
-            activeControlsWidgetColor: Color(0xFFE30613),
-            toolbarTitle: 'Crop Image',
-            toolbarColor: Color(0xFFE30613),
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: true,
-          ),
-          IOSUiSettings(
-            title: 'Crop Image',
-          ),
-        ],
+    try {
+      // Open the picker to select an image
+      final images = await _picker.openPicker(
+        cropping: true, // Enable cropping
+        pickerOptions: HLPickerOptions(
+          mediaType: MediaType.image, // Ensure we are selecting images
+          maxSelectedAssets: 1, // Allow selecting only one image
+        ),
+        cropOptions: HLCropOptions(
+          aspectRatio:
+              CropAspectRatio(ratioX: 4, ratioY: 5), // Set 4:5 aspect ratio
+          compressQuality: 0.9, // Updated: Use a value between 0.1 and 1.0
+          compressFormat: CompressFormat.jpg,
+          croppingStyle: CroppingStyle.normal, // Optional, set cropping style
+        ),
       );
 
-      if (croppedImage != null) {
+      if (images.isNotEmpty) {
+        final selectedImage = images.first;
         setState(() {
-          _feedImage = File(croppedImage.path);
+          _feedImage = File(selectedImage.path);
           _feedImageSource = ImageSource.gallery;
         });
         return _feedImage;
       }
+    } catch (e) {
+      debugPrint("Error picking or cropping the image: $e");
     }
+
     return null;
   }
 
@@ -448,12 +447,11 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
                                         : const Icon(Icons.person),
                                   ),
                                 ),
-                                title: Text(
-                                    widget.feed.comments![index].user != null
-                                        ? widget.feed.comments![index].user!
-                                                .name ??
-                                            'Unknown User'
-                                        : 'Unknown User'),
+                                title: Text(widget.feed.comments![index].user !=
+                                        null
+                                    ? widget.feed.comments![index].user!.name ??
+                                        'Unknown User'
+                                    : 'Unknown User'),
                                 subtitle: Text(
                                     widget.feed.comments?[index].comment ?? ''),
                               );

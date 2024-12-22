@@ -16,7 +16,8 @@ import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/paymentpage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_completetion_page.dart';
-import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/subcription_expired_page.dart';
+
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRegistrationScreen extends StatefulWidget {
   const UserRegistrationScreen({super.key});
@@ -497,7 +497,10 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                     log(token);
 
                                                     final response = await userApi
-                                                        .registerUser(emiratesID: emirateIDController.text,
+                                                        .registerUser(
+                                                            emiratesID:
+                                                                emirateIDController
+                                                                    .text,
                                                             token: token,
                                                             profileUrl:
                                                                 profileImageUrl,
@@ -568,6 +571,9 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
             } else if (user.status == 'inactive') {
               log('im in inactive condition');
               return const UserInactivePage();
+            } else if (user.status == 'subscription_expired') {
+              log('im in inactive condition');
+              return const SubcriptionExpiredPage();
             } else {
               log('im in payment condition');
               return const PaymentConfirmationPage();

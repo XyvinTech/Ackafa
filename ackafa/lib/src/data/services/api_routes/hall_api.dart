@@ -1,18 +1,20 @@
-  import 'dart:convert';
+import 'dart:convert';
 import 'dart:developer';
 import 'package:ackaf/src/data/models/hall_models.dart';
+import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:ackaf/src/data/globals.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'hall_api.g.dart';
 
-
-
 @riverpod
-Future<List<HallBooking>> fetchHallBookings(FetchHallBookingsRef ref,
-   ) async {
+Future<List<HallBooking>> fetchHallBookings(
+    FetchHallBookingsRef ref, String date) async {
+  log('requesting url:$baseUrl/time/bookings?date=$date');
   final response = await http.get(
-    Uri.parse('$baseUrl/booking/list'),
+    Uri.parse('$baseUrl/time/bookings?date=$date'),
     headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token"
@@ -22,32 +24,41 @@ Future<List<HallBooking>> fetchHallBookings(FetchHallBookingsRef ref,
   if (response.statusCode == 200) {
     final data = json.decode(response.body);
     final hallbookingsJson = data['data'] as List<dynamic>? ?? [];
-
-    return hallbookingsJson.map((hallBookings) => HallBooking.fromJson(hallBookings)).toList();
+    log(data.toString());
+    final List<HallBooking> hallbookings = hallbookingsJson
+        .map((hallBookings) => HallBooking.fromJson(hallBookings))
+        .toList();
+    log(hallbookings.toString());
+    return hallbookings;
   } else {
     final data = json.decode(response.body);
     log(data['message']);
     throw Exception('Failed to load feeds');
   }
 }
-  Future<void> bookHall(Map<String, dynamic> bookingData) async {
-    final url = Uri.parse('$baseUrl/booking');
-    log('updated profile data:$bookingData');
-    final response = await http.patch(
-      url,
-      headers: {
-        'Content-type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode(bookingData),
-    );
 
-    if (response.statusCode == 200) {
-      print('Profile updated successfully');
-      print(json.decode(response.body)['message']);
-    } else {
-      print(json.decode(response.body)['message']);
-      print('Failed to update profile. Status code: ${response.statusCode}');
-      throw Exception('Failed to update profile');
-    }
+Future<bool?> bookHall(
+    Map<String, dynamic> bookingData, BuildContext context) async {
+  final url = Uri.parse('$baseUrl/booking');
+  log('creating data:$bookingData');
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+    body: jsonEncode(bookingData),
+  );
+
+  if (response.statusCode == 200) {
+    print('created hall booking successfully');
+    print(json.decode(response.body)['message']);
+    CustomSnackbar.showSnackbar(context, json.decode(response.body)['message']);
+    return true;
+  } else {
+    print(json.decode(response.body)['message']);
+    CustomSnackbar.showSnackbar(context, json.decode(response.body)['message']);
+    print('Failed. Status code: ${response.statusCode}');
+    return false;
   }
+}

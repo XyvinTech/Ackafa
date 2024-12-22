@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/feed_model.dart';
@@ -1411,6 +1412,7 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
   String? mediaUrl;
   @override
   Widget build(BuildContext context) {
+    log('Modal image:${postImage.toString()}');
     ApiRoutes api = ApiRoutes();
 
     return PopScope(

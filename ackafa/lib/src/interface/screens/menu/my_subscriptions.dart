@@ -1,5 +1,8 @@
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/interface/common/webview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MySubscriptionPage extends StatelessWidget {
   const MySubscriptionPage({super.key});
@@ -32,14 +35,19 @@ class MySubscriptionPage extends StatelessWidget {
           child: Column(
             children: [
               // Membership Subscription Card
-              _SubscriptionCard(
-                title: "App subscription",
-                plan: "Active",
-                planColor: Colors.green,
-                lastRenewedDate: "12th July 2025",
-                amount: "₹2000",
-                dueOrExpiryDate: "12th July 2026",
-                dueOrExpiryLabel: "Due date",
+              Consumer(
+                builder: (context, ref, child) {
+           
+              return    _SubscriptionCard(
+                    title: "App subscription",
+                    plan: "Active",
+                    planColor: Colors.green,
+                    lastRenewedDate: "12th July 2025",
+                    amount: "₹2000",
+                    dueOrExpiryDate: "12th July 2026",
+                    dueOrExpiryLabel: "Due date",
+                  );
+                },
               ),
               const SizedBox(height: 16),
             ],
@@ -146,7 +154,16 @@ class _SubscriptionCard extends StatelessWidget {
                 child: customButton(
                   fontSize: 13,
                   label: 'EXTEND SUBSCRIPTION',
-                  onPressed: () {},
+                  onPressed: () async {
+                    ApiRoutes userApi = ApiRoutes();
+                    String? paymentUrl = await userApi.makePayment();
+                    if (paymentUrl != null) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => PaymentWebView(
+                                paymentUrl: paymentUrl,
+                              )));
+                    }
+                  },
                 ))
           ],
         ),

@@ -5,4 +5,4 @@ bool LoggedIn = false;
 String id = '';
 String fcmToken = '';
 bool isPaymentEnabled = false;
-String baseUrl = 'http://192.168.29.241:3000/api/v1';
+String baseUrl = 'http://192.168.1.5:3000/api/v1';

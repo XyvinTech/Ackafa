@@ -20,6 +20,8 @@ final getGroupListProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GetGroupListRef = AutoDisposeFutureProviderRef<List<GroupModel>>;
 String _$fetchGroupInfoHash() => r'e869bd7582a2f215ea5fb0efdd748b596cd31f89';
 
@@ -157,6 +159,8 @@ class FetchGroupInfoProvider extends AutoDisposeFutureProvider<GroupInfoModel> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin FetchGroupInfoRef on AutoDisposeFutureProviderRef<GroupInfoModel> {
   /// The parameter `id` of this provider.
   String get id;
@@ -171,4 +175,4 @@ class _FetchGroupInfoProviderElement
   String get id => (origin as FetchGroupInfoProvider).id;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

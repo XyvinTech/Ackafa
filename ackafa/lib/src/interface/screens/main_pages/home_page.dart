@@ -24,7 +24,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   final UserModel user;
@@ -119,12 +118,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 final filteredVideos = videos
                     .where((video) => video.link!.startsWith('http'))
                     .toList();
-                posters.forEach((poster) {
-                  if (poster.media != null) {
-                    CachedNetworkImageProvider(poster.media!)
-                        .resolve(ImageConfiguration());
-                  }
-                });
+          
 
                 return SingleChildScrollView(
                   child: Column(

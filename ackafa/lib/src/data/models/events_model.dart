@@ -12,7 +12,7 @@ class Speaker {
     this.image,
     this.id,
   });
-
+ 
   // fromJson
   factory Speaker.fromJson(Map<String, dynamic> json) {
     return Speaker(

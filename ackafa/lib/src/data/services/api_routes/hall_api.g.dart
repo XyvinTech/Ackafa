@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'college_api.dart';
+part of 'hall_api.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchCollegesHash() => r'ed908420d407b8137417871ad406d232ff3d0bd0';
+String _$fetchHallBookingsHash() => r'0a2213ce06bcbd0dcd2ee5d6cd10957b2de3dd07';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,30 +29,30 @@ class _SystemHash {
   }
 }
 
-/// See also [fetchColleges].
-@ProviderFor(fetchColleges)
-const fetchCollegesProvider = FetchCollegesFamily();
+/// See also [fetchHallBookings].
+@ProviderFor(fetchHallBookings)
+const fetchHallBookingsProvider = FetchHallBookingsFamily();
 
-/// See also [fetchColleges].
-class FetchCollegesFamily extends Family<AsyncValue<List<College>>> {
-  /// See also [fetchColleges].
-  const FetchCollegesFamily();
+/// See also [fetchHallBookings].
+class FetchHallBookingsFamily extends Family<AsyncValue<List<HallBooking>>> {
+  /// See also [fetchHallBookings].
+  const FetchHallBookingsFamily();
 
-  /// See also [fetchColleges].
-  FetchCollegesProvider call(
-    String token,
+  /// See also [fetchHallBookings].
+  FetchHallBookingsProvider call(
+    String date,
   ) {
-    return FetchCollegesProvider(
-      token,
+    return FetchHallBookingsProvider(
+      date,
     );
   }
 
   @override
-  FetchCollegesProvider getProviderOverride(
-    covariant FetchCollegesProvider provider,
+  FetchHallBookingsProvider getProviderOverride(
+    covariant FetchHallBookingsProvider provider,
   ) {
     return call(
-      provider.token,
+      provider.date,
     );
   }
 
@@ -68,75 +68,76 @@ class FetchCollegesFamily extends Family<AsyncValue<List<College>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'fetchCollegesProvider';
+  String? get name => r'fetchHallBookingsProvider';
 }
 
-/// See also [fetchColleges].
-class FetchCollegesProvider extends AutoDisposeFutureProvider<List<College>> {
-  /// See also [fetchColleges].
-  FetchCollegesProvider(
-    String token,
+/// See also [fetchHallBookings].
+class FetchHallBookingsProvider
+    extends AutoDisposeFutureProvider<List<HallBooking>> {
+  /// See also [fetchHallBookings].
+  FetchHallBookingsProvider(
+    String date,
   ) : this._internal(
-          (ref) => fetchColleges(
-            ref as FetchCollegesRef,
-            token,
+          (ref) => fetchHallBookings(
+            ref as FetchHallBookingsRef,
+            date,
           ),
-          from: fetchCollegesProvider,
-          name: r'fetchCollegesProvider',
+          from: fetchHallBookingsProvider,
+          name: r'fetchHallBookingsProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$fetchCollegesHash,
-          dependencies: FetchCollegesFamily._dependencies,
+                  : _$fetchHallBookingsHash,
+          dependencies: FetchHallBookingsFamily._dependencies,
           allTransitiveDependencies:
-              FetchCollegesFamily._allTransitiveDependencies,
-          token: token,
+              FetchHallBookingsFamily._allTransitiveDependencies,
+          date: date,
         );
 
-  FetchCollegesProvider._internal(
+  FetchHallBookingsProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.token,
+    required this.date,
   }) : super.internal();
 
-  final String token;
+  final String date;
 
   @override
   Override overrideWith(
-    FutureOr<List<College>> Function(FetchCollegesRef provider) create,
+    FutureOr<List<HallBooking>> Function(FetchHallBookingsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: FetchCollegesProvider._internal(
-        (ref) => create(ref as FetchCollegesRef),
+      override: FetchHallBookingsProvider._internal(
+        (ref) => create(ref as FetchHallBookingsRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        token: token,
+        date: date,
       ),
     );
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<College>> createElement() {
-    return _FetchCollegesProviderElement(this);
+  AutoDisposeFutureProviderElement<List<HallBooking>> createElement() {
+    return _FetchHallBookingsProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is FetchCollegesProvider && other.token == token;
+    return other is FetchHallBookingsProvider && other.date == date;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, token.hashCode);
+    hash = _SystemHash.combine(hash, date.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -144,18 +145,18 @@ class FetchCollegesProvider extends AutoDisposeFutureProvider<List<College>> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin FetchCollegesRef on AutoDisposeFutureProviderRef<List<College>> {
-  /// The parameter `token` of this provider.
-  String get token;
+mixin FetchHallBookingsRef on AutoDisposeFutureProviderRef<List<HallBooking>> {
+  /// The parameter `date` of this provider.
+  String get date;
 }
 
-class _FetchCollegesProviderElement
-    extends AutoDisposeFutureProviderElement<List<College>>
-    with FetchCollegesRef {
-  _FetchCollegesProviderElement(super.provider);
+class _FetchHallBookingsProviderElement
+    extends AutoDisposeFutureProviderElement<List<HallBooking>>
+    with FetchHallBookingsRef {
+  _FetchHallBookingsProviderElement(super.provider);
 
   @override
-  String get token => (origin as FetchCollegesProvider).token;
+  String get date => (origin as FetchHallBookingsProvider).date;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
