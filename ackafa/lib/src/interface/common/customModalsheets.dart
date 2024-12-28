@@ -1,7 +1,13 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/feed_model.dart';
+import 'package:ackaf/src/data/models/hall_models.dart';
+import 'package:ackaf/src/data/notifires/bookings_notifier.dart';
+import 'package:ackaf/src/data/notifires/feed_approval_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
+import 'package:ackaf/src/data/services/api_routes/feed_api.dart';
+import 'package:ackaf/src/data/services/api_routes/hall_api.dart';
 import 'package:ackaf/src/data/services/api_routes/image_upload.dart';
 import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
 import 'package:ackaf/src/interface/common/custom_dropdowns/custom_dropdowns.dart';
@@ -14,6 +20,7 @@ import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 
 void feedModalSheet({
@@ -53,22 +60,15 @@ void feedModalSheet({
                   ),
                 Consumer(
                   builder: (context, ref, child) {
-                    final asyncAuthor =
-                        ref.watch(fetchUserByIdProvider(feed.author ?? ''));
-                    return asyncAuthor.when(
-                      data: (author) {
+   
+               
                         return Padding(
                           padding: const EdgeInsets.only(
                               left: 10, right: 10, top: 10),
                           child:
-                              buildUserInfo(author, feed), // Reuse widget here
+                              buildUserInfo( feed), // Reuse widget here
                         );
-                      },
-                      loading: () => Center(child: LoadingAnimation()),
-                      error: (error, stackTrace) {
-                        return const Center(child: Text('No Author'));
-                      },
-                    );
+                    
                   },
                 ),
                 Padding(
@@ -154,7 +154,7 @@ void messageSheet({
       final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
       return Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20))),
@@ -180,26 +180,15 @@ void messageSheet({
                         ),
                       ),
                     ),
-                    Consumer(
-                      builder: (context, ref, child) {
-                        final asyncAuthor =
-                            ref.watch(fetchUserByIdProvider(feed.author ?? ''));
-                        return asyncAuthor.when(
-                          data: (author) {
-                            return Padding(
+           
+                             Padding(
                               padding: const EdgeInsets.only(
                                   left: 20, right: 20, bottom: 10, top: 10),
                               child: buildUserInfo(
-                                  author, feed), // Reuse widget here
-                            );
-                          },
-                          loading: () => Center(child: LoadingAnimation()),
-                          error: (error, stackTrace) {
-                            return const Center(child: Text('No Author'));
-                          },
-                        );
-                      },
-                    ),
+                                   feed), // Reuse widget here
+                            )
+                        ,
+                       
                     const SizedBox(height: 10),
                     // Feed content in a row with image on the left and content on the right
                     if (feed.media != null && feed.media != '')
@@ -272,7 +261,7 @@ void messageSheet({
                             label: buttonText,
                             onPressed: () async {
                               await sendChatMessage(
-                                  userId: feed.author!,
+                                  userId: feed.author?.id??'',
                                   content: feed.content!,
                                   feedId: feed.id);
                               Navigator.of(context).push(MaterialPageRoute(
@@ -281,7 +270,7 @@ void messageSheet({
                                         sender: sender,
                                       )));
                               await sendChatMessage(
-                                  userId: feed.author!,
+                                  userId: feed.author?.id??'',
                                   content: messageController.text);
                             },
                             fontSize: 16,
@@ -1411,6 +1400,7 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
   String? mediaUrl;
   @override
   Widget build(BuildContext context) {
+    log('Modal image:${postImage.toString()}');
     ApiRoutes api = ApiRoutes();
 
     return PopScope(
@@ -1605,4 +1595,301 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
       ),
     );
   }
+}
+
+class HallModalSheet extends StatelessWidget {
+  final HallBooking booking;
+  const HallModalSheet({super.key, required this.booking});
+
+  @override
+  Widget build(BuildContext context) {
+    String date = DateFormat('yyyy-MM-dd').format(booking!.date!);
+    String startTime = DateFormat('hh:mm a')
+        .format(DateTime.parse(booking.time!.start!).toLocal());
+    String endTime = DateFormat('hh:mm a')
+        .format(DateTime.parse(booking.time!.end!).toLocal());
+    return DraggableScrollableSheet(
+      initialChildSize: 0.6,
+      minChildSize: 0.4,
+      maxChildSize: 0.9,
+      builder: (_, controller) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      booking.hall ?? '',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Booking Date',
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(date),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Booking Time',
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 4),
+                      Text('$startTime – $endTime'),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Event Name',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 4),
+              const Text('Morning Yoga Session'),
+              const SizedBox(height: 16),
+              const Text(
+                'Description',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                booking.description ?? '',
+              ),
+              if (booking.status != 'cancelled')
+                const SizedBox(
+                  height: 10,
+                ),
+              if (booking.status != 'cancelled')
+                Consumer(
+                  builder: (context, ref, child) {
+                    return customButton(
+                      label: 'Cancel Booking',
+                      onPressed: () async {
+                        await cancelBooking(booking.id ?? '', context);
+                        ref
+                            .read(bookingsNotifierProvider.notifier)
+                            .refreshBookings();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                )
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+void showFeedApprovalDetail(BuildContext context, Feed feed) {
+  final date = DateFormat('yyyy-MM-dd').format(feed.createdAt!);
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) {
+      return DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.9,
+        builder: (context, scrollController) {
+          return Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(16.0),
+              ),
+            ),
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Requirement Detail',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 24,
+                        backgroundImage: NetworkImage(""),
+                      ),
+                      const SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            feed.author?.fullName ?? '',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          // Text(
+                          //   'Member ID: 8945672234',
+                          //   style: TextStyle(
+                          //     color: Colors.grey,
+                          //     fontSize: 14,
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          feed.status ?? '',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        date,
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      feed.media ?? "",
+                      height: 150,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Description',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    feed.content ?? '',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                            child: customButton(
+                              label: 'Reject',
+                              onPressed: () async {
+                            await updateFeedStatus(
+                                    "reject", feed.id ?? '');
+
+                                Navigator.pop(context);
+
+                                ref
+                                    .read(feedApprovalNotifierProvider.notifier)
+                                    .refreshFeed();
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Expanded(
+                            child: customButton(
+                              buttonColor: Colors.green,
+                              sideColor: Colors.green,
+                              label: 'Accept',
+                              onPressed: () async {
+                                await updateFeedStatus(
+                                  "accept",
+                                  feed.id ?? '',
+                                );
+
+                                Navigator.pop(context);
+                                ref
+                                    .read(feedApprovalNotifierProvider.notifier)
+                                    .refreshFeed();
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
 }

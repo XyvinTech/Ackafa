@@ -90,41 +90,38 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 data: (user) {
                   return Stack(
                     children: <Widget>[
-                      if (user.role != 'member' && nonApprovedUsers.length > 0)
-                        IconButton(
-                            iconSize: 17,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation,
-                                          secondaryAnimation) =>
-                                      ApprovalPage(),
-                                  transitionsBuilder: (context, animation,
-                                      secondaryAnimation, child) {
-                                    const begin = Offset(
-                                        1.0, 0.0); // Slide from right to left
-                                    const end = Offset.zero;
-                                    const curve =
-                                        Curves.fastEaseInToSlowEaseOut;
+                      IconButton(
+                          iconSize: 17,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        ApprovalPage(),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  const begin = Offset(
+                                      1.0, 0.0); // Slide from right to left
+                                  const end = Offset.zero;
+                                  const curve = Curves.fastEaseInToSlowEaseOut;
 
-                                    var tween = Tween(begin: begin, end: end)
-                                        .chain(CurveTween(curve: curve));
-                                    var offsetAnimation =
-                                        animation.drive(tween);
+                                  var tween = Tween(begin: begin, end: end)
+                                      .chain(CurveTween(curve: curve));
+                                  var offsetAnimation = animation.drive(tween);
 
-                                    return SlideTransition(
-                                      position: offsetAnimation,
-                                      child: child,
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                            icon: Icon(
-                              FontAwesomeIcons.userGroup,
-                              color: Colors.grey,
-                            )),
+                                  return SlideTransition(
+                                    position: offsetAnimation,
+                                    child: child,
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            FontAwesomeIcons.userGroup,
+                            color: Colors.grey,
+                          )),
                       if (nonApprovedUsers.length > 0)
                         Positioned(
                           right: 4,

@@ -108,14 +108,14 @@ class _MainPageState extends ConsumerState<MainPage> {
     _inactiveIcons = [
       'assets/icons/home_inactive.svg',
       'assets/icons/feed_inactive.svg',
-      user.image ?? 'https://placehold.co/600x400',
+      user.image ?? '',
       'assets/icons/inactive_news.svg',
       'assets/icons/inactive_chat.svg',
     ];
     _activeIcons = [
       'assets/icons/home_active.svg',
       'assets/icons/feed_active.svg',
-      user.image ?? 'https://placehold.co/600x400',
+      user.image ?? '',
       'assets/icons/active_news.svg',
       'assets/icons/active_chat.svg',
     ];

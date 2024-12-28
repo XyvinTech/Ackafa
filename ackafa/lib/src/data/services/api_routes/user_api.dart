@@ -21,9 +21,8 @@ class ApiRoutes {
   Future<bool> registerUser(
       {required String token,
       required String? profileUrl,
-      required String? firstName,
-      required String? middleName,
-      required String? lastName,
+      required String? name,
+required String? emiratesID,
       required String? emailId,
       required String? college,
       required String? batch,
@@ -38,15 +37,12 @@ class ApiRoutes {
         'accept': '*/*',
       },
       body: jsonEncode({
-        "name": {
-          "first": firstName,
-          if (middleName != null && middleName != '') "middle": middleName,
-          "last": lastName
-        },
+        "fullName": name,
         if (profileUrl != null && profileUrl != '') "image": profileUrl,
         "email": emailId,
         "college": college,
         "batch": batch,
+        "emiratesID": emiratesID,
       }),
     );
 

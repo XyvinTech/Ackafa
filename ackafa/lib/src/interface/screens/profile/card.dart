@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/services/save_qr.dart';
 import 'package:ackaf/src/data/services/share_qr.dart';
+import 'package:ackaf/src/data/services/share_with_qr.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
@@ -208,7 +209,7 @@ class ProfileCard extends StatelessWidget {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
+                                                    '${user.fullName??''}',
                                                     style: const TextStyle(
                                                       fontSize: 18,
                                                       fontWeight:
@@ -308,10 +309,7 @@ class ProfileCard extends StatelessWidget {
                                     fontSize: 16,
                                     label: 'SHARE',
                                     onPressed: () async {
-                                      shareQr(
-                                          screenshotController:
-                                              screenshotController,
-                                          context: context);
+                                      captureAndShareWidgetScreenshot(context);
                                     }),
                               ),
                               const SizedBox(

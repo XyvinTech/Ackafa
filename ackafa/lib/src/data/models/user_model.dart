@@ -1,5 +1,6 @@
 class UserModel {
-  final Name? name;
+  final String? fullName;
+  final String? emiratesID;
   final String? id;
   final String? uid;
   final UserCollege? college;
@@ -25,7 +26,8 @@ class UserModel {
   final List<String>? blockedUsers;
 
   UserModel({
-    this.name,
+    this.fullName,
+    this.emiratesID,
     this.id,
     this.uid,
     this.college,
@@ -53,8 +55,9 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      name: json['name'] != null ? Name.fromJson(json['name']) : null,
+      fullName: json['fullName'] ,
       id: json['_id'],
+      emiratesID: json['emiratesID'],
       uid: json['uid'],
       college: json['college'] != null
           ? UserCollege.fromJson(json['college'])
@@ -102,7 +105,7 @@ class UserModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name?.toJson(),
+      'name': fullName,
       '_id': id?.toString(),
       'uid': uid,
       'college': college,
@@ -130,7 +133,7 @@ class UserModel {
   }
 
   UserModel copyWith({
-    Name? name,
+    String? name,
     String? id,
     String? uid,
     UserCollege? college,
@@ -156,7 +159,7 @@ class UserModel {
      List<String>? blockedUsers
   }) {
     return UserModel(
-      name: name ?? this.name,
+      fullName: name ?? this.fullName,
       id: id ?? this.id,
       uid: uid ?? this.uid,
       college: college ?? this.college,
@@ -187,41 +190,6 @@ class UserModel {
 
 
 
-class Name {
-  final String? first;
-  final String? middle;
-  final String? last;
-
-  Name({this.first, this.middle, this.last});
-
-  factory Name.fromJson(Map<String, dynamic> json) {
-    return Name(
-      first: json['first'],
-      middle: json['middle'],
-      last: json['last'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'first': first,
-      'middle': middle,
-      'last': last,
-    };
-  }
-
-  Name copyWith({
-    String? first,
-    String? middle,
-    String? last,
-  }) {
-    return Name(
-      first: first ?? this.first,
-      middle: middle ?? this.middle,
-      last: last ?? this.last,
-    );
-  }
-}
 
 class Company {
   final String? name;

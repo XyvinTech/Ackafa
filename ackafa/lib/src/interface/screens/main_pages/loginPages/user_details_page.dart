@@ -48,8 +48,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   // final isBrochureDetailsVisibleProvider = StateProvider<bool>((ref) => false);
 
   final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController middleNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController emaritesIdController = TextEditingController();
+
   final TextEditingController landlineController = TextEditingController();
   final TextEditingController bloodGroupController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -267,8 +267,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   void dispose() {
     // Dispose controllers when the widget is disposed
     firstNameController.dispose();
-    middleNameController.dispose();
-    lastNameController.dispose();
+    emaritesIdController.dispose();
+
     bloodGroupController.dispose();
     emailController.dispose();
     profilePictureController.dispose();
@@ -295,12 +295,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     // String lastName = nameParts.length > 1 ? nameParts.last : ' ';
 
     final Map<String, dynamic> profileData = {
-      "name": {
-        "first": user.name!.first,
-        if (user.name?.middle != null && user.name?.middle != '')
-          "middle": user.name?.middle,
-        "last": user.name!.last,
-      },
+      "fullName": user.fullName,
       "email": user.email,
       if (user.image != null && user.image != '') "image": user.image,
       "college": user.college?.id,
@@ -441,17 +436,10 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                 );
               },
               data: (user) {
-                print(user.name?.first);
-
                 if (firstNameController.text.isEmpty) {
-                  firstNameController.text = user.name!.first!;
+                  firstNameController.text = user.fullName!;
                 }
-                if (middleNameController.text.isEmpty) {
-                  middleNameController.text = user.name?.middle ?? '';
-                }
-                if (lastNameController.text.isEmpty) {
-                  lastNameController.text = user.name!.last!;
-                }
+
                 if (collegeController.text.isEmpty) {
                   collegeController.text = user.college?.collegeName ?? '';
                 }
@@ -713,35 +701,25 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                     CustomTextFormField(
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return 'Please Enter Your First Name';
+                                          return 'Please Enter Your Full Name';
                                         }
                                         return null;
                                       },
                                       textController: firstNameController,
-                                      labelText: 'Enter your First name',
-                                    ),
-                                    const SizedBox(height: 20.0),
-                                    CustomTextFormField(
-                                      // validator: (value) {
-                                      //   if (value == null || value.isEmpty) {
-                                      //     return 'Please Enter your Middle name';
-                                      //   }
-                                      //   return null;
-                                      // },
-                                      textController: middleNameController,
-                                      labelText: 'Enter your Middle name',
+                                      labelText: 'Enter Your Full name',
                                     ),
                                     const SizedBox(height: 20.0),
                                     CustomTextFormField(
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return 'Please Enter Your Last Name';
+                                          return 'Please Enter Your Emarites ID';
                                         }
                                         return null;
                                       },
-                                      textController: lastNameController,
-                                      labelText: 'Enter your Last name',
+                                      textController: emaritesIdController,
+                                      labelText: 'Enter Your Emarites ID',
                                     ),
+
                                     const SizedBox(height: 20.0),
                                     // CustomTextFormField(
                                     //     readOnly: true,

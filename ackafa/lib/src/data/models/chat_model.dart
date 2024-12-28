@@ -61,7 +61,7 @@ class ChatModel {
 
 class Participant {
   final String? id;
-  final Name? name;
+  final String? name;
   final String? image;
 
   Participant({
@@ -73,7 +73,7 @@ class Participant {
   factory Participant.fromJson(Map<String, dynamic> json) {
     return Participant(
       id: json['_id'] as String?,
-      name: json['name'] != null ? Name.fromJson(json['name']) : null,
+      name: json['name'] as String?,
       image: json['image'] as String?,
     );
   }
@@ -81,7 +81,7 @@ class Participant {
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
-      'name': name?.toJson(),
+      'name': name,
       'image': image,
     };
   }

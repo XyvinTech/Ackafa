@@ -181,11 +181,11 @@ class _IndividualPageState extends ConsumerState<Groupchatscreen> {
                           builder: (context) => GroupInfoPage(
                               groupId: widget.group.id ?? '',
                               groupName:
-                                  '${widget.group.name?.first ?? ''} ${widget.group.name?.middle ?? ''} ${widget.group.name?.last ?? ''}')),
+                                  '${widget.group.name?? ''}')),
                     );
                   },
                   child: Text(
-                    '${widget.group.name?.first ?? ''}  ${widget.group.name?.middle ?? ''} ${widget.group.name?.last ?? ''}',
+                    '${widget.group.name?? ''}',
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),
@@ -241,7 +241,7 @@ class _IndividualPageState extends ConsumerState<Groupchatscreen> {
                                 data: (user) {
                                   return GroupchatOwnMessageCard(
                                     username:
-                                        '${user.name?.first ?? ''} ${user.name?.middle ?? ''} ${user.name?.last ?? ''}',
+                                        '${user.fullName?? ''}',
                                     status: message.status!,
                                     message: message.content ?? '',
                                     time: DateFormat('h:mm a').format(
@@ -278,7 +278,7 @@ class _IndividualPageState extends ConsumerState<Groupchatscreen> {
                               },
                               child: GroupchatReplyMsgCard(
                                 username:
-                                    '${message.from?.name?.first ?? ''} ${message.from?.name?.middle ?? ''} ${message.from?.name?.last ?? ''}',
+                                    '${message.from?.name?? ''}',
                                 message: message.content ?? '',
                                 time: DateFormat('h:mm a').format(
                                   DateTime.parse(message.createdAt.toString())

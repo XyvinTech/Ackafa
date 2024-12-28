@@ -70,6 +70,7 @@ class CustomTextFormField extends StatelessWidget {
   final VoidCallback? onChanged;
   final bool? enabled;
   final bool? isAward;
+  final Color? fillColor;
   const CustomTextFormField({
     Key? key,
     required this.labelText,
@@ -82,7 +83,7 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.enabled,
-    this.isAward,
+    this.isAward, this.fillColor=const Color(0xFFF2F2F2),
   }) : super(key: key);
 
   @override
@@ -93,23 +94,20 @@ class CustomTextFormField extends StatelessWidget {
           enabled: enabled,
           onChanged: (value) {
             switch (labelText) {
-              case 'Enter your First name':
+              case 'Enter Your Full name':
                 ref.read(userProvider.notifier).updateName(
-                    firstName: textController!.text,
-                    middleName: null,
-                    lastName: null);
+                      name: textController!.text,
+                    );
                 break;
-              case 'Enter your Middle name':
+              case 'Enter Your Email ID':
                 ref.read(userProvider.notifier).updateName(
-                    firstName: null,
-                    middleName: textController!.text,
-                    lastName: null);
+                      name: textController!.text,
+                    );
                 break;
-              case 'Enter your Last name':
-                ref.read(userProvider.notifier).updateName(
-                    firstName: null,
-                    middleName: null,
-                    lastName: textController!.text);
+              case 'Enter Your Emarites ID':
+                ref.read(userProvider.notifier).updateEmiratesID(
+                      emiratesID: textController!.text,
+                    );
                 break;
               case 'Enter Your Phone':
                 ref
@@ -179,8 +177,8 @@ class CustomTextFormField extends StatelessWidget {
             alignLabelWithHint: true,
             labelText: labelText,
             labelStyle: const TextStyle(color: Colors.grey),
-            floatingLabelBehavior: FloatingLabelBehavior.auto,
-            fillColor: const Color(0xFFF2F2F2),
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+            fillColor: fillColor,
             filled: true,
             prefixIcon: prefixIcon != null && maxLines > 1
                 ? Padding(

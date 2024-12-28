@@ -1,23 +1,21 @@
 import 'dart:developer';
 
 import 'package:ackaf/src/data/notifires/approval_notifier.dart';
-import 'package:ackaf/src/data/notifires/people_notifier.dart';
 import 'package:ackaf/src/interface/common/approval_widgets/approval_pending_widget.dart';
-import 'package:ackaf/src/interface/common/approval_widgets/approved_widget.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/profile/profilePreview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ApprovedApprovalPage extends ConsumerStatefulWidget {
-  const ApprovedApprovalPage({super.key});
+class PendingApprovalPage extends ConsumerStatefulWidget {
+  const PendingApprovalPage({super.key});
 
   @override
-  ConsumerState<ApprovedApprovalPage> createState() =>
+  ConsumerState<PendingApprovalPage> createState() =>
       _PendingApprovalPageState();
 }
 
-class _PendingApprovalPageState extends ConsumerState<ApprovedApprovalPage> {
+class _PendingApprovalPageState extends ConsumerState<PendingApprovalPage> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -28,31 +26,31 @@ class _PendingApprovalPageState extends ConsumerState<ApprovedApprovalPage> {
   }
 
   Future<void> _fetchInitialUsers() async {
-    await ref.read(usersNotifierProvider.notifier).fetchMoreUsers();
+    await ref.read(approvalNotifierProvider.notifier).fetchMoreApprovals();
   }
 
   void _onScroll() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      ref.read(usersNotifierProvider.notifier).fetchMoreUsers();
+      ref.read(approvalNotifierProvider.notifier).fetchMoreApprovals();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final allUsers = ref.watch(usersNotifierProvider);
-    final users = allUsers.where((user) => user.status != 'inactive').toList();
-    final isLoading = ref.read(usersNotifierProvider.notifier).isLoading;
-    log('pending approvals :$allUsers');
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: users.isEmpty
-          ? Center(child: Text('')) // Show loader when no data
+    final approvals = ref.watch(approvalNotifierProvider);
+    final isLoading = ref.read(approvalNotifierProvider.notifier).isLoading;
+    log('pending approvals :$approvals');
+    return Scaffold(  
+      body: approvals.isEmpty
+          ? Center(
+              child: Text('NO PENDING APPROVALS')) // Show loader when no data
           : ListView.builder(
               controller: _scrollController,
-              itemCount: users.length + 1, // Add 1 for the loading indicator
+              itemCount:
+                  approvals.length + 1, // Add 1 for the loading indicator
               itemBuilder: (context, index) {
-                if (index == users.length) {
+                if (index == approvals.length) {
                   return isLoading
                       ? Center(
                           child:
@@ -60,15 +58,14 @@ class _PendingApprovalPageState extends ConsumerState<ApprovedApprovalPage> {
                       : SizedBox.shrink(); // Hide when done
                 }
 
-                final approval = users[index];
+                final approval = approvals[index];
                 return Column(
                   children: [
-                    ApprovedWidget(
-                      status: approval.status!,
+                    ApprovalPendingWidget(
+                      userId: approval.id!,
                       imageUrl:
-                          approval.image ?? 'https://placehold.co/600x400/png',
-                      name:
-                          '${approval.name?.first} ${approval.name?.middle} ${approval.name?.last}',
+                          approval.image ?? '',
+                      name: '${approval.fullName ?? ''}',
                       college: approval.college?.collegeName ?? '',
                       batch: 'Batch of: ${approval.batch.toString() ?? ''}',
                     ),

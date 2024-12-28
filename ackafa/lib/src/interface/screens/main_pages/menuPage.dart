@@ -1,5 +1,7 @@
 import 'package:ackaf/src/interface/common/shimmer.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
+import 'package:ackaf/src/interface/screens/menu/hall_booking.dart';
+import 'package:ackaf/src/interface/screens/menu/my_subscriptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -276,7 +278,7 @@ class MenuPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
+                                    '${user.fullName ?? ''}',
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -343,7 +345,6 @@ class MenuPage extends StatelessWidget {
                         ),
                       ),
 
-                      // Menu List
                       _buildListTile(
                         context,
                         Icons.credit_card,
@@ -357,6 +358,35 @@ class MenuPage extends StatelessWidget {
                         },
                       ),
 
+                      const Divider(),
+
+                      _buildListTile(
+                        context,
+                        Icons.loyalty_outlined,
+                        'My Subscriptions',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const MySubscriptionPage()),
+                          );
+                        },
+                      ),
+                      if (user.role != 'member') const Divider(),
+                      if (user.role != 'member')
+                        _buildListTile(
+                          context,
+                          Icons.edit_calendar_outlined,
+                          'Hall Booking',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HallBookingPage()),
+                            );
+                          },
+                        ),
                       const Divider(),
                       _buildListTile(
                         context,

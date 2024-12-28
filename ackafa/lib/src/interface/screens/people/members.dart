@@ -52,7 +52,7 @@ class _MembersPageState extends ConsumerState<MembersPage> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: users.isEmpty
-            ? Center(child: LoadingAnimation()) // Show loader when no data
+            ? Center(child: Text('No members')) // Show loader when no data
             : asyncChats.when(
                 data: (chats) {
                   log('im inside chat');
@@ -61,13 +61,13 @@ class _MembersPageState extends ConsumerState<MembersPage> {
                       itemCount: users.length +
                           (isLoading
                               ? 1
-                              : 0), // Add 1 to show the loading indicator
+                              : 0), 
                       itemBuilder: (context, index) {
                         if (index == users.length) {
-                          // This is the loading indicator at the end of the list
+                        
                           return Center(
                             child:
-                                LoadingAnimation(), // Show loading indicator when fetching more users
+                                LoadingAnimation(), 
                           );
                         }
 
@@ -81,7 +81,7 @@ class _MembersPageState extends ConsumerState<MembersPage> {
                             participants: [
                               Participant(
                                 id: users[index].id,
-                                name: users[index].name,
+                                name: users[index].fullName,
                                 image: users[index].image,
                               ),
                               Participant(
@@ -94,7 +94,7 @@ class _MembersPageState extends ConsumerState<MembersPage> {
                           (participant) => participant.id != id,
                           orElse: () => Participant(
                             id: users[index].id,
-                            name: users[index].name,
+                            name: users[index].fullName,
                             image: users[index].image,
                           ),
                         );
@@ -153,8 +153,7 @@ class _MembersPageState extends ConsumerState<MembersPage> {
                                     ),
                                   ),
                                 ),
-                                title: Text(
-                                    '${user.name?.first ?? ''} ${user.name?.middle ?? ''} ${user.name?.last ?? ''}'),
+                                title: Text('${user.fullName ?? ''}'),
                                 subtitle: user.company?.designation != null
                                     ? Text(user.company?.designation ?? '')
                                     : null,

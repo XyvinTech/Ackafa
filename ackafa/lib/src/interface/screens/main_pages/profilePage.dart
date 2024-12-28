@@ -1,3 +1,4 @@
+import 'package:ackaf/src/data/services/share_with_qr.dart';
 import 'package:ackaf/src/interface/common/components/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
@@ -33,7 +34,6 @@ class ProfilePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
                           border: Border.all(
                               color: const Color.fromARGB(255, 237, 231, 231)),
@@ -51,22 +51,20 @@ class ProfilePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: Column(
+                        child: Stack(
                           children: [
-                            Stack(
+                            Positioned.fill(
+                              top: -100,
+                              left: -19,
+                              child: Image.asset(
+                                color: Color(0xFFE30613).withOpacity(0.07),
+                                'assets/profile_background.png',
+                                fit: BoxFit.fitWidth,
+                                width: double.infinity,
+                              ),
+                            ),
+                            Column(
                               children: [
-                                Positioned.fill(
-                                  child: Image.asset(
-                                    color: Colors.black.withOpacity(0.6),
-                                    'assets/triangles.png',
-                                    fit: BoxFit.cover,
-                                    height: 240,
-                                    width: double.infinity,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 40,
-                                ),
                                 SizedBox(
                                   width: double
                                       .infinity, // Sets a bounded width constraint
@@ -92,6 +90,7 @@ class ProfilePage extends StatelessWidget {
                                                       ),
                                                     )
                                                   : Image.asset(
+                                                      scale: 1.2,
                                                       'assets/icons/dummy_person.png'),
                                             ],
                                           ),
@@ -103,7 +102,7 @@ class ProfilePage extends StatelessWidget {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  '${user.name!.first!} ${user.name?.middle ?? ''} ${user.name!.last!}',
+                                                  '${user.fullName ?? ''}',
                                                   style: const TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.bold,
@@ -247,8 +246,7 @@ class ProfilePage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Share.share(
-                        'https://admin.akcafconnect.com/user/${user.id}');
+                    captureAndShareWidgetScreenshot(context);
                   },
                   child: Container(
                     height: 70,

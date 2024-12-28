@@ -1,4 +1,3 @@
-import 'package:ackaf/src/data/models/user_model.dart';
 
 class GroupChatModel {
   final String? id;
@@ -56,7 +55,7 @@ class GroupChatModel {
 
 class GroupChatUserModel {
   final String? id;
-  final Name? name;
+  final String? name;
   final String? image;
 
   GroupChatUserModel({
@@ -69,7 +68,7 @@ class GroupChatUserModel {
   factory GroupChatUserModel.fromJson(Map<String, dynamic> json) {
     return GroupChatUserModel(
       id: json['_id'] as String?,
-      name: json['name'] != null ? Name.fromJson(json['name']) : null,
+      name: json['name']as String?,
       image: json['image'] as String?,
     );
   }
@@ -78,7 +77,7 @@ class GroupChatUserModel {
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
-      'name': name?.toJson(),
+      'name': name,
       'image': image,
     };
   }

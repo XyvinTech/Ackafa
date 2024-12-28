@@ -36,7 +36,7 @@ class _ChatPageState extends ConsumerState<GroupChatPage> {
                   itemBuilder: (context, index) {
                     var receiver = Participant(
                         id: groups[index].id,
-                        name: Name(first: groups[index].groupName));
+                        name: groups[index].groupName);
 
                     var sender = Participant(id: id);
                     return ListTile(
@@ -58,7 +58,7 @@ class _ChatPageState extends ConsumerState<GroupChatPage> {
                         ),
                       ),
                       title: Text(
-                          '${receiver?.name?.first ?? ''} ${receiver?.name?.middle ?? ''} ${receiver?.name?.last ?? ''}'),
+                          '${receiver.name ?? ''}'),
                       subtitle: Text(
                         groups[index].lastMessage != null
                             ? (groups[index].lastMessage!.length > 10

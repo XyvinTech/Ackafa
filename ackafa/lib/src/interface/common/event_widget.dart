@@ -4,7 +4,6 @@ import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 
 Widget eventWidget({
@@ -44,35 +43,35 @@ Widget eventWidget({
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
-                         event.image!,
+                        event.image ?? '',
                         fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                  );
-                },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child; // Image loaded successfully
-                  }
-                  // While the image is loading, show shimmer effect
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  );
-                },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                          );
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child; // Image loaded successfully
+                          }
+                          // While the image is loading, show shimmer effect
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -160,8 +159,7 @@ Widget eventWidget({
                           Row(
                             children: [
                               const Icon(Icons.calendar_today,
-                                  size: 13,
-                                  color: Color(0xFF700F0F)),
+                                  size: 13, color: Color(0xFF700F0F)),
                               const SizedBox(width: 4),
                               Text(
                                 formattedDate,
@@ -182,8 +180,7 @@ Widget eventWidget({
                           Row(
                             children: [
                               const Icon(Icons.access_time,
-                                  size: 13,
-                                  color: Color(0xFF0E1877)),
+                                  size: 13, color: Color(0xFF0E1877)),
                               const SizedBox(width: 4),
                               Text(
                                 formattedTime,
@@ -217,8 +214,7 @@ Widget eventWidget({
                         ),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {
-                          const begin =
-                              Offset(1.0, 0.0);
+                          const begin = Offset(1.0, 0.0);
                           const end = Offset.zero;
                           const curve = Curves.fastEaseInToSlowEaseOut;
 

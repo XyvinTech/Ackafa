@@ -1,7 +1,7 @@
 name: ackaf
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.2.9+38
+version: 1.0.0+43
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -59,9 +59,10 @@ dependencies:
   firebase_analytics: ^11.3.3
   turn_page_transition: ^0.4.0
   carousel_slider: ^5.0.0
-  cached_network_image: ^3.4.1
-  image_cropper: ^8.0.2
   flutter_image_compress: ^2.3.0
+  table_calendar: ^3.0.9
+  crop_your_image: ^2.0.0
+  hl_image_picker: ^1.2.16
 
 
   

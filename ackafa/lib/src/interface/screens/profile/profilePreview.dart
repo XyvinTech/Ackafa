@@ -41,6 +41,16 @@ class ProfilePreview extends ConsumerWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
+          Positioned(
+            top: -10,
+            left: -39,
+            right: -39,
+            child: Image.asset(
+              color: Color(0xFFE30613).withOpacity(0.1),
+              'assets/profile_background.png',
+              width: double.infinity,
+            ),
+          ),
           SingleChildScrollView(
             child: Column(
               children: [
@@ -116,7 +126,7 @@ class ProfilePreview extends ConsumerWidget {
                             : Image.asset('assets/icons/dummy_person.png'),
                         const SizedBox(height: 10),
                         Text(
-                          '${user.name?.first ?? ''} ${user.name?.middle ?? ''} ${user.name?.last ?? ''}',
+                          user.fullName ?? '',
                           style: const TextStyle(
                             color: Color(0xFF2C2829),
                             fontSize: 20,
@@ -506,7 +516,7 @@ class ProfilePreview extends ConsumerWidget {
                                 final Participant receiver = Participant(
                                   id: user.id,
                                   image: user.image ?? '',
-                                  name: user.name,
+                                  name: user.fullName,
                                 );
                                 final Participant sender = Participant(id: id);
                                 Navigator.of(context).push(MaterialPageRoute(
@@ -531,10 +541,9 @@ class ProfilePreview extends ConsumerWidget {
                               onPressed: () {
                                 if (user.phone != null) {
                                   saveContact(
-                                      firstName:
-                                          '${user.name?.first ?? ''} ${user.name?.middle ?? ''}',
+                                      firstName: '${user.fullName ?? ''}',
                                       number: user.phone ?? '',
-                                      lastName: '${user.name?.last ?? ''}',
+                                      lastName: '',
                                       email: user.email ?? '',
                                       context: context);
                                 }
