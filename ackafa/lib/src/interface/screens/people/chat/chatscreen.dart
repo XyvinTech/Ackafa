@@ -386,7 +386,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                                   ),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                        color: const Color(0xFF004797),
+                                        color: const Color(0xFFE30613),
                                         borderRadius: BorderRadius.circular(5)),
                                     child: IconButton(
                                       icon: const Icon(
