@@ -8,7 +8,9 @@ import 'package:ackaf/src/interface/common/chat_widgets/ReplyCard.dart';
 import 'package:ackaf/src/interface/common/custom_dialog.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
-import 'package:ackaf/src/interface/screens/profile/profilePreview.dart';
+
+import 'package:ackaf/src/interface/screens/profile/profilePreview_using_ID.dart';
+import 'package:ackaf/src/interface/screens/profile/profile_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

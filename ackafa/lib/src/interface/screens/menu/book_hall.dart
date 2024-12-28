@@ -311,10 +311,10 @@ class _BookHallPageState extends ConsumerState<BookHallPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(top: 8, bottom: 8, right: 8.0),
           child: Text(
-            'Start time',
+            label,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),

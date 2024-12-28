@@ -5,7 +5,7 @@ import 'package:ackaf/src/data/notifires/people_notifier.dart';
 import 'package:ackaf/src/interface/common/approval_widgets/approval_pending_widget.dart';
 import 'package:ackaf/src/interface/common/approval_widgets/approved_widget.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
-import 'package:ackaf/src/interface/screens/profile/profilePreview.dart';
+import 'package:ackaf/src/interface/screens/profile/profilePreview_using_ID.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

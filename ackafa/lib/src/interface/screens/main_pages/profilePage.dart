@@ -5,7 +5,7 @@ import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:ackaf/src/interface/screens/profile/card.dart';
-import 'package:ackaf/src/interface/screens/profile/profilePreview.dart';
+import 'package:ackaf/src/interface/screens/profile/profilePreview_using_ID.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share_plus/share_plus.dart'; // Import the XCard widget
@@ -303,8 +303,8 @@ class ProfilePage extends StatelessWidget {
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
-                            ProfilePreview(
-                          user: user,
+                            ProfilePreviewUsingId(
+                          userId: user.id??'',
                         ),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {

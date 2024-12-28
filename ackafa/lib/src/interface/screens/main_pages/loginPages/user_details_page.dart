@@ -301,6 +301,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       "college": user.college?.id,
       if (user.address != null) "address": user.address ?? '',
       if (user.bio != null) "bio": user.bio ?? '',
+      if (user.emiratesID != null) "bio": user.emiratesID ?? '',
       "company": {
         if (user.company?.name != null) "name": user.company?.name ?? '',
         if (user.company?.designation != null)
@@ -439,6 +440,9 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                 if (firstNameController.text.isEmpty) {
                   firstNameController.text = user.fullName!;
                 }
+                if (emaritesIdController.text.isEmpty) {
+                  emaritesIdController.text = user.emiratesID!;
+                }
 
                 if (collegeController.text.isEmpty) {
                   collegeController.text = user.college?.collegeName ?? '';
@@ -539,7 +543,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                 return PopScope(
                   onPopInvoked: (didPop) {
                     if (didPop) {
-                      ref.invalidate(userProvider);
+                      ref.invalidate(fetchUserByIdProvider);
                     }
                   },
                   child: Stack(
@@ -579,7 +583,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   actions: [
                                     TextButton(
                                         onPressed: () {
-                                          ref.invalidate(userProvider);
+                                       ref.invalidate(fetchUserByIdProvider);
                                           navigateBasedOnPreviousPage();
                                         },
                                         child: Icon(
@@ -1518,7 +1522,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   onPressed: () async {
                                     if (_formKey.currentState!.validate()) {
                                       await _submitData(user: user);
-                                      ref.invalidate(userProvider);
+                                      ref.invalidate(fetchUserByIdProvider);
                                       CustomSnackbar.showSnackbar(
                                           context, 'Success');
                                       navigateBasedOnPreviousPage();

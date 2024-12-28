@@ -240,6 +240,19 @@ class ProfilePreview extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 10),
+                        if (user.emiratesID != null)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.perm_identity_rounded,
+                                    color: Color(0xFFE30613)),
+                                const SizedBox(width: 10),
+                                Text(user.emiratesID ?? ''),
+                              ],
+                            ),
+                          ),
+                        const SizedBox(height: 10),
                         if (user.email != null)
                           Padding(
                             padding: const EdgeInsets.only(left: 10),
