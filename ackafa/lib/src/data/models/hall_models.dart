@@ -38,8 +38,10 @@ class HallBooking {
       eventName: json['eventName'] as String?,
       description: json['description'] as String?,
       user: json['user'] as String?,
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
       v: json['__v'] as int?,
     );
   }
@@ -90,15 +92,53 @@ class Time {
   }
 }
 
-
 class Hall {
-  final String name;
-  final String address;
+  final String? id;
+  final String? name;
+  final bool? status;
+  final String? address;
 
   Hall({
-    required this.name,
-    required this.address,
+    this.id,
+    this.name,
+    this.status,
+    this.address,
   });
+
+  /// Factory method to create a `Hall` object from JSON
+  factory Hall.fromJson(Map<String, dynamic> json) {
+    return Hall(
+      id: json['_id'] as String?,
+      name: json['name'] as String?,
+      status: json['status'] as bool?,
+      address: json['address'] as String?,
+    );
+  }
+
+  /// Converts a `Hall` object to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'name': name,
+      'status': status,
+      'address': address,
+    };
+  }
+
+  /// Creates a copy of the `Hall` object with updated fields
+  Hall copyWith({
+    String? id,
+    String? name,
+    bool? status,
+    String? address,
+  }) {
+    return Hall(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      status: status ?? this.status,
+      address: address ?? this.address,
+    );
+  }
 }
 
 class HallEvent {

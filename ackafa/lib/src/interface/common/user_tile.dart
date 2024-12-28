@@ -3,7 +3,7 @@ import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-Widget buildUserInfo(UserModel user, Feed feed) {
+Widget buildUserInfo( Feed feed) {
   String formattedDateTime = DateFormat('h:mm a · MMM d, yyyy')
       .format(DateTime.parse(feed.createdAt.toString()).toLocal());
   return Row(
@@ -19,7 +19,7 @@ Widget buildUserInfo(UserModel user, Feed feed) {
                 height: 30,
                 color: const Color.fromARGB(255, 255, 255, 255),
                 child: Image.network(
-                  user.image ?? 'https://placehold.co/600x400',
+                  feed.author?.image ?? '',
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Image.asset('assets/icons/dummy_person_small.png');
@@ -34,15 +34,15 @@ Widget buildUserInfo(UserModel user, Feed feed) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${user.fullName??''}',
+                    '${feed.author?.fullName??''}',
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 12),
                     overflow:
                         TextOverflow.ellipsis, // Ensures text doesn't overflow
                   ),
-                  if (user.company?.name != null)
+                  if (feed.author?.companyName != null)
                     Text(
-                      user.company!.name!,
+                    '${feed.author?.companyName??''}',
                       style: const TextStyle(color: Colors.grey, fontSize: 12),
                       overflow: TextOverflow
                           .ellipsis, // Allows company name to wrap or be truncated

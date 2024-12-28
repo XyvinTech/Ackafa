@@ -345,7 +345,6 @@ class MenuPage extends StatelessWidget {
                         ),
                       ),
 
-                      // Menu List
                       _buildListTile(
                         context,
                         Icons.credit_card,
@@ -374,19 +373,20 @@ class MenuPage extends StatelessWidget {
                           );
                         },
                       ),
-                      const Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.edit_calendar_outlined,
-                        'Hall Booking',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HallBookingPage()),
-                          );
-                        },
-                      ),
+                      if (user.role != 'member') const Divider(),
+                      if (user.role != 'member')
+                        _buildListTile(
+                          context,
+                          Icons.edit_calendar_outlined,
+                          'Hall Booking',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HallBookingPage()),
+                            );
+                          },
+                        ),
                       const Divider(),
                       _buildListTile(
                         context,

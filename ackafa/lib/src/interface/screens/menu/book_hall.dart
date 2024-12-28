@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:ackaf/src/data/models/hall_models.dart';
+import 'package:ackaf/src/data/notifires/bookings_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/hall_api.dart';
 import 'package:ackaf/src/interface/common/customTextfields.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
@@ -20,6 +21,7 @@ class BookHallPage extends ConsumerStatefulWidget {
 class _BookHallPageState extends ConsumerState<BookHallPage> {
   String? selectedHall;
   String? selectedHallAddress;
+  String? selectedHallId;
   String? v;
   DateTime selectedDate = DateTime.now();
   DateTime selectedDay = DateTime.now();
@@ -41,31 +43,16 @@ class _BookHallPageState extends ConsumerState<BookHallPage> {
   Future<void> _onDaySelected(DateTime selectedDay, DateTime focusedDay) async {
     print("Selected Day: $selectedDay");
 
-    // Perform the asynchronous work outside of setState
-
-    // Update the state synchronously
     setState(() {
       selectedDate = selectedDay;
     });
     log(asyncBookings.toString());
   }
 
-  List<Hall> halls = [
-    Hall(
-        name: 'SP Yogam Centenary Hall',
-        address:
-            'SP Yogam Centenary Hall\nX8F8+F6G, Mahakavi Vailoppilli Rd, Ponnurunni, Vyttila, Kochi, Ernakulam, Kerala 682019'),
-    Hall(
-        name: 'Main Auditorium',
-        address:
-            'SP Yogam Centenary Hall\nX8F8+F6G, Mahakavi Vailoppilli Rd, Ponnurunni, Vyttila, Kochi, Ernakulam, Kerala 682019')
-  ];
-
   @override
   Widget build(BuildContext context) {
     final asyncBookings = ref.watch(fetchHallBookingsProvider(
-      DateFormat('yyyy-MM-dd').format(selectedDate),
-    ));
+        DateFormat('yyyy-MM-dd').format(selectedDate), selectedHallId ?? ''));
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
@@ -93,43 +80,59 @@ class _BookHallPageState extends ConsumerState<BookHallPage> {
           children: [
             const Text("Choose Hall *", style: TextStyle(fontSize: 16)),
             const SizedBox(height: 8),
-            DropdownButtonFormField<String>(
-              value: selectedHall,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 231, 221, 221),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 231, 221, 221),
-                  ),
-                ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-              ),
-              hint: const Text("Select Hall"),
-              items: halls
-                  .map((hall) => DropdownMenuItem<String>(
-                        value: hall.name,
-                        child: Text(hall.name),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedHall = value;
-                  proceed = false;
-                  selectedHallAddress =
-                      halls.firstWhere((hall) => hall.name == value).address;
-                  print('Selected Hall Address: $selectedHallAddress');
-                });
+            Consumer(
+              builder: (context, ref, child) {
+                final asyncHalls = ref.watch(fetchHallsProvider);
+                return asyncHalls.when(
+                  data: (halls) {
+                    return DropdownButtonFormField<String>(
+                      value: selectedHall,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 231, 221, 221),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 231, 221, 221),
+                          ),
+                        ),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 12),
+                      ),
+                      hint: const Text("Select Hall"),
+                      items: halls
+                          .map((hall) => DropdownMenuItem<String>(
+                                value: hall.name,
+                                child: Text(hall.name ?? ''),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedHall = value;
+                          proceed = false;
+                          selectedHallAddress = halls
+                              .firstWhere((hall) => hall.name == value)
+                              .address;
+                          selectedHallId =
+                              halls.firstWhere((hall) => hall.name == value).id;
+                          print('Selected Hall Address: $selectedHallAddress');
+                        });
+                      },
+                    );
+                  },
+                  loading: () => const Center(child: LoadingAnimation()),
+                  error: (error, stackTrace) =>
+                      const Center(child: Text('No Halls')),
+                );
               },
             ),
             const SizedBox(height: 16),
@@ -229,7 +232,7 @@ class _BookHallPageState extends ConsumerState<BookHallPage> {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    "Please select a time slot that does not overlap with any events listed above.",
+                    "Please select a time slot that does not overlap with any events listed above for the same day. Review the event timings carefully and choose a free slot to ensure smooth scheduling and avoid conflicts.",
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                   const SizedBox(height: 16),
@@ -258,16 +261,19 @@ class _BookHallPageState extends ConsumerState<BookHallPage> {
                     Map<String, dynamic> bookingData = {
                       "day": daysOfWeek[selectedDate.weekday - 1],
                       "time": {
-                        "start": "${startTime.hour}:${startTime.minute}",
-                        "end": "${endTime.hour}:${endTime.minute}",
+                        "start": "${formatTimeOfDay(startTime)}",
+                        "end": "${formatTimeOfDay(endTime)}",
                       },
-                      "hall": selectedHall,
+                      "hall": selectedHallId,
                       "date": DateFormat('yyyy-MM-dd').format(selectedDate),
                       "eventName": eventNameController.text,
                       "description": descriptionController.text
                     };
                     bool? success = await bookHall(bookingData, context);
                     if (success == true) {
+                      ref
+                          .read(bookingsNotifierProvider.notifier)
+                          .refreshBookings();
                       Navigator.pop(context);
                     }
                   }),
@@ -349,4 +355,10 @@ class _BookHallPageState extends ConsumerState<BookHallPage> {
       ],
     );
   }
+}
+
+String formatTimeOfDay(TimeOfDay time) {
+  final String hour = time.hour.toString().padLeft(2, '0');
+  final String minute = time.minute.toString().padLeft(2, '0');
+  return '$hour:$minute';
 }

@@ -6,7 +6,7 @@ class Feed {
   String? media;
   String? link;
   String? content;
-  String? author;
+  Author? author;
   List<String>? likes;
   String? status;
   DateTime? createdAt;
@@ -35,7 +35,7 @@ class Feed {
       media: json['media'] as String?,
       link: json['link'] as String?,
       content: json['content'] as String?,
-      author: json['author'] as String?,
+       author: json['author'] != null ? Author.fromJson(json['author']) : null,
       likes: (json['like'] as List?)?.map((item) => item as String).toList(),
       status: json['status'] as String?,
       createdAt: json['createdAt'] != null
@@ -58,7 +58,7 @@ class Feed {
       'media': media,
       'link': link,
       'content': content,
-      'author': author,
+      'author': author?.toJson(),
       'like': likes,
       'status': status,
       'createdAt': createdAt?.toIso8601String(),
@@ -115,3 +115,44 @@ class FeedUser {
   }
 }
 
+
+
+
+class Author {
+  final String? id;
+  final String? fullName;
+  final String? college;
+  final String? image;
+  final String? memberId;
+  final String? companyName;
+
+  Author({
+    this.id,
+    this.fullName,
+    this.college,
+    this.image,
+    this.memberId,this.companyName
+  });
+
+  factory Author.fromJson(Map<String, dynamic> json) {
+    return Author(
+      id: json['_id'] as String?,
+      fullName: json['fullName'] as String?,
+      college: json['college'] as String?,
+      image: json['image'] as String?,
+      memberId: json['memberId'] as String?,
+      companyName: json['companyName'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'fullName': fullName,
+      'college': college,
+      'image': image,
+      'memberId': memberId,
+      'companyName': companyName,
+    };
+  }
+}

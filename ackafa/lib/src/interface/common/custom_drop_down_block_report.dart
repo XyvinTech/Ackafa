@@ -88,7 +88,7 @@ class CustomDropDown extends ConsumerWidget {
             if (feed != null) {
               showBlockPersonDialog(
                   context: context,
-                  userId: feed?.author ?? '',
+                  userId: feed?.author?.id ?? '',
                   onBlockStatusChanged: () {
                     ref.invalidate(feedNotifierProvider);
                   });

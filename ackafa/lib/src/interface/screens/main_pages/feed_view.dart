@@ -174,9 +174,9 @@ class _FeedViewState extends ConsumerState<FeedView> {
                             }
 
                             if (index == filteredFeeds.length + 1) {
-                              // SizedBox to add space at the bottom
+                             
                               return const SizedBox(
-                                  height: 80); // Adjust height as needed
+                                  height: 80);
                             }
 
                             final feed = filteredFeeds[index];
@@ -260,14 +260,13 @@ class _FeedViewState extends ConsumerState<FeedView> {
     return Consumer(
       builder: (context, ref, child) {
         ApiRoutes userApi = ApiRoutes();
-        final asynPostOwner = ref.watch(fetchUserByIdProvider(feed.author!));
+   
         final asyncUser = ref.watch(userProvider);
-        return asynPostOwner.when(
-          data: (postOwner) {
+ 
             var receiver = Participant(
-              id: feed.author,
-              name: postOwner.fullName,
-              image: postOwner.image,
+              id: feed.author?.id??'',
+              name:  feed.author?.fullName??'',
+              image:  feed.author?.image??'',
             );
             log('receiver:${receiver.id}\n${receiver.image}\n${receiver.name}');
 
@@ -280,7 +279,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
                 return ReusableFeedPost(
                     withImage: feed.media != null ? true : false,
                     feed: feed,
-                    user: postOwner,
+             
                     onLike: () async {
                       await userApi.likeFeed(feed.id!);
                       ref.read(feedNotifierProvider.notifier).refreshFeed();
@@ -303,12 +302,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
                 );
               },
             );
-          },
-          loading: () => const ReusableFeedPostSkeleton(),
-          error: (error, stackTrace) {
-            return const ReusableFeedPostSkeleton();
-          },
-        );
+         
       },
     );
   }
@@ -317,7 +311,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
 class ReusableFeedPost extends ConsumerStatefulWidget {
   final Feed feed;
   final bool withImage;
-  final UserModel user;
+
   final Function onLike;
   final Function onComment;
   final Function onShare;
@@ -326,7 +320,7 @@ class ReusableFeedPost extends ConsumerStatefulWidget {
     Key? key,
     required this.feed,
     this.withImage = false,
-    required this.user,
+  
     required this.onLike,
     required this.onComment,
     required this.onShare,
@@ -538,7 +532,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
         children: [
           Padding(
             padding: const EdgeInsets.all(15),
-            child: buildUserInfo(widget.user, widget.feed),
+            child: buildUserInfo( widget.feed),
           ),
           if (widget.withImage)
             Padding(
@@ -576,7 +570,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
                           height: 30,
                           color: const Color.fromARGB(255, 255, 255, 255),
                           child: Image.network(
-                            widget.user.image ?? '',
+                          widget.feed.author?.image ?? '',
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Image.asset(

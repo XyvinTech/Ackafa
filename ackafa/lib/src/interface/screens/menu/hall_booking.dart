@@ -1,18 +1,48 @@
+import 'package:ackaf/src/data/models/hall_models.dart';
+import 'package:ackaf/src/data/notifires/bookings_notifier.dart';
+import 'package:ackaf/src/data/notifires/feed_notifier.dart';
+import 'package:ackaf/src/data/services/api_routes/hall_api.dart';
+import 'package:ackaf/src/interface/common/customModalsheets.dart';
+import 'package:ackaf/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/menu/book_hall.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
-class HallBookingPage extends StatefulWidget {
+class HallBookingPage extends ConsumerStatefulWidget {
   const HallBookingPage({super.key});
 
   @override
   _HallBookingPageState createState() => _HallBookingPageState();
 }
 
-class _HallBookingPageState extends State<HallBookingPage> {
-  int selectedTab = 0; // 0 for Ongoing, 1 for Upcoming, 2 for Completed
+class _HallBookingPageState extends ConsumerState<HallBookingPage> {
+  int selectedTab = 0;
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(_onScroll);
+    _fetchInitialUsers();
+  }
+
+  Future<void> _fetchInitialUsers() async {
+    await ref.read(bookingsNotifierProvider.notifier).fetchMoreBookings();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      ref.read(bookingsNotifierProvider.notifier).fetchMoreBookings();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final bookings = ref.watch(bookingsNotifierProvider);
+    final isLoading = ref.read(bookingsNotifierProvider.notifier).isLoading;
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
@@ -40,23 +70,25 @@ class _HallBookingPageState extends State<HallBookingPage> {
           children: [
             const SizedBox(height: 16.0),
 
-            // Tab Buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildTabButton('ONGOING', 0),
-                _buildTabButton('UPCOMING', 1),
-                _buildTabButton('COMPLETED', 2),
-              ],
-            ),
+            // // Tab Buttons
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     _buildTabButton('ONGOING', 0),
+            //     _buildTabButton('UPCOMING', 1),
+            //     _buildTabButton('COMPLETED', 2),
+            //   ],
+            // ),
             const SizedBox(height: 16.0),
-
-            // Booking Cards
             Expanded(
               child: ListView.builder(
-                itemCount: 3, // Example count
+                controller: _scrollController,
+                itemCount: bookings.length + (isLoading ? 1 : 0),
                 itemBuilder: (context, index) {
-                  return _buildBookingCard("ONGOING");
+                  if (index == bookings.length) {
+                    return Center(child: LoadingAnimation());
+                  }
+                  return _buildBookingCard(bookings[index]);
                 },
               ),
             ),
@@ -103,60 +135,72 @@ class _HallBookingPageState extends State<HallBookingPage> {
     );
   }
 
-  // Build Booking Card
-  Widget _buildBookingCard(String title) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16.0),
-      decoration: BoxDecoration(color: Colors.white),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            // Icon
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.red[50],
-                borderRadius: BorderRadius.circular(8.0),
+  Widget _buildBookingCard(HallBooking? booking) {
+    String date = DateFormat('yyyy-MM-dd').format(booking!.date!);
+    String startTime = DateFormat('hh:mm a')
+        .format(DateTime.parse(booking.time!.start!).toLocal());
+    String endTime = DateFormat('hh:mm a')
+        .format(DateTime.parse(booking.time!.end!).toLocal());
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => HallModalSheet(
+            booking: booking,
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16.0),
+        decoration: BoxDecoration(color: Colors.white),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.red[50],
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.event, color: Colors.red),
               ),
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.event, color: Colors.red),
-            ),
-            const SizedBox(width: 16.0),
-
-            // Hall Details
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'Hall Name',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
+              const SizedBox(width: 16.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      booking.hall ?? '',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Text('22.03.2023'),
-                  Text('09:30 AM - 10:30 AM'),
-                ],
+                    SizedBox(height: 8.0),
+                    Text(date ?? ''),
+                    Text('$startTime - $endTime'),
+                  ],
+                ),
               ),
-            ),
-
-            // Status Badge
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.green[100],
-                borderRadius: BorderRadius.circular(8.0),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.green[100],
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                child: Text(
+                  booking.status ?? '',
+                  style: TextStyle(
+                      color: Colors.green, fontWeight: FontWeight.bold),
+                ),
               ),
-              padding:
-                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-              child: const Text(
-                'Ongoing',
-                style:
-                    TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
+          
+            ],
+          ),
         ),
       ),
     );

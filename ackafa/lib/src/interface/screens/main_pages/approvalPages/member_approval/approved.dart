@@ -43,9 +43,9 @@ class _PendingApprovalPageState extends ConsumerState<ApprovedApprovalPage> {
     final allUsers = ref.watch(usersNotifierProvider);
     final users = allUsers.where((user) => user.status != 'inactive').toList();
     final isLoading = ref.read(usersNotifierProvider.notifier).isLoading;
-    log('pending approvals :$allUsers');
+
     return Scaffold(
-      backgroundColor: Colors.white,
+    
       body: users.isEmpty
           ? Center(child: Text('')) // Show loader when no data
           : ListView.builder(
@@ -66,9 +66,8 @@ class _PendingApprovalPageState extends ConsumerState<ApprovedApprovalPage> {
                     ApprovedWidget(
                       status: approval.status!,
                       imageUrl:
-                          approval.image ?? 'https://placehold.co/600x400/png',
-                      name:
-                          '${approval.fullName??''}',
+                          approval.image ?? '',
+                      name: '${approval.fullName ?? ''}',
                       college: approval.college?.collegeName ?? '',
                       batch: 'Batch of: ${approval.batch.toString() ?? ''}',
                     ),

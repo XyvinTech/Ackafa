@@ -61,13 +61,13 @@ class _MembersPageState extends ConsumerState<MembersPage> {
                       itemCount: users.length +
                           (isLoading
                               ? 1
-                              : 0), // Add 1 to show the loading indicator
+                              : 0), 
                       itemBuilder: (context, index) {
                         if (index == users.length) {
-                          // This is the loading indicator at the end of the list
+                        
                           return Center(
                             child:
-                                LoadingAnimation(), // Show loading indicator when fetching more users
+                                LoadingAnimation(), 
                           );
                         }
 

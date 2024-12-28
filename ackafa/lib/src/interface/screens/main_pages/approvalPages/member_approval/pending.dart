@@ -41,8 +41,7 @@ class _PendingApprovalPageState extends ConsumerState<PendingApprovalPage> {
     final approvals = ref.watch(approvalNotifierProvider);
     final isLoading = ref.read(approvalNotifierProvider.notifier).isLoading;
     log('pending approvals :$approvals');
-    return Scaffold(
-      backgroundColor: Colors.white,
+    return Scaffold(  
       body: approvals.isEmpty
           ? Center(
               child: Text('NO PENDING APPROVALS')) // Show loader when no data
@@ -63,11 +62,10 @@ class _PendingApprovalPageState extends ConsumerState<PendingApprovalPage> {
                 return Column(
                   children: [
                     ApprovalPendingWidget(
-                  userId: approval.id!,
+                      userId: approval.id!,
                       imageUrl:
-                          approval.image ?? 'https://placehold.co/600x400/png',
-                      name:
-                          '${approval.fullName??''}',
+                          approval.image ?? '',
+                      name: '${approval.fullName ?? ''}',
                       college: approval.college?.collegeName ?? '',
                       batch: 'Batch of: ${approval.batch.toString() ?? ''}',
                     ),

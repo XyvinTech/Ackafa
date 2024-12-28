@@ -32,10 +32,9 @@ class _CustomCalendarState extends State<CustomCalendar> {
     "December"
   ];
 
-  // Example list of unselectable days
   final List<DateTime> _unselectableDays = [
-    DateTime.now().subtract(Duration(days: 1)), // Yesterday
-    DateTime.now().add(Duration(days: 2)), // 2 days from now
+    // DateTime.now().subtract(const Duration(days: 1)),
+    // DateTime.now().add(const Duration(days: 2)),
   ];
 
   @override
@@ -45,13 +44,11 @@ class _CustomCalendarState extends State<CustomCalendar> {
     _focusedDay = DateTime.now();
   }
 
-  // Check if a day is selectable
   bool _isDaySelectable(DateTime day) {
     return !_unselectableDays
         .any((unselectableDay) => isSameDay(unselectableDay, day));
   }
 
-  // Show month selection
   Future<void> _selectMonth() async {
     final selectedMonth = await showModalBottomSheet<int>(
       context: context,

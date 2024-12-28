@@ -44,7 +44,6 @@ class _PendingApprovalPageState extends ConsumerState<RejectedApprovalPage> {
     final isLoading = ref.read(usersNotifierProvider.notifier).isLoading;
     log('pending approvals :$users');
     return Scaffold(
-      backgroundColor: Colors.white,
       body: users.isEmpty
           ? Center(child: Text('NO REJECTIONS')) // Show loader when no data
           : ListView.builder(
@@ -64,9 +63,8 @@ class _PendingApprovalPageState extends ConsumerState<RejectedApprovalPage> {
                   children: [
                     ApprovalRejectedWidget(
                       imageUrl:
-                          user.image ?? 'https://placehold.co/600x400/png',
-                      name:
-                          '${user.fullName??''}',
+                          user.image ?? '',
+                      name: '${user.fullName ?? ''}',
                       college: user.college?.collegeName ?? '',
                       batch: 'Batch of: ${user.batch.toString() ?? ''}',
                     ),

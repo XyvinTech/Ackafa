@@ -53,7 +53,7 @@ class SubcriptionExpiredPage extends StatelessWidget {
                 // Next Steps
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
+                  children: [  
                     const SizedBox(height: 30),
                     // Checklist
 
