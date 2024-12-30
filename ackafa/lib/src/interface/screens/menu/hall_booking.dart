@@ -108,39 +108,36 @@ class _HallBookingPageState extends ConsumerState<HallBookingPage> {
     );
   }
 
-  // Build Tab Button
-  Widget _buildTabButton(String title, int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedTab = index;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-        decoration: BoxDecoration(
-          color: selectedTab == index ? Colors.red[50] : Colors.transparent,
-          border: Border.all(
-            color: selectedTab == index ? Colors.red : Colors.grey,
-          ),
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: Text(
-          title,
-          style: TextStyle(
-            color: selectedTab == index ? Colors.red : Colors.black,
-          ),
-        ),
-      ),
-    );
-  }
+  // // Build Tab Button
+  // Widget _buildTabButton(String title, int index) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       setState(() {
+  //         selectedTab = index;
+  //       });
+  //     },
+  //     child: Container(
+  //       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+  //       decoration: BoxDecoration(
+  //         color: selectedTab == index ? Colors.red[50] : Colors.transparent,
+  //         border: Border.all(
+  //           color: selectedTab == index ? Colors.red : Colors.grey,
+  //         ),
+  //         borderRadius: BorderRadius.circular(20.0),
+  //       ),
+  //       child: Text(
+  //         title,
+  //         style: TextStyle(
+  //           color: selectedTab == index ? Colors.red : Colors.black,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildBookingCard(HallBooking? booking) {
     String date = DateFormat('yyyy-MM-dd').format(booking!.date!);
-    String startTime = DateFormat('hh:mm a')
-        .format(DateTime.parse(booking.time!.start!).toLocal());
-    String endTime = DateFormat('hh:mm a')
-        .format(DateTime.parse(booking.time!.end!).toLocal());
+
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(
@@ -181,13 +178,14 @@ class _HallBookingPageState extends ConsumerState<HallBookingPage> {
                     ),
                     SizedBox(height: 8.0),
                     Text(date ?? ''),
-                    Text('$startTime - $endTime'),
+                    Text(
+                        '${booking.time?.start ?? ''} - ${booking.time?.end ?? ''}'),
                   ],
                 ),
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.green[100],
+                  color: _getStatusColor(booking.status ?? '').withOpacity(.25),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 padding:
@@ -195,14 +193,27 @@ class _HallBookingPageState extends ConsumerState<HallBookingPage> {
                 child: Text(
                   booking.status ?? '',
                   style: TextStyle(
-                      color: Colors.green, fontWeight: FontWeight.bold),
+                      color: _getStatusColor(booking.status ?? ''),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
-          
             ],
           ),
         ),
       ),
     );
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case "approved":
+        return Colors.green;
+      case "rejected":
+        return Colors.red;
+      case "pending":
+        return Colors.orange;
+      default:
+        return Colors.grey;
+    }
   }
 }

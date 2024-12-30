@@ -60,15 +60,11 @@ void feedModalSheet({
                   ),
                 Consumer(
                   builder: (context, ref, child) {
-   
-               
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              left: 10, right: 10, top: 10),
-                          child:
-                              buildUserInfo( feed), // Reuse widget here
-                        );
-                    
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: buildUserInfo(feed), // Reuse widget here
+                    );
                   },
                 ),
                 Padding(
@@ -180,15 +176,13 @@ void messageSheet({
                         ),
                       ),
                     ),
-           
-                             Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, bottom: 10, top: 10),
-                              child: buildUserInfo(
-                                   feed), // Reuse widget here
-                            )
-                        ,
-                       
+
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, bottom: 10, top: 10),
+                      child: buildUserInfo(feed), // Reuse widget here
+                    ),
+
                     const SizedBox(height: 10),
                     // Feed content in a row with image on the left and content on the right
                     if (feed.media != null && feed.media != '')
@@ -261,7 +255,7 @@ void messageSheet({
                             label: buttonText,
                             onPressed: () async {
                               await sendChatMessage(
-                                  userId: feed.author?.id??'',
+                                  userId: feed.author?.id ?? '',
                                   content: feed.content!,
                                   feedId: feed.id);
                               Navigator.of(context).push(MaterialPageRoute(
@@ -270,7 +264,7 @@ void messageSheet({
                                         sender: sender,
                                       )));
                               await sendChatMessage(
-                                  userId: feed.author?.id??'',
+                                  userId: feed.author?.id ?? '',
                                   content: messageController.text);
                             },
                             fontSize: 16,
@@ -1604,10 +1598,7 @@ class HallModalSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String date = DateFormat('yyyy-MM-dd').format(booking!.date!);
-    String startTime = DateFormat('hh:mm a')
-        .format(DateTime.parse(booking.time!.start!).toLocal());
-    String endTime = DateFormat('hh:mm a')
-        .format(DateTime.parse(booking.time!.end!).toLocal());
+
     return DraggableScrollableSheet(
       initialChildSize: 0.6,
       minChildSize: 0.4,
@@ -1664,7 +1655,8 @@ class HallModalSheet extends StatelessWidget {
                             fontSize: 14, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),
-                      Text('$startTime – $endTime'),
+                      Text(
+                          '${booking.time?.start ?? ''} – ${booking.time?.end ?? ''}'),
                     ],
                   ),
                 ],
@@ -1675,7 +1667,7 @@ class HallModalSheet extends StatelessWidget {
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 4),
-              const Text('Morning Yoga Session'),
+              Text(booking.eventName ?? ''),
               const SizedBox(height: 16),
               const Text(
                 'Description',
@@ -1848,8 +1840,7 @@ void showFeedApprovalDetail(BuildContext context, Feed feed) {
                             child: customButton(
                               label: 'Reject',
                               onPressed: () async {
-                            await updateFeedStatus(
-                                    "reject", feed.id ?? '');
+                                await updateFeedStatus("reject", feed.id ?? '');
 
                                 Navigator.pop(context);
 
