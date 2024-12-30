@@ -174,9 +174,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
                             }
 
                             if (index == filteredFeeds.length + 1) {
-                             
-                              return const SizedBox(
-                                  height: 80);
+                              return const SizedBox(height: 80);
                             }
 
                             final feed = filteredFeeds[index];
@@ -260,49 +258,47 @@ class _FeedViewState extends ConsumerState<FeedView> {
     return Consumer(
       builder: (context, ref, child) {
         ApiRoutes userApi = ApiRoutes();
-   
+
         final asyncUser = ref.watch(userProvider);
- 
-            var receiver = Participant(
-              id: feed.author?.id??'',
-              name:  feed.author?.fullName??'',
-              image:  feed.author?.image??'',
-            );
-            log('receiver:${receiver.id}\n${receiver.image}\n${receiver.name}');
 
-            return asyncUser.when(
-              data: (user) {
-                var sender = Participant(
-                    id: user.id, image: user.image, name: user.fullName);
-                log('sender:${sender.id}\n${sender.image}\n${sender.name}');
+        var receiver = Participant(
+          id: feed.author?.id ?? '',
+          name: feed.author?.fullName ?? '',
+          image: feed.author?.image ?? '',
+        );
+        log('receiver:${receiver.id}\n${receiver.image}\n${receiver.name}');
 
-                return ReusableFeedPost(
-                    withImage: feed.media != null ? true : false,
-                    feed: feed,
-             
-                    onLike: () async {
-                      await userApi.likeFeed(feed.id!);
-                      ref.read(feedNotifierProvider.notifier).refreshFeed();
-                    },
-                    onComment: () async {},
-                    onShare: () {
-                      feedModalSheet(
-                          context: context,
-                          onButtonPressed: () async {},
-                          buttonText: 'MESSAGE',
-                          feed: feed,
-                          receiver: receiver,
-                          sender: sender);
-                    });
-              },
-              loading: () => const ReusableFeedPostSkeleton(),
-              error: (error, stackTrace) {
-                return Center(
-                  child: Text('$error'),
-                );
-              },
+        return asyncUser.when(
+          data: (user) {
+            var sender = Participant(
+                id: user.id, image: user.image, name: user.fullName);
+            log('sender:${sender.id}\n${sender.image}\n${sender.name}');
+
+            return ReusableFeedPost(
+                withImage: feed.media != null ? true : false,
+                feed: feed,
+                onLike: () async {
+                  await userApi.likeFeed(feed.id!);
+                  ref.read(feedNotifierProvider.notifier).refreshFeed();
+                },
+                onComment: () async {},
+                onShare: () {
+                  feedModalSheet(
+                      context: context,
+                      onButtonPressed: () async {},
+                      buttonText: 'MESSAGE',
+                      feed: feed,
+                      receiver: receiver,
+                      sender: sender);
+                });
+          },
+          loading: () => const ReusableFeedPostSkeleton(),
+          error: (error, stackTrace) {
+            return Center(
+              child: Text('$error'),
             );
-         
+          },
+        );
       },
     );
   }
@@ -320,7 +316,6 @@ class ReusableFeedPost extends ConsumerStatefulWidget {
     Key? key,
     required this.feed,
     this.withImage = false,
-  
     required this.onLike,
     required this.onComment,
     required this.onShare,
@@ -532,7 +527,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
         children: [
           Padding(
             padding: const EdgeInsets.all(15),
-            child: buildUserInfo( widget.feed),
+            child: buildUserInfo(widget.feed),
           ),
           if (widget.withImage)
             Padding(
@@ -554,7 +549,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
                     child: Text(
-                      'View all ${widget.feed.likes?.length ?? 0} comments',
+                      'View all ${widget.feed.comments?.length ?? 0} comments',
                       style:
                           const TextStyle(color: Colors.grey, fontSize: 14.5),
                     ),
@@ -570,7 +565,7 @@ class _ReusableFeedPostState extends ConsumerState<ReusableFeedPost>
                           height: 30,
                           color: const Color.fromARGB(255, 255, 255, 255),
                           child: Image.network(
-                          widget.feed.author?.image ?? '',
+                            widget.feed.author?.image ?? '',
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Image.asset(
