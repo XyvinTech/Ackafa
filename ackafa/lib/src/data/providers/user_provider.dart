@@ -39,22 +39,16 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
     }
   }
 
- 
   void updateName({
     String? name,
   }) {
-
-       state =
-        state.whenData((user) => user.copyWith(name: name));
-
+    state = state.whenData((user) => user.copyWith(fullName: name));
   }
+
   void updateEmiratesID({
     String? emiratesID,
   }) {
-
-       state =
-        state.whenData((user) => user.copyWith(name: emiratesID));
-
+    state = state.whenData((user) => user.copyWith(emiratesID: emiratesID));
   }
 
   void updateCompany(Company? company) {

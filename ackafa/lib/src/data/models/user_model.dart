@@ -133,7 +133,8 @@ class UserModel {
   }
 
   UserModel copyWith({
-    String? name,
+    String? fullName,
+    String? emiratesID,
     String? id,
     String? uid,
     UserCollege? college,
@@ -159,7 +160,9 @@ class UserModel {
      List<String>? blockedUsers
   }) {
     return UserModel(
-      fullName: name ?? this.fullName,
+      fullName: fullName ?? this.fullName,
+      emiratesID: emiratesID ?? this.emiratesID,
+      
       id: id ?? this.id,
       uid: uid ?? this.uid,
       college: college ?? this.college,

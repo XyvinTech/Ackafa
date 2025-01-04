@@ -296,6 +296,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
 
     final Map<String, dynamic> profileData = {
       "fullName": user.fullName,
+      "emiratesID": user.emiratesID,
       "email": user.email,
       if (user.image != null && user.image != '') "image": user.image,
       "college": user.college?.id,
@@ -441,7 +442,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                   firstNameController.text = user.fullName!;
                 }
                 if (emaritesIdController.text.isEmpty) {
-                  emaritesIdController.text = user.emiratesID!;
+                  emaritesIdController.text = user.emiratesID ?? '';
                 }
 
                 if (collegeController.text.isEmpty) {
@@ -583,7 +584,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   actions: [
                                     TextButton(
                                         onPressed: () {
-                                       ref.invalidate(fetchUserByIdProvider);
+                                          ref.invalidate(fetchUserByIdProvider);
                                           navigateBasedOnPreviousPage();
                                         },
                                         child: Icon(

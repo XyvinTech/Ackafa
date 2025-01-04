@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-
 import 'package:ackaf/src/data/models/feed_model.dart';
 import 'package:ackaf/src/data/models/msg_model.dart';
 import 'package:ackaf/src/data/notifires/feed_notifier.dart';
@@ -9,7 +8,6 @@ import 'package:ackaf/src/interface/common/custom_dialog.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 
 class CustomDropDown extends ConsumerWidget {
   final Feed? feed;
@@ -21,7 +19,6 @@ class CustomDropDown extends ConsumerWidget {
 
   const CustomDropDown({
     this.onBlockStatusChanged,
-
     this.userId,
     this.msg,
     super.key,
@@ -66,8 +63,7 @@ class CustomDropDown extends ConsumerWidget {
                   context: context,
                   onReportStatusChanged: () {},
                   reportType: reportType);
-            }
-             else if (userId != null) {
+            } else if (userId != null) {
               log(userId.toString());
               reportType = 'User';
               showReportPersonDialog(

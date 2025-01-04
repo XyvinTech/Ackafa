@@ -6,7 +6,7 @@ part of 'hall_api.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchHallBookingsHash() => r'a8f4c0d4e0fbae37ca29a181b21213cb8d76ed82';
+String _$fetchHallBookingsHash() => r'e79ea35b917bcd9440bb31bf0beb311d2529f7b6';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -41,11 +41,11 @@ class FetchHallBookingsFamily extends Family<AsyncValue<List<HallBooking>>> {
   /// See also [fetchHallBookings].
   FetchHallBookingsProvider call(
     String date,
-    String hall,
+    String hallId,
   ) {
     return FetchHallBookingsProvider(
       date,
-      hall,
+      hallId,
     );
   }
 
@@ -55,7 +55,7 @@ class FetchHallBookingsFamily extends Family<AsyncValue<List<HallBooking>>> {
   ) {
     return call(
       provider.date,
-      provider.hall,
+      provider.hallId,
     );
   }
 
@@ -80,12 +80,12 @@ class FetchHallBookingsProvider
   /// See also [fetchHallBookings].
   FetchHallBookingsProvider(
     String date,
-    String hall,
+    String hallId,
   ) : this._internal(
           (ref) => fetchHallBookings(
             ref as FetchHallBookingsRef,
             date,
-            hall,
+            hallId,
           ),
           from: fetchHallBookingsProvider,
           name: r'fetchHallBookingsProvider',
@@ -97,7 +97,7 @@ class FetchHallBookingsProvider
           allTransitiveDependencies:
               FetchHallBookingsFamily._allTransitiveDependencies,
           date: date,
-          hall: hall,
+          hallId: hallId,
         );
 
   FetchHallBookingsProvider._internal(
@@ -108,11 +108,11 @@ class FetchHallBookingsProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.date,
-    required this.hall,
+    required this.hallId,
   }) : super.internal();
 
   final String date;
-  final String hall;
+  final String hallId;
 
   @override
   Override overrideWith(
@@ -128,7 +128,7 @@ class FetchHallBookingsProvider
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         date: date,
-        hall: hall,
+        hallId: hallId,
       ),
     );
   }
@@ -142,14 +142,14 @@ class FetchHallBookingsProvider
   bool operator ==(Object other) {
     return other is FetchHallBookingsProvider &&
         other.date == date &&
-        other.hall == hall;
+        other.hallId == hallId;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, date.hashCode);
-    hash = _SystemHash.combine(hash, hall.hashCode);
+    hash = _SystemHash.combine(hash, hallId.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -161,8 +161,8 @@ mixin FetchHallBookingsRef on AutoDisposeFutureProviderRef<List<HallBooking>> {
   /// The parameter `date` of this provider.
   String get date;
 
-  /// The parameter `hall` of this provider.
-  String get hall;
+  /// The parameter `hallId` of this provider.
+  String get hallId;
 }
 
 class _FetchHallBookingsProviderElement
@@ -173,7 +173,7 @@ class _FetchHallBookingsProviderElement
   @override
   String get date => (origin as FetchHallBookingsProvider).date;
   @override
-  String get hall => (origin as FetchHallBookingsProvider).hall;
+  String get hallId => (origin as FetchHallBookingsProvider).hallId;
 }
 
 String _$fetchHallsHash() => r'078eab5e6101293aa51f3c8c6afa57f0b0097b16';
