@@ -39,23 +39,11 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
   final TextEditingController emirateIDController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   Future<void> _pickImage(ImageSource source, context) async {
-    PermissionStatus status;
 
-    if (source == ImageSource.camera) {
-      status = await Permission.camera.request();
-    } else if (source == ImageSource.gallery) {
-      status = await Permission.photos.request();
-    } else {
-      return;
-    }
 
-    if (status.isGranted) {
+    
       _pickFile(source);
-    } else if (status.isPermanentlyDenied) {
-      _showPermissionDeniedDialog(true, context);
-    } else {
-      _showPermissionDeniedDialog(false, context);
-    }
+   
   }
 
   Future<File?> _pickFile(source) async {

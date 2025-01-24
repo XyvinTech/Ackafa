@@ -2,6 +2,7 @@ class News {
   final String? id;
   final String? category;
   final String? title;
+  final String? pdf;
   final String? content;
   final String? media;
   final String? status;
@@ -13,6 +14,7 @@ class News {
     this.id,
     this.category,
     this.title,
+    this.pdf,
     this.content,
     this.media,
     this.status,
@@ -27,6 +29,7 @@ class News {
       id: json['_id'] as String?,
       category: json['category'] as String?,
       title: json['title'] as String?,
+      pdf: json['pdf'] as String?,
       content: json['content'] as String?,
       media: json['media'] as String?,
       status: json['status'] as String?,
@@ -42,6 +45,7 @@ class News {
       '_id': id,
       'category': category,
       'title': title,
+      'pdf': pdf,
       'content': content,
       'media': media,
       'status': status,
@@ -56,6 +60,7 @@ class News {
     String? id,
     String? category,
     String? title,
+    String? pdf,
     String? content,
     String? media,
     String? status,
@@ -67,6 +72,7 @@ class News {
       id: id ?? this.id,
       category: category ?? this.category,
       title: title ?? this.title,
+      pdf: pdf ?? this.pdf,
       content: content ?? this.content,
       media: media ?? this.media,
       status: status ?? this.status,

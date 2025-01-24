@@ -206,7 +206,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                         showReportPersonDialog(
                             context: context,
                             onReportStatusChanged: () {},
-                            reportType: 'user',
+                            reportType: 'User',
                             reportedItemId: widget.receiver.id ?? '');
                       }),
                   IconButton(
@@ -269,7 +269,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                                             }
                                           });
                                         },
-                                        reportType: 'chat');
+                                        reportType: 'Message');
                                   },
                                   child: ReplyCard(
                                     feed: message.feed,

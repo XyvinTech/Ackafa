@@ -176,6 +176,138 @@ class _FetchHallBookingsProviderElement
   String get hallId => (origin as FetchHallBookingsProvider).hallId;
 }
 
+String _$fetchBookedDatesHash() => r'96afb9b2d2245521c440fb4d20b466f22ca26d33';
+
+/// See also [fetchBookedDates].
+@ProviderFor(fetchBookedDates)
+const fetchBookedDatesProvider = FetchBookedDatesFamily();
+
+/// See also [fetchBookedDates].
+class FetchBookedDatesFamily extends Family<AsyncValue<List<DateTime?>>> {
+  /// See also [fetchBookedDates].
+  const FetchBookedDatesFamily();
+
+  /// See also [fetchBookedDates].
+  FetchBookedDatesProvider call(
+    String month,
+  ) {
+    return FetchBookedDatesProvider(
+      month,
+    );
+  }
+
+  @override
+  FetchBookedDatesProvider getProviderOverride(
+    covariant FetchBookedDatesProvider provider,
+  ) {
+    return call(
+      provider.month,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'fetchBookedDatesProvider';
+}
+
+/// See also [fetchBookedDates].
+class FetchBookedDatesProvider
+    extends AutoDisposeFutureProvider<List<DateTime?>> {
+  /// See also [fetchBookedDates].
+  FetchBookedDatesProvider(
+    String month,
+  ) : this._internal(
+          (ref) => fetchBookedDates(
+            ref as FetchBookedDatesRef,
+            month,
+          ),
+          from: fetchBookedDatesProvider,
+          name: r'fetchBookedDatesProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$fetchBookedDatesHash,
+          dependencies: FetchBookedDatesFamily._dependencies,
+          allTransitiveDependencies:
+              FetchBookedDatesFamily._allTransitiveDependencies,
+          month: month,
+        );
+
+  FetchBookedDatesProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.month,
+  }) : super.internal();
+
+  final String month;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<DateTime?>> Function(FetchBookedDatesRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FetchBookedDatesProvider._internal(
+        (ref) => create(ref as FetchBookedDatesRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        month: month,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<DateTime?>> createElement() {
+    return _FetchBookedDatesProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FetchBookedDatesProvider && other.month == month;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, month.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin FetchBookedDatesRef on AutoDisposeFutureProviderRef<List<DateTime?>> {
+  /// The parameter `month` of this provider.
+  String get month;
+}
+
+class _FetchBookedDatesProviderElement
+    extends AutoDisposeFutureProviderElement<List<DateTime?>>
+    with FetchBookedDatesRef {
+  _FetchBookedDatesProviderElement(super.provider);
+
+  @override
+  String get month => (origin as FetchBookedDatesProvider).month;
+}
+
 String _$fetchHallsHash() => r'078eab5e6101293aa51f3c8c6afa57f0b0097b16';
 
 /// See also [fetchHalls].

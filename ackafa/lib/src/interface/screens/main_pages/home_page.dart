@@ -10,6 +10,7 @@ import 'package:ackaf/src/data/notifires/people_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/events_api.dart';
 import 'package:ackaf/src/data/services/api_routes/promotions_api.dart';
 import 'package:ackaf/src/data/services/dynamic_links.dart';
+import 'package:ackaf/src/data/services/launch_url.dart';
 import 'package:ackaf/src/interface/common/components/app_bar.dart';
 import 'package:ackaf/src/interface/common/custom_video.dart';
 import 'package:ackaf/src/interface/common/event_widget.dart';
@@ -74,7 +75,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       final double itemHeight =
           titleHeight + descriptionHeight; // Adding padding
       if (itemHeight > maxHeight) {
-        maxHeight = itemHeight + 10;
+        maxHeight = itemHeight + 30;
       }
     }
     return maxHeight;
@@ -118,7 +119,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                 final filteredVideos = videos
                     .where((video) => video.link!.startsWith('http'))
                     .toList();
-          
 
                 return SingleChildScrollView(
                   child: Column(
@@ -484,6 +484,36 @@ Widget customNotice(
                       // Set the font color to blue
                       ),
                 ),
+                const Spacer(),
+                if (notice.link != null &&
+                    notice.link != '' &&
+                    notice.link != 'null')
+                  GestureDetector(
+                    onTap: () {
+                      log(notice.link ?? '');
+                      launchURL(notice.link ?? '');
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Know more',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Color(
+                                    0xFF004797) // Set the font color to blue
+                                ),
+                          ),
+                          Icon(
+                            color: Color(0xFF004797),
+                            Icons.arrow_forward_ios,
+                            size: 14,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

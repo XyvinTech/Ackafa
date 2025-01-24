@@ -57,7 +57,7 @@ class CustomDropDown extends ConsumerWidget {
           if (value == 'report') {
             String reportType = '';
             if (feed != null) {
-              reportType = 'Post';
+              reportType = 'Feeds';
               showReportPersonDialog(
                   reportedItemId: feed?.id ?? '',
                   context: context,
@@ -73,7 +73,7 @@ class CustomDropDown extends ConsumerWidget {
                   onReportStatusChanged: () {},
                   reportType: reportType);
             } else {
-              reportType = 'Chat';
+              reportType = 'Message';
               showReportPersonDialog(
                   reportedItemId: msg?.id ?? '',
                   context: context,

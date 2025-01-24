@@ -90,7 +90,7 @@ class ProfilePage extends StatelessWidget {
                                                       ),
                                                     )
                                                   : Image.asset(
-                                                      scale: 1.2,
+                                                      scale: 1.3,
                                                       'assets/icons/dummy_person.png'),
                                             ],
                                           ),
@@ -304,7 +304,7 @@ class ProfilePage extends StatelessWidget {
                       PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
                             ProfilePreviewUsingId(
-                          userId: user.id??'',
+                          userId: user.id ?? '',
                         ),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {

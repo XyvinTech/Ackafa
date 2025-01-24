@@ -11,7 +11,7 @@ Future<void> saveContact(
     required String firstName,    required String lastName,required String email,
     required BuildContext context}) async {
   // Request permission to access contacts
-  if (await Permission.contacts.request().isGranted) {
+
     final Contact contact = Contact(
         firstname: firstName,
         lastname: lastName,
@@ -26,8 +26,5 @@ Future<void> saveContact(
     } else {
       CustomSnackbar.showSnackbar(context, 'Contact saving failed!');
     }
-  } else {
-    // Show error message if permission is denied
-    CustomSnackbar.showSnackbar(context, 'Permission denied to save contacts');
-  }
+ 
 }

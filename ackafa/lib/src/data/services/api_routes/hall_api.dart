@@ -38,6 +38,36 @@ Future<List<HallBooking>> fetchHallBookings(
 }
 
 @riverpod
+Future<List<DateTime?>> fetchBookedDates(
+    FetchBookedDatesRef ref, String month) async {
+  log('requesting url:$baseUrl/booking/calendar/$month');
+  final response = await http.get(
+    Uri.parse('$baseUrl/booking/calendar/$month'),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    final hallbookingsJson = data['data'] as List<dynamic>? ?? [];
+    log(data.toString());
+    final List<HallBooking> hallbookings = hallbookingsJson
+        .map((hallBookings) => HallBooking.fromJson(hallBookings))
+        .toList();
+    final List<DateTime?> bookedDates =
+        hallbookings.map((booking) => booking.date).toSet().toList();
+    log(hallbookings.toString());
+    return bookedDates ?? [];
+  } else {
+    final data = json.decode(response.body);
+    log(data['message']);
+    return [];
+  }
+}
+
+@riverpod
 Future<List<Hall>> fetchHalls(FetchHallsRef ref) async {
   log('requesting url:$baseUrl/booking/dropdown');
   final response = await http.get(

@@ -196,7 +196,7 @@ class _IndividualPageState extends ConsumerState<Groupchatscreen> {
                         showReportPersonDialog(
                             context: context,
                             onReportStatusChanged: () {},
-                            reportType: 'user',
+                            reportType: 'User',
                             reportedItemId: widget.group.id ?? '');
                       }),
                   // IconButton(
@@ -274,7 +274,7 @@ class _IndividualPageState extends ConsumerState<Groupchatscreen> {
                                         }
                                       });
                                     },
-                                    reportType: 'chat');
+                                    reportType: 'Message');
                               },
                               child: GroupchatReplyMsgCard(
                                 username:

@@ -107,21 +107,10 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   Future<void> _pickImage(ImageSource source, String imageType) async {
     PermissionStatus status;
 
-    if (source == ImageSource.camera) {
-      status = await Permission.camera.request();
-    } else if (source == ImageSource.gallery) {
-      status = await Permission.photos.request();
-    } else {
-      return;
-    }
 
-    if (status.isGranted) {
+
       _pickFile(imageType: imageType);
-    } else if (status.isPermanentlyDenied) {
-      _showPermissionDeniedDialog(true);
-    } else {
-      _showPermissionDeniedDialog(false);
-    }
+   
   }
 
   Future<File?> _pickFile({required String imageType}) async {
