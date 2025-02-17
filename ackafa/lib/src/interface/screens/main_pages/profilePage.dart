@@ -128,6 +128,12 @@ class ProfilePage extends StatelessWidget {
                                               ],
                                             ),
                                           ),
+                         ),
+                                          ),
+                         ),
+                                          ),
+                         ),
+                                          ),
                                         ],
                                       ),
                                       SizedBox(
