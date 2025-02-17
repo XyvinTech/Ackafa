@@ -83,7 +83,8 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.enabled,
-    this.isAward, this.fillColor=const Color(0xFFF2F2F2),
+    this.isAward,
+    this.fillColor = const Color(0xFFF2F2F2),
   }) : super(key: key);
 
   @override
@@ -130,6 +131,7 @@ class CustomTextFormField extends StatelessWidget {
                     .read(userProvider.notifier)
                     .updateCompany(Company(designation: textController!.text));
               case 'Bio':
+                log('Bio ${textController!.text}');
                 ref.read(userProvider.notifier).updateBio(textController!.text);
               case 'Enter Company Name':
                 ref

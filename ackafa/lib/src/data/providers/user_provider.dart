@@ -75,6 +75,7 @@ class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
   }
 
   void updateBio(String? bio) {
+    log('updating bio ${bio}');
     state = state.whenData((user) => user.copyWith(bio: bio));
   }
 

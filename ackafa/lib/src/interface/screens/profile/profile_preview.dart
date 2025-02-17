@@ -115,15 +115,44 @@ class ProfilePreview extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         user.image != null && user.image != ''
-                            ? ClipOval(
-                                child: Image.network(
-                                  user.image ?? '',
-                                  width: 90,
-                                  height: 90,
-                                  fit: BoxFit.contain,
-                                ),
-                              )
-                            : Image.asset('assets/icons/dummy_person.png'),
+                            ? GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => Dialog(
+                                      backgroundColor: Colors.transparent,
+                                      child: GestureDetector(
+                                        onTap: () => Navigator.pop(context),
+                                        child: InteractiveViewer(
+                                          child: Image.network(user.image ?? '',
+                                              fit: BoxFit.contain),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: 100, // Diameter + border width
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Color(0xFFE30613),
+                                      width: 2.0, // Border width
+                                    ),
+                                  ),
+                                  child: ClipOval(
+                                    child: Image.network(
+                                      user.image ?? '',
+                                      width:
+                                          74, // Diameter of the circle (excluding border)
+                                      height: 74,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ))
+                            : Image.asset(
+                                'assets/icons/dummy_person_large.png'),
                         const SizedBox(height: 10),
                         Text(
                           user.fullName ?? '',

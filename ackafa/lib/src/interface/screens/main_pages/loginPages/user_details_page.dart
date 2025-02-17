@@ -107,10 +107,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   Future<void> _pickImage(ImageSource source, String imageType) async {
     PermissionStatus status;
 
-
-
-      _pickFile(imageType: imageType);
-   
+    _pickFile(imageType: imageType);
   }
 
   Future<File?> _pickFile({required String imageType}) async {
@@ -291,7 +288,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       "college": user.college?.id,
       if (user.address != null) "address": user.address ?? '',
       if (user.bio != null) "bio": user.bio ?? '',
-      if (user.emiratesID != null) "bio": user.emiratesID ?? '',
+      if (user.emiratesID != null) "emiratesID": user.emiratesID ?? '',
       "company": {
         if (user.company?.name != null) "name": user.company?.name ?? '',
         if (user.company?.designation != null)

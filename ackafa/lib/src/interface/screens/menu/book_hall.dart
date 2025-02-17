@@ -190,11 +190,9 @@ class _BookHallPageState extends ConsumerState<BookHallPage> {
                           itemCount: bookings.length,
                           itemBuilder: (context, index) {
                             String startTime = DateFormat('hh:mm a').format(
-                                DateTime.parse(bookings[index].time!.start!)
-                                    .toLocal());
+                                DateTime.parse(bookings[index].time!.start!));
                             String endTime = DateFormat('hh:mm a').format(
-                                DateTime.parse(bookings[index].time!.end!)
-                                    .toLocal());
+                                DateTime.parse(bookings[index].time!.end!));
                             log(bookings.toString());
                             return _eventCard("${bookings[index].eventName}",
                                 "$startTime - $endTime");
