@@ -1,3 +1,4 @@
+import 'package:ackaf/src/data/models/hall_models.dart';
 import 'package:ackaf/src/data/services/api_routes/hall_api.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,12 @@ import 'package:table_calendar/table_calendar.dart';
 
 class CustomCalendar extends StatefulWidget {
   final Function(DateTime selectedDay, DateTime focusedDay)? onDaySelected;
+  final List<AvailableTimeModel>? hallTimes;
 
   const CustomCalendar({
     super.key,
     this.onDaySelected,
+    this.hallTimes,
   });
 
   @override
@@ -36,6 +39,16 @@ class _CustomCalendarState extends State<CustomCalendar> {
     "December"
   ];
 
+  final List<String> _daysOfWeek = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
+
   final List<DateTime> _unselectableDays = [];
 
   @override
@@ -46,8 +59,21 @@ class _CustomCalendarState extends State<CustomCalendar> {
   }
 
   bool _isDaySelectable(DateTime day) {
-    return !_unselectableDays
-        .any((unselectableDay) => isSameDay(unselectableDay, day));
+    if (_unselectableDays
+        .any((unselectableDay) => isSameDay(unselectableDay, day))) {
+      return false;
+    }
+
+    String dayName = _daysOfWeek[day.weekday - 1].toLowerCase();
+
+    if (widget.hallTimes == null || widget.hallTimes!.isEmpty) {
+      return true;
+    }
+
+    bool isDayAvailable =
+        widget.hallTimes!.any((time) => time.day!.toLowerCase() == dayName);
+
+    return isDayAvailable;
   }
 
   bool _isDayBooked(DateTime day, List<DateTime?> bookedDates) {
@@ -107,7 +133,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
         String yearAndMonth = DateFormat('yyyy-MM').format(_selectedDay);
         final asyncBookedDates =
             ref.watch(fetchBookedDatesProvider(yearAndMonth));
-     return   asyncBookedDates.when(
+        return asyncBookedDates.when(
           data: (bookedDates) {
             return Container(
               color: Colors.white,
@@ -218,10 +244,10 @@ class _CustomCalendarState extends State<CustomCalendar> {
                     ),
                     calendarBuilders: CalendarBuilders(
                       markerBuilder: (context, day, _) {
-                    if(bookedDates.isEmpty) {
-                      bookedDates=[];
-                    }
-                        if (_isDayBooked(day,bookedDates)) {
+                        if (bookedDates.isEmpty) {
+                          bookedDates = [];
+                        }
+                        if (_isDayBooked(day, bookedDates)) {
                           return Positioned(
                             bottom: 1,
                             child: Container(

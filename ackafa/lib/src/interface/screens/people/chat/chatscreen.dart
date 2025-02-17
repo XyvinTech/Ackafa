@@ -119,6 +119,7 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
     return Stack(
       children: [
         Scaffold(
+          resizeToAvoidBottomInset: true,
           backgroundColor: const Color(0xFFFCFCFC),
           appBar: PreferredSize(
               preferredSize: const Size.fromHeight(60),
@@ -326,54 +327,60 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                             ),
                           ),
                         )
-                      : Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 5.0),
+                      : Container(
+                          decoration: const BoxDecoration(
                             color: Colors.white,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Card(
-                                    elevation: 1,
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      side: const BorderSide(
-                                        color:
-                                            Color.fromARGB(255, 220, 215, 215),
-                                        width: 0.5,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15.0),
+                            border: Border(
+                              top: BorderSide(
+                                color: Color.fromARGB(255, 220, 215, 215),
+                                width: 0.5,
+                              ),
+                            ),
+                          ),
+                          padding: EdgeInsets.only(
+                            left: 8.0,
+                            right: 8.0,
+                            top: 5.0,
+                            bottom: 5.0,
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Card(
+                                  elevation: 1,
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(
+                                      color: Color.fromARGB(255, 220, 215, 215),
+                                      width: 0.5,
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0, vertical: 5.0),
-                                      child: Container(
-                                        constraints: const BoxConstraints(
-                                          maxHeight: 150, // Limit the height
-                                        ),
-                                        child: Scrollbar(
-                                          thumbVisibility: true,
-                                          child: SingleChildScrollView(
-                                            scrollDirection: Axis.vertical,
-                                            reverse: true, // Start from bottom
-                                            child: TextField(
-                                              controller: _controller,
-                                              focusNode: focusNode,
-                                              keyboardType:
-                                                  TextInputType.multiline,
-                                              maxLines:
-                                                  null, // Allows for unlimited lines
-                                              minLines:
-                                                  1, // Starts with a single line
-                                              decoration: const InputDecoration(
-                                                border: InputBorder.none,
-                                                hintText: "Type a message",
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                        horizontal: 10),
-                                              ),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0, vertical: 5.0),
+                                    child: Container(
+                                      constraints: const BoxConstraints(
+                                        maxHeight: 150,
+                                      ),
+                                      child: Scrollbar(
+                                        thumbVisibility: true,
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.vertical,
+                                          reverse: true,
+                                          child: TextField(
+                                            controller: _controller,
+                                            focusNode: focusNode,
+                                            keyboardType:
+                                                TextInputType.multiline,
+                                            maxLines: null,
+                                            minLines: 1,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                              hintText: "Type a message",
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      horizontal: 10),
                                             ),
                                           ),
                                         ),
@@ -381,30 +388,31 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    right: 2,
-                                    left: 2,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  right: 2,
+                                  left: 2,
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFE30613),
+                                    borderRadius: BorderRadius.circular(5),
                                   ),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: const Color(0xFFE30613),
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.send,
-                                        color: Colors.white,
-                                      ),
-                                      onPressed: () {
-                                        sendMessage();
-                                      },
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.send,
+                                      color: Colors.white,
                                     ),
+                                    onPressed: () {
+                                      sendMessage();
+                                    },
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        )
+                        ),
                 ],
               ),
               onPopInvoked: (didPop) {

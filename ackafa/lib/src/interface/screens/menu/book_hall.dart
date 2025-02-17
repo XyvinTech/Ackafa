@@ -53,6 +53,8 @@ class _BookHallPageState extends ConsumerState<BookHallPage> {
   Widget build(BuildContext context) {
     final asyncBookings = ref.watch(fetchHallBookingsProvider(
         DateFormat('yyyy-MM-dd').format(selectedDate), selectedHallId ?? ''));
+    final asyncTimes = ref.watch(fetchHallTimesProvider);
+
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
@@ -166,6 +168,11 @@ class _BookHallPageState extends ConsumerState<BookHallPage> {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   CustomCalendar(
                     onDaySelected: _onDaySelected,
+                    hallTimes: asyncTimes.when(
+                      data: (times) => times,
+                      loading: () => null,
+                      error: (_, __) => null,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   if (asyncBookings.hasValue)
@@ -234,18 +241,42 @@ class _BookHallPageState extends ConsumerState<BookHallPage> {
                   Consumer(
                     builder: (context, ref, child) {
                       final asyncTimes = ref.watch(fetchHallTimesProvider);
-                   return   asyncTimes.when(
+                      return asyncTimes.when(
                         data: (hallTimes) {
-                          return const Text(
-                            "Please select a time slot that does not overlap with any events listed above for the same day. Review the event timings carefully and choose a free slot to ensure smooth scheduling and avoid conflicts.",
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
-                          );
+                          // Get current day's timing
+                          String dayName = daysOfWeek[selectedDate.weekday - 1];
+                          AvailableTimeModel? dayTiming;
+                          try {
+                            dayTiming = hallTimes.firstWhere(
+                              (time) =>
+                                  time.day.toLowerCase() ==
+                                  dayName.toLowerCase(),
+                            );
+                          } catch (e) {
+                            // If no matching day is found, dayTiming remains null
+                          }
+
+                          if (dayTiming != null &&
+                              dayTiming.start != null &&
+                              dayTiming.end != null) {
+                            final localStart = dayTiming.start!.toLocal();
+                            final localEnd = dayTiming.end!.toLocal();
+                            return Text(
+                              "Please book between ${DateFormat('hh:mm a').format(localStart)} to ${DateFormat('hh:mm a').format(localEnd)}",
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
+                            );
+                          } else {
+                            return Text(
+                              "Hall is not available for booking on ${dayName}s",
+                              style: TextStyle(color: Colors.red, fontSize: 12),
+                            );
+                          }
                         },
                         loading: () => Center(child: LoadingAnimation()),
                         error: (error, stackTrace) {
-                          log('$error');
                           return const Center(
-                            child: Text('No Timings'),
+                            child: Text('Unable to load available times'),
                           );
                         },
                       );
