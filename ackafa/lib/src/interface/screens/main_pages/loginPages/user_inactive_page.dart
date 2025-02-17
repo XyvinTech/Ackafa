@@ -20,8 +20,7 @@ class UserInactivePage extends ConsumerWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      PaymentConfirmationPage()), // Navigate to MenuPage
+                  builder: (context) => PaymentConfirmationPage()),
             );
           }
         },
@@ -32,27 +31,29 @@ class UserInactivePage extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  LoadingAnimationWidget.hexagonDots(
-                    color: const Color(0xFFE30613),
-                    size: 80,
-                  ),
+                  Image.asset('assets/approval_waiting.png'),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Your request to join has been sent',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      'Your membership is under approval',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Access to the app will be made',
-                    style: TextStyle(fontSize: 15, color: Colors.grey),
-                  ),
-                  const Text(
-                    'available to you soon',
-                    style: TextStyle(fontSize: 15, color: Colors.grey),
-                  ),
-                  const Text(
-                    'Thank you for your patience',
-                    style: TextStyle(fontSize: 15, color: Colors.grey),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      'Kindly contact your college alumni officials for approval',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),

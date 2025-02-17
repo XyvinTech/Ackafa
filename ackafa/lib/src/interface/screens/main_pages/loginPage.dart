@@ -323,7 +323,7 @@ class OTPScreen extends ConsumerStatefulWidget {
 class _OTPScreenState extends ConsumerState<OTPScreen> {
   Timer? _timer;
 
-  int _start = 20;
+  int _start = 59;
 
   bool _isButtonDisabled = true;
 
@@ -462,7 +462,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: Text(
                             _isButtonDisabled
-                                ? 'Enter OTP in $_start seconds'
+                                ? 'Resend OTP in $_start seconds'
                                 : 'Enter your OTP',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
