@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ackaf/src/data/notifires/feed_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/feed_api.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +36,7 @@ class MyPostsPage extends StatelessWidget {
             body: asyncMyPosts.when(
               loading: () => Center(child: LoadingAnimation()),
               error: (error, stackTrace) {
-                // Handle error state
+                log(error.toString());
                 return Center(
                   child: Text('USER HASN\'T POSTED ANYTHING'),
                 );
@@ -53,7 +55,6 @@ class MyPostsPage extends StatelessWidget {
                                 context,
                                 myPosts[index].status ?? '',
                                 myPosts[index].content ?? '',
-                                '3 messages',
                                 myPosts[index].createdAt!,
                                 myPosts[index].id!,
                                 imageUrl: myPosts[index].media);
@@ -71,7 +72,7 @@ class MyPostsPage extends StatelessWidget {
   }
 
   Widget _buildPostCard(BuildContext context, String status, String description,
-      String messages, DateTime timestamp, String requirementId,
+      DateTime timestamp, String requirementId,
       {String? imageUrl}) {
     DateTime localDateTime = timestamp.toLocal();
 

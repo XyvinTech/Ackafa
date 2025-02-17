@@ -176,7 +176,7 @@ class _FetchHallBookingsProviderElement
   String get hallId => (origin as FetchHallBookingsProvider).hallId;
 }
 
-String _$fetchBookedDatesHash() => r'96afb9b2d2245521c440fb4d20b466f22ca26d33';
+String _$fetchBookedDatesHash() => r'4a25b0dec032a4665e4a641362bb7b5080cec986';
 
 /// See also [fetchBookedDates].
 @ProviderFor(fetchBookedDates)
@@ -475,5 +475,25 @@ class _FetchMyHallBookingsProviderElement
   @override
   int get limit => (origin as FetchMyHallBookingsProvider).limit;
 }
+
+String _$fetchHallTimesHash() => r'6981cd37e48e6562cf3d68fca8c3fcdb8f48aa3d';
+
+/// See also [fetchHallTimes].
+@ProviderFor(fetchHallTimes)
+final fetchHallTimesProvider =
+    AutoDisposeFutureProvider<List<AvailableTimeModel>>.internal(
+  fetchHallTimes,
+  name: r'fetchHallTimesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$fetchHallTimesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef FetchHallTimesRef
+    = AutoDisposeFutureProviderRef<List<AvailableTimeModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -1,38 +1,30 @@
-// import 'dart:convert';
-// import 'dart:developer';
-// import 'package:ackaf/src/data/models/hall_models.dart';
-// import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
-// import 'package:flutter/cupertino.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:ackaf/src/data/globals.dart';
-// import 'package:riverpod_annotation/riverpod_annotation.dart';
+// GENERATED CODE - DO NOT MODIFY BY HAND
 
-// part 'subscription_api.g.dart';
+part of 'subscription_api.dart';
 
-// @riverpod
-// Future<List<HallBooking>> fetchHallBookings(
-//     FetchHallBookingsRef ref, String date) async {
-//   log('requesting url:$baseUrl/time/bookings?date=$date');
-//   final response = await http.get(
-//     Uri.parse('$baseUrl/time/bookings?date=$date'),
-//     headers: {
-//       "Content-Type": "application/json",
-//       "Authorization": "Bearer $token"
-//     },
-//   );
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
 
-//   if (response.statusCode == 200) {
-//     final data = json.decode(response.body);
-//     final hallbookingsJson = data['data'] as List<dynamic>? ?? [];
-//     log(data.toString());
-//     final List<HallBooking> hallbookings = hallbookingsJson
-//         .map((hallBookings) => HallBooking.fromJson(hallBookings))
-//         .toList();
-//     log(hallbookings.toString());
-//     return hallbookings;
-//   } else {
-//     final data = json.decode(response.body);
-//     log(data['message']);
-//     throw Exception('Failed to load feeds');
-//   }
-// }
+String _$fetchSubscriptionDetailsHash() =>
+    r'a603ec128bc83f2bc419cb7bff7ca3a32077913c';
+
+/// See also [fetchSubscriptionDetails].
+@ProviderFor(fetchSubscriptionDetails)
+final fetchSubscriptionDetailsProvider =
+    AutoDisposeFutureProvider<SubscriptionModel>.internal(
+  fetchSubscriptionDetails,
+  name: r'fetchSubscriptionDetailsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$fetchSubscriptionDetailsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef FetchSubscriptionDetailsRef
+    = AutoDisposeFutureProviderRef<SubscriptionModel>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

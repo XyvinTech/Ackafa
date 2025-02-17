@@ -342,7 +342,7 @@ class ReportPersonDialog extends StatelessWidget {
         ElevatedButton(
           onPressed: () async {
             ApiRoutes userAPi = ApiRoutes();
-            await userAPi.createReport(
+            await userAPi.createReport(description: reasonController.text,
                 reportedItemId: reportedItemId,
                 context: context,
                 reportType: reportType);

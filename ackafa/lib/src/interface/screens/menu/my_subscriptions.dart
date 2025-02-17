@@ -1,59 +1,77 @@
+import 'package:ackaf/src/data/services/api_routes/subscription_api.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/common/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class MySubscriptionPage extends StatelessWidget {
   const MySubscriptionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        backgroundColor: Colors.white,
-        title: const Text(
-          'My Subscription',
-          style: TextStyle(fontSize: 16),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: Colors.grey,
-            height: .5,
+    return Consumer(
+      builder: (context, ref, child) {
+        final asyncSubscription = ref.watch(fetchSubscriptionDetailsProvider);
+        return Scaffold(
+          appBar: AppBar(
+            scrolledUnderElevation: 0,
+            backgroundColor: Colors.white,
+            title: const Text(
+              'My Subscription',
+              style: TextStyle(fontSize: 16),
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(1.0),
+              child: Container(
+                color: Colors.grey,
+                height: .5,
+              ),
+            ),
           ),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(28.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Membership Subscription Card
-              Consumer(
-                builder: (context, ref, child) {
-           
-              return    _SubscriptionCard(
-                    title: "App subscription",
-                    plan: "Active",
-                    planColor: Colors.green,
-                    lastRenewedDate: "12th July 2025",
-                    amount: "₹2000",
-                    dueOrExpiryDate: "12th July 2026",
-                    dueOrExpiryLabel: "Due date",
+          body: Padding(
+              padding: const EdgeInsets.all(28.0),
+              child: asyncSubscription.when(
+                data: (subscription) {
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // Membership Subscription Card
+                        Consumer(
+                          builder: (context, ref, child) {
+                            return _SubscriptionCard(
+                              title: "App subscription",
+                              plan: subscription.status.toUpperCase(),
+                              planColor: subscription.status == 'active'
+                                  ? Colors.green
+                                  : Colors.red,
+                              lastRenewedDate: DateFormat("dd MMM yyyy")
+                                  .format(subscription.lastRenewed!.toLocal()),
+                              amount:
+                                  '${subscription.amount.toString()} ${subscription.currency}}',
+                              dueOrExpiryDate: DateFormat("dd MMM yyyy")
+                                  .format(subscription.expiryDate!.toLocal()),
+                              dueOrExpiryLabel: "Due date",
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
                   );
                 },
-              ),
-              const SizedBox(height: 16),
-            ],
-          ),
-        ),
-      ),
+                loading: () => const Center(child: LoadingAnimation()),
+                error: (error, stackTrace) =>
+                    const Center(child: Text('No Subscription')),
+              )),
+        );
+      },
     );
   }
 }

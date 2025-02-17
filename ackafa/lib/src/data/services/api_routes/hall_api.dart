@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:ackaf/src/data/models/hall_models.dart';
 import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:ackaf/src/data/globals.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -119,6 +120,37 @@ Future<List<HallBooking>> fetchMyHallBookings(FetchMyHallBookingsRef ref,
     final data = json.decode(response.body);
     log(data['message']);
     throw Exception('Failed to load feeds');
+  }
+}
+
+
+
+@riverpod
+Future<List<AvailableTimeModel>> fetchHallTimes(Ref ref) async {
+  final url = Uri.parse('$baseUrl/time');
+  print('Requesting URL: $url');
+  final response = await http.get(
+    url,
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    },
+  );
+  print(json.decode(response.body)['status']);
+  if (response.statusCode == 200) {
+    final List<dynamic> data = json.decode(response.body)['data'];
+    print(response.body);
+    List<AvailableTimeModel> news = [];
+
+    for (var item in data) {
+      news.add(AvailableTimeModel.fromJson(item));
+    }
+    print(news);
+    return news;
+  } else {
+    print(json.decode(response.body)['message']);
+
+    throw Exception(json.decode(response.body)['message']);
   }
 }
 

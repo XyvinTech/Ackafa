@@ -150,3 +150,68 @@ class HallEvent {
     required this.description,
   });
 }
+
+
+class AvailableTimeModel {
+  final String id;
+  final String day;
+  final DateTime? start;
+  final DateTime? end;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final int version;
+
+  AvailableTimeModel({
+    required this.id,
+    required this.day,
+    this.start,
+    this.end,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.version,
+  });
+
+  factory AvailableTimeModel.fromJson(Map<String, dynamic> json) {
+    return AvailableTimeModel(
+      id: json["_id"] ?? "", 
+      day: json["day"] ?? "", 
+      start: json["start"] != null ? DateTime.tryParse(json["start"]) : null,
+      end: json["end"] != null ? DateTime.tryParse(json["end"]) : null,
+      createdAt: DateTime.parse(json["createdAt"]),
+      updatedAt: DateTime.parse(json["updatedAt"]),
+      version: json["__v"] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "_id": id,
+      "day": day,
+      "start": start?.toIso8601String(),
+      "end": end?.toIso8601String(),
+      "createdAt": createdAt.toIso8601String(),
+      "updatedAt": updatedAt.toIso8601String(),
+      "__v": version,
+    };
+  }
+
+  AvailableTimeModel copyWith({
+    String? id,
+    String? day,
+    DateTime? start,
+    DateTime? end,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? version,
+  }) {
+    return AvailableTimeModel(
+      id: id ?? this.id,
+      day: day ?? this.day,
+      start: start ?? this.start,
+      end: end ?? this.end,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      version: version ?? this.version,
+    );
+  }
+}

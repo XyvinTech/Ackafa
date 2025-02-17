@@ -208,6 +208,7 @@ required String? emiratesID,
 
   Future<void> createReport({
     required BuildContext context,
+    required String description,
     required String reportedItemId,
     required String reportType,
   }) async {
@@ -218,6 +219,7 @@ required String? emiratesID,
             ? reportedItemId
             : ' ',
         'reportType': reportType,
+        'description': description
       };
 
       // Send the POST request

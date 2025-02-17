@@ -231,9 +231,25 @@ class _BookHallPageState extends ConsumerState<BookHallPage> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    "Please select a time slot that does not overlap with any events listed above for the same day. Review the event timings carefully and choose a free slot to ensure smooth scheduling and avoid conflicts.",
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final asyncTimes = ref.watch(fetchHallTimesProvider);
+                   return   asyncTimes.when(
+                        data: (hallTimes) {
+                          return const Text(
+                            "Please select a time slot that does not overlap with any events listed above for the same day. Review the event timings carefully and choose a free slot to ensure smooth scheduling and avoid conflicts.",
+                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                          );
+                        },
+                        loading: () => Center(child: LoadingAnimation()),
+                        error: (error, stackTrace) {
+                          log('$error');
+                          return const Center(
+                            child: Text('No Timings'),
+                          );
+                        },
+                      );
+                    },
                   ),
                   const SizedBox(height: 16),
                   const Text("Event Details",
