@@ -141,9 +141,10 @@ class _BookHallPageState extends ConsumerState<BookHallPage> {
             customButton(
               label: 'PROCEED',
               onPressed: () {
-                setState(() {
-                  proceed = true;
-                });
+                if (selectedHall != null)
+                  setState(() {
+                    proceed = true;
+                  });
               },
             ),
             if (proceed)
