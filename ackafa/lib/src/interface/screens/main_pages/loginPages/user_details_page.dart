@@ -397,6 +397,37 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     }
   }
 
+  String? validateEmiratesId(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your Emirates ID';
+    }
+
+    // Remove any spaces or special characters
+    String cleanValue = value.replaceAll(RegExp(r'[^0-9]'), '');
+
+    if (cleanValue.length != 15) {
+      return 'Emirates ID must be 15 digits';
+    }
+
+    if (!cleanValue.startsWith('784')) {
+      return 'Emirates ID must start with 784';
+    }
+
+    try {
+      BigInt numericValue = BigInt.parse(cleanValue);
+      BigInt minValue = BigInt.parse('784194011111111');
+      BigInt maxValue = BigInt.parse('784202411111111');
+
+      if (numericValue < minValue || numericValue > maxValue) {
+        return 'Invalid Emirates ID range';
+      }
+    } catch (e) {
+      return 'Invalid Emirates ID format';
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final asyncUser = ref.watch(userProvider);
@@ -701,14 +732,9 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                     ),
                                     const SizedBox(height: 20.0),
                                     CustomTextFormField(
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Please Enter Your Emarites ID';
-                                        }
-                                        return null;
-                                      },
+                                      validator: validateEmiratesId,
                                       textController: emiratesIdController,
-                                      labelText: 'Enter Your Emarites ID',
+                                      labelText: 'Enter Your Emirates ID',
                                     ),
 
                                     const SizedBox(height: 20.0),
