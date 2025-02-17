@@ -48,7 +48,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   // final isBrochureDetailsVisibleProvider = StateProvider<bool>((ref) => false);
 
   final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController emaritesIdController = TextEditingController();
+  final TextEditingController emiratesIdController = TextEditingController();
 
   final TextEditingController landlineController = TextEditingController();
   final TextEditingController bloodGroupController = TextEditingController();
@@ -253,7 +253,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   void dispose() {
     // Dispose controllers when the widget is disposed
     firstNameController.dispose();
-    emaritesIdController.dispose();
+    emiratesIdController.dispose();
 
     bloodGroupController.dispose();
     emailController.dispose();
@@ -427,8 +427,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                 if (firstNameController.text.isEmpty) {
                   firstNameController.text = user.fullName!;
                 }
-                if (emaritesIdController.text.isEmpty) {
-                  emaritesIdController.text = user.emiratesID ?? '';
+                if (emiratesIdController.text.isEmpty) {
+                  emiratesIdController.text = user.emiratesID ?? '';
                 }
 
                 if (collegeController.text.isEmpty) {
@@ -707,7 +707,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                         }
                                         return null;
                                       },
-                                      textController: emaritesIdController,
+                                      textController: emiratesIdController,
                                       labelText: 'Enter Your Emarites ID',
                                     ),
 

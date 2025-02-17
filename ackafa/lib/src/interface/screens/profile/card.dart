@@ -123,227 +123,240 @@ class ProfileCard extends StatelessWidget {
                   ),
                 )
               : null,
-          body: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/profile_background2.png'),
+                alignment: Alignment.topCenter,
+              ),
+            ),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Container(
+                  color: Colors.transparent,
+                  child: Column(
                     children: [
-                      Consumer(
-                        builder: (context, ref, child) {
-                          if (!isFullScreen) {
-                            return IconButton(
-                              icon: const Icon(Icons.open_in_full),
-                              onPressed: () {
-                                SystemChrome.setEnabledSystemUIMode(
-                                    SystemUiMode.immersiveSticky);
-                                ref.read(isFullScreenProvider.notifier).state =
-                                    true;
-                              },
-                            );
-                          } else {
-                            return IconButton(
-                              icon: const Icon(Icons.close_fullscreen),
-                              onPressed: () {
-                                SystemChrome.setEnabledSystemUIMode(
-                                    SystemUiMode.edgeToEdge);
-                                ref.read(isFullScreenProvider.notifier).state =
-                                    false;
-                              },
-                            );
-                          }
-                        },
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Consumer(
+                            builder: (context, ref, child) {
+                              if (!isFullScreen) {
+                                return IconButton(
+                                  icon: const Icon(Icons.open_in_full),
+                                  onPressed: () {
+                                    SystemChrome.setEnabledSystemUIMode(
+                                        SystemUiMode.immersiveSticky);
+                                    ref
+                                        .read(isFullScreenProvider.notifier)
+                                        .state = true;
+                                  },
+                                );
+                              } else {
+                                return IconButton(
+                                  icon: const Icon(Icons.close_fullscreen),
+                                  onPressed: () {
+                                    SystemChrome.setEnabledSystemUIMode(
+                                        SystemUiMode.edgeToEdge);
+                                    ref
+                                        .read(isFullScreenProvider.notifier)
+                                        .state = false;
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  Screenshot(
-                    controller: screenshotController,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 25, right: 15),
-                        child: Column(
-                          children: [
-                            Stack(
-                              children: [
-                                SizedBox(
-                                  height: 19,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: SizedBox(
-                                    width: double
-                                        .infinity, // Sets a bounded width constraint
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 30,
+                      Screenshot(
+                        controller: screenshotController,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.transparent,
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 30),
+                                child: Column(
+                                  children: [
+                                    // Profile Image with Red Border
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: Colors.red,
+                                          width: 2,
                                         ),
-                                        Row(
-                                          children: [
-                                            SizedBox(width: 20),
-                                            Column(
-                                              children: [
-                                                user.image != null &&
-                                                        user.image != ''
-                                                    ? CircleAvatar(
-                                                        radius: 37,
-                                                        backgroundImage:
-                                                            NetworkImage(
-                                                                user.image ??
-                                                                    ''),
-                                                      )
-                                                    : Image.asset(
-                                                        'assets/icons/dummy_person.png'),
-                                              ],
-                                            ),
-                                            SizedBox(width: 10),
-                                            Expanded(
-                                              // Use Expanded here to take up remaining space
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    '${user.fullName??''}',
-                                                    style: const TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  if (user.college != null)
-                                                    Text(
-                                                      user.college
-                                                              ?.collegeName ??
-                                                          '',
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                  // if (user.batch != null)
-                                                  //   Text(
-                                                  //     '${user.batch ?? ''}',
-                                                  //     style: const TextStyle(
-                                                  //       fontSize: 15,
-                                                  //     ),
-                                                  //   ),
-                                                ],
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: user.image != null &&
+                                                user.image != ''
+                                            ? Image.network(
+                                                user.image ?? '',
+                                                width: 100,
+                                                height: 100,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Image.asset(
+                                                'assets/icons/dummy_person.png',
+                                                width: 100,
+                                                height: 100,
+                                                fit: BoxFit.cover,
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                    const SizedBox(height: 15),
+                                    Text(
+                                      user.fullName ?? '',
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      'Chief Financial Officer',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      'Company Name',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            QrImageView(
-                              size: 285,
-                              data:
-                                  'https://admin.akcafconnect.com/user/${user.id}',
-                            ),
-                            const SizedBox(height: 20),
-                            if (user.phone != null)
-                              Row(
-                                children: [
-                                  const Icon(Icons.phone, color: Colors.grey),
-                                  const SizedBox(width: 10),
-                                  Text(user.phone?.toString() ?? ''),
-                                ],
                               ),
-                            const SizedBox(height: 10),
-                            if (user.email != null)
-                              Row(
-                                children: [
-                                  const Icon(Icons.email, color: Colors.grey),
-                                  const SizedBox(width: 10),
-                                  Text(user.email ?? ''),
-                                ],
+                              // QR Code Section
+                              Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFFF5EA),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: QrImageView(
+                                  size: 250,
+                                  data:
+                                      'https://admin.akcafconnect.com/user/${user.id}',
+                                  backgroundColor: Colors.white,
+                                ),
                               ),
-                            const SizedBox(height: 10),
-                            if (user.address != null)
-                              Row(
-                                children: [
-                                  const Icon(Icons.location_on,
-                                      color: Colors.grey),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Text(
-                                      user.address ?? '',
-                                    ),
-                                  ),
-                                ],
+                              const SizedBox(height: 30),
+                              // Contact Information
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 30),
+                                child: Column(
+                                  children: [
+                                    if (user.phone != null)
+                                      _buildContactRow(
+                                        Icons.phone,
+                                        user.phone?.toString() ?? '',
+                                      ),
+                                    const SizedBox(height: 15),
+                                    if (user.email != null)
+                                      _buildContactRow(
+                                        Icons.email,
+                                        user.email ?? '',
+                                      ),
+                                    const SizedBox(height: 15),
+                                    if (user.address != null)
+                                      _buildContactRow(
+                                        Icons.location_on,
+                                        user.address ?? '',
+                                      ),
+                                  ],
+                                ),
                               ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                          ],
+                              const SizedBox(height: 30),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
+                      if (!isFullScreen)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20),
+                          child: SizedBox(
+                              height: 50,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Flexible(
+                                    child: customButton(
+                                        buttonHeight: 60,
+                                        fontSize: 16,
+                                        label: 'SHARE',
+                                        onPressed: () async {
+                                          captureAndShareWidgetScreenshot(
+                                              context);
+                                        }),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Flexible(
+                                    child: customButton(
+                                        sideColor: const Color.fromARGB(
+                                            255, 219, 217, 217),
+                                        labelColor: const Color(0xFF2C2829),
+                                        buttonColor: const Color.fromARGB(
+                                            255, 222, 218, 218),
+                                        buttonHeight: 60,
+                                        fontSize: 13,
+                                        label: 'DOWNLOAD QR',
+                                        onPressed: () async {
+                                          saveQr(
+                                              screenshotController:
+                                                  screenshotController,
+                                              context: context);
+                                        }),
+                                  ),
+                                ],
+                              )),
+                        ),
+                      const SizedBox(
+                        height: 40,
+                      )
+                    ],
                   ),
-                  if (!isFullScreen)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 20),
-                      child: SizedBox(
-                          height: 50,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Flexible(
-                                child: customButton(
-                                    buttonHeight: 60,
-                                    fontSize: 16,
-                                    label: 'SHARE',
-                                    onPressed: () async {
-                                      captureAndShareWidgetScreenshot(context);
-                                    }),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Flexible(
-                                child: customButton(
-                                    sideColor: const Color.fromARGB(
-                                        255, 219, 217, 217),
-                                    labelColor: const Color(0xFF2C2829),
-                                    buttonColor: const Color.fromARGB(
-                                        255, 222, 218, 218),
-                                    buttonHeight: 60,
-                                    fontSize: 13,
-                                    label: 'DOWNLOAD QR',
-                                    onPressed: () async {
-                                      saveQr(
-                                          screenshotController:
-                                              screenshotController,
-                                          context: context);
-                                    }),
-                              ),
-                            ],
-                          )),
-                    ),
-                  const SizedBox(
-                    height: 40,
-                  )
-                ],
+                ),
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildContactRow(IconData icon, String text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: Colors.red, size: 22),
+        const SizedBox(width: 15),
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

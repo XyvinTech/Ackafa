@@ -29,38 +29,31 @@ class ProfilePage extends StatelessWidget {
                   height: 20,
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 20, bottom: 1),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          border: Border.all(
-                              color: const Color.fromARGB(255, 237, 231, 231)),
                           color: Colors.white,
                           borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(5),
-                              topRight: Radius.circular(5)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(255, 182, 181, 181)
-                                  .withOpacity(0.5),
-                              spreadRadius: 0,
-                              blurRadius: 1,
-                              offset: const Offset(.5, .5),
-                            ),
-                          ],
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20)),
                         ),
                         child: Stack(
                           children: [
-                            Positioned.fill(
-                              top: -100,
-                              left: -19,
-                              child: Image.asset(
-                                color: Color(0xFFE30613).withOpacity(0.07),
-                                'assets/profile_background.png',
-                                fit: BoxFit.fitWidth,
-                                width: double.infinity,
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20)),
+                                child: Image.asset(
+                                  'assets/profile_background2.png',
+                                  fit: BoxFit.fitWidth,
+                                  width: double.infinity,
+                                ),
                               ),
                             ),
                             Column(
@@ -73,76 +66,91 @@ class ProfilePage extends StatelessWidget {
                                       SizedBox(
                                         height: 60,
                                       ),
-                                      Row(
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          SizedBox(width: 20),
-                                          Column(
-                                            children: [
-                                              user.image != null &&
-                                                      user.image != ''
-                                                  ? ClipOval(
-                                                      child: Image.network(
-                                                        user.image ?? '',
-                                                        width:
-                                                            74, // Diameter of the circle (2 * radius)
-                                                        height: 74,
-                                                        fit: BoxFit.contain,
+                                          user.image != null && user.image != ''
+                                              ? Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                      color: Colors.white,
+                                                      width: 4,
+                                                    ),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black
+                                                            .withOpacity(0.2),
+                                                        spreadRadius: 2,
+                                                        blurRadius: 8,
+                                                        offset:
+                                                            const Offset(0, 0),
                                                       ),
-                                                    )
-                                                  : Image.asset(
+                                                    ],
+                                                  ),
+                                                  child: ClipOval(
+                                                    child: Image.network(
+                                                      user.image ?? '',
+                                                      width: 104,
+                                                      height: 104,
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                  ),
+                                                )
+                                              : Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                      color: Colors.white,
+                                                      width: 4,
+                                                    ),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black
+                                                            .withOpacity(0.2),
+                                                        spreadRadius: 2,
+                                                        blurRadius: 8,
+                                                        offset:
+                                                            const Offset(0, 0),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Image.asset(
                                                       scale: 1.3,
                                                       'assets/icons/dummy_person.png'),
-                                            ],
-                                          ),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                            // Use Expanded here to take up remaining space
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  '${user.fullName ?? ''}',
-                                                  style: const TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
                                                 ),
-                                                if (user.college != null)
-                                                  Text(
-                                                    user.college?.collegeName ??
-                                                        '',
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 15,
-                                                    ),
-                                                  ),
-                                                if (user.batch != null)
-                                                  Text(
-                                                    '${user.batch ?? ''}',
-                                                    style: const TextStyle(
-                                                      fontSize: 15,
-                                                    ),
-                                                  ),
-                                              ],
+                                          SizedBox(height: 15),
+                                          Text(
+                                            '${user.fullName ?? ''}',
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
                                             ),
+                                            textAlign: TextAlign.center,
                                           ),
-                         ),
-                                          ),
-                         ),
-                                          ),
-                         ),
-                                          ),
+                                          if (user.college != null)
+                                            Text(
+                                              user.college?.collegeName ?? '',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          if (user.batch != null)
+                                            Text(
+                                              '${user.batch ?? ''}',
+                                              style: const TextStyle(
+                                                fontSize: 15,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
                                         ],
-                                      ),
-                                      SizedBox(
-                                        height: 40,
                                       ),
                                     ],
                                   ),
                                 ),
-                                const SizedBox(height: 10),
                               ],
                             ),
                           ],
@@ -152,8 +160,6 @@ class ProfilePage extends StatelessWidget {
                         padding: const EdgeInsets.only(
                             left: 35, right: 30, top: 25, bottom: 35),
                         decoration: BoxDecoration(
-                          border: Border.all(
-                              color: const Color.fromARGB(255, 237, 231, 231)),
                           color: Colors.white,
                           boxShadow: [
                             BoxShadow(
@@ -168,7 +174,15 @@ class ProfilePage extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                const Icon(Icons.phone, color: Colors.grey),
+                                Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(6)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: const Icon(Icons.phone,
+                                          color: Colors.white),
+                                    )),
                                 const SizedBox(width: 10),
                                 Text(user.phone!),
                               ],
@@ -176,7 +190,16 @@ class ProfilePage extends StatelessWidget {
                             const SizedBox(height: 10),
                             Row(
                               children: [
-                                const Icon(Icons.email, color: Colors.grey),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(6)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: const Icon(Icons.email,
+                                        color: Colors.white),
+                                  ),
+                                ),
                                 const SizedBox(width: 10),
                                 Text(user.email!),
                               ],
@@ -185,8 +208,16 @@ class ProfilePage extends StatelessWidget {
                             if (user.address != null && user.address != '')
                               Row(
                                 children: [
-                                  const Icon(Icons.location_on,
-                                      color: Colors.grey),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(6)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: const Icon(Icons.location_on,
+                                          color: Colors.white),
+                                    ),
+                                  ),
                                   const SizedBox(width: 10),
                                   if (user.address != null)
                                     Expanded(
@@ -204,35 +235,27 @@ class ProfilePage extends StatelessWidget {
                         decoration: BoxDecoration(
                           border: Border.all(
                               color: const Color.fromARGB(255, 237, 231, 231)),
-                          color: Colors.white,
+                          color: Color(0xFFE30613),
                           borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(5),
-                              bottomRight: Radius.circular(5)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 0,
-                              blurRadius: 1,
-                              offset: const Offset(.5, .5),
-                            ),
-                          ],
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20)),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             RichText(
                               text: TextSpan(
-                                text: 'Member ID: ',
+                                text: 'Emirates ID: ',
                                 style: const TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.normal,
                                 ),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: user.memberId,
+                                    text: user.emiratesID,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ],
@@ -259,14 +282,14 @@ class ProfilePage extends StatelessWidget {
                     width: 70,
                     decoration: BoxDecoration(
                         border: Border.all(
-                          color: Color(0xFFE30613),
+                          color: Colors.grey,
                         ),
                         shape: BoxShape.circle,
-                        color: Color(0xFFFEECED)),
+                        color: Colors.white),
                     child: Center(
                         child: Icon(
                       Icons.share,
-                      color: Color(0xFFE30613),
+                      color: Colors.grey,
                     )),
                   ),
                 ),
@@ -289,14 +312,14 @@ class ProfilePage extends StatelessWidget {
                     width: 80,
                     decoration: BoxDecoration(
                         border: Border.all(
-                          color: Color(0xFFE30613),
+                          color: Colors.grey,
                         ),
                         shape: BoxShape.circle,
-                        color: Color(0xFFFEECED)),
+                        color: Colors.white),
                     child: Center(
                         child: Icon(
                       Icons.qr_code_2,
-                      color: Color(0xFFE30613),
+                      color: Colors.grey,
                     )),
                   ),
                 ),
@@ -327,14 +350,14 @@ class ProfilePage extends StatelessWidget {
                     width: 70,
                     decoration: BoxDecoration(
                         border: Border.all(
-                          color: Color(0xFFE30613),
+                          color: Colors.grey,
                         ),
                         shape: BoxShape.circle,
-                        color: Color(0xFFFEECED)),
+                        color: Colors.white),
                     child: Center(
                         child: Icon(
                       Icons.remove_red_eye,
-                      color: Color(0xFFE30613),
+                      color: Colors.grey,
                     )),
                   ),
                 ),
