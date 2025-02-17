@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/feed_model.dart';
 import 'package:ackaf/src/data/models/hall_models.dart';
@@ -74,26 +75,27 @@ void feedModalSheet({
                 const SizedBox(
                   height: 10,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      return customButton(
-                        label: buttonText,
-                        onPressed: () async {
-                          messageSheet(
-                              context: context,
-                              onButtonPressed: () async {},
-                              buttonText: 'SEND MESSAGE',
-                              feed: feed,
-                              receiver: receiver,
-                              sender: sender);
-                        },
-                        fontSize: 16,
-                      );
-                    },
+                if (feed.author?.id != id)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        return customButton(
+                          label: buttonText,
+                          onPressed: () async {
+                            messageSheet(
+                                context: context,
+                                onButtonPressed: () async {},
+                                buttonText: 'SEND MESSAGE',
+                                feed: feed,
+                                receiver: receiver,
+                                sender: sender);
+                          },
+                          fontSize: 16,
+                        );
+                      },
+                    ),
                   ),
-                ),
                 const SizedBox(height: 10),
               ],
             ),
