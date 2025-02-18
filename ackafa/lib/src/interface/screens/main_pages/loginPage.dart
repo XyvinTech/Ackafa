@@ -335,7 +335,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
 
   void startTimer() {
     _isButtonDisabled = true;
-    _start = 20;
+    _start = 59;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_start == 0) {
         setState(() {
