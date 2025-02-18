@@ -105,7 +105,7 @@ class CustomTextFormField extends StatelessWidget {
                       name: textController!.text,
                     );
                 break;
-              case 'Enter Your Emarites ID':
+              case 'Enter Your Emirates ID':
                 ref.read(userProvider.notifier).updateEmiratesID(
                       emiratesID: textController!.text,
                     );
