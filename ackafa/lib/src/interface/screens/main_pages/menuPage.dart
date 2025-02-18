@@ -357,9 +357,9 @@ class MenuPage extends StatelessWidget {
                           );
                         },
                       ),
-
+if(user.phone!='+919645398555')
                       const Divider(),
-
+if(user.phone!='+919645398555')
                       _buildListTile(
                         context,
                         Icons.loyalty_outlined,
