@@ -8,10 +8,30 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:screenshot/screenshot.dart';
 import 'dart:io';
 import 'package:share_plus/share_plus.dart';
 
 Future<void> captureAndShareWidgetScreenshot(BuildContext context) async {
+  Widget _buildContactRow(IconData icon, String text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: Colors.red, size: 22),
+        const SizedBox(width: 15),
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   // Create a GlobalKey to hold the widget's RepaintBoundary
   final boundaryKey = GlobalKey();
   String userId = '';
@@ -28,121 +48,150 @@ Future<void> captureAndShareWidgetScreenshot(BuildContext context) async {
               data: (user) {
                 userId = user.id ?? '';
                 return Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 25, right: 15),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: SizedBox(
-                            width: double
-                                .infinity, // Sets a bounded width constraint
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 100),
-                                Row(
+      
+                    width: double.infinity,
+                    height: double.infinity,
+                    decoration: const BoxDecoration(              color: Colors.white,
+                      image: DecorationImage(
+                        image: AssetImage('assets/profile_background2.png'),
+                        alignment: Alignment.topCenter,
+                      ),
+                    ),
+                    child: Center(
+                      child: SingleChildScrollView(
+                        child: Container(
+                          color: Colors.transparent,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 60,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [],
+                              ),
+                              Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.transparent,
+                                ),
+                                child: Column(
                                   children: [
-                                    SizedBox(width: 20),
-                                    Column(
-                                      children: [
-                                        user.image != null && user.image != ''
-                                            ? CircleAvatar(
-                                                radius: 37,
-                                                backgroundImage: NetworkImage(
-                                                    user.image ?? ''),
-                                              )
-                                            : Image.asset(
-                                                'assets/icons/dummy_person.png'),
-                                      ],
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      // Use Expanded here to take up remaining space
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 30),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
                                         children: [
+                                          // Profile Image with Red Border
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              border: Border.all(
+                                                color: Colors.red,
+                                                width: 2,
+                                              ),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: user.image != null &&
+                                                      user.image != ''
+                                                  ? Image.network(
+                                                      user.image ?? '',
+                                                      width: 100,
+                                                      height: 100,
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : Image.asset(
+                                                      'assets/icons/dummy_person.png',
+                                                      width: 100,
+                                                      height: 100,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 15),
                                           Text(
-                                            '${user.fullName??''}',
+                                            user.fullName ?? '',
                                             style: const TextStyle(
-                                              fontSize: 18,
+                                              fontSize: 20,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          if (user.college != null)
-                                            Text(
-                                              user.college?.collegeName ?? '',
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 15,
-                                              ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            'Chief Financial Officer',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[600],
                                             ),
-                                          // if (user.batch != null)
-                                          //   Text(
-                                          //     '${user.batch ?? ''}',
-                                          //     style: const TextStyle(
-                                          //       fontSize: 15,
-                                          //     ),
-                                          //   ),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            'Company Name',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
+                                    // QR Code Section
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      padding: const EdgeInsets.all(20),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFFFF5EA),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: QrImageView(
+                                        size: 250,
+                                        data:
+                                            'https://admin.akcafconnect.com/user/${user.id}',
+                                        backgroundColor: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 30),
+                                    // Contact Information
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 30),
+                                      child: Column(
+                                        children: [
+                                          if (user.phone != null)
+                                            _buildContactRow(
+                                              Icons.phone,
+                                              user.phone?.toString() ?? '',
+                                            ),
+                                          const SizedBox(height: 15),
+                                          if (user.email != null)
+                                            _buildContactRow(
+                                              Icons.email,
+                                              user.email ?? '',
+                                            ),
+                                          const SizedBox(height: 15),
+                                          if (user.address != null)
+                                            _buildContactRow(
+                                              Icons.location_on,
+                                              user.address ?? '',
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 30),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        QrImageView(
-                          size: 285,
-                          data:
-                              'https://admin.akcafconnect.com/user/${user.id}',
-                        ),
-                        const SizedBox(height: 20),
-                        if (user.phone != null)
-                          Row(
-                            children: [
-                              const Icon(Icons.phone, color: Colors.grey),
-                              const SizedBox(width: 10),
-                              Text(user.phone?.toString() ?? ''),
-                            ],
-                          ),
-                        const SizedBox(height: 10),
-                        if (user.email != null)
-                          Row(
-                            children: [
-                              const Icon(Icons.email, color: Colors.grey),
-                              const SizedBox(width: 10),
-                              Text(user.email ?? ''),
-                            ],
-                          ),
-                        const SizedBox(height: 10),
-                        if (user.address != null)
-                          Row(
-                            children: [
-                              const Icon(Icons.location_on, color: Colors.grey),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Text(
-                                  user.address ?? '',
-                                ),
                               ),
+                              const SizedBox(
+                                height: 40,
+                              )
                             ],
                           ),
-                        SizedBox(
-                          height: 30,
                         ),
-                      ],
-                    ),
-                  ),
-                );
+                      ),
+                    ));
               },
               loading: () => const Center(child: LoadingAnimation()),
               error: (error, stackTrace) =>
