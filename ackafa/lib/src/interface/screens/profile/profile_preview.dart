@@ -621,11 +621,17 @@ class ProfilePreview extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Text(video.name!,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    video.name!,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 18)),
+                        fontWeight: FontWeight.bold, fontSize: 18),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
             ],
           ),
