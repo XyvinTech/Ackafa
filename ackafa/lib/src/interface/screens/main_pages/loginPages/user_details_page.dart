@@ -270,7 +270,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     super.dispose();
   }
 
-  Future<void> _submitData({required UserModel user}) async {
+  Future<String> _submitData({required UserModel user}) async {
     // String fullName =
     //     '${user.name!.first} ${user.name!.middle} ${user.name!.last}';
 
@@ -316,8 +316,9 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
         for (var i in user.certificates!) {"name": i.name, "link": i.link}
       ],
     };
-    await api.editUser(profileData);
+    String? response = await api.editUser(profileData);
     log(profileData.toString());
+    return response;
   }
 
   // Future<void> _selectImageFile(ImageSource source, String imageType) async {
@@ -1534,11 +1535,18 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   label: 'Save & Proceed',
                                   onPressed: () async {
                                     if (_formKey.currentState!.validate()) {
-                                      await _submitData(user: user);
+                                      String? response =
+                                          await _submitData(user: user);
                                       ref.invalidate(fetchUserByIdProvider);
-                                      CustomSnackbar.showSnackbar(
-                                          context, 'Success');
-                                      navigateBasedOnPreviousPage();
+                                      log(name: 'API RESPONSE:', response);
+                                      if (response.contains('success')) {
+                                        navigateBasedOnPreviousPage();
+                                        CustomSnackbar.showSnackbar(
+                                            context, response);
+                                      } else {
+                                        CustomSnackbar.showSnackbar(
+                                            context, response);
+                                      }
                                     }
                                   }))),
                     ],

@@ -299,7 +299,7 @@ required String? emiratesID,
     }
   }
 
-  Future<void> editUser(Map<String, dynamic> profileData) async {
+  Future<String> editUser(Map<String, dynamic> profileData) async {
     final url = Uri.parse('$baseUrl/user/update');
     log('updated profile data:$profileData');
     final response = await http.patch(
@@ -311,13 +311,17 @@ required String? emiratesID,
       body: jsonEncode(profileData),
     );
 
-    if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
+        
       print('Profile updated successfully');
       print(json.decode(response.body)['message']);
+      return json.decode(response.body)['message'];
     } else {
       print(json.decode(response.body)['message']);
+
       print('Failed to update profile. Status code: ${response.statusCode}');
-      throw Exception('Failed to update profile');
+      return json.decode(response.body)['message'];
+      // throw Exception('Failed to update profile');
     }
   }
 
