@@ -475,8 +475,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                             '') {
                                                       profileImageUrl =
                                                           await imageUpload(
-                                                              _profileImageFile!
-                                                                  .path,
+                                                           
                                                               _profileImageFile!
                                                                   .path);
                                                     }
