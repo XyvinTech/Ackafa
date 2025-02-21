@@ -118,7 +118,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       if (imageType == 'profile') {
         setState(() {
           _profileImageFile = File(image.path);
-          imageUpload(Path.basename(_profileImageFile!.path),
+          imageUpload(
                   _profileImageFile!.path)
               .then((url) {
             String profileUrl = url;
@@ -139,7 +139,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       } else if (imageType == 'company') {
         setState(() {
           _companyImageFile = File(image.path);
-          imageUpload(Path.basename(_companyImageFile!.path),
+          imageUpload(
                   _companyImageFile!.path)
               .then((url) {
             String companyUrl = url;
@@ -174,7 +174,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
 
   Future<void> _addNewAward() async {
     await imageUpload(
-            Path.basename(_awardImageFIle!.path), _awardImageFIle!.path)
+            _awardImageFIle!.path)
         .then((url) {
       final String awardUrl = url;
       final newAward = Award(
@@ -231,7 +231,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   }
 
   Future<void> _addNewCertificate() async {
-    await imageUpload(Path.basename(_certificateImageFIle!.path),
+    await imageUpload(
             _certificateImageFIle!.path)
         .then((url) {
       final String certificateUrl = url;

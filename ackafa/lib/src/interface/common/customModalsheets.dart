@@ -1543,7 +1543,7 @@ class _ShowAddPostSheetState extends State<ShowAddPostSheet> {
 
                         if (postImage != null) {
                           mediaUrl = await imageUpload(
-                            basename(postImage!.path),
+                
                             postImage!.path,
                           );
                         }
