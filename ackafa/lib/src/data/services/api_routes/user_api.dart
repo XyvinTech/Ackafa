@@ -17,12 +17,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_api.g.dart';
 
 class ApiRoutes {
-
   Future<bool> registerUser(
       {required String token,
       required String? profileUrl,
       required String? name,
-required String? emiratesID,
+      required String? emiratesID,
       required String? emailId,
       required String? college,
       required String? batch,
@@ -311,8 +310,7 @@ required String? emiratesID,
       body: jsonEncode(profileData),
     );
 
-      if (response.statusCode == 200) {
-        
+    if (response.statusCode == 200) {
       print('Profile updated successfully');
       print(json.decode(response.body)['message']);
       return json.decode(response.body)['message'];
@@ -556,7 +554,6 @@ required String? emiratesID,
   }
 }
 
-
 @riverpod
 Future<UserModel> fetchUserDetails(FetchUserDetailsRef ref) async {
   final url = Uri.parse('$baseUrl/user');
@@ -584,9 +581,18 @@ Future<UserModel> fetchUserDetails(FetchUserDetailsRef ref) async {
 //list of users
 @riverpod
 Future<List<UserModel>> fetchActiveUsers(FetchActiveUsersRef ref,
-    {int pageNo = 1, int limit = 10}) async {
+    {int pageNo = 1, int limit = 20, String? query}) async {
+  // Construct the base URL
+  Uri url = Uri.parse('$baseUrl/user/list?pageNo=$pageNo&limit=$limit');
+
+  // Append query parameter if provided
+  if (query != null && query.isNotEmpty) {
+    url = Uri.parse(
+        '$baseUrl/user/list?pageNo=$pageNo&limit=$limit&search=$query');
+  }
+
   final response = await http.get(
-    Uri.parse('$baseUrl/user/list?pageNo=$pageNo&limit=$limit'),
+    url,
     headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token"

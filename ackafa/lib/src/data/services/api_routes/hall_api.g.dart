@@ -476,7 +476,7 @@ class _FetchMyHallBookingsProviderElement
   int get limit => (origin as FetchMyHallBookingsProvider).limit;
 }
 
-String _$fetchHallTimesHash() => r'6981cd37e48e6562cf3d68fca8c3fcdb8f48aa3d';
+String _$fetchHallTimesHash() => r'a6922294450912e5dae84ae2e58347487fb81f69';
 
 /// See also [fetchHallTimes].
 @ProviderFor(fetchHallTimes)
