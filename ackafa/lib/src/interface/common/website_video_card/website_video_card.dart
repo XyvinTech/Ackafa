@@ -1,10 +1,15 @@
 import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:ackaf/src/interface/common/cards.dart';
 import 'package:ackaf/src/interface/common/components/svg_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-Padding customWebsiteCard({Link? website, VoidCallback? onRemove}) {
+Padding customWebsiteCard({
+  required VoidCallback onRemove,
+  required VoidCallback onEdit,
+  required Link? website,
+}) {
   return Padding(
     padding: const EdgeInsets.only(
       bottom: 20,
@@ -22,64 +27,57 @@ Padding customWebsiteCard({Link? website, VoidCallback? onRemove}) {
           Padding(
             padding:
                 const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-            child: Align(
-              alignment: Alignment.topCenter,
-              widthFactor: 1.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Colors.white,
-                ),
-                width: 42,
-                height: 42,
-                child: Icon(
-                  Icons.language,
-                  color: Color(0xFFE30613),
-                ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.white,
+              ),
+              width: 42,
+              height: 42,
+              child: Icon(
+                Icons.language,
+                color: Color(0xFFE30613),
               ),
             ),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
               child: Text(
-                '${website!.name}',
+                '${website?.name != '' && website?.name != null && website?.name != 'null' ? website?.name : website?.link ?? ''}',
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                maxLines: 1, // Optional: to limit to one line
-                style: TextStyle(fontSize: 16), // Adjust style as needed
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => onRemove!(),
-            child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-              child: Align(
-                alignment: Alignment.topCenter,
-                widthFactor: 1.0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.white,
-                  ),
-                  width: 42,
-                  height: 42,
-                  child: Icon(
-                    Icons.remove,
-                    color: Color(0xFFE30613),
-                  ),
+                style: TextStyle(
+                  fontSize: 16,
                 ),
               ),
             ),
           ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: DropDownMenu(
+                onRemove: onRemove,
+                onEdit: onEdit,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
         ],
       ),
     ),
   );
 }
 
-Padding customVideoCard({Link? video, VoidCallback? onRemove}) {
+Padding customVideoCard({
+  required VoidCallback onRemove,
+  required VoidCallback onEdit,
+  required Link? video,
+}) {
   return Padding(
     padding: const EdgeInsets.only(
       bottom: 20,
@@ -116,38 +114,32 @@ Padding customVideoCard({Link? video, VoidCallback? onRemove}) {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
               child: Text(
-                '${video!.name}',
+                video?.name != '' &&
+                        video?.name != null &&
+                        video?.name != 'null'
+                    ? video?.name ?? ''
+                    : video?.link ?? '',
                 overflow: TextOverflow.ellipsis,
-                maxLines: 1, // Optional: to limit to one line
-                style: TextStyle(fontSize: 16), // Adjust style as needed
+                maxLines: 1,
               ),
             ),
           ),
-          GestureDetector(
-            onTap: () => onRemove!(),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+            ),
             child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-              child: Align(
-                alignment: Alignment.topCenter,
-                widthFactor: 1.0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.white,
-                  ),
-                  width: 42,
-                  height: 42,
-                  child: Icon(
-                    Icons.remove,
-                    color: Color(0xFFE30613),
-                  ),
-                ),
+              padding: const EdgeInsets.all(4.0),
+              child: DropDownMenu(
+                onRemove: onRemove,
+                onEdit: onEdit,
               ),
             ),
           ),
+          const SizedBox(width: 10),
         ],
       ),
     ),

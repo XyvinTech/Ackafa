@@ -220,7 +220,7 @@ class ProfileCard extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 5),
                                     Text(
-                                      'Chief Financial Officer',
+                                      user.company?.designation ?? '',
                                       style: TextStyle(
                                         fontSize: 16,
                                         color: Colors.grey[600],
@@ -228,7 +228,7 @@ class ProfileCard extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 5),
                                     Text(
-                                      'Company Name',
+                                      user.company?.name ?? '',
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey[600],
