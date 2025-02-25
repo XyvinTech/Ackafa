@@ -156,7 +156,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             loading: () => const Center(child: LoadingAnimation()),
             error: (error, stackTrace) {
               return Center(
-                child: Text('$error'),
+                child: Text('Something went wrong please try again later'),
               );
             },
           ));

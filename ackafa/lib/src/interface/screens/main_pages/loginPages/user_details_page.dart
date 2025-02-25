@@ -366,7 +366,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       context: context,
       builder: (context) {
         if (sheet == 'award') {
-          return ShowEnterAwardtSheet(
+          return ShowEnterAwardSheet(
             pickImage: _pickFile,
             addAwardCard: _addNewAward,
             imageType: sheet,
@@ -1230,7 +1230,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 4.0), // Space between items
-                                    child: customWebsiteCard(
+                                    child: customWebsiteCard(                        onEdit: () =>
+                                                    _editWebsite(index),
                                         onRemove: () => _removeWebsite(index),
                                         website: user.websites?[index]),
                                   );
@@ -1299,7 +1300,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 4.0), // Space between items
-                                    child: customVideoCard(
+                                    child: customVideoCard(       onEdit: () => _editVideo(index),
                                         onRemove: () => _removeVideo(index),
                                         video: user.videos?[index]),
                                   );
@@ -1380,7 +1381,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   ),
                                   itemCount: user.awards!.length,
                                   itemBuilder: (context, index) {
-                                    return AwardCard(
+                                    return AwardCard(    onEdit: () => _onAwardEdit(index),
                                       award: user.awards![index],
                                       onRemove: () => _removeAward(index),
                                     );
@@ -1471,7 +1472,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 4.0), // Space between items
-                                      child: CertificateCard(
+                                      child: CertificateCard(  onEdit: () =>
+                                                  _editCertificate(index),
                                         certificate: user.certificates![index],
                                         onRemove: () =>
                                             _removeCertificate(index),
@@ -1558,6 +1560,122 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     );
   }
 
+  void _onAwardEdit(int index) async {
+    // First check if awards exist and index is valid
+    final awards = ref.read(userProvider).value?.awards;
+    if (awards == null || awards.isEmpty || index >= awards.length) {
+      CustomSnackbar.showSnackbar(context, 'Award not found');
+      return;
+    }
+
+    // Get the award to edit
+    final Award oldAward = awards[index];
+
+    // Pre-fill the controllers with existing data
+    awardNameController.text = oldAward.name ?? '';
+    awardAuthorityController.text = oldAward.authority ?? '';
+
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return ShowEnterAwardSheet(
+          imageUrl: oldAward.image,
+          pickImage: _pickFile,
+          editAwardCard: () => _editAward(oldAward: oldAward),
+          imageType: 'award',
+          textController1: awardNameController,
+          textController2: awardAuthorityController,
+        );
+      },
+    );
+  }
+
+  Future<void> _editAward({required Award oldAward}) async {
+    await 
+        imageUpload(
+      _awardImageFIle!.path,
+    )
+        .then((url) {
+      final String awardUrl = url;
+      final newAward = Award(
+        name: awardNameController.text,
+        image: awardUrl,
+        authority: awardAuthorityController.text,
+      );
+
+      ref.read(userProvider.notifier).editAward(oldAward, newAward);
+    });
+    _awardImageFIle == null;
+  }
+  void _editWebsite(int index) {
+    websiteNameController.text =
+        ref.read(userProvider).value?.websites?[index].name ?? '';
+    websiteLinkController.text =
+        ref.read(userProvider).value?.websites?[index].link ?? '';
+
+    showWebsiteSheet(
+        addWebsite: () {
+          final Link oldWebsite =
+              ref.read(userProvider).value!.websites![index];
+          final Link newWebsite = Link(
+              name: websiteNameController.text,
+              link: websiteLinkController.text);
+          ref.read(userProvider.notifier).editWebsite(oldWebsite, newWebsite);
+        },
+        textController1: websiteNameController,
+        textController2: websiteLinkController,
+        fieldName: 'Edit Website Link',
+        title: 'Edit Website',
+        context: context);
+  }
+
+  void _editVideo(int index) {
+    videoNameController.text =
+        ref.read(userProvider).value?.videos?[index].name ?? '';
+    videoLinkController.text =
+        ref.read(userProvider).value?.videos?[index].link ?? '';
+
+    showVideoLinkSheet(
+        addVideo: () {
+          final Link oldVideo = ref.read(userProvider).value!.videos![index];
+          final Link newVideo = Link(
+              name: videoNameController.text, link: videoLinkController.text);
+          ref.read(userProvider.notifier).editVideo(oldVideo, newVideo);
+        },
+        textController1: videoNameController,
+        textController2: videoLinkController,
+        fieldName: 'Edit Video Link',
+        title: 'Edit Video Link',
+        context: context);
+  }
+
+  void _editCertificate(int index) async {
+    final Link oldCertificate =
+        ref.read(userProvider).value!.certificates![index];
+    certificateNameController.text = oldCertificate.name ?? '';
+
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => ShowAddCertificateSheet(
+     imageUrl:     oldCertificate.link,
+        textController: certificateNameController,
+        pickImage: _pickFile,
+        imageType: 'certificate',
+        addCertificateCard: () async {
+          await imageUpload(_certificateImageFIle!.path).then((url) {
+            final String certificateUrl = url;
+            final newCertificate = Link(
+                name: certificateNameController.text, link: certificateUrl);
+            ref
+                .read(userProvider.notifier)
+                .editCertificate(oldCertificate, newCertificate);
+          });
+        },
+      ),
+    );
+  }
   Widget _buildImagePickerOptions(BuildContext context, String imageType) {
     return Wrap(
       children: [

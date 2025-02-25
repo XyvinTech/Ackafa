@@ -297,7 +297,7 @@ class NewsContent extends StatelessWidget {
                         fontSize: 16,
                       ),
                     ),
-                      if (newsItem.pdf != null)
+                    if (newsItem.pdf != null)
                       const SizedBox(
                         height: 30,
                       ),
@@ -345,7 +345,7 @@ class NewsContent extends StatelessWidget {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 border:
-                                    Border.all(color: const Color(0xFF004797))),
+                                    Border.all(color: const Color(0xFFE30613))),
                             child: const Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 10.0, vertical: 4),
@@ -354,13 +354,13 @@ class NewsContent extends StatelessWidget {
                                 children: [
                                   Text(
                                     'View PDF',
-                                    style: TextStyle(color: Color(0xFF004797)),
+                                    style: TextStyle(color: Color(0xFFE30613)),
                                   ),
                                   SizedBox(
                                     width: 10,
                                   ),
                                   Icon(Icons.remove_red_eye_outlined,
-                                      color: Color(0xFF004797))
+                                      color: Color(0xFFE30613))
                                 ],
                               ),
                             ),

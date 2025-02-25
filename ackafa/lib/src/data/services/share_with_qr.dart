@@ -48,10 +48,10 @@ Future<void> captureAndShareWidgetScreenshot(BuildContext context) async {
               data: (user) {
                 userId = user.id ?? '';
                 return Container(
-      
                     width: double.infinity,
                     height: double.infinity,
-                    decoration: const BoxDecoration(              color: Colors.white,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
                       image: DecorationImage(
                         image: AssetImage('assets/profile_background2.png'),
                         alignment: Alignment.topCenter,
@@ -120,7 +120,7 @@ Future<void> captureAndShareWidgetScreenshot(BuildContext context) async {
                                           ),
                                           const SizedBox(height: 5),
                                           Text(
-                                            'Chief Financial Officer',
+                                            user.company?.designation ?? '',
                                             style: TextStyle(
                                               fontSize: 16,
                                               color: Colors.grey[600],
@@ -128,7 +128,7 @@ Future<void> captureAndShareWidgetScreenshot(BuildContext context) async {
                                           ),
                                           const SizedBox(height: 5),
                                           Text(
-                                            'Company Name',
+                                            user.company?.name ?? '',
                                             style: TextStyle(
                                               fontSize: 14,
                                               color: Colors.grey[600],

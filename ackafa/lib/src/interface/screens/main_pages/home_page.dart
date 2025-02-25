@@ -506,7 +506,7 @@ Widget customNotice(
                                 ),
                           ),
                           Icon(
-                            color: Color(0xFF004797),
+                            color: Color(0xFFE30613),
                             Icons.arrow_forward_ios,
                             size: 14,
                           )
