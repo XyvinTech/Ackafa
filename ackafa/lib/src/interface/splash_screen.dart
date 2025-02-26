@@ -231,7 +231,7 @@ void initializeNotifications() {
       log('payload = $payload');
       if (payload != null && payload.isNotEmpty && payload != ' ') {
         launchURL(
-            payload); // Trigger the deep link URL when the notification is tapped
+            payload);
       }
     },
   );
