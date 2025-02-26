@@ -85,7 +85,8 @@ class ProfileCompletionScreen extends StatelessWidget {
               return MainPage();
             }
           },
-          loading: () => Center(child: LoadingAnimation()),
+          loading: () => Scaffold(
+            body: Center(child: LoadingAnimation())),
           error: (error, stackTrace) {
             // Handle error state
             return Center(

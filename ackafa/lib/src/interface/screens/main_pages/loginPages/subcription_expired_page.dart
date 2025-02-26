@@ -31,7 +31,7 @@ class SubcriptionExpiredPage extends StatelessWidget {
                     Image.asset('assets/sad_emoji.png'),
                     const SizedBox(height: 20),
                     const Text(
-                      'Subcription Expired !',
+                      'Subscription Expired !',
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,

@@ -281,9 +281,11 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     // String lastName = nameParts.length > 1 ? nameParts.last : ' ';
 
     final Map<String, dynamic> profileData = {
+
       "fullName": user.fullName,
       "emiratesID": user.emiratesID,
       "email": user.email,
+
       if (user.image != null && user.image != '') "image": user.image,
       "college": user.college?.id,
       if (user.address != null) "address": user.address ?? '',

@@ -47,8 +47,8 @@ class ApiRoutes {
 
     if (response.statusCode == 200) {
       print('User updated successfully');
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Request Sent Successfully')));
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(content: Text('Request Sent Successfully')));
       return true;
     } else {
       print('Failed to update user: ${response.statusCode}');
