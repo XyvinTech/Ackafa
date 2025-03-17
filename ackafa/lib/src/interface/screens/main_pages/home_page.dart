@@ -411,7 +411,7 @@ Widget customPoster(
       aspectRatio: 19 / 20,
       child: Image.network(
         poster.media ?? '',
-        fit: BoxFit.cover,
+        fit: BoxFit.fill,
         errorBuilder: (context, error, stackTrace) {
           return Shimmer.fromColors(
             baseColor: Colors.grey[300]!,

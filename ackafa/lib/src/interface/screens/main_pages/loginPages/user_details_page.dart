@@ -118,9 +118,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       if (imageType == 'profile') {
         setState(() {
           _profileImageFile = File(image.path);
-          imageUpload(
-                  _profileImageFile!.path)
-              .then((url) {
+          imageUpload(_profileImageFile!.path).then((url) {
             String profileUrl = url;
             _profileImageSource = ImageSource.gallery;
             ref.read(userProvider.notifier).updateProfilePicture(profileUrl);
@@ -139,9 +137,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       } else if (imageType == 'company') {
         setState(() {
           _companyImageFile = File(image.path);
-          imageUpload(
-                  _companyImageFile!.path)
-              .then((url) {
+          imageUpload(_companyImageFile!.path).then((url) {
             String companyUrl = url;
             _companyImageSource = ImageSource.gallery;
             ref.read(userProvider.notifier).updateCompany(Company(logo: url));
@@ -173,9 +169,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   // }
 
   Future<void> _addNewAward() async {
-    await imageUpload(
-            _awardImageFIle!.path)
-        .then((url) {
+    await imageUpload(_awardImageFIle!.path).then((url) {
       final String awardUrl = url;
       final newAward = Award(
         name: awardNameController.text,
@@ -231,9 +225,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   }
 
   Future<void> _addNewCertificate() async {
-    await imageUpload(
-            _certificateImageFIle!.path)
-        .then((url) {
+    await imageUpload(_certificateImageFIle!.path).then((url) {
       final String certificateUrl = url;
       final newCertificate =
           Link(name: certificateNameController.text, link: certificateUrl);
@@ -281,11 +273,9 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     // String lastName = nameParts.length > 1 ? nameParts.last : ' ';
 
     final Map<String, dynamic> profileData = {
-
       "fullName": user.fullName,
       "emiratesID": user.emiratesID,
       "email": user.email,
-
       if (user.image != null && user.image != '') "image": user.image,
       "college": user.college?.id,
       if (user.address != null) "address": user.address ?? '',
@@ -1232,8 +1222,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 4.0), // Space between items
-                                    child: customWebsiteCard(                        onEdit: () =>
-                                                    _editWebsite(index),
+                                    child: customWebsiteCard(
+                                        onEdit: () => _editWebsite(index),
                                         onRemove: () => _removeWebsite(index),
                                         website: user.websites?[index]),
                                   );
@@ -1302,7 +1292,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 4.0), // Space between items
-                                    child: customVideoCard(       onEdit: () => _editVideo(index),
+                                    child: customVideoCard(
+                                        onEdit: () => _editVideo(index),
                                         onRemove: () => _removeVideo(index),
                                         video: user.videos?[index]),
                                   );
@@ -1383,7 +1374,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                   ),
                                   itemCount: user.awards!.length,
                                   itemBuilder: (context, index) {
-                                    return AwardCard(    onEdit: () => _onAwardEdit(index),
+                                    return AwardCard(
+                                      onEdit: () => _onAwardEdit(index),
                                       award: user.awards![index],
                                       onRemove: () => _removeAward(index),
                                     );
@@ -1474,8 +1466,8 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 4.0), // Space between items
-                                      child: CertificateCard(  onEdit: () =>
-                                                  _editCertificate(index),
+                                      child: CertificateCard(
+                                        onEdit: () => _editCertificate(index),
                                         certificate: user.certificates![index],
                                         onRemove: () =>
                                             _removeCertificate(index),
@@ -1594,11 +1586,9 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   }
 
   Future<void> _editAward({required Award oldAward}) async {
-    await 
-        imageUpload(
+    await imageUpload(
       _awardImageFIle!.path,
-    )
-        .then((url) {
+    ).then((url) {
       final String awardUrl = url;
       final newAward = Award(
         name: awardNameController.text,
@@ -1610,6 +1600,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     });
     _awardImageFIle == null;
   }
+
   void _editWebsite(int index) {
     websiteNameController.text =
         ref.read(userProvider).value?.websites?[index].name ?? '';
@@ -1661,7 +1652,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       isScrollControlled: true,
       context: context,
       builder: (context) => ShowAddCertificateSheet(
-     imageUrl:     oldCertificate.link,
+        imageUrl: oldCertificate.link,
         textController: certificateNameController,
         pickImage: _pickFile,
         imageType: 'certificate',
@@ -1678,6 +1669,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       ),
     );
   }
+
   Widget _buildImagePickerOptions(BuildContext context, String imageType) {
     return Wrap(
       children: [
