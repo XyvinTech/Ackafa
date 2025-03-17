@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:ackaf/src/data/services/deep_link_service.dart';
 import 'package:ackaf/src/data/services/launch_url.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
@@ -22,6 +23,7 @@ class SplashScreen extends ConsumerStatefulWidget {
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
   bool isAppUpdateRequired = false;
+  final DeepLinkService _deepLinkService = DeepLinkService();
 
   @override
   void initState() {
@@ -33,46 +35,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       }
     });
     getToken();
-    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-      print("New FCM Token: $newToken");
-      // Save or send the new token to your server
-    });
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (message.notification != null) {
-        const AndroidNotificationDetails androidPlatformChannelSpecifics =
-            AndroidNotificationDetails(
-          'your_channel_id',
-          'your_channel_name',
-          importance: Importance.max,
-          priority: Priority.high,
-          showWhen: false,
-        );
-        const NotificationDetails platformChannelSpecifics =
-            NotificationDetails(android: androidPlatformChannelSpecifics);
 
-        flutterLocalNotificationsPlugin.show(
-          0, // Notification ID
-          message.notification?.title,
-          message.notification?.body,
-          platformChannelSpecifics,
-          payload: message.data['deepLinkUrl'], // Pass deep link URL as payload
-        );
-      }
-    });
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('Notification opened: ${message.data}');
-      log('deeeeeeeeeeeeeeeeep :${message.data['deepLinkUrl']}');
-      launchURL((message.data['deepLinkUrl']));
-    });
-
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage? message) {
-      if (message != null) {
-        print('Notification clicked when app was terminated');
-      }
-    });
   }
 
   Future<void> checkAppVersion(context) async {
@@ -126,12 +89,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   Future<void> initialize() async {
     await checktoken();
     Timer(Duration(seconds: 2), () {
-      print('logged in : $LoggedIn');
-      if (LoggedIn) {
-        ref.invalidate(userProvider);
-        Navigator.pushReplacementNamed(context, '/userReg');
-      } else {
-        Navigator.pushReplacementNamed(context, '/login_screen');
+      if (!isAppUpdateRequired) {
+        print('Logged in : $LoggedIn');
+        if (LoggedIn) {
+          // Check for pending deep link
+          final pendingDeepLink = _deepLinkService.pendingDeepLink;
+          if (pendingDeepLink != null) {
+            Navigator.pushReplacementNamed(context, '/mainpage').then((_) {
+              // Handle the deep link after main page is loaded
+              _deepLinkService.handleDeepLink(pendingDeepLink);
+              _deepLinkService.clearPendingDeepLink();
+            });
+          } else {
+            Navigator.pushReplacementNamed(context, '/mainpage');
+          }
+        } else {
+          Navigator.pushReplacementNamed(context, '/login_screen');
+        }
       }
     });
   }

@@ -12,7 +12,7 @@ class PeopleNotifier extends _$PeopleNotifier {
   List<UserModel> users = [];
   bool isLoading = false;
   int pageNo = 1;
-  final int limit = 9;
+  final int limit = 20;
   bool hasMore = true;
   String? searchQuery;
 
@@ -32,9 +32,9 @@ class PeopleNotifier extends _$PeopleNotifier {
     });
 
     try {
-      final newUsers = await ref.read(
-          fetchActiveUsersProvider(pageNo: pageNo, limit: limit, query: searchQuery)
-              .future);
+      final newUsers = await ref.read(fetchActiveUsersProvider(
+              pageNo: pageNo, limit: limit, query: searchQuery)
+          .future);
 
       users = [...users, ...newUsers];
       pageNo++;
@@ -90,9 +90,9 @@ class PeopleNotifier extends _$PeopleNotifier {
     state = [...users]; // Update the state to reflect the cleared list
 
     try {
-      final newUsers = await ref.read(
-          fetchActiveUsersProvider(pageNo: pageNo, limit: limit, query: searchQuery)
-              .future);
+      final newUsers = await ref.read(fetchActiveUsersProvider(
+              pageNo: pageNo, limit: limit, query: searchQuery)
+          .future);
 
       users = [...newUsers];
       hasMore = newUsers.length == limit;
@@ -106,8 +106,6 @@ class PeopleNotifier extends _$PeopleNotifier {
     }
   }
 }
-
-
 
 @riverpod
 class UsersNotifier extends _$UsersNotifier {

@@ -6,6 +6,7 @@ import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 class DeepLinkService {
   static final DeepLinkService _instance = DeepLinkService._internal();
   factory DeepLinkService() => _instance;
@@ -98,9 +99,9 @@ class DeepLinkService {
           }
           break;
 
-        case 'my_requirements':
+        case 'my_feeds':
           try {
-            navigatorKey.currentState?.pushNamed('/my_requirements');
+            navigatorKey.currentState?.pushNamed('/my_feeds');
           } catch (e) {
             debugPrint('Error fetching requirement: $e');
             _showError('Unable to load profile');
@@ -128,7 +129,7 @@ class DeepLinkService {
           break;
 
         default:
-                navigatorKey.currentState?.pushNamed('/notification');
+          navigatorKey.currentState?.pushNamed('/notification');
           break;
       }
     } catch (e) {
@@ -148,17 +149,17 @@ class DeepLinkService {
   String? getDeepLinkPath(String screen, {String? id}) {
     switch (screen) {
       case 'chat':
-        return id != null ? 'kssia://app/chat/$id' : 'kssia://app/chat';
+        return id != null ? 'akcaf://app/chat/$id' : 'akcaf://app/chat';
       case 'event':
-        return id != null ? 'kssia://app/event/$id' : 'kssia://app/event';
+        return id != null ? 'akcaf://app/event/$id' : 'akcaf://app/event';
       case 'my_subscription':
-        return 'kssia://app/my_subscription';
+        return 'akcaf://app/my_subscription';
       case 'my_products':
-        return 'kssia://app/my_products';
+        return 'akcaf://app/my_products';
       case 'my_requirements':
-        return 'kssia://app/my_requirements';
+        return 'akcaf://app/my_feeds';
       case 'mainpage':
-        return 'kssia://app/mainpage';
+        return 'akcaf://app/mainpage';
 
       default:
         return null;
