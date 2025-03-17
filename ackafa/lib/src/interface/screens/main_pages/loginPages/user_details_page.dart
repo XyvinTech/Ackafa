@@ -141,14 +141,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
             String companyUrl = url;
             _companyImageSource = ImageSource.gallery;
             ref.read(userProvider.notifier).updateCompany(Company(logo: url));
-            final user = ref.watch(userProvider);
-            user.whenData(
-              (value) {
-                log('company logo: ${value.company?.logo ?? ''}');
-              },
-            );
-
-            print(companyUrl);
+ 
           });
         });
         return _companyImageFile;
@@ -1670,26 +1663,4 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     );
   }
 
-  Widget _buildImagePickerOptions(BuildContext context, String imageType) {
-    return Wrap(
-      children: [
-        ListTile(
-          leading: const Icon(Icons.photo_library),
-          title: const Text('Choose from Gallery'),
-          onTap: () {
-            Navigator.pop(context);
-            _pickImage(ImageSource.gallery, imageType);
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.camera_alt),
-          title: const Text('Take a Photo'),
-          onTap: () {
-            Navigator.pop(context);
-            _pickImage(ImageSource.camera, imageType);
-          },
-        ),
-      ],
-    );
-  }
 }

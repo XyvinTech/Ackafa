@@ -572,6 +572,7 @@ class ShowEnterAwardSheet extends StatefulWidget {
 class _ShowEnterAwardSheetState extends State<ShowEnterAwardSheet> {
   final _formKey = GlobalKey<FormState>();
   File? awardImage; // Moved awardImage to State
+  bool get isEditMode => widget.imageUrl != null;
 
   @override
   Widget build(BuildContext context) {
@@ -614,7 +615,11 @@ class _ShowEnterAwardSheetState extends State<ShowEnterAwardSheet> {
                 initialValue: awardImage, // Updated to use awardImage in State
                 validator: (value) {
                   if (value == null) {
-                    return 'Please upload an image';
+                    if (!isEditMode) {
+                      return 'Please upload an image';
+                    } else {
+                      return null;
+                    }
                   }
                   return null;
                 },
@@ -780,6 +785,7 @@ class ShowAddCertificateSheet extends StatefulWidget {
 class _ShowAddCertificateSheetState extends State<ShowAddCertificateSheet> {
   File? certificateImage;
   final _formKey = GlobalKey<FormState>();
+  bool get isEditMode => widget.imageUrl != null;
 
   @override
   Widget build(BuildContext context) {
@@ -821,7 +827,11 @@ class _ShowAddCertificateSheetState extends State<ShowAddCertificateSheet> {
                 initialValue: certificateImage,
                 validator: (value) {
                   if (value == null) {
-                    return 'Please upload an image';
+                    if (!isEditMode) {
+                      return 'Please upload an image';
+                    } else {
+                      return null;
+                    }
                   }
                   return null;
                 },
