@@ -15,7 +15,7 @@ import 'package:shimmer/shimmer.dart';
 
 class MembersPage extends ConsumerStatefulWidget {
   const MembersPage({super.key});
-
+  
   @override
   ConsumerState<MembersPage> createState() => _MembersPageState();
 }
