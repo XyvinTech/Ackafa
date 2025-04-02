@@ -1,471 +1,617 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kssia/src/data/services/api_routes/products_api.dart';
-import 'package:kssia/src/data/services/api_routes/promotions_api.dart';
-import 'package:kssia/src/data/services/api_routes/user_api.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/models/promotions_model.dart';
-import 'package:kssia/src/interface/common/custom_video.dart';
-import 'package:kssia/src/interface/common/loading.dart';
-import 'package:kssia/src/interface/screens/main_pages/menuPage.dart';
-import 'package:kssia/src/interface/screens/main_pages/notificationPage.dart';
-import 'package:kssia/src/data/providers/user_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import '../main_page.dart';
+import 'dart:async';
+import 'dart:developer';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/models/events_model.dart';
+import 'package:ackaf/src/data/models/promotions_model.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:ackaf/src/data/notifires/approval_notifier.dart';
+import 'package:ackaf/src/data/notifires/people_notifier.dart';
+import 'package:ackaf/src/data/services/api_routes/events_api.dart';
+import 'package:ackaf/src/data/services/api_routes/promotions_api.dart';
+import 'package:ackaf/src/data/services/dynamic_links.dart';
+import 'package:ackaf/src/data/services/launch_url.dart';
+import 'package:ackaf/src/interface/common/components/app_bar.dart';
+import 'package:ackaf/src/interface/common/custom_video.dart';
+import 'package:ackaf/src/interface/common/event_widget.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart';
+import 'package:ackaf/src/interface/screens/main_pages/approvalPages/approval_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
+class HomePage extends ConsumerStatefulWidget {
+  final UserModel user;
+  const HomePage({super.key, required this.user});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  Future<void> _launchUrl({required url}) async {
-    if (!await launchUrl(Uri.parse(url))) {
-      throw Exception('Could not launch $url');
-    }
+class _HomePageState extends ConsumerState<HomePage> {
+  int _currentBannerIndex = 0;
+  int _currentNoticeIndex = 0;
+  int _currentPosterIndex = 0;
+  int _currentEventIndex = 0;
+  int _currentVideoIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchInitialApprovals();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _clearImageCache();
+  }
+
+  void _clearImageCache() {
+    imageCache.clear(); // Clears all cached images
+    imageCache.clearLiveImages();
+  }
+
+  Future<void> _fetchInitialApprovals() async {
+    await ref.read(approvalNotifierProvider.notifier).fetchMoreApprovals();
+  }
+
+  double _calculateDynamicHeight(List<Promotion> notices) {
+    double maxHeight = 0.0;
+
+    for (var notice in notices) {
+      // Estimate height based on the length of title and description
+      final double titleHeight =
+          _estimateTextHeight(notice.title!, 18.0); // Font size 18 for title
+      final double descriptionHeight = _estimateTextHeight(
+          notice.description!, 14.0); // Font size 14 for description
+
+      final double itemHeight =
+          titleHeight + descriptionHeight; // Adding padding
+      if (itemHeight > maxHeight) {
+        maxHeight = itemHeight + 30;
+      }
+    }
+    return maxHeight;
+  }
+
+  double _estimateTextHeight(String text, double fontSize) {
+    final double screenWidth = MediaQuery.sizeOf(context).width;
+    final int numLines = (text.length / (screenWidth / fontSize)).ceil();
+    return numLines * fontSize * 1.2;
+  }
+
+  CarouselController controller = CarouselController();
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-     
         final asyncPromotions = ref.watch(fetchPromotionsProvider(token));
+        final asyncEvents = ref.watch(fetchEventsProvider);
 
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: asyncPromotions.when(
-            data: (promotions) {
-              // Filter promotions by type
-              final banners =
-                  promotions.where((promo) => promo.type == 'banner').toList();
-              final posters =
-                  promotions.where((promo) => promo.type == 'poster').toList();
-              final notices =
-                  promotions.where((promo) => promo.type == 'notice').toList();
-              final videos =
-                  promotions.where((promo) => promo.type == 'video').toList();
-              final filteredVideos = videos
-                  .where((video) => video.ytLink.startsWith('http'))
-                  .toList();
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            offset: const Offset(0, 2),
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
-                      child: AppBar(
-                        toolbarHeight: 45.0,
-                        scrolledUnderElevation: 0,
-                        backgroundColor: Colors.white,
-                        elevation: 0,
-                        leadingWidth: 100,
-                        leading: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: SizedBox(
-                            width: 100,
-                            height: 100,
-                            child: Image.asset(
-                              'assets/icons/kssiaLogo.png',
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                        actions: [
-                          IconButton(
-                            icon: Icon(Icons.notifications_none_outlined),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => NotificationPage()),
-                              );
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.menu),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        MenuPage()), // Navigate to MenuPage
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    promotions.isEmpty
-                        ? Center(
-                            child: Text(
-                              'No Promotions Yet',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w700),
-                            ),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.only(
-                                top: 8, left: 8, right: 8),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(Icons.search),
-                                hintText: 'Search promotions',
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color:
-                                          Color.fromARGB(255, 214, 211, 211)),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color:
-                                          Color.fromARGB(255, 217, 212, 212)),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
+        return RefreshIndicator(
+          color: Color(0xFFE30613),
+          onRefresh: () async {
+            ref.invalidate(fetchPromotionsProvider);
+            ref.invalidate(fetchEventsProvider);
+          },
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: asyncPromotions.when(
+              data: (promotions) {
+                final banners = promotions
+                    .where((promo) => promo.type == 'banner')
+                    .toList();
+                final notices = promotions
+                    .where((promo) => promo.type == 'notice')
+                    .toList();
+                final posters = promotions
+                    .where((promo) => promo.type == 'poster')
+                    .toList();
+                final videos =
+                    promotions.where((promo) => promo.type == 'video').toList();
+                final filteredVideos = videos
+                    .where((video) => video.link!.startsWith('http'))
+                    .toList();
+
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomAppBar(),
+                      const SizedBox(height: 20),
+
+                      // Banner Carousel
+                      if (banners.isNotEmpty)
+                        Column(
+                          children: [
+                            CarouselSlider(
+                              items: banners.map((banner) {
+                                return _buildBanners(
+                                    context: context, banner: banner);
+                              }).toList(),
+                              options: CarouselOptions(
+                                enableInfiniteScroll: false,
+                                height: 175,
+                                scrollPhysics: banners.length > 1
+                                    ? null
+                                    : NeverScrollableScrollPhysics(),
+                                autoPlay: banners.length > 1 ? true : false,
+                                viewportFraction: 1,
+                                autoPlayInterval: Duration(seconds: 3),
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _currentBannerIndex = index;
+                                  });
+                                },
                               ),
                             ),
+                          ],
+                        ),
+
+                      const SizedBox(height: 16),
+
+                      // Notices Carousel
+                      if (notices.isNotEmpty)
+                        Column(
+                          children: [
+                            CarouselSlider(
+                              items: notices.map((notice) {
+                                return customNotice(
+                                    context: context, notice: notice);
+                              }).toList(),
+                              options: CarouselOptions(
+                                enableInfiniteScroll: false,
+                                scrollPhysics: notices.length > 1
+                                    ? null
+                                    : NeverScrollableScrollPhysics(),
+                                autoPlay: notices.length > 1 ? true : false,
+                                viewportFraction: 1,
+                                height: _calculateDynamicHeight(notices),
+                                autoPlayInterval: Duration(seconds: 4),
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _currentNoticeIndex = index;
+                                  });
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            _buildDotIndicator(
+                                _currentNoticeIndex,
+                                notices.length,
+                                const Color.fromARGB(255, 39, 38, 38)),
+                          ],
+                        ),
+
+                      if (posters.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Column(
+                            children: [
+                              CarouselSlider(
+                                items: posters.asMap().entries.map((entry) {
+                                  int index = entry.key;
+                                  Promotion poster = entry.value;
+
+                                  return KeyedSubtree(
+                                    key: ValueKey(index),
+                                    child: customPoster(
+                                        context: context, poster: poster),
+                                  );
+                                }).toList(),
+                                options: CarouselOptions(
+                                  enableInfiniteScroll: false,
+                                  height: 420,
+                                  scrollPhysics: posters.length > 1
+                                      ? null
+                                      : NeverScrollableScrollPhysics(),
+                                  autoPlay: posters.length > 1,
+                                  viewportFraction: 1,
+                                  autoPlayInterval: Duration(seconds: 5),
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      _currentPosterIndex = index;
+                                    });
+                                  },
+                                ),
+                              )
+                            ],
                           ),
-                    const SizedBox(height: 16),
-
-                    if (banners.isNotEmpty)
-                      Card(
-                        color: Colors.transparent,
-                        elevation: 0,
-                        child: Container(
-                          color: Colors.transparent,
-                          height: 140,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: banners.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 20.0),
-                                child: _buildBanners(
-                                    context: context, banner: banners[index]),
-                              );
-                            },
-                          ),
                         ),
-                      ),
-                    const SizedBox(height: 16),
 
-                    if (posters.isNotEmpty)
-                      SizedBox(
-                        height: 150,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: posters.length,
-                          physics: const PageScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return customPoster(
-                                context: context, poster: posters[index]);
-                          },
+                      // Events Carousel
+                      asyncEvents.when(
+                        data: (events) {
+                          return events.isNotEmpty
+                              ? Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 25, top: 10),
+                                          child: Text(
+                                            'Events',
+                                            style: TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    CarouselSlider(
+                                      items: events.map((event) {
+                                        return Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.95,
+                                          child: eventWidget(
+                                            withImage: true,
+                                            context: context,
+                                            event: event,
+                                          ),
+                                        );
+                                      }).toList(),
+                                      options: CarouselOptions(
+                                        enableInfiniteScroll: false,
+                                        height: 380,
+                                        scrollPhysics: events.length > 1
+                                            ? null
+                                            : NeverScrollableScrollPhysics(),
+                                        autoPlay:
+                                            events.length > 1 ? true : false,
+                                        viewportFraction: 1,
+                                        autoPlayInterval: Duration(seconds: 3),
+                                        onPageChanged: (index, reason) {
+                                          setState(() {
+                                            _currentEventIndex = index;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    _buildDotIndicator(_currentEventIndex,
+                                        events.length, Colors.red),
+                                  ],
+                                )
+                              : SizedBox();
+                        },
+                        loading: () => Center(child: LoadingAnimation()),
+                        error: (error, stackTrace) => SizedBox(),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // Videos Carousel
+                      if (filteredVideos.isNotEmpty)
+                        Column(
+                          children: [
+                            CarouselSlider(
+                              items: filteredVideos.map((video) {
+                                return customVideo(
+                                    context: context, video: video);
+                              }).toList(),
+                              options: CarouselOptions(
+                                height: 225,
+                                scrollPhysics: videos.length > 1
+                                    ? null
+                                    : NeverScrollableScrollPhysics(),
+                                viewportFraction: 1,
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _currentVideoIndex = index;
+                                  });
+                                },
+                              ),
+                            ),
+                            _buildDotIndicator(_currentVideoIndex,
+                                filteredVideos.length, Colors.black),
+                          ],
                         ),
-                      ),
-                    const SizedBox(height: 16),
-
-                    // Notices
-                    if (notices.isNotEmpty)
-                      SizedBox(
-                        height:
-                            250, // This ensures that ListView has a bounded height
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: notices.length,
-                          physics: const PageScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return customNotice(
-                                context: context, notice: notices[index]);
-                          },
-                        ),
-                      ),
-                    const SizedBox(height: 20),
-
-                    // Videos
-                    const SizedBox(height: 8),
-
-                    if (filteredVideos.isNotEmpty)
-                      SizedBox(
-                        height: 300,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: filteredVideos.length,
-                          physics: const PageScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return customVideo(
-                                context: context, video: filteredVideos[index]);
-                          },
-                        ),
-                      ),
-                  ],
-                ),
-              );
-            },
-            loading: () => Center(child: LoadingAnimation()),
-            error: (error, stackTrace) {
-              // Handle error state
-              return Center(
-                child: Text('Error loading promotions: $error'),
-              );
-            },
+                    ],
+                  ),
+                );
+              },
+              loading: () =>
+                  Center(child: buildShimmerPromotionsColumn(context: context)),
+              error: (error, stackTrace) =>
+                  Center(child: Text('NO PROMOTIONS YET')),
+            ),
           ),
         );
       },
     );
   }
 
-  Widget _buildBanners(
-      {required BuildContext context, required Promotion banner}) {
-    return Container(
-      width: MediaQuery.sizeOf(context).width / 1.20,
+  // Method to build a dot indicator for carousels
+  Widget _buildDotIndicator(int currentIndex, int itemCount, Color color) {
+    return Center(
+      child: SmoothPageIndicator(
+        controller: PageController(initialPage: currentIndex),
+        count: itemCount,
+        effect: WormEffect(
+          dotHeight: 10,
+          dotWidth: 10,
+          activeDotColor: color,
+          dotColor: Colors.grey,
+        ),
+      ),
+    );
+  }
+}
+
+Widget _buildBanners(
+    {required BuildContext context, required Promotion banner}) {
+  return Container(
+    width: MediaQuery.sizeOf(context).width / 1.15,
+    child: AspectRatio(
+      aspectRatio: 2 / 1, // Custom aspect ratio as 2:1
       child: Stack(
         clipBehavior: Clip.none, // This allows overflow
         children: [
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: 120,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    Color.fromARGB(41, 249, 180, 6),
-                    Color.fromARGB(113, 249, 180, 6)
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: Image.network(
-                width: double.infinity,
-                banner.bannerImageUrl,
-                fit: BoxFit.cover,
+                banner.media ?? '',
+                fit: BoxFit.fill,
                 errorBuilder: (context, error, stackTrace) {
-                  return Image.network(
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      'https://placehold.co/600x400/png');
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                      ),
+                    ),
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child; // Image loaded successfully
+                  }
+                  // While the image is loading, show shimmer effect
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  );
                 },
               ),
-              // child: Padding(
-              //   padding: EdgeInsets.all(8.0),
-              //   child: Row(
-              //     children: [
-              //       SizedBox(width: 100),
-              //       SizedBox(width: 40),
-              //       Flexible(
-              //         child: Column(
-              //           crossAxisAlignment: CrossAxisAlignment.start,
-              //           children: [
-              //             SizedBox(
-              //               height: 20,
-              //             ),
-              //             Container(
-              //               decoration: BoxDecoration(
-              //                   color: Colors.white,
-              //                   borderRadius: BorderRadius.circular(10)),
-              //               child: const Padding(
-              //                 padding: EdgeInsets.only(left: 8, right: 8),
-              //                 child: Text(
-              //                   'Lorem ipsum dolor sit amet',
-              //                   style: TextStyle(
-              //                     fontWeight: FontWeight.w500,
-              //                     fontSize: 13,
-              //                   ),
-              //                 ),
-              //               ),
-              //             ),
-              //             Row(
-              //               children: [
-              //                 SizedBox(
-              //                   width: 10,
-              //                 ),
-              //                 Flexible(
-              //                   child: Text(
-              //                     'Lorem ipsum dolor sit amet',
-              //                     style: TextStyle(
-              //                         fontSize: 16, fontWeight: FontWeight.bold),
-              //                   ),
-              //                 ),
-              //               ],
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
             ),
           ),
-          // Positioned(
-          //   left: -10,
-          //   bottom: -10, // Make this value more negative to move the image up
-          //   child: SizedBox(
-          //     width: 240, // Adjust the width of the image
-          //     height: 240, // Adjust the height of the image
-          //     child: Image.asset(
-          //       'assets/homegirl.png',
-          //       fit: BoxFit.cover,
-          //     ),
-          //   ),
-          // ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget customNotice(
-      {required BuildContext context, required Promotion notice}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 16), // Adjust spacing between notices
-      child: Container(
-        width: MediaQuery.of(context).size.width -
-            32, // Notice width matches screen width
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [
-              Color.fromARGB(41, 249, 180, 6),
-              Color.fromARGB(113, 249, 180, 6),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/posterside_logo.svg', // Ensure this path is correct
-                  width: 40,
-                  height: 40,
-                ),
-                const SizedBox(width: 15),
-              ],
-            ),
-            const Padding(padding: EdgeInsets.all(8.0)),
-            Text(
-              notice.noticeTitle,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+Widget customPoster(
+    {required BuildContext context, required Promotion poster}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: AspectRatio(
+      aspectRatio: 19 / 20,
+      child: Image.network(
+        poster.media ?? '',
+        fit: BoxFit.fill,
+        errorBuilder: (context, error, stackTrace) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
               ),
             ),
-            const SizedBox(height: 8),
-            const Text(
-              'Lorem ipsum dolor sit amet consectetur. Eget velit sagittis sapien in vitae ut. Lorem cursus sed nunc diam ullamcorper elit.',
+          );
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) {
+            return child; // Image loaded successfully
+          }
+          // While the image is loading, show shimmer effect
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(8.0),
+              ),
             ),
-            const SizedBox(height: 8),
-            TextButton(
-              onPressed: () => notice.noticeLink.contains('http')
-                  ? _launchUrl(url: notice.noticeLink)
-                  : null,
-              child: const Row(
-                children: [
-                  Text(
-                    'Know More',
-                    style: TextStyle(
-                      color: Color(0xFF040F4F), // Change the color here
+          );
+        },
+      ),
+    ),
+  );
+}
+
+Widget customNotice(
+    {required BuildContext context, required Promotion notice}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(
+        horizontal: 16), // Adjust spacing between posters
+    child: Container(
+      width: MediaQuery.of(context).size.width - 32,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Color(0xFFEDDCF3), // Set the background color to white
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(
+          color: const Color.fromARGB(
+              255, 225, 231, 236), // Set the border color to blue
+          width: 2.0, // Adjust the width as needed
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  notice.title!,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Color(0xFF661E92), // Set the font color to blue
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  notice.description!,
+                  style: const TextStyle(color: Color(0xFF6A6A6A)
+                      // Set the font color to blue
+                      ),
+                ),
+                const Spacer(),
+                if (notice.link != null &&
+                    notice.link != '' &&
+                    notice.link != 'null')
+                  GestureDetector(
+                    onTap: () {
+                      log(notice.link ?? '');
+                      launchURL(notice.link ?? '');
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Know more',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Color(
+                                    0xFF004797) // Set the font color to blue
+                                ),
+                          ),
+                          Icon(
+                            color: Color(0xFFE30613),
+                            Icons.arrow_forward_ios,
+                            size: 14,
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                  Icon(
-                    Icons.arrow_forward,
-                    color: Color(0xFF040F4F), // Change the icon color here
-                  ),
-                ],
-              ),
+              ],
             ),
-          ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget buildShimmerPromotionsColumn({
+  required BuildContext context,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      shimmerNotice(context: context),
+      const SizedBox(height: 16),
+      shimmerPoster(context: context),
+      const SizedBox(height: 16),
+      shimmerVideo(context: context),
+    ],
+  );
+}
+
+Widget shimmerNotice({
+  required BuildContext context,
+}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        width: MediaQuery.of(context).size.width - 32,
+        height: 100,
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.circular(8.0),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget customPoster(
-      {required BuildContext context, required Promotion poster}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 16), // Adjust spacing between posters
+Widget shimmerPoster({
+  required BuildContext context,
+}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
       child: Container(
-        width: MediaQuery.of(context).size.width -
-            32, // Poster width matches screen width
-        padding: const EdgeInsets.all(0),
+        width: MediaQuery.of(context).size.width - 32,
+        height: 200,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.grey[300],
           borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(
-            color: const Color.fromARGB(255, 225, 231, 236),
-            width: 2.0,
+        ),
+      ),
+    ),
+  );
+}
+
+Widget shimmerVideo({
+  required BuildContext context,
+}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 20, // Height for the title shimmer
+              color: Colors.grey[300],
+            ),
           ),
         ),
-        child: Image.network(
-          poster.posterImageUrl,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Image.network(
-                fit: BoxFit.cover, 'https://placehold.co/600x400/png');
-          },
+        const SizedBox(height: 10),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: MediaQuery.of(context).size.width - 32,
+            height: 200,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+          ),
         ),
-        // child: Row(
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: [
-        //     SvgPicture.asset(
-        //       'assets/icons/membership_logo.svg',
-        //       width: 40,
-        //       height: 40,
-        //     ),
-        //     const SizedBox(width: 8),
-        //     Expanded(
-        //       child: Column(
-        //         crossAxisAlignment: CrossAxisAlignment.start,
-        //         children: const [
-        //           Text(
-        //             'KSSIA Membership',
-        //             style: TextStyle(
-        //               fontWeight: FontWeight.bold,
-        //               fontSize: 18,
-        //               color: Color(0xFF004797),
-        //             ),
-        //           ),
-        //           SizedBox(height: 8),
-        //           Text(
-        //             'Lorem ipsum dolor sit amet consectetur. Eget velit sagittis sapien in vitae ut. Lorem cursus sed nunc diam ullamcorper elit.',
-        //             style: TextStyle(
-        //               color: Color.fromRGBO(0, 0, 0, 1),
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //   ],
-        // ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
 }

@@ -1,14 +1,22 @@
+import 'dart:developer';
+
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
+import 'package:ackaf/src/interface/screens/event_news/news.dart';
+import 'package:ackaf/src/interface/screens/main_pages/feed_view.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kssia/src/data/models/user_model.dart';
-import 'package:kssia/src/data/providers/user_provider.dart';
-import 'package:kssia/src/interface/common/loading.dart';
-import 'package:kssia/src/interface/screens/main_pages/event_news_page.dart';
-import 'package:kssia/src/interface/screens/main_pages/feed_page.dart';
-import 'package:kssia/src/interface/screens/main_pages/home_page.dart';
-import 'package:kssia/src/interface/screens/main_pages/people_page.dart';
-import 'package:kssia/src/interface/screens/main_pages/profilePage.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/main_pages/event_news_page.dart';
+
+import 'package:ackaf/src/interface/screens/main_pages/home_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/people_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/profilePage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IconResolver extends StatelessWidget {
   final String iconPath;
@@ -47,48 +55,74 @@ class IconResolver extends StatelessWidget {
   }
 }
 
-class MainPage extends StatefulWidget {
+class MainPage extends ConsumerStatefulWidget {
   const MainPage({super.key});
 
   @override
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends ConsumerState<MainPage> {
+  late final webSocketClient;
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(userProvider.notifier).refreshUser();
+    webSocketClient = ref.read(socketIoClientProvider);
+    webSocketClient.connect(id, ref);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[];
 
   void _onItemTapped(int index) {
     setState(() {
+      ref.read(currentNewsIndexProvider.notifier).state = 0;
       _selectedIndex = index;
     });
   }
 
   List<String> _inactiveIcons = [];
   List<String> _activeIcons = [];
-  void _initialize({required User user}) {
+  Future<void> _initialize({required UserModel user}) async {
     _widgetOptions = <Widget>[
-      HomePage(),
-      FeedPage(),
+      // HomePage(),
+      // FeedPage(),
+      HomePage(
+        user: user,
+      ),
+      FeedView(),
       ProfilePage(user: user),
-      Event_News_Page(),
+      NewsPage(),
       PeoplePage(),
+      // Event_News_Page(),
+      // PeoplePage(),
     ];
     _inactiveIcons = [
       'assets/icons/home_inactive.svg',
       'assets/icons/feed_inactive.svg',
-      user.profilePicture!,
-      'assets/icons/news_inactive.svg',
-      'assets/icons/people_inactive.svg',
+      user.image ?? '',
+      'assets/icons/inactive_news.svg',
+      'assets/icons/inactive_chat.svg',
     ];
     _activeIcons = [
       'assets/icons/home_active.svg',
       'assets/icons/feed_active.svg',
-      user.profilePicture!,
-      'assets/icons/news_active.svg',
-      'assets/icons/people_active.svg',
+      user.image ?? '',
+      'assets/icons/active_news.svg',
+      'assets/icons/active_chat.svg',
     ];
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('id', user.id!);
+    id = preferences.getString('id') ?? '';
+    log('main page user id:$id');
   }
 
   @override
@@ -96,17 +130,14 @@ class _MainPageState extends State<MainPage> {
     return Consumer(builder: (context, ref, child) {
       final asyncUser = ref.watch(userProvider);
       return asyncUser.when(
-        loading: () => Center(child: LoadingAnimation()),
+        loading: () => Scaffold(body: Center(child: LoadingAnimation())),
         error: (error, stackTrace) {
-          return Center(
-            child: Text('Error loading promotions: $error'),
-          );
+          return LoginPage();
         },
         data: (user) {
-          print(user.profilePicture);
+          log(user.image.toString());
           _initialize(user: user);
           return Scaffold(
-         
             body: Center(
               child: _widgetOptions.elementAt(_selectedIndex),
             ),
@@ -115,10 +146,17 @@ class _MainPageState extends State<MainPage> {
                 return BottomNavigationBarItem(
                   backgroundColor: Colors.white,
                   icon: index == 2 // Assuming profile is the third item
-                      ? CircleAvatar(
-                          backgroundImage: NetworkImage(user.profilePicture!),
-                          radius: 15,
-                        )
+                      ? user.image != null && user.image != ''
+                          ? CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                user.image ?? '',
+                              ),
+                              radius: 15,
+                            )
+                          : Image.asset(
+                              'assets/icons/dummy_person_small.png',
+                              scale: 1.5,
+                            )
                       : IconResolver(
                           iconPath: _inactiveIcons[index],
                           color: _selectedIndex == index
@@ -126,25 +164,26 @@ class _MainPageState extends State<MainPage> {
                               : Colors.grey,
                         ),
                   activeIcon: index == 2
-                      ? CircleAvatar(
-                          backgroundImage: NetworkImage(user.profilePicture!),
-                          radius: 15,
-                        )
+                      ? user.image != null && user.image != ''
+                          ? CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                user.image ?? '',
+                              ),
+                              radius: 15,
+                            )
+                          : Image.asset(
+                              'assets/icons/dummy_person_small.png',
+                              scale: 1.5,
+                            )
                       : IconResolver(
                           iconPath: _activeIcons[index],
-                          color: Color(0xFF004797),
+                          color: Color(0xFFE30613),
                         ),
-                  label: [
-                    'Home',
-                    'Feed',
-                    'Profile',
-                    'Events/news',
-                    'People'
-                  ][index],
+                  label: ['Home', 'Feed', 'Profile', 'News', 'Chats'][index],
                 );
               }),
               currentIndex: _selectedIndex,
-              selectedItemColor: Color(0xFF004797),
+              selectedItemColor: Color(0xFFE30613),
               unselectedItemColor: Colors.grey,
               onTap: _onItemTapped,
               showUnselectedLabels: true,

@@ -1,103 +1,81 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kssia/src/data/services/api_routes/user_api.dart';
-import 'package:kssia/src/data/models/product_model.dart';
-import 'package:kssia/src/data/models/user_model.dart';
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
 
-import '../globals.dart';
-
-class UserNotifier extends StateNotifier<AsyncValue<User>> {
-  final StateNotifierProviderRef<UserNotifier, AsyncValue<User>> ref;
+class UserNotifier extends StateNotifier<AsyncValue<UserModel>> {
+  final StateNotifierProviderRef<UserNotifier, AsyncValue<UserModel>> ref;
 
   UserNotifier(this.ref) : super(const AsyncValue.loading()) {
     _initializeUser();
   }
+
   Future<void> _initializeUser() async {
     try {
-      final user = await ref.read(fetchUserDetailsProvider(token, id).future);
-      state = AsyncValue.data(user ?? User());
+      final user = await ref.read(fetchUserDetailsProvider.future);
+      state = AsyncValue.data(user ?? UserModel());
     } catch (e, stackTrace) {
+      log(e.toString());
+      log(stackTrace.toString());
       state = AsyncValue.error(e, stackTrace);
     }
   }
 
+  Future<UserModel?> refreshUser() async {
+    // Instead of setting state to loading, use AsyncValue.guard
+    final result = await AsyncValue.guard(() async {
+      final user = await ref.read(fetchUserDetailsProvider.future);
+      return user ?? UserModel();
+    });
+
+    if (result.hasValue) {
+      state = AsyncValue.data(result.value!);
+      return result.value;
+    } else {
+      // Handle the error case
+      state = result;
+      return null;
+    }
+  }
+
   void updateName({
-    String? firstName,
-    String? middleName,
-    String? lastName,
+    String? name,
   }) {
-    state = state.whenData((user) {
-      final newName = user.name?.copyWith(
-            firstName: firstName ?? user.name?.firstName,
-            middleName: middleName ?? user.name?.middleName,
-            lastName: lastName ?? user.name?.lastName,
-          ) ??
-          Name(
-            firstName: firstName,
-            middleName: middleName,
-            lastName: lastName,
-          );
-      return user.copyWith(name: newName);
-    });
+    state = state.whenData((user) => user.copyWith(fullName: name));
   }
 
-  void updatePhoneNumbers({
-    int? personal,
-    int? landline,
-    int? companyPhoneNumber,
-    int? whatsappNumber,
-    int? whatsappBusinessNumber,
+  void updateEmiratesID({
+    String? emiratesID,
   }) {
-    state = state.whenData((user) {
-      final newPhoneNumbers = user.phoneNumbers?.copyWith(
-            personal: personal ?? user.phoneNumbers?.personal,
-            landline: landline ?? user.phoneNumbers?.landline,
-            companyPhoneNumber:
-                companyPhoneNumber ?? user.phoneNumbers?.companyPhoneNumber,
-            whatsappNumber: whatsappNumber ?? user.phoneNumbers?.whatsappNumber,
-            whatsappBusinessNumber: whatsappBusinessNumber ??
-                user.phoneNumbers?.whatsappBusinessNumber,
-          ) ??
-          PhoneNumbers(
-            personal: personal,
-            landline: landline,
-            companyPhoneNumber: companyPhoneNumber,
-            whatsappNumber: whatsappNumber,
-            whatsappBusinessNumber: whatsappBusinessNumber,
-          );
-      return user.copyWith(phoneNumbers: newPhoneNumbers);
-    });
+    state = state.whenData((user) => user.copyWith(emiratesID: emiratesID));
   }
 
-  void updateBloodGroup(String? bloodGroup) {
-    state = state.whenData((user) => user.copyWith(bloodGroup: bloodGroup));
+  void updateCompany(Company? company) {
+    state = state.whenData((user) => user.copyWith(
+        company: Company(
+            designation: company?.designation ?? user.company?.designation,
+            address: company?.address ?? user.company?.address,
+            name: company?.name ?? user.company?.name,
+            phone: company?.phone ?? user.company?.phone,
+            logo: company?.logo ?? user.company?.logo)));
   }
 
   void updateEmail(String? email) {
     state = state.whenData((user) => user.copyWith(email: email));
   }
 
-  void updateDesignation(String? designation) {
-    state = state.whenData((user) => user.copyWith(designation: designation));
+  void updateCollege(String? college) {
+    state = state.whenData(
+        (user) => user.copyWith(college: UserCollege(collegeName: college)));
   }
 
-  void updateCompanyName(String? companyName) {
-    state = state.whenData((user) => user.copyWith(companyName: companyName));
-  }
-
-  void updateCompanyEmail(String? companyEmail) {
-    state = state.whenData((user) => user.copyWith(companyEmail: companyEmail));
-  }
-
-  void updateBusinessCategory(String? businessCategory) {
-    state = state
-        .whenData((user) => user.copyWith(businessCategory: businessCategory));
-  }
-
-  void updateSubCategory(String? subCategory) {
-    state = state.whenData((user) => user.copyWith(subCategory: subCategory));
+  void updateBatch(int? batch) {
+    state = state.whenData((user) => user.copyWith(batch: batch));
   }
 
   void updateBio(String? bio) {
+    log('updating bio ${bio}');
     state = state.whenData((user) => user.copyWith(bio: bio));
   }
 
@@ -105,81 +83,93 @@ class UserNotifier extends StateNotifier<AsyncValue<User>> {
     state = state.whenData((user) => user.copyWith(address: address));
   }
 
-  void updateIsActive(bool? isActive) {
-    state = state.whenData((user) => user.copyWith(isActive: isActive));
-  }
-
-  void updateIsDeleted(bool? isDeleted) {
-    state = state.whenData((user) => user.copyWith(isDeleted: isDeleted));
-  }
-
-  void updateSelectedTheme(String? selectedTheme) {
-    state =
-        state.whenData((user) => user.copyWith(selectedTheme: selectedTheme));
-  }
-
-  void updateCreatedAt(String? createdAt) {
-    state = state.whenData((user) => user.copyWith(createdAt: createdAt));
-  }
-
-  void updateUpdatedAt(String? updatedAt) {
-    state = state.whenData((user) => user.copyWith(updatedAt: updatedAt));
-  }
-
-  void updateCompanyAddress(String? companyAddress) {
-    state =
-        state.whenData((user) => user.copyWith(companyAddress: companyAddress));
-  }
-
-  void updateCompanyLogo(String? companyLogo) {
-    state = state.whenData((user) => user.copyWith(companyLogo: companyLogo));
-  }
-
   void updateProfilePicture(String? profilePicture) {
-    state =
-        state.whenData((user) => user.copyWith(profilePicture: profilePicture));
+    state = state.whenData((user) => user.copyWith(image: profilePicture));
   }
 
   void updateAwards(List<Award> awards) {
     state = state.whenData((user) => user.copyWith(awards: awards));
   }
 
-  void updateBrochure(List<Brochure> brochure) {
-    state = state.whenData((user) => user.copyWith(brochure: brochure));
-  }
-
-  void updateCertificate(List<Certificate> certificates) {
+  void updateCertificate(List<Link> certificates) {
     state = state.whenData((user) => user.copyWith(certificates: certificates));
   }
 
-  void updateProduct(List<Product> products) {
-    state = state.whenData((user) => user.copyWith(products: products));
-  }
+  // void updateSocialMedia(List<Link> social) {
+  //   state = state.whenData((user) => user.copyWith(social: social));
+  // }
+  // void updateCompanyLogo(String? companyLogo) {
+  //   state = state.whenData((user) => user.copyWith(company: Company(logo: companyLogo)));
+  // }
+  //   void updateCompanyDesignation(String? designation) {
+  //   state = state.whenData((user) => user.copyWith(company: Company(designation: designation)));
+  // }
+  //   void updateCompanyLogo(String? companyLogo) {
+  //   state = state.whenData((user) => user.copyWith(company: Company(logo: companyLogo)));
+  // }
+  //   void updateCompanyLogo(String? companyLogo) {
+  //   state = state.whenData((user) => user.copyWith(company: Company(logo: companyLogo)));
+  // }
 
   void updateSocialMedia(
-      List<SocialMedia> socialmedias, String platform, String newUrl) {
-    final index = socialmedias.indexWhere((item) => item.platform == platform);
-    if (index != -1) {
-      final updatedSocialMedia = socialmedias[index].copyWith(url: newUrl);
-      socialmedias[index] = updatedSocialMedia;
-      state =
-          state.whenData((user) => user.copyWith(socialMedia: socialmedias));
+      List<Link> socialmedias, String platform, String newUrl) {
+    if (platform.isNotEmpty) {
+      final index = socialmedias.indexWhere((item) => item.name == platform);
+      log('platform:$platform');
+      if (index != -1) {
+        if (newUrl.isNotEmpty) {
+          // Update the existing social media link
+          final updatedSocialMedia = socialmedias[index].copyWith(link: newUrl);
+          socialmedias[index] = updatedSocialMedia;
+        } else {
+          // Remove the social media link if newUrl is empty
+          socialmedias.removeAt(index);
+        }
+      } else if (newUrl.isNotEmpty) {
+        // Add new social media link if platform doesn't exist and newUrl is not empty
+        final newSocialMedia = Link(name: platform, link: newUrl);
+        socialmedias.add(newSocialMedia);
+      }
+
+      // Update the state with the modified socialmedias list
+      state = state.whenData((user) => user.copyWith(social: socialmedias));
+    } else {
+      // If platform is empty, clear the social media list
+      state = state.whenData((user) => user.copyWith(social: []));
     }
+
+    log('Updated Social Media $socialmedias');
   }
 
-  void updateVideo(
-    List<Video> videos,
-  ) {
-    state = state.whenData(
-      (user) => user.copyWith(video: videos),
-    );
+  void updateVideos(List<Link> videos) {
+    state = state.whenData((user) => user.copyWith(videos: videos));
   }
 
-  void updateWebsite(
-    List<Website> website,
-  ) {
+  void removeVideo(Link videoToRemove) {
+    state = state.whenData((user) {
+      final updatedVideo =
+          user.videos!.where((video) => video != videoToRemove).toList();
+      return user.copyWith(videos: updatedVideo);
+    });
+  }
+
+  void updateWebsite(List<Link> websites) {
+    state = state.whenData((user) => user.copyWith(websites: websites));
+    log('website count in updation ${websites.length}');
+  }
+
+  void removeWebsite(Link websiteToRemove) {
+    state = state.whenData((user) {
+      final updatedWebsites = user.websites!
+          .where((website) => website != websiteToRemove)
+          .toList();
+      return user.copyWith(websites: updatedWebsites);
+    });
+  }
+
+  void updatePhone(String phone) {
     state = state.whenData(
-      (user) => user.copyWith(websites: website),
+      (user) => user.copyWith(phone: phone),
     );
   }
 
@@ -191,16 +181,7 @@ class UserNotifier extends StateNotifier<AsyncValue<User>> {
     });
   }
 
-  void removeBrochure(Brochure brochureToRemove) {
-    state = state.whenData((user) {
-      final updatedBrochures = user.brochure!
-          .where((brochure) => brochure != brochureToRemove)
-          .toList();
-      return user.copyWith(brochure: updatedBrochures);
-    });
-  }
-
-  void removeCertificate(Certificate certificateToRemove) {
+  void removeCertificate(Link certificateToRemove) {
     state = state.whenData((user) {
       final updatedCertificate = user.certificates!
           .where((certificate) => certificate != certificateToRemove)
@@ -208,18 +189,45 @@ class UserNotifier extends StateNotifier<AsyncValue<User>> {
       return user.copyWith(certificates: updatedCertificate);
     });
   }
-
-  void removeProduct(Product productToRemove) {
-    state = state.whenData((user) {
-      final updatedProducts = user.products!
-          .where((product) => product != productToRemove)
-          .toList();
-      return user.copyWith(products: updatedProducts);
-    });
+  
+  void editWebsite(Link oldWebsite, Link newWebsite) {
+    state = AsyncValue.data(state.value!.copyWith(
+      websites: state.value!.websites!.map((w) => 
+        w == oldWebsite ? newWebsite : w
+      ).toList()
+    ));
   }
+
+  void editVideo(Link oldVideo, Link newVideo) {
+    state = AsyncValue.data(state.value!.copyWith(
+      videos: state.value!.videos!.map((v) =>
+        v == oldVideo ? newVideo : v  
+      ).toList()
+    ));
+  }
+
+
+
+  void editCertificate(Link oldCertificate, Link newCertificate) {
+    state = AsyncValue.data(state.value!.copyWith(
+      certificates: state.value!.certificates!.map((c) => 
+        c == oldCertificate ? newCertificate : c
+      ).toList()
+    ));
+  }
+  
+  void editAward(Award oldAward, Award updatedAward) {
+  state = state.whenData((user) {
+    final updatedAwards = user.awards!.map((award) {
+      return award == oldAward ? updatedAward : award;
+    }).toList();
+
+    return user.copyWith(awards: updatedAwards);
+  });
+}
 }
 
 final userProvider =
-    StateNotifierProvider<UserNotifier, AsyncValue<User>>((ref) {
+    StateNotifierProvider<UserNotifier, AsyncValue<UserModel>>((ref) {
   return UserNotifier(ref);
 });

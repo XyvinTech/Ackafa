@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kssia/src/data/services/api_routes/notification_api.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/interface/common/loading.dart';
+import 'package:ackaf/src/data/services/api_routes/notification_api.dart';
+import 'package:ackaf/src/data/globals.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
@@ -16,15 +18,19 @@ class NotificationPage extends StatelessWidget {
       // },
       child: Consumer(
         builder: (context, ref, child) {
-          final asyncUnreadNotification =
-              ref.watch(fetchUnreadNotificationsProvider(token));
-          final asyncreadNotification =
-              ref.watch(fetchreadNotificationsProvider(token));
+          final asyncNotification = ref.watch(fetchNotificationsProvider);
+
           return Scaffold(
+            backgroundColor: Colors.white,
             appBar: AppBar(
-              title: Text('Notifications'),
+              title: Text(
+                "Notifications",
+                style: TextStyle(fontSize: 17),
+              ),
+              backgroundColor: Colors.white,
+              scrolledUnderElevation: 0,
               leading: IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -33,20 +39,24 @@ class NotificationPage extends StatelessWidget {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  asyncUnreadNotification.when(
-                    data: (unreadNotifications) {
+                  asyncNotification.when(
+                    data: (notifications) {
                       return ListView.builder(
-                        shrinkWrap: true, // Added this line
-                        physics:
-                            NeverScrollableScrollPhysics(), // Prevents scrolling within the ListView
-                        itemCount: unreadNotifications.length,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: notifications.length,
                         itemBuilder: (context, index) {
-                          bool readed = false;
+                          bool userExists =
+                              notifications[index].users?.any((user) {
+                                    return user.user == id;
+                                  }) ??
+                                  false;
+                          log(userExists.toString());
                           return _buildNotificationCard(
-                            readed: readed,
-                            subject: unreadNotifications[index].subject!,
-                            content: unreadNotifications[index].content!,
-                            dateTime: unreadNotifications[index].updatedAt!,
+                            readed: userExists,
+                            subject: notifications[index].subject ?? '',
+                            content: notifications[index].content ?? '',
+                            dateTime: notifications[index].updatedAt!,
                           );
                         },
                         padding: EdgeInsets.all(0.0),
@@ -55,33 +65,7 @@ class NotificationPage extends StatelessWidget {
                     loading: () => Center(child: LoadingAnimation()),
                     error: (error, stackTrace) {
                       return Center(
-                        child: Text('Error loading promotions: $error'),
-                      );
-                    },
-                  ),
-                  asyncreadNotification.when(
-                    data: (readNotifications) {
-                      return ListView.builder(
-                        shrinkWrap: true, // Added this line
-                        physics:
-                            NeverScrollableScrollPhysics(), // Prevents scrolling within the ListView
-                        itemCount: readNotifications.length,
-                        itemBuilder: (context, index) {
-                          bool readed = true;
-                          return _buildNotificationCard(
-                            readed: readed,
-                            subject: readNotifications[index].subject!,
-                            content: readNotifications[index].content!,
-                            dateTime: readNotifications[index].updatedAt!,
-                          );
-                        },
-                        padding: EdgeInsets.all(0.0),
-                      );
-                    },
-                    loading: () => Center(child: LoadingAnimation()),
-                    error: (error, stackTrace) {
-                      return Center(
-                        child: Text('Error loading promotions: $error'),
+                        child: Text(''),
                       );
                     },
                   ),

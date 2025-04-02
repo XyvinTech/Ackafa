@@ -1,22 +1,34 @@
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:flutter/material.dart';
-import 'package:kssia/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/interface/common/custom_button.dart';
 
 class RequestNFCPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Request NFC'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Request NFC',
+          style: TextStyle(fontSize: 17),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        // actions: [
+        //   IconButton(
+        //     icon: FaIcon(FontAwesomeIcons.whatsapp),
+        //     onPressed: () {
+        //       // WhatsApp action
+        //     },
+        //   ),
+        // ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.0),
+          preferredSize: const Size.fromHeight(1.0),
           child: Container(
-            color: Color.fromRGBO(51, 51, 51, 0.2),
+            color: Colors.grey,
             height: 1.0,
           ),
         ),
@@ -27,32 +39,32 @@ class RequestNFCPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Connect            with Ease',
+              'Connect\nwith Ease',
               style: TextStyle(
-                fontSize: 50,
+                fontSize: 35,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF004797),
+                color: Color(0xFFE30613),
               ),
+            ),
+            Flexible(
+              child: Text(
+                  'Tired of carrying bulky business cards or typing out contact details? Upgrade to the future with our sleek NFC card! Just a simple tap, and your contact information, website, or social media instantly appears on any smartphone.'),
             ),
             SizedBox(height: 16),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Justo facilisis mattis tincidunt vitae quam quis. Nec nisi duis amet aenean arcu tristique et et eleifend.',
-              style: TextStyle(
-                fontSize: 16,
-                color: Color(0xFF828282),
-              ),
-            ),
             SizedBox(height: 24),
             Center(
-              child: Image.network(
-                'https://placehold.co/600x400/png', // Replace with your image URL
-                height: 200,
+              child: Image.asset(
+                scale: 2.5,
+                'assets/NFC.png', // Replace with your image URL
               ),
             ),
-            SizedBox(height: 69),
-            Center(
-                child: customButton(
-                    label: 'REQUEST NFC', onPressed: () {}, fontSize: 16)),
+            customButton(
+                label: 'REQUEST NFC',
+                onPressed: () {
+                  ApiRoutes userApi = ApiRoutes();
+                  userApi.requestNFC(context);
+                },
+                fontSize: 16),
           ],
         ),
       ),

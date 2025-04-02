@@ -1,50 +1,75 @@
+import 'package:ackaf/src/data/models/chat_model.dart';
+import 'package:ackaf/src/data/models/msg_model.dart';
+import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
+import 'package:ackaf/src/data/services/api_routes/user_api.dart';
+import 'package:ackaf/src/interface/common/chat_widgets/OwnMessageCard.dart';
+import 'package:ackaf/src/interface/common/chat_widgets/ReplyCard.dart';
+import 'package:ackaf/src/interface/common/custom_dialog.dart';
+import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_details_page.dart';
+
+import 'package:ackaf/src/interface/screens/profile/profilePreview_using_ID.dart';
+import 'package:ackaf/src/interface/screens/profile/profile_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kssia/src/data/globals.dart';
-import 'package:kssia/src/data/providers/chat_providers.dart';
-import 'package:kssia/src/interface/common/OwnMessageCard.dart';
-import 'package:kssia/src/interface/common/ReplyCard.dart';
-import 'package:kssia/src/data/models/chat_model.dart';
-import 'package:kssia/src/data/models/msg_model.dart';
-import 'package:kssia/src/data/services/api_routes/chat_api.dart';
+import 'package:intl/intl.dart';
 
 class IndividualPage extends ConsumerStatefulWidget {
-  IndividualPage({required this.chatModel, required this.sourchat, super.key});
-  final ChatModel chatModel;
-  final ChatModel sourchat;
-
+  IndividualPage({required this.receiver, required this.sender, super.key});
+  final Participant receiver;
+  final Participant sender;
   @override
   _IndividualPageState createState() => _IndividualPageState();
 }
 
 class _IndividualPageState extends ConsumerState<IndividualPage> {
+  bool isBlocked = false;
   bool show = false;
   FocusNode focusNode = FocusNode();
   List<MessageModel> messages = [];
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = ScrollController();
-  late final webSocketClient;
+
   @override
   void initState() {
     super.initState();
-    webSocketClient = ref.read(socketIoClientProvider);
-    webSocketClient.connect(widget.chatModel.id, widget.sourchat.id);
     getMessageHistory();
   }
 
   void getMessageHistory() async {
-    final messagesette =
-        await getMessages(widget.chatModel.id, widget.sourchat.id);
-    setState(() {
-      messages.addAll(messagesette);
-    });
+    final messagesette = await getChatBetweenUsers(widget.receiver.id!);
+    if (mounted) {
+      setState(() {
+        messages.addAll(messagesette);
+      });
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadBlockStatus(); // Now safe to call
+  }
+
+  Future<void> _loadBlockStatus() async {
+    final asyncUser = ref.watch(userProvider);
+    asyncUser.whenData(
+      (user) {
+        setState(() {
+          if (user.blockedUsers != null) {
+            isBlocked = user.blockedUsers!
+                .any((blockedUser) => blockedUser == widget.receiver.id);
+          }
+        });
+      },
+    );
   }
 
   @override
   void dispose() {
     focusNode.unfocus();
-    webSocketClient.disconnect();
     _controller.dispose();
     _scrollController.dispose();
     focusNode.dispose();
@@ -54,28 +79,20 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
   void sendMessage() {
     if (_controller.text.isNotEmpty && mounted) {
       sendChatMessage(
-        userId: widget.chatModel.id,
-        from: widget.sourchat.id,
+        userId: widget.receiver.id!,
         content: _controller.text,
       );
-      setMessage("sent", _controller.text, widget.sourchat.id);
+      setMessage("sent", _controller.text, widget.sender.id!);
       _controller.clear();
-      if (mounted) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
     }
   }
 
   void setMessage(String type, String message, String fromId) {
     final messageModel = MessageModel(
-      fromId: fromId,
+      from: fromId,
       status: type,
-      message: message,
-      time: DateTime.now().toString().substring(10, 16),
+      content: message,
+      createdAt: DateTime.now(),
     );
 
     setState(() {
@@ -85,12 +102,27 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
 
   @override
   Widget build(BuildContext context) {
+    final messageStream = ref.watch(messageStreamProvider);
+
+    messageStream.whenData((newMessage) {
+      bool messageExists = messages.any((message) =>
+          message.createdAt == newMessage.createdAt &&
+          message.content == newMessage.content);
+
+      if (!messageExists) {
+        setState(() {
+          messages.add(newMessage);
+        });
+      }
+    });
+
     return Stack(
       children: [
         Scaffold(
-          backgroundColor: Color(0xFFFCFCFC),
+          resizeToAvoidBottomInset: true,
+          backgroundColor: const Color(0xFFFCFCFC),
           appBar: PreferredSize(
-              preferredSize: Size.fromHeight(60),
+              preferredSize: const Size.fromHeight(60),
               child: AppBar(
                 elevation: 1,
                 shadowColor: Colors.white,
@@ -100,138 +132,275 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                 leading: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     InkWell(
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_back,
                         size: 24,
                       ),
                     ),
-                    SizedBox(width: 10),
-                    CircleAvatar(
-                      child: SvgPicture.asset(
-                        "assets/icons/person.svg",
-                        color: Colors.white,
-                        height: 30,
+                    const SizedBox(width: 10),
+                    ClipOval(
+                      child: Container(
                         width: 30,
+                        height: 30,
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                        child: Image.network(
+                          widget.receiver.image ?? '',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                                'assets/icons/dummy_person_small.png');
+                          },
+                        ),
                       ),
-                      radius: 19,
-                      backgroundColor: Colors.blueGrey,
                     ),
                   ],
                 ),
-                title: Text(
-                  widget.chatModel.name,
-                  style: TextStyle(fontSize: 18),
+                title: Consumer(
+                  builder: (context, ref, child) {
+                    final asyncUser = ref
+                        .watch(fetchUserByIdProvider(widget.receiver.id ?? ''));
+                    return asyncUser.when(
+                      data: (user) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (_, __, ___) => ProfilePreview(
+                                  user: user,
+                                ),
+                                transitionDuration: Duration(milliseconds: 500),
+                                transitionsBuilder: (_, a, __, c) =>
+                                    FadeTransition(opacity: a, child: c),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            '${widget.receiver.name ?? ''}',
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                        );
+                      },
+                      loading: () => Text(
+                        '${widget.receiver.name ?? ''}',
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                      error: (error, stackTrace) {
+                        // Handle error state
+                        return Center(
+                          child: Text(
+                              'Something went wrong please try again later'),
+                        );
+                      },
+                    );
+                  },
                 ),
                 actions: [
-                  IconButton(icon: Icon(Icons.call), onPressed: () {}),
+                  IconButton(
+                      icon: const Icon(Icons.report_gmailerrorred),
+                      onPressed: () {
+                        showReportPersonDialog(
+                            context: context,
+                            onReportStatusChanged: () {},
+                            reportType: 'User',
+                            reportedItemId: widget.receiver.id ?? '');
+                      }),
+                  IconButton(
+                      icon: const Icon(Icons.block),
+                      onPressed: () {
+                        showBlockPersonDialog(
+                            context: context,
+                            userId: widget.receiver.id ?? '',
+                            onBlockStatusChanged: () {
+                              Future.delayed(Duration(seconds: 1));
+                              setState(() {
+                                if (isBlocked) {
+                                  isBlocked = false;
+                                } else {
+                                  isBlocked = true;
+                                }
+                              });
+                            });
+                      }),
                 ],
               )),
           body: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child: WillPopScope(
+            child: PopScope(
               child: Column(
                 children: [
                   Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      controller: _scrollController,
-                      itemCount: messages.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index == messages.length) {
-                          return Container(
-                            height: 70,
-                          );
-                        }
-                        if (messages[index].fromId == widget.sourchat.id) {
-                          return OwnMessageCard(
-                            message: messages[index].message,
-                            time: messages[index].time,
-                          );
-                        } else {
-                          return ReplyCard(
-                            message: messages[index].message,
-                            time: messages[index].time,
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 70,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width - 65,
-                                child: Card(
-                                  elevation: 0,
-                                  color: Colors.white,
-                                  margin: EdgeInsets.only(
-                                      left: 15, right: 2, bottom: 22),
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color: Color.fromARGB(255, 220, 215, 215),
-                                      width: .5,
+                    child: messages.isNotEmpty
+                        ? ListView.builder(
+                            reverse: true,
+                            controller: _scrollController,
+                            itemCount: messages.length,
+                            itemBuilder: (context, index) {
+                              final message = messages[messages.length -
+                                  1 -
+                                  index]; // Reverse the index to get the latest message first
+                              if (message.from == widget.sender.id) {
+                                return OwnMessageCard(
+                                  feed: message.feed,
+                                  status: message.status!,
+                                  message: message.content ?? '',
+                                  time: DateFormat('h:mm a').format(
+                                    DateTime.parse(message.createdAt.toString())
+                                        .toLocal(),
+                                  ),
+                                );
+                              } else {
+                                return GestureDetector(
+                                  onLongPress: () {
+                                    showReportPersonDialog(
+                                        reportedItemId: message.id ?? '',
+                                        context: context,
+                                        onReportStatusChanged: () {
+                                          setState(() {
+                                            if (isBlocked) {
+                                              isBlocked = false;
+                                            } else {
+                                              isBlocked = true;
+                                            }
+                                          });
+                                        },
+                                        reportType: 'Message');
+                                  },
+                                  child: ReplyCard(
+                                    feed: message.feed,
+                                    message: message.content ?? '',
+                                    time: DateFormat('h:mm a').format(
+                                      DateTime.parse(
+                                              message.createdAt.toString())
+                                          .toLocal(),
                                     ),
                                   ),
-                                  child: TextFormField(
-                                    controller: _controller,
-                                    focusNode: focusNode,
-                                    textAlignVertical: TextAlignVertical.center,
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 5,
-                                    minLines: 1,
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: "What would you share?",
-                                      hintStyle: TextStyle(
-                                          color: Colors.grey, fontSize: 14),
-                                      suffixIcon: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.attach_file),
-                                            onPressed: () {
-                                              showModalBottomSheet(
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  context: context,
-                                                  builder: (builder) =>
-                                                      bottomSheet());
-                                            },
-                                          ),
-                                        ],
+                                );
+                              }
+                            },
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                                child: Image.asset(
+                                    'assets/startConversation.png')),
+                          ),
+                  ),
+                  isBlocked
+                      ? Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 20,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFE30613),
+                            boxShadow: [
+                              const BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 10,
+                                offset: Offset(4, 4),
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'This user is blocked',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 1.5,
+                                shadows: [
+                                  // Shadow(
+                                  //   color: Colors.black45,
+                                  //   blurRadius: 5,
+                                  //   offset: Offset(2, 2),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            border: Border(
+                              top: BorderSide(
+                                color: Color.fromARGB(255, 220, 215, 215),
+                                width: 0.5,
+                              ),
+                            ),
+                          ),
+                          padding: EdgeInsets.only(
+                            left: 8.0,
+                            right: 8.0,
+                            top: 5.0,
+                            bottom: 5.0,
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Card(
+                                  elevation: 1,
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(
+                                      color: Color.fromARGB(255, 220, 215, 215),
+                                      width: 0.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0, vertical: 5.0),
+                                    child: Container(
+                                      constraints: const BoxConstraints(
+                                        maxHeight: 150,
                                       ),
-                                      contentPadding: EdgeInsets.all(5),
+                                      child: Scrollbar(
+                                        thumbVisibility: true,
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.vertical,
+                                          reverse: true,
+                                          child: TextField(
+                                            controller: _controller,
+                                            focusNode: focusNode,
+                                            keyboardType:
+                                                TextInputType.multiline,
+                                            maxLines: null,
+                                            minLines: 1,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                              hintText: "Type a message",
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                width: 5,
-                              ),
                               Padding(
                                 padding: const EdgeInsets.only(
-                                  bottom: 20,
                                   right: 2,
                                   left: 2,
                                 ),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      color: Color(0xFF004797),
-                                      borderRadius: BorderRadius.circular(5)),
+                                    color: const Color(0xFFE30613),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
                                   child: IconButton(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.send,
                                       color: Colors.white,
                                     ),
@@ -243,22 +412,25 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
+                        ),
                 ],
               ),
-              onWillPop: () {
-                if (show) {
-                  setState(() {
-                    show = false;
-                  });
-                } else {
-                  focusNode.unfocus();
-                  Navigator.pop(context);
+              onPopInvoked: (didPop) {
+                if (didPop) {
+                  if (show) {
+                    setState(() {
+                      show = false;
+                    });
+                  } else {
+                    focusNode.unfocus();
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
+                    });
+                  }
+                  ref.invalidate(fetchChatThreadProvider);
                 }
-                return Future.value(false);
               },
             ),
           ),
@@ -283,28 +455,28 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
                 children: [
                   iconCreation(
                       Icons.insert_drive_file, Colors.indigo, "Document"),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   iconCreation(Icons.camera_alt, Colors.pink, "Camera"),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   iconCreation(Icons.insert_photo, Colors.purple, "Gallery"),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   iconCreation(Icons.headset, Colors.orange, "Audio"),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   iconCreation(Icons.location_pin, Colors.teal, "Location"),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   iconCreation(Icons.person, Colors.blue, "Contact"),
@@ -331,12 +503,12 @@ class _IndividualPageState extends ConsumerState<IndividualPage> {
               color: Colors.white,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12,
             ),
           )

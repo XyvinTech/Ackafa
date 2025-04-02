@@ -6,7 +6,7 @@ part of 'promotions_api.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchPromotionsHash() => r'd70199213bd5b17fac3e0d42746409da537901cb';
+String _$fetchPromotionsHash() => r'8d97b02b19a0786631701616084a0793c080826b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -143,6 +143,8 @@ class FetchPromotionsProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin FetchPromotionsRef on AutoDisposeFutureProviderRef<List<Promotion>> {
   /// The parameter `token` of this provider.
   String get token;
@@ -157,4 +159,4 @@ class _FetchPromotionsProviderElement
   String get token => (origin as FetchPromotionsProvider).token;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

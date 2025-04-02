@@ -1,15 +1,18 @@
 import 'dart:developer';
 
+import 'package:ackaf/src/data/models/college_model.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kssia/src/data/providers/user_provider.dart';
-import 'package:kssia/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/data/providers/user_provider.dart';
 
 class ModalSheetTextFormField extends StatelessWidget {
   final TextEditingController textController;
   final String? label;
   final int maxLines;
   final String? Function(String?)? validator;
+  final bool isAward;
 
   const ModalSheetTextFormField({
     required this.textController,
@@ -17,11 +20,13 @@ class ModalSheetTextFormField extends StatelessWidget {
     this.maxLines = 1,
     this.validator,
     super.key,
+    this.isAward = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLength: isAward ? 15 : null,
       controller: textController,
       maxLines: maxLines,
       validator: validator,
@@ -63,7 +68,9 @@ class CustomTextFormField extends StatelessWidget {
   final VoidCallback? onTap;
   final FormFieldValidator<String>? validator;
   final VoidCallback? onChanged;
-
+  final bool? enabled;
+  final bool? isAward;
+  final Color? fillColor;
   const CustomTextFormField({
     Key? key,
     required this.labelText,
@@ -75,64 +82,92 @@ class CustomTextFormField extends StatelessWidget {
     required this.textController,
     this.validator,
     this.onChanged,
+    this.enabled,
+    this.isAward,
+    this.fillColor = const Color(0xFFF2F2F2),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        final user = ref.watch(userProvider);
         return TextFormField(
+          enabled: enabled,
           onChanged: (value) {
             switch (labelText) {
-              case 'Enter your Full name':
-                List<String> nameParts = textController!.text.split(' ');
-
-                String firstName = nameParts[0];
-                String middleName = nameParts.length > 2 ? nameParts[1] : ' ';
-                String lastName = nameParts.length > 1 ? nameParts.last : ' ';
+              case 'Enter Your Full name':
                 ref.read(userProvider.notifier).updateName(
-                    firstName: firstName,
-                    middleName: middleName,
-                    lastName: lastName);
+                      name: textController!.text,
+                    );
                 break;
-              case 'Designation':
+              case 'Enter Your Email ID':
+                ref.read(userProvider.notifier).updateName(
+                      name: textController!.text,
+                    );
+                break;
+              case 'Enter Your Emirates ID':
+                ref.read(userProvider.notifier).updateEmiratesID(
+                      emiratesID: textController!.text,
+                    );
+                break;
+              case 'Enter Your Phone':
                 ref
                     .read(userProvider.notifier)
-                    .updateDesignation(textController!.text);
+                    .updatePhone(textController!.text);
+                break;
+              case 'Select Your College':
+                ref
+                    .read(userProvider.notifier)
+                    .updateCollege(textController!.text);
+                break;
+              case 'Enter Personal Address':
+                ref
+                    .read(userProvider.notifier)
+                    .updateAddress(textController!.text);
+                break;
+
+              case 'Enter Designation':
+                ref
+                    .read(userProvider.notifier)
+                    .updateCompany(Company(designation: textController!.text));
               case 'Bio':
+                log('Bio ${textController!.text}');
                 ref.read(userProvider.notifier).updateBio(textController!.text);
               case 'Enter Company Name':
                 ref
                     .read(userProvider.notifier)
-                    .updateCompanyName(textController!.text);
+                    .updateCompany(Company(name: textController!.text));
+              case 'Enter Company Phone':
+                ref
+                    .read(userProvider.notifier)
+                    .updateCompany(Company(phone: textController!.text));
               case 'Enter Company Address':
                 ref
                     .read(userProvider.notifier)
-                    .updateCompanyAddress(textController!.text);
-              case 'Enter phone number':
-                ref.read(userProvider.notifier).updatePhoneNumbers(
-                    personal: int.parse(textController!.text));
-              case 'Enter landline number':
-                ref.read(userProvider.notifier).updatePhoneNumbers(
-                    landline: int.parse(textController!.text));
-              case 'Enter Ig':
+                    .updateCompany(Company(address: textController!.text));
+
+              case 'Enter Instagram':
                 ref.read(userProvider.notifier).updateSocialMedia(
-                    [...?ref.read(userProvider).value?.socialMedia],
+                    [...?ref.read(userProvider).value?.social],
                     'instagram',
                     textController!.text);
 
               case 'Enter Linkedin':
                 ref.read(userProvider.notifier).updateSocialMedia(
-                    [...?ref.read(userProvider).value?.socialMedia],
+                    [...?ref.read(userProvider).value?.social],
                     'linkedin',
                     textController!.text);
               case 'Enter Twitter':
                 ref.read(userProvider.notifier).updateSocialMedia(
-                    [...?ref.read(userProvider).value?.socialMedia],
+                    [...?ref.read(userProvider).value?.social],
                     'twitter',
                     textController!.text);
-   
+              case 'Enter Facebook':
+                ref.read(userProvider.notifier).updateSocialMedia(
+                    [...?ref.read(userProvider).value?.social],
+                    'facebook',
+                    textController!.text);
+
               default:
             }
           },
@@ -144,8 +179,8 @@ class CustomTextFormField extends StatelessWidget {
             alignLabelWithHint: true,
             labelText: labelText,
             labelStyle: const TextStyle(color: Colors.grey),
-            floatingLabelBehavior: FloatingLabelBehavior.auto,
-            fillColor: const Color(0xFFF2F2F2),
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+            fillColor: fillColor,
             filled: true,
             prefixIcon: prefixIcon != null && maxLines > 1
                 ? Padding(
