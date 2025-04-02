@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chat.dart';
 import 'package:ackaf/src/interface/screens/people/members.dart';
 
+
 class PeoplePage extends StatelessWidget {
   const PeoplePage({super.key});
 
