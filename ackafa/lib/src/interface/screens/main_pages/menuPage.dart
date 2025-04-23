@@ -480,64 +480,105 @@ if(user.phone!='+919645398555')
                       //   ],
                       // ),
 
-                      Container(
-                        color: const Color(0xFFF2F2F2),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            FadeInDown(
-                              child: const Center(
-                                child: Text(
-                                  'Version 1.0',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            FadeInUp(
-                              delay: const Duration(milliseconds: 300),
-                              child: GestureDetector(
+                   Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
                                 onTap: () {
-                                  _launchURL('https://www.skybertech.ae');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const WebViewScreen(
+                                        color: Colors.blue,
+                                        url: 'https://www.skybertech.com/',
+                                        title: 'Skybertech',
+                                      ),
+                                    ),
+                                  );
                                 },
-                                child: const Text(
-                                  'Powered By SkyberTech',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(color: Colors.grey),
+                                      color: const Color.fromARGB(
+                                          255, 246, 246, 246)),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10, left: 22, right: 22),
+                                        child: Text(
+                                          'Powered by',
+                                          style: TextStyle(
+                                              fontSize: 12, color: Colors.grey),
+                                        ),
+                                      ),
+                                      Image.asset(
+                                        scale: 15,
+                                        'assets/skybertechlogo.png',
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            FadeInUp(
-                              delay: const Duration(milliseconds: 600),
-                              child: GestureDetector(
+                              SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
                                 onTap: () {
-                                  _launchURL('https://www.xyvin.com');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const WebViewScreen(
+                                        color: Colors.deepPurpleAccent,
+                                        url: 'https://www.acutendeavors.com/',
+                                        title: 'ACUTE ENDEAVORS',
+                                      ),
+                                    ),
+                                  );
                                 },
-                                child: const Text(
-                                  'Developed By Xyvin',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(color: Colors.grey),
+                                      color: const Color.fromARGB(
+                                          255, 246, 246, 246)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 8),
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 2, bottom: 3),
+                                          child: Text(
+                                            'Developed by',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 7),
+                                          child: Image.asset(
+                                            scale: 25,
+                                            'assets/acutelogo.png',
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       Container(color: const Color(0xFFF2F2F2), height: 20),
