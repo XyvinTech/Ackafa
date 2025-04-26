@@ -89,6 +89,8 @@ class _MyAppState extends State<MyApp> {
           return SplashScreen();
         },
  
+        '/login_screen': (context) => LoginPage(),
+ 
         '/mainpage': (context) => MainPage(),
         '/splash': (context) => SplashScreen(),
         '/profile_completion': (context) => ProfileCompletionScreen(),
