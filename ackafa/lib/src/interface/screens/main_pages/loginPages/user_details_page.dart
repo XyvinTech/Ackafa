@@ -2,6 +2,7 @@ import 'package:ackaf/src/data/services/api_routes/image_upload.dart';
 import 'package:ackaf/src/interface/common/cards.dart';
 import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
 import 'package:ackaf/src/interface/common/website_video_card/website_video_card.dart';
+import 'package:ackaf/src/interface/validatelinks.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -382,49 +383,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       ref.read(userProvider.notifier).refreshUser();
     }
   }
-String? validateEmiratesId(String? value, {required String phoneNumber}) {
-  List<String> bypassPhoneNumbers = ['+918547516733',
-'+919778945854',
-'+916282864614',
-'+971567883132',
-'+917592888111',
-'+918281977675'	,
-'+919567077118',
-'+916282822971',
-'+917994461589','+919645398555'];
 
-  if (bypassPhoneNumbers.contains(phoneNumber)) {
-    return null;
-  }
-
-  if (value == null || value.isEmpty) {
-    return 'Please enter your Emirates ID';
-  }
-
-  String cleanValue = value.replaceAll(RegExp(r'[^0-9]'), '');
-
-  if (cleanValue.length != 15) {
-    return 'Emirates ID must be 15 digits';
-  }
-
-  if (!cleanValue.startsWith('784')) {
-    return 'Emirates ID must start with 784';
-  }
-
-  try {
-    BigInt numericValue = BigInt.parse(cleanValue);
-    BigInt minValue = BigInt.parse('784194011111111');
-    BigInt maxValue = BigInt.parse('784202411111111');
-
-    if (numericValue < minValue || numericValue > maxValue) {
-      return 'Invalid Emirates ID range';
-    }
-  } catch (e) {
-    return 'Invalid Emirates ID format';
-  }
-
-  return null;
-}
 
 
   @override
@@ -439,130 +398,130 @@ String? validateEmiratesId(String? value, {required String phoneNumber}) {
     // final isCertificateDetailsVisible =
     //     ref.watch(isCertificateDetailsVisibleProvider);
 
-    return SafeArea(
-      child: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Scaffold(
-            backgroundColor: Colors.white,
-            body: asyncUser.when(
-              loading: () => Center(child: LoadingAnimation()),
-              error: (error, stackTrace) {
-                return Center(
-                  child: Text('Error loading User: $error '),
-                );
-              },
-              data: (user) {
-                if (firstNameController.text.isEmpty) {
-                  firstNameController.text = user.fullName!;
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+          backgroundColor: Colors.white,
+          body: asyncUser.when(
+            loading: () => Center(child: LoadingAnimation()),
+            error: (error, stackTrace) {
+              return Center(
+                child: Text('Error loading User: $error '),
+              );
+            },
+            data: (user) {
+              if (firstNameController.text.isEmpty) {
+                firstNameController.text = user.fullName!;
+              }
+              if (emiratesIdController.text.isEmpty) {
+                emiratesIdController.text = user.emiratesID ?? '';
+              }
+    
+              if (collegeController.text.isEmpty) {
+                collegeController.text = user.college?.collegeName ?? '';
+              }
+              if (batchController.text.isEmpty) {
+                batchController.text = user.batch?.toString() ?? '';
+              }
+              if (designationController.text.isEmpty) {
+                designationController.text = user.company?.designation ?? '';
+              }
+              if (bioController.text.isEmpty) {
+                bioController.text = user.bio ?? '';
+              }
+              if (companyPhoneController.text.isEmpty) {
+                companyPhoneController.text = user.company?.phone ?? '';
+              }
+              if (companyNameController.text.isEmpty) {
+                companyNameController.text = user.company?.name ?? '';
+              }
+              if (companyAddressController.text.isEmpty) {
+                companyAddressController.text = user.company?.address ?? '';
+              }
+              if (personalPhoneController.text.isEmpty) {
+                personalPhoneController.text = user.phone ?? '';
+              }
+              if (emailController.text.isEmpty) {
+                emailController.text = user.email ?? '';
+              }
+              if (addressController.text.isEmpty) {
+                addressController.text = user.address ?? '';
+              }
+    
+              // List<TextEditingController> socialLinkControllers = [
+              //   igController,
+              //   linkedinController,
+              //   twtitterController,
+              //   facebookController
+              // ];
+              for (Link social in user.social ?? []) {
+                if (social.name == 'instagram' && igController.text.isEmpty) {
+                  igController.text = social.link ?? '';
+                } else if (social.name == 'linkedin' &&
+                    linkedinController.text.isEmpty) {
+                  linkedinController.text = social.link ?? '';
+                } else if (social.name == 'twitter' &&
+                    twtitterController.text.isEmpty) {
+                  twtitterController.text = social.link ?? '';
+                } else if (social.name == 'facebook' &&
+                    facebookController.text.isEmpty) {
+                  facebookController.text = social.link ?? '';
                 }
-                if (emiratesIdController.text.isEmpty) {
-                  emiratesIdController.text = user.emiratesID ?? '';
-                }
-
-                if (collegeController.text.isEmpty) {
-                  collegeController.text = user.college?.collegeName ?? '';
-                }
-                if (batchController.text.isEmpty) {
-                  batchController.text = user.batch?.toString() ?? '';
-                }
-                if (designationController.text.isEmpty) {
-                  designationController.text = user.company?.designation ?? '';
-                }
-                if (bioController.text.isEmpty) {
-                  bioController.text = user.bio ?? '';
-                }
-                if (companyPhoneController.text.isEmpty) {
-                  companyPhoneController.text = user.company?.phone ?? '';
-                }
-                if (companyNameController.text.isEmpty) {
-                  companyNameController.text = user.company?.name ?? '';
-                }
-                if (companyAddressController.text.isEmpty) {
-                  companyAddressController.text = user.company?.address ?? '';
-                }
-                if (personalPhoneController.text.isEmpty) {
-                  personalPhoneController.text = user.phone ?? '';
-                }
-                if (emailController.text.isEmpty) {
-                  emailController.text = user.email ?? '';
-                }
-                if (addressController.text.isEmpty) {
-                  addressController.text = user.address ?? '';
-                }
-
-                // List<TextEditingController> socialLinkControllers = [
-                //   igController,
-                //   linkedinController,
-                //   twtitterController,
-                //   facebookController
-                // ];
-                for (Link social in user.social ?? []) {
-                  if (social.name == 'instagram' && igController.text.isEmpty) {
-                    igController.text = social.link ?? '';
-                  } else if (social.name == 'linkedin' &&
-                      linkedinController.text.isEmpty) {
-                    linkedinController.text = social.link ?? '';
-                  } else if (social.name == 'twitter' &&
-                      twtitterController.text.isEmpty) {
-                    twtitterController.text = social.link ?? '';
-                  } else if (social.name == 'facebook' &&
-                      facebookController.text.isEmpty) {
-                    facebookController.text = social.link ?? '';
+              }
+    
+              // for (int i = 0; i < socialLinkControllers.length; i++) {
+              //   if (i < user.social!.length) {
+              //     socialLinkControllers[i].text = user.social![i].link ?? '';
+              //     log('social : ${socialLinkControllers[i].text}');
+              //   }
+              // else {
+              //   socialLinkControllers[i].clear();
+              // }
+              // }
+    
+              // List<TextEditingController> websiteLinkControllers = [
+              //   websiteLinkController
+              // ];
+              // List<TextEditingController> websiteNameControllers = [
+              //   websiteNameController
+              // ];
+    
+              // for (int i = 0; i < websiteLinkControllers.length; i++) {
+              //   if (i < user.websites!.length) {
+              //     websiteLinkControllers[i].text = user.websites![i].link ?? '';
+              //     websiteNameControllers[i].text = user.websites![i].name ?? '';
+              //   } else {
+              //     websiteLinkControllers[i].clear();
+              //     websiteNameControllers[i].clear();
+              //   }
+              // }
+    
+              // List<TextEditingController> videoLinkControllers = [
+              //   videoLinkController
+              // ];
+              // List<TextEditingController> videoNameControllers = [
+              //   videoNameController
+              // ];
+    
+              // for (int i = 0; i < videoLinkControllers.length; i++) {
+              //   if (i < user.videos!.length) {
+              //     videoLinkControllers[i].text = user.videos![i].link ?? '';
+              //     videoNameControllers[i].text = user.videos![i].name ?? '';
+              //   } else {
+              //     videoLinkControllers[i].clear();
+              //     videoNameControllers[i].clear();
+              //   }
+              // }
+    
+              return PopScope(
+                onPopInvoked: (didPop) {
+                  if (didPop) {
+                    ref.invalidate(fetchUserByIdProvider);
                   }
-                }
-
-                // for (int i = 0; i < socialLinkControllers.length; i++) {
-                //   if (i < user.social!.length) {
-                //     socialLinkControllers[i].text = user.social![i].link ?? '';
-                //     log('social : ${socialLinkControllers[i].text}');
-                //   }
-                // else {
-                //   socialLinkControllers[i].clear();
-                // }
-                // }
-
-                // List<TextEditingController> websiteLinkControllers = [
-                //   websiteLinkController
-                // ];
-                // List<TextEditingController> websiteNameControllers = [
-                //   websiteNameController
-                // ];
-
-                // for (int i = 0; i < websiteLinkControllers.length; i++) {
-                //   if (i < user.websites!.length) {
-                //     websiteLinkControllers[i].text = user.websites![i].link ?? '';
-                //     websiteNameControllers[i].text = user.websites![i].name ?? '';
-                //   } else {
-                //     websiteLinkControllers[i].clear();
-                //     websiteNameControllers[i].clear();
-                //   }
-                // }
-
-                // List<TextEditingController> videoLinkControllers = [
-                //   videoLinkController
-                // ];
-                // List<TextEditingController> videoNameControllers = [
-                //   videoNameController
-                // ];
-
-                // for (int i = 0; i < videoLinkControllers.length; i++) {
-                //   if (i < user.videos!.length) {
-                //     videoLinkControllers[i].text = user.videos![i].link ?? '';
-                //     videoNameControllers[i].text = user.videos![i].name ?? '';
-                //   } else {
-                //     videoLinkControllers[i].clear();
-                //     videoNameControllers[i].clear();
-                //   }
-                // }
-
-                return PopScope(
-                  onPopInvoked: (didPop) {
-                    if (didPop) {
-                      ref.invalidate(fetchUserByIdProvider);
-                    }
-                  },
+                },
+                child: SafeArea(
                   child: Stack(
                     children: [
                       SingleChildScrollView(
@@ -735,7 +694,7 @@ String? validateEmiratesId(String? value, {required String phoneNumber}) {
                                       textController: emiratesIdController,
                                       labelText: 'Enter Your Emirates ID',
                                     ),
-
+                      
                                     const SizedBox(height: 20.0),
                                     // CustomTextFormField(
                                     //     readOnly: true,
@@ -780,7 +739,7 @@ String? validateEmiratesId(String? value, {required String phoneNumber}) {
                                     //     },
                                     //     textController: emailController,
                                     //     labelText: 'Enter Your Email'),
-
+                      
                                     CustomTextFormField(
                                       // validator: (value) {
                                       //   if (value == null || value.isEmpty) {
@@ -1349,7 +1308,7 @@ String? validateEmiratesId(String? value, {required String phoneNumber}) {
                                     //         .read(isAwardsDetailsVisibleProvider
                                     //             .notifier)
                                     //         .state = value;
-
+                      
                                     //     // if (value == false) {
                                     //     //   setState(
                                     //     //     () {
@@ -1553,10 +1512,10 @@ String? validateEmiratesId(String? value, {required String phoneNumber}) {
                                   }))),
                     ],
                   ),
-                );
-              },
-            )),
-      ),
+                ),
+              );
+            },
+          )),
     );
   }
 

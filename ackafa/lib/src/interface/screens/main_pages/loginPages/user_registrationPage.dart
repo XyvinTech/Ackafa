@@ -20,6 +20,7 @@ import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_comple
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/subcription_expired_page.dart';
 
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
+import 'package:ackaf/src/interface/validatelinks.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -318,13 +319,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                               const SizedBox(height: 20.0),
                                               _createLabel('Emirates ID', true),
                                               CustomTextFormField(
-                                                  validator: (value) {
-                                                    if (value == null ||
-                                                        value.isEmpty) {
-                                                      return 'Please Enter your Emirates ID';
-                                                    }
-                                                    return null;
-                                                  },
+                                           validator: (value) => validateEmiratesId(value, phoneNumber: user.phone ?? ''),
                                                   textController:
                                                       emirateIDController,
                                                   labelText:
