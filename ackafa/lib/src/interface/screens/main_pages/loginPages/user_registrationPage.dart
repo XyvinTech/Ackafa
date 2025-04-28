@@ -26,8 +26,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:permission_handler/permission_handler.dart';
-
 class UserRegistrationScreen extends StatefulWidget {
   const UserRegistrationScreen({super.key});
 
@@ -51,67 +49,10 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
     if (image != null) {
       setState(() {
         _profileImageFile = File(image.path);
-        // api.createFileUrl(file: _profileImageFile!, token: token).then((url) {
-        //   String profileUrl = url;
-        //   ref.read(userProvider.notifier).updateProfilePicture(profileUrl);
-        //   print((profileUrl));
-        // });
       });
       return _profileImageFile;
     }
     return null;
-  }
-
-  Future<String> _editUser({required UserModel user}) async {
-    // String fullName =
-    //     '${user.name!.first} ${user.name!.middle} ${user.name!.last}';
-
-    // List<String> nameParts = fullName.split(' ');
-
-    // String firstName = nameParts[0];
-    // String middleName = nameParts.length > 2 ? nameParts[1] : ' ';
-    // String lastName = nameParts.length > 1 ? nameParts.last : ' ';
-
-    final Map<String, dynamic> profileData = {
-      "fullName": nameController.text,
-      "emiratesID": user.emiratesID,
-      "email": emailController.text,
-      "batch": selectedBatch,
-      if (user.image != null && user.image != '') "image": profileImageUrl,
-      "college": selectedCollegeId,
-      if (user.address != null) "address": user.address ?? '',
-      if (user.bio != null) "bio": user.bio ?? '',
-      if (user.emiratesID != null) "emiratesID": emirateIDController.text ?? '',
-      "company": {
-        if (user.company?.name != null) "name": user.company?.name ?? '',
-        if (user.company?.designation != null)
-          "designation": user.company?.designation ?? '',
-        if (user.company?.phone != null) "phone": user.company?.phone ?? '',
-        if (user.company?.address != null)
-          "address": user.company?.address ?? '',
-        if (user.company?.logo != null) "logo": user.company?.logo ?? '',
-      },
-      "social": [
-        for (var i in user.social!) {"name": "${i.name}", "link": i.link}
-      ],
-      "websites": [
-        for (var i in user.websites!)
-          {"name": i.name.toString(), "link": i.link}
-      ],
-      "videos": [
-        for (var i in user.videos!) {"name": i.name, "link": i.link}
-      ],
-      "awards": [
-        for (var i in user.awards!)
-          {"name": i.name, "image": i.image, "authority": i.authority}
-      ],
-      "certificates": [
-        for (var i in user.certificates!) {"name": i.name, "link": i.link}
-      ],
-    };
-    String? response = await userApi.editUser(profileData);
-    log(profileData.toString());
-    return response;
   }
 
   ApiRoutes userApi = ApiRoutes();
@@ -132,9 +73,6 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
         return asyncUser.when(
           data: (user) {
             if (user.batch == null) {
-              emailController.text = user.email ?? '';
-              emirateIDController.text = user.emiratesID ?? '';
-              nameController.text = user.fullName ?? '';
               return Consumer(
                 builder: (context, ref, child) {
                   final asyncColleges = ref.watch(fetchCollegesProvider(token));
@@ -319,7 +257,10 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                               const SizedBox(height: 20.0),
                                               _createLabel('Emirates ID', true),
                                               CustomTextFormField(
-                                           validator: (value) => validateEmiratesId(value, phoneNumber: user.phone ?? ''),
+                                                  validator: (value) =>
+                                                      validateEmiratesId(value,
+                                                          phoneNumber:
+                                                              user.phone ?? ''),
                                                   textController:
                                                       emirateIDController,
                                                   labelText:
@@ -472,10 +413,9 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                         height: 50,
                                         child: customButton(
                                             fontSize: 16,
-                                            label:
-                                                user.status == 'inactive'
-                                                    ? 'Send Request'
-                                                    : 'Next',
+                                            label: user.status == 'inactive'
+                                                ? 'Send Request'
+                                                : 'Next',
                                             onPressed: () async {
                                               if (_formKey.currentState!
                                                   .validate()) {
@@ -491,55 +431,54 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
 
                                                   print(profileImageUrl);
                                                   log(token);
-                                       
-                                                 final response = await userApi
-                                                        .registerUser(
-                                                            emiratesID:
-                                                                emirateIDController
-                                                                    .text,
-                                                            token: token,
-                                                            profileUrl:
-                                                                profileImageUrl,
-                                                            name: nameController
-                                                                .text,
-                                                            emailId:
-                                                                emailController
-                                                                    .text,
-                                                            college:
-                                                                selectedCollegeId,
-                                                            batch:
-                                                                selectedBatch,
-                                                            context: context);
 
-                                                    if (response) {
-                                                      log('user status: ${user.status}');
-                                                      if (user.status ==
-                                                          'active') {
-                                                        Navigator.of(context)
-                                                            .pushReplacement(
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            ProfileCompletionScreen()));
-                                                      } else if (user.status ==
-                                                          'awaiting_payment') {
-                                                        log('im in payment condition ok');
-                                                        Navigator.of(context)
-                                                            .pushReplacement(
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            const PaymentConfirmationPage()));
-                                                      } else {
-                                                        Navigator.of(context)
-                                                            .pushReplacement(
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            const UserInactivePage()));
-                                                      }
+                                                  final response = await userApi
+                                                      .registerUser(
+                                                          emiratesID:
+                                                              emirateIDController
+                                                                  .text,
+                                                          token: token,
+                                                          profileUrl:
+                                                              profileImageUrl,
+                                                          name:
+                                                              nameController
+                                                                  .text,
+                                                          emailId:
+                                                              emailController
+                                                                  .text,
+                                                          college:
+                                                              selectedCollegeId,
+                                                          batch: selectedBatch,
+                                                          context: context);
+
+                                                  if (response) {
+                                                    log('user status: ${user.status}');
+                                                    if (user.status ==
+                                                        'active') {
+                                                      Navigator.of(context)
+                                                          .pushReplacement(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ProfileCompletionScreen()));
+                                                    } else if (user.status ==
+                                                        'awaiting_payment') {
+                                                      log('im in payment condition ok');
+                                                      Navigator.of(context)
+                                                          .pushReplacement(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          const PaymentConfirmationPage()));
+                                                    } else {
+                                                      Navigator.of(context)
+                                                          .pushReplacement(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          const UserInactivePage()));
                                                     }
-                                                
+                                                  }
                                                 } catch (e) {
                                                   CustomSnackbar.showSnackbar(
                                                       context, '$e');
@@ -550,7 +489,8 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                             )),
                       );
                     },
-                    loading: () =>  Scaffold(body: Center(child: LoadingAnimation())),
+                    loading: () =>
+                        Scaffold(body: Center(child: LoadingAnimation())),
                     error: (error, stackTrace) {
                       return Center(
                         child: Text('$error'),

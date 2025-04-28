@@ -25,19 +25,20 @@ bool? isValidUrl(String? url) {
   }
 }
 
-
-
-  
 String? validateEmiratesId(String? value, {required String phoneNumber}) {
-  List<String> bypassPhoneNumbers = ['+918547516733',
-'+919778945854',
-'+916282864614',
-'+971567883132',
-'+917592888111',
-'+918281977675'	,
-'+919567077118',
-'+916282822971',
-'+917994461589','+919645398555'];
+  List<String> bypassPhoneNumbers = [
+    '+918547516733',
+    '+919778945854',
+    '+916282864614',
+    '+971567883132',
+    '+917592888111',
+    '+918281977675',
+    '+919567077118',
+    '+916282822971',
+    '+919895074710',
+    '+917994461589',
+    '+919645398555'
+  ];
 
   if (bypassPhoneNumbers.contains(phoneNumber)) {
     return null;
