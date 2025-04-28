@@ -382,37 +382,50 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       ref.read(userProvider.notifier).refreshUser();
     }
   }
+String? validateEmiratesId(String? value, {required String phoneNumber}) {
+  List<String> bypassPhoneNumbers = ['+918547516733',
+'+919778945854',
+'+916282864614',
+'+971567883132',
+'+917592888111',
+'+918281977675'	,
+'+919567077118',
+'+916282822971',
+'+917994461589','+919645398555'];
 
-  String? validateEmiratesId(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your Emirates ID';
-    }
-
-
-    String cleanValue = value.replaceAll(RegExp(r'[^0-9]'), '');
-
-    if (cleanValue.length != 15) {
-      return 'Emirates ID must be 15 digits';
-    }
-
-    if (!cleanValue.startsWith('784')) {
-      return 'Emirates ID must start with 784';
-    }
-
-    try {
-      BigInt numericValue = BigInt.parse(cleanValue);
-      BigInt minValue = BigInt.parse('784194011111111');
-      BigInt maxValue = BigInt.parse('784202411111111');
-
-      if (numericValue < minValue || numericValue > maxValue) {
-        return 'Invalid Emirates ID range';
-      }
-    } catch (e) {
-      return 'Invalid Emirates ID format';
-    }
-
+  if (bypassPhoneNumbers.contains(phoneNumber)) {
     return null;
   }
+
+  if (value == null || value.isEmpty) {
+    return 'Please enter your Emirates ID';
+  }
+
+  String cleanValue = value.replaceAll(RegExp(r'[^0-9]'), '');
+
+  if (cleanValue.length != 15) {
+    return 'Emirates ID must be 15 digits';
+  }
+
+  if (!cleanValue.startsWith('784')) {
+    return 'Emirates ID must start with 784';
+  }
+
+  try {
+    BigInt numericValue = BigInt.parse(cleanValue);
+    BigInt minValue = BigInt.parse('784194011111111');
+    BigInt maxValue = BigInt.parse('784202411111111');
+
+    if (numericValue < minValue || numericValue > maxValue) {
+      return 'Invalid Emirates ID range';
+    }
+  } catch (e) {
+    return 'Invalid Emirates ID format';
+  }
+
+  return null;
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -718,7 +731,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                     ),
                                     const SizedBox(height: 20.0),
                                     CustomTextFormField(
-                                      validator: validateEmiratesId,
+                                 validator: (value) => validateEmiratesId(value, phoneNumber: user.phone ?? ''),
                                       textController: emiratesIdController,
                                       labelText: 'Enter Your Emirates ID',
                                     ),
