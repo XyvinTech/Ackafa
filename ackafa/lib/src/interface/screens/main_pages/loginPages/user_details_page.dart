@@ -388,7 +388,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       return 'Please enter your Emirates ID';
     }
 
-    // Remove any spaces or special characters
+
     String cleanValue = value.replaceAll(RegExp(r'[^0-9]'), '');
 
     if (cleanValue.length != 15) {

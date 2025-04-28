@@ -102,12 +102,9 @@ Future<void> captureAndShareWidgetScreenshot(BuildContext context) async {
                                                       height: 100,
                                                       fit: BoxFit.cover,
                                                     )
-                                                  : Image.asset(
-                                                      'assets/icons/dummy_person.png',
-                                                      width: 100,
+                                                  : Image.asset(   width: 100,
                                                       height: 100,
-                                                      fit: BoxFit.cover,
-                                                    ),
+                                'assets/icons/dummy_person_large.png'),
                                             ),
                                           ),
                                           const SizedBox(height: 15),
