@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/services/deep_link_service.dart';
 import 'package:ackaf/src/data/services/launch_url.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -35,7 +36,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       }
     });
     getToken();
-
   }
 
   Future<void> checkAppVersion(context) async {
@@ -88,25 +88,38 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   Future<void> initialize() async {
     await checktoken();
-    Timer(Duration(seconds: 2), () {
-      if (!isAppUpdateRequired) {
-        print('Logged in : $LoggedIn');
-        if (LoggedIn) {
-          // Check for pending deep link
-          final pendingDeepLink = _deepLinkService.pendingDeepLink;
-          if (pendingDeepLink != null) {
-            Navigator.pushReplacementNamed(context, '/mainpage').then((_) {
-              // Handle the deep link after main page is loaded
-              _deepLinkService.handleDeepLink(pendingDeepLink);
-              _deepLinkService.clearPendingDeepLink();
-            });
+
+    if (isAppUpdateRequired) return;
+
+    ref.listenManual<AsyncValue<UserModel>>(userProvider, (previous, next) {
+      next.when(
+        data: (user) {
+          if (!mounted) return;
+
+          if (LoggedIn) {
+            if (user.batch != null && user.batch != '') {
+              final pendingDeepLink = _deepLinkService.pendingDeepLink;
+              if (pendingDeepLink != null) {
+                Navigator.pushReplacementNamed(context, '/mainpage').then((_) {
+                  _deepLinkService.handleDeepLink(pendingDeepLink);
+                  _deepLinkService.clearPendingDeepLink();
+                });
+              } else {
+                Navigator.pushReplacementNamed(context, '/mainpage');
+              }
+            } else {
+              Navigator.pushReplacementNamed(context, '/userReg');
+            }
           } else {
-            Navigator.pushReplacementNamed(context, '/mainpage');
+            Navigator.pushReplacementNamed(context, '/login_screen');
           }
-        } else {
+        },
+        loading: () {},
+        error: (err, stack) {
+          if (!mounted) return;
           Navigator.pushReplacementNamed(context, '/login_screen');
-        }
-      }
+        },
+      );
     });
   }
 
@@ -204,8 +217,7 @@ void initializeNotifications() {
       String? payload = response.payload;
       log('payload = $payload');
       if (payload != null && payload.isNotEmpty && payload != ' ') {
-        launchURL(
-            payload);
+        launchURL(payload);
       }
     },
   );
