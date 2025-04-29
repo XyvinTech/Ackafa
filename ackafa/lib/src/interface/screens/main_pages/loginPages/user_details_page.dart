@@ -142,7 +142,6 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
             String companyUrl = url;
             _companyImageSource = ImageSource.gallery;
             ref.read(userProvider.notifier).updateCompany(Company(logo: url));
- 
           });
         });
         return _companyImageFile;
@@ -384,8 +383,6 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final asyncUser = ref.watch(userProvider);
@@ -418,7 +415,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
               if (emiratesIdController.text.isEmpty) {
                 emiratesIdController.text = user.emiratesID ?? '';
               }
-    
+
               if (collegeController.text.isEmpty) {
                 collegeController.text = user.college?.collegeName ?? '';
               }
@@ -449,7 +446,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
               if (addressController.text.isEmpty) {
                 addressController.text = user.address ?? '';
               }
-    
+
               // List<TextEditingController> socialLinkControllers = [
               //   igController,
               //   linkedinController,
@@ -470,7 +467,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                   facebookController.text = social.link ?? '';
                 }
               }
-    
+
               // for (int i = 0; i < socialLinkControllers.length; i++) {
               //   if (i < user.social!.length) {
               //     socialLinkControllers[i].text = user.social![i].link ?? '';
@@ -480,14 +477,14 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
               //   socialLinkControllers[i].clear();
               // }
               // }
-    
+
               // List<TextEditingController> websiteLinkControllers = [
               //   websiteLinkController
               // ];
               // List<TextEditingController> websiteNameControllers = [
               //   websiteNameController
               // ];
-    
+
               // for (int i = 0; i < websiteLinkControllers.length; i++) {
               //   if (i < user.websites!.length) {
               //     websiteLinkControllers[i].text = user.websites![i].link ?? '';
@@ -497,14 +494,14 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
               //     websiteNameControllers[i].clear();
               //   }
               // }
-    
+
               // List<TextEditingController> videoLinkControllers = [
               //   videoLinkController
               // ];
               // List<TextEditingController> videoNameControllers = [
               //   videoNameController
               // ];
-    
+
               // for (int i = 0; i < videoLinkControllers.length; i++) {
               //   if (i < user.videos!.length) {
               //     videoLinkControllers[i].text = user.videos![i].link ?? '';
@@ -514,7 +511,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
               //     videoNameControllers[i].clear();
               //   }
               // }
-    
+
               return PopScope(
                 onPopInvoked: (didPop) {
                   if (didPop) {
@@ -599,7 +596,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                                         error, stackTrace) {
                                                       return Image.asset(
                                                           scale: .7,
-                                                          'assets/icons/dummy_person.png');
+                                                          'assets/icons/dummy_person_large.png');
                                                     },
                                                     user.image ??
                                                         '', // Replace with your image URL
@@ -690,11 +687,13 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                     ),
                                     const SizedBox(height: 20.0),
                                     CustomTextFormField(
-                                 validator: (value) => validateEmiratesId(value, phoneNumber: user.phone ?? ''),
+                                      validator: (value) => validateEmiratesId(
+                                          value,
+                                          phoneNumber: user.phone ?? ''),
                                       textController: emiratesIdController,
                                       labelText: 'Enter Your Emirates ID',
                                     ),
-                      
+
                                     const SizedBox(height: 20.0),
                                     // CustomTextFormField(
                                     //     readOnly: true,
@@ -739,7 +738,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                     //     },
                                     //     textController: emailController,
                                     //     labelText: 'Enter Your Email'),
-                      
+
                                     CustomTextFormField(
                                       // validator: (value) {
                                       //   if (value == null || value.isEmpty) {
@@ -1308,7 +1307,7 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                     //         .read(isAwardsDetailsVisibleProvider
                                     //             .notifier)
                                     //         .state = value;
-                      
+
                                     //     // if (value == false) {
                                     //     //   setState(
                                     //     //     () {
@@ -1634,5 +1633,4 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
       ),
     );
   }
-
 }

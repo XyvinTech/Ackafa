@@ -133,7 +133,7 @@ class ProfilePreviewUsingId extends ConsumerWidget {
                                         ),
                                       )
                                     : Image.asset(
-                                        'assets/icons/dummy_person.png'),
+                                        'assets/icons/dummy_person_large.png'),
                                 const SizedBox(height: 10),
                                 Text(
                                   user.fullName ?? '',
@@ -493,7 +493,8 @@ class ProfilePreviewUsingId extends ConsumerWidget {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 4.0), // Space between items
-                                    child: CertificateCard(onEdit: null,
+                                    child: CertificateCard(
+                                      onEdit: null,
                                       certificate: user.certificates![index],
                                       onRemove: null,
                                     ),
@@ -527,7 +528,8 @@ class ProfilePreviewUsingId extends ConsumerWidget {
                                 ),
                                 itemCount: user.awards!.length,
                                 itemBuilder: (context, index) {
-                                  return AwardCard(onEdit: null,
+                                  return AwardCard(
+                                    onEdit: null,
                                     award: user.awards![index],
                                     onRemove: null,
                                   );

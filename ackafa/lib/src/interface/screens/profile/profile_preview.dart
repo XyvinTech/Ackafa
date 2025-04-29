@@ -269,19 +269,19 @@ class ProfilePreview extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        if (user.emiratesID != null)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.perm_identity_rounded,
-                                    color: Color(0xFFE30613)),
-                                const SizedBox(width: 10),
-                                Text(user.emiratesID ?? ''),
-                              ],
-                            ),
-                          ),
-                        const SizedBox(height: 10),
+                        // if (user.emiratesID != null)
+                        //   Padding(
+                        //     padding: const EdgeInsets.only(left: 10),
+                        //     child: Row(
+                        //       children: [
+                        //         const Icon(Icons.perm_identity_rounded,
+                        //             color: Color(0xFFE30613)),
+                        //         const SizedBox(width: 10),
+                        //         Text(user.emiratesID ?? ''),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // const SizedBox(height: 10),
                         if (user.email != null)
                           Padding(
                             padding: const EdgeInsets.only(left: 10),
@@ -495,7 +495,8 @@ class ProfilePreview extends ConsumerWidget {
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 4.0), // Space between items
-                            child: CertificateCard(onEdit: null,
+                            child: CertificateCard(
+                              onEdit: null,
                               certificate: user.certificates![index],
                               onRemove: null,
                             ),
@@ -528,7 +529,8 @@ class ProfilePreview extends ConsumerWidget {
                         ),
                         itemCount: user.awards!.length,
                         itemBuilder: (context, index) {
-                          return AwardCard(onEdit: null,
+                          return AwardCard(
+                            onEdit: null,
                             award: user.awards![index],
                             onRemove: null,
                           );

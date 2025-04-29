@@ -203,7 +203,7 @@ class ProfileCard extends StatelessWidget {
                                                 fit: BoxFit.cover,
                                               )
                                             : Image.asset(
-                                                'assets/icons/dummy_person.png',
+                                                'assets/icons/dummy_person_large.png',
                                                 width: 100,
                                                 height: 100,
                                                 fit: BoxFit.cover,

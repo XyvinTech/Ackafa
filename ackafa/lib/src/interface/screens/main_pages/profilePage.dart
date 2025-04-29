@@ -118,7 +118,7 @@ class ProfilePage extends StatelessWidget {
                                                   ),
                                                   child: Image.asset(
                                                       scale: 1.3,
-                                                      'assets/icons/dummy_person.png'),
+                                                      'assets/icons/dummy_person_large.png'),
                                                 ),
                                           SizedBox(height: 15),
                                           Text(
@@ -184,7 +184,7 @@ class ProfilePage extends StatelessWidget {
                                           color: Colors.white),
                                     )),
                                 const SizedBox(width: 10),
-                                Text(user.phone??''),
+                                Text(user.phone ?? ''),
                               ],
                             ),
                             const SizedBox(height: 10),
@@ -201,7 +201,7 @@ class ProfilePage extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(width: 10),
-                                Text(user.email??''),
+                                Text(user.email ?? ''),
                               ],
                             ),
                             const SizedBox(height: 10),
