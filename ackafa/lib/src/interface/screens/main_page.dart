@@ -5,6 +5,9 @@ import 'package:ackaf/src/data/services/api_routes/chat_api.dart';
 import 'package:ackaf/src/interface/screens/event_news/news.dart';
 import 'package:ackaf/src/interface/screens/main_pages/feed_view.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/paymentpage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/subcription_expired_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -135,7 +138,15 @@ class _MainPageState extends ConsumerState<MainPage> {
           return LoginPage();
         },
         data: (user) {
-          log(user.image.toString());
+          switch (user.status?.toLowerCase()??'inactive') {
+            case 'inactive':
+                        return UserInactivePage();
+            case 'awaiting_payment':
+                        return PaymentConfirmationPage();
+            case 'subscription_expired':
+                        return SubcriptionExpiredPage();
+case 'active':
+  log(user.image.toString());
           _initialize(user: user);
           return Scaffold(
             body: Center(
@@ -189,6 +200,11 @@ class _MainPageState extends ConsumerState<MainPage> {
               showUnselectedLabels: true,
             ),
           );
+            default:
+                         return UserInactivePage();
+
+          }
+        
         },
       );
     });
