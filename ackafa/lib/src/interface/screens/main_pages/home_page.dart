@@ -210,7 +210,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 }).toList(),
                                 options: CarouselOptions(
                                   enableInfiniteScroll: false,
-                                  height: 420,
+                                  height: 560,
                                   scrollPhysics: posters.length > 1
                                       ? null
                                       : NeverScrollableScrollPhysics(),
@@ -408,10 +408,10 @@ Widget customPoster(
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16),
     child: AspectRatio(
-      aspectRatio: 19 / 20,
+      aspectRatio: 3 / 4,
       child: Image.network(
         poster.media ?? '',
-        fit: BoxFit.fill,
+        fit: BoxFit.contain,
         errorBuilder: (context, error, stackTrace) {
           return Shimmer.fromColors(
             baseColor: Colors.grey[300]!,
