@@ -200,14 +200,12 @@ class NewsContent extends StatelessWidget {
 
     return Stack(
       children: [
-        // News Content
         SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image Section
               AspectRatio(
-                aspectRatio: 16 / 9, // Set aspect ratio to 16:9
+                aspectRatio: 16 / 9,
                 child: Image.network(
                   newsItem.media ?? '',
                   fit: BoxFit.cover,

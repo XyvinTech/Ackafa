@@ -210,7 +210,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 }).toList(),
                                 options: CarouselOptions(
                                   enableInfiniteScroll: false,
-                                  height: 560,
+                                  height: 440,
                                   scrollPhysics: posters.length > 1
                                       ? null
                                       : NeverScrollableScrollPhysics(),
@@ -238,7 +238,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                              left: 25, top: 10),
+                                              left: 25, top: 24),
                                           child: Text(
                                             'Events',
                                             style: TextStyle(

@@ -64,41 +64,40 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                 Stack(
                   children: [
                     AspectRatio(
-                      aspectRatio: 16 / 9, // Set aspect ratio to 16:9
+                      aspectRatio: 16 / 9,
                       child: Container(
                         width: double.infinity,
                         color: Colors.grey[300],
                         child: Image.network(
-                          widget.event.image ??
-                              '', // Replace with your image URL
+                          widget.event.image ?? '',
                           fit: BoxFit.cover,
-                           errorBuilder: (context, error, stackTrace) {
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                  );
-                },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child; // Image loaded successfully
-                  }
-                  // While the image is loading, show shimmer effect
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  );
-                },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+                            );
+                          },
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child; // Image loaded successfully
+                            }
+                            // While the image is loading, show shimmer effect
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
