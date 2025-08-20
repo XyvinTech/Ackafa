@@ -102,13 +102,13 @@ Widget eventWidget({
                               color: Colors.white,
                             ),
                           if (event.status == 'upcoming')
-                            Icon(
+                            const Icon(
                               Icons.access_time,
                               color: Colors.white,
                             ),
                           Text(
                             event.status?.toUpperCase() ?? '',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 11,
                             ),

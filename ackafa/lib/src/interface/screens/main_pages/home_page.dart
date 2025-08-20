@@ -12,6 +12,7 @@ import 'package:ackaf/src/data/services/api_routes/promotions_api.dart';
 import 'package:ackaf/src/data/services/dynamic_links.dart';
 import 'package:ackaf/src/data/services/launch_url.dart';
 import 'package:ackaf/src/interface/common/components/app_bar.dart';
+import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/custom_video.dart';
 import 'package:ackaf/src/interface/common/event_widget.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
@@ -182,7 +183,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 },
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             _buildDotIndicator(
@@ -234,10 +235,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                           return events.isNotEmpty
                               ? Column(
                                   children: [
-                                    Row(
+                                    const Row(
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.only(
+                                          padding: EdgeInsets.only(
                                               left: 25, top: 24),
                                           child: Text(
                                             'Events',
@@ -403,46 +404,148 @@ Widget _buildBanners(
   );
 }
 
-Widget customPoster(
-    {required BuildContext context, required Promotion poster}) {
+Widget customPoster({
+  required BuildContext context,
+  required Promotion poster,
+}) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: AspectRatio(
-      aspectRatio: 3 / 4,
-      child: Image.network(
-        poster.media ?? '',
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          return Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
-            child: Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12),
+    child: Transform.translate(
+      offset: const Offset(0, 6),
+      child: Container(
+        height: MediaQuery.of(context).size.height*0.65,
+        margin: const EdgeInsets.only(bottom: 12.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.0),
+          border: Border.all(color: const Color.fromARGB(255, 226, 222, 222)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Poster Image
+            Container(
+              padding: const EdgeInsets.all(10),
+              width: MediaQuery.sizeOf(context).width * .95,
+              height: 370,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  poster.media ?? '',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    );
+                  },
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-          );
-        },
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) {
-            return child; // Image loaded successfully
-          }
-          // While the image is loading, show shimmer effect
-          return Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-            ),
-          );
-        },
+
+            const Spacer(),
+
+            // Button
+            if (poster.link != null &&
+                poster.link != '' &&
+                poster.link != 'null')
+              Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
+                  child: customButton(
+                    buttonHeight: 40,
+                    label: 'Know More',
+                    onPressed: () {
+                      // Add your navigation or action here
+                      log(poster.link ?? '');
+                      print(poster.link);
+                      launchURL(poster.link ?? '');
+                    },
+                  ),
+                ),
+              
+          ],
+        ),
       ),
     ),
   );
 }
+
+// Widget customPoster(
+//     {required BuildContext context, required Promotion poster}) {
+//   return Padding(
+//     padding: const EdgeInsets.symmetric(horizontal: 16),
+//     child: Column(
+//       children: [
+//         AspectRatio(
+//           aspectRatio: 3 / 4,
+//           child: Image.network(
+//             poster.media ?? '',
+//             fit: BoxFit.contain,
+//             errorBuilder: (context, error, stackTrace) {
+//               return Shimmer.fromColors(
+//                 baseColor: Colors.grey[300]!,
+//                 highlightColor: Colors.grey[100]!,
+//                 child: Container(
+//                   decoration: BoxDecoration(
+//                     color: Colors.grey[300],
+//                   ),
+//                 ),
+//               );
+//             },
+//             loadingBuilder: (context, child, loadingProgress) {
+//               if (loadingProgress == null) {
+//                 return child; // Image loaded successfully
+//               }
+//               // While the image is loading, show shimmer effect
+//               return Shimmer.fromColors(
+//                 baseColor: Colors.grey[300]!,
+//                 highlightColor: Colors.grey[100]!,
+//                 child: Container(
+//                   decoration: BoxDecoration(
+//                     color: Colors.grey[300],
+//                     borderRadius: BorderRadius.circular(8.0),
+//                   ),
+//                 ),
+//               );
+//             },
+//           ),
+//         ),
+//         Padding(
+//           padding:const EdgeInsets.only(left: 8, right: 8, bottom: 10),
+//           child: customButton(
+//             buttonHeight: 40,
+//             label: 'Know More',
+//             onPressed: (){}
+//           ),
+//            )
+//       ],
+//     ),
+
+//   );
+// }
 
 Widget customNotice(
     {required BuildContext context, required Promotion notice}) {
