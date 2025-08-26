@@ -15,7 +15,7 @@ dependencies:
   dotted_border: ^2.1.0
   flutter_riverpod: ^2.5.1
   http: ^1.2.2
-  image_picker: ^1.1.2
+  image_picker: ^1.2.0
   permission_handler: ^11.3.1
   http_parser: ^4.0.2
   dropdown_button2: ^2.3.9
