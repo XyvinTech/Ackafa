@@ -142,23 +142,20 @@ void messageSheet({
 }) {
   TextEditingController messageController = TextEditingController();
   showModalBottomSheet(
-    isScrollControlled: true, // Ensure the sheet size changes with the keyboard
+    isScrollControlled: true,
     context: context,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
     ),
     builder: (context) {
-      // Get the current view insets (keyboard height)
       final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-
       return Container(
         decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         child: Padding(
-          padding: EdgeInsets.only(
-              bottom: bottomInset), // Adjust padding for keyboard
+          padding: EdgeInsets.only(bottom: bottomInset),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -182,11 +179,10 @@ void messageSheet({
                     Padding(
                       padding: const EdgeInsets.only(
                           left: 20, right: 20, bottom: 10, top: 10),
-                      child: buildUserInfo(feed), // Reuse widget here
+                      child: buildUserInfo(feed),
                     ),
 
                     const SizedBox(height: 10),
-                    // Feed content in a row with image on the left and content on the right
                     if (feed.media != null && feed.media != '')
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -244,11 +240,10 @@ void messageSheet({
                           ),
                         ),
                         maxLines: 6,
-                        enabled: true, // Set to false to disable the TextField
+                        enabled: true,
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // Send button
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Consumer(
@@ -278,7 +273,6 @@ void messageSheet({
                   ],
                 ),
               ),
-              // Close button at the top right
               Positioned(
                 right: 5,
                 top: -50,
@@ -333,8 +327,7 @@ void showWebsiteSheet({
       return Form(
         key: _formKey,
         child: Stack(
-          clipBehavior:
-              Clip.none, // Allow content to overflow outside the stack
+          clipBehavior: Clip.none,
           children: [
             Padding(
               padding: EdgeInsets.only(
@@ -448,7 +441,7 @@ void showVideoLinkSheet({
         key: _formKey,
         child: Stack(
           clipBehavior:
-              Clip.none, // Allow content to overflow outside the stack
+              Clip.none, 
           children: [
             Padding(
               padding: EdgeInsets.only(
@@ -612,7 +605,7 @@ class _ShowEnterAwardSheetState extends State<ShowEnterAwardSheet> {
               ),
               const SizedBox(height: 10),
               FormField<File>(
-                initialValue: awardImage, // Updated to use awardImage in State
+                initialValue: awardImage, 
                 validator: (value) {
                   if (value == null) {
                     if (!isEditMode) {

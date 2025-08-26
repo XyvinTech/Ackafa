@@ -3,6 +3,7 @@ class MessageModel {
   final String? from;
   final String? to;
   final String? content;
+  final List<MessageAttachment>? attachments;
   final ChatFeed? feed;
   final String? status;
   final DateTime? createdAt;
@@ -14,6 +15,7 @@ class MessageModel {
     this.from,
     this.to,
     this.content,
+    this.attachments,
     this.feed,
     this.status,
     this.createdAt,
@@ -28,6 +30,11 @@ class MessageModel {
       from: json['from'] as String?,
       to: json['to'] as String?,
       content: json['content'] as String?,
+      attachments: json['attachments'] != null
+          ? (json['attachments'] as List)
+              .map((e) => MessageAttachment.fromJson(e))
+              .toList()
+          : null,
       feed: json['feed'] != null ? ChatFeed.fromJson(json['feed']) : null,
       status: json['status'] as String?,
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
@@ -43,11 +50,33 @@ class MessageModel {
       'from': from,
       'to': to,
       'content': content,
+      'attachments': attachments?.map((e) => e.toJson()).toList(),
       'feed': feed?.toJson(),
       'status': status,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
       '__v': v,
+    };
+  }
+}
+
+class MessageAttachment {
+  final String? url;
+  final String? type;
+
+  MessageAttachment({this.url, this.type});
+
+  factory MessageAttachment.fromJson(Map<String, dynamic> json) {
+    return MessageAttachment(
+      url: json['url'] as String?,
+      type: json['type'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'url': url,
+      'type': type,
     };
   }
 }

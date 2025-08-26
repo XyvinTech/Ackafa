@@ -4,10 +4,12 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   app_links
+  audioplayers_windows
   file_selector_windows
   firebase_auth
   firebase_core
   permission_handler_windows
+  record_windows
   share_plus
   syncfusion_pdfviewer_windows
   url_launcher_windows

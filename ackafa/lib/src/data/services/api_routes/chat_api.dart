@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'package:ackaf/src/data/models/group_chat_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:ackaf/src/data/globals.dart';
@@ -9,6 +8,8 @@ import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:ackaf/src/data/models/msg_model.dart';
+import 'package:ackaf/src/data/services/api_routes/image_upload.dart';
+import 'package:ackaf/src/data/services/api_routes/file_upload.dart';
 
 part 'chat_api.g.dart';
 
@@ -95,10 +96,11 @@ class SocketIoClient {
   }
 }
 
-Future<void> sendChatMessage(
+Future<bool> sendChatMessage(
     {required String userId,
-    required String content,
+    String? content,
     String? feedId,
+    List<MessageAttachment>? attachments,
     bool isGroup = false}) async {
   final url = Uri.parse('$baseUrl/chat/send-message/$userId');
   final headers = {
@@ -106,8 +108,18 @@ Future<void> sendChatMessage(
     'Authorization': 'Bearer $token',
     'Content-Type': 'application/json',
   };
-  final body =
-      jsonEncode({'content': content, 'isGroup': isGroup, 'feed': feedId});
+  final body = jsonEncode({
+    if (content != null) 'content': content,
+    'isGroup': isGroup,
+    if (feedId != null) 'feed': feedId,
+    if (attachments != null)
+      'attachments': attachments
+          .map((a) => {
+                'url': a.url,
+                'type': a.type,
+              })
+          .toList(),
+  });
 
   try {
     final response = await http.post(
@@ -119,13 +131,58 @@ Future<void> sendChatMessage(
     if (response.statusCode == 200 || response.statusCode == 201) {
       // Successfully sent the message
       print('Message sent: ${response.body}');
+      return true;
     } else {
       // Handle errors here
       print(json.decode(response.body)['message']);
       print('Failed to send message: ${response.statusCode}');
+      return false;
     }
   } catch (e) {
     print('Error occurred: $e');
+    return false;
+  }
+}
+
+Future<bool> sendImageMessage(
+    {required String userId, required String imagePath}) async {
+  try {
+    final uploadedUrl = await imageUpload(imagePath);
+    return await sendChatMessage(
+      userId: userId,
+      attachments: [MessageAttachment(url: uploadedUrl, type: 'image')],
+    );
+  } catch (e) {
+    log('Error sending image message: $e');
+    return false;
+  }
+}
+
+Future<bool> sendDocumentMessage(
+    {required String userId, required String filePath}) async {
+  try {
+    final uploadedUrl = await uploadFile(filePath);
+    return await sendChatMessage(
+      userId: userId,
+      attachments: [MessageAttachment(url: uploadedUrl, type: 'file')],
+    );
+  } catch (e) {
+    print('Error sending document message: $e');
+    return false;
+  }
+}
+
+Future<bool> sendVoiceMessage(
+    {required String userId, required String audioPath}) async {
+  try {
+    final uploadedUrl = await uploadFile(audioPath);
+    return await sendChatMessage(
+      userId: userId,
+      attachments: [MessageAttachment(url: uploadedUrl, type: 'voice')],
+    );
+  } catch (e) {
+    print('Error sending voice message: $e');
+    return false;
   }
 }
 

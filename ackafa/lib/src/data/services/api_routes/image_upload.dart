@@ -29,14 +29,14 @@ Future<String> imageUpload(String imagePath) async {
 
   var request = http.MultipartRequest(
     'POST',
-      Uri.parse('$baseUrl/upload'),
+    Uri.parse('$baseUrl/upload'),
   );
   request.files.add(await http.MultipartFile.fromPath('image', imageFile.path));
 
   var response = await request.send();
-
+  var responseBody = await response.stream.bytesToString();
+  log(responseBody.toString());
   if (response.statusCode == 200) {
-    var responseBody = await response.stream.bytesToString();
     return extractImageUrl(responseBody);
   } else {
     throw Exception('Failed to upload image');
