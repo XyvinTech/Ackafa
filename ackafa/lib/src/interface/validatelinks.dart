@@ -28,6 +28,7 @@ bool? isValidUrl(String? url) {
 String? validateEmiratesId(String? value, {required String phoneNumber}) {
   List<String> bypassPhoneNumbers = [
     '+918547516733',
+    '+911234567890',
     '+919778945854',
     '+916282864614',
     '+971567883132',

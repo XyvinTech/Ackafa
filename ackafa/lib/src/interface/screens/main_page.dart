@@ -14,7 +14,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
-import 'package:ackaf/src/interface/screens/main_pages/event_news_page.dart';
 
 import 'package:ackaf/src/interface/screens/main_pages/home_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/people_page.dart';
@@ -138,7 +137,14 @@ class _MainPageState extends ConsumerState<MainPage> {
           return LoginPage();
         },
         data: (user) {
-          switch (user.status?.toLowerCase()??'inactive') {
+          // If payments are disabled, treat payment-related statuses as active
+          String adjustedStatus = user.status?.toLowerCase() ?? 'inactive';
+          if (!isPaymentEnabled &&
+              (adjustedStatus == 'awaiting_payment' ||
+                  adjustedStatus == 'subscription_expired')) {
+            adjustedStatus = 'active';
+          }
+          switch (adjustedStatus) {
             case 'inactive':
                         return UserInactivePage();
             case 'awaiting_payment':
