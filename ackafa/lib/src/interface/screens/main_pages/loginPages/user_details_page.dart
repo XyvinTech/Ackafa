@@ -687,12 +687,23 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
                                     ),
                                     const SizedBox(height: 20.0),
                                     CustomTextFormField(
-                                      validator: (value) => validateEmiratesId(
-                                          value,
-                                          phoneNumber: user.phone ?? ''),
-                                      textController: emiratesIdController,
-                                      labelText: 'Enter Your Emirates ID',
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please Enter Your Email ID';
+                                        }
+                                        return null;
+                                      },
+                                      textController: emailController,
+                                      labelText: 'Enter Your Email ID',
                                     ),
+                                    const SizedBox(height: 20.0),
+                                    // CustomTextFormField(
+                                    //   validator: (value) => validateEmiratesId(
+                                    //       value,
+                                    //       phoneNumber: user.phone ?? ''),
+                                    //   textController: emiratesIdController,
+                                    //   labelText: 'Enter Your Emirates ID',
+                                    // ),
 
                                     const SizedBox(height: 20.0),
                                     // CustomTextFormField(

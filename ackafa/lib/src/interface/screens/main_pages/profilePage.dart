@@ -162,12 +162,12 @@ class ProfilePage extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 0,
-                              blurRadius: 1,
-                              offset: const Offset(.5, .5),
-                            ),
+                            // BoxShadow(
+                            //   color: Colors.grey.withOpacity(0.5),
+                            //   spreadRadius: 0,
+                            //   blurRadius: 1,
+                            //   offset: const Offset(.5, .5),
+                            // ),
                           ],
                         ),
                         child: Column(
@@ -230,40 +230,40 @@ class ProfilePage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(15.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: const Color.fromARGB(255, 237, 231, 231)),
-                          color: Color(0xFFE30613),
-                          borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20)),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                text: 'Emirates ID: ',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: user.emiratesID,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Container(
+                      //   padding: const EdgeInsets.all(15.0),
+                      //   decoration: BoxDecoration(
+                      //     border: Border.all(
+                      //         color: const Color.fromARGB(255, 237, 231, 231)),
+                      //     color: Color(0xFFE30613),
+                      //     borderRadius: const BorderRadius.only(
+                      //         bottomLeft: Radius.circular(20),
+                      //         bottomRight: Radius.circular(20)),
+                      //   ),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: [
+                      //       RichText(
+                      //         text: TextSpan(
+                      //           text: 'Emirates ID: ',
+                      //           style: const TextStyle(
+                      //             color: Colors.white,
+                      //             fontWeight: FontWeight.normal,
+                      //           ),
+                      //           children: <TextSpan>[
+                      //             TextSpan(
+                      //               text: user.emiratesID,
+                      //               style: const TextStyle(
+                      //                 fontWeight: FontWeight.bold,
+                      //                 color: Colors.white,
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       const SizedBox(height: 20),
                     ],
                   ),

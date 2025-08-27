@@ -255,16 +255,16 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                   labelText:
                                                       'Enter your  Email ID'),
                                               const SizedBox(height: 20.0),
-                                              _createLabel('Emirates ID', true),
-                                              CustomTextFormField(
-                                                  validator: (value) =>
-                                                      validateEmiratesId(value,
-                                                          phoneNumber:
-                                                              user.phone ?? ''),
-                                                  textController:
-                                                      emirateIDController,
-                                                  labelText:
-                                                      'Enter your  Emirates ID'),
+                                              // _createLabel('Emirates ID', true),
+                                              // CustomTextFormField(
+                                              //     validator: (value) =>
+                                              //         validateEmiratesId(value,
+                                              //             phoneNumber:
+                                              //                 user.phone ?? ''),
+                                              //     textController:
+                                              //         emirateIDController,
+                                              //     labelText:
+                                              //         'Enter your  Emirates ID'),
                                               const SizedBox(height: 20.0),
                                               _createLabel('College', true),
                                               FormField<College>(
