@@ -358,22 +358,22 @@ class MenuPage extends StatelessWidget {
                           );
                         },
                       ),
-// if(user.phone!='+919645398555')
-//                       const Divider(),
-// if(user.phone!='+919645398555')
-//                       _buildListTile(
-//                         context,
-//                         Icons.loyalty_outlined,
-//                         'My Subscriptions',
-//                         onTap: () {
-//                           Navigator.push(
-//                             context,
-//                             MaterialPageRoute(
-//                                 builder: (context) =>
-//                                     const MySubscriptionPage()),
-//                           );
-//                         },
-//                       ),
+                      if (user.phone != '+919645398555' && isPaymentEnabled)
+                        const Divider(),
+                      if (user.phone != '+919645398555' && isPaymentEnabled)
+                        _buildListTile(
+                          context,
+                          Icons.loyalty_outlined,
+                          'My Subscriptions',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MySubscriptionPage()),
+                            );
+                          },
+                        ),
                       if (user.role != 'member') const Divider(),
                       if (user.role != 'member')
                         _buildListTile(
