@@ -3,8 +3,7 @@ import 'dart:io';
 
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/college_model.dart';
-import 'package:ackaf/src/data/models/user_model.dart';
-import 'package:ackaf/src/data/providers/loading_notifier.dart';
+// removed unused imports
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/college_api.dart';
 import 'package:ackaf/src/data/services/api_routes/image_upload.dart';
@@ -20,7 +19,6 @@ import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_comple
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/subcription_expired_page.dart';
 
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
-import 'package:ackaf/src/interface/validatelinks.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,6 +36,15 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emirateIDController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  
+  String _resolveUserStatus(String? status) {
+    final s = status?.toLowerCase() ?? 'inactive';
+    if (!isPaymentEnabled &&
+        (s == 'awaiting_payment' || s == 'subscription_expired')) {
+      return 'active';
+    }
+    return s;
+  }
   Future<void> _pickImage(ImageSource source, context) async {
     _pickFile(source);
   }
@@ -413,7 +420,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                         height: 50,
                                         child: customButton(
                                             fontSize: 16,
-                                            label: user.status == 'inactive'
+                                            label: _resolveUserStatus(user.status) == 'inactive'
                                                 ? 'Send Request'
                                                 : 'Next',
                                             onPressed: () async {
@@ -452,17 +459,16 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                           context: context);
 
                                                   if (response) {
-                                                    log('user status: ${user.status}');
-                                                    if (user.status ==
-                                                        'active') {
+                                                    final resolved = _resolveUserStatus(user.status);
+                                                    log('user status: ${user.status} -> $resolved');
+                                                    if (resolved == 'active') {
                                                       Navigator.of(context)
                                                           .pushReplacement(
                                                               MaterialPageRoute(
                                                                   builder:
                                                                       (context) =>
                                                                           ProfileCompletionScreen()));
-                                                    } else if (user.status ==
-                                                        'awaiting_payment') {
+                                                    } else if (resolved == 'awaiting_payment') {
                                                       log('im in payment condition ok');
                                                       Navigator.of(context)
                                                           .pushReplacement(
@@ -501,13 +507,13 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
               );
               // } else if (user.status == 'accepted') {
               //   return DetailsPage();
-            } else if (user.status == 'active') {
+            } else if (_resolveUserStatus(user.status) == 'active') {
               log('im in active condition');
               return ProfileCompletionScreen();
-            } else if (user.status == 'inactive') {
+            } else if (_resolveUserStatus(user.status) == 'inactive') {
               log('im in inactive condition');
               return const UserInactivePage();
-            } else if (user.status == 'subscription_expired') {
+            } else if (_resolveUserStatus(user.status) == 'subscription_expired') {
               log('im in subscription expired condition');
               return const SubcriptionExpiredPage();
             } else {
