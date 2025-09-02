@@ -1,3 +1,4 @@
+import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/notifires/approval_notifier.dart';
 import 'package:ackaf/src/data/services/api_routes/approval_api.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
@@ -84,7 +85,7 @@ class ApprovalPendingWidget extends StatelessWidget {
                 onChanged: (value) async {
                   if (value == 'approve') {
                     bool result = await userApi.updateUserStatus(
-                        userId: userId, status: 'active', reason: '');
+                        userId: userId, status:isPaymentEnabled?'awaiting_payment': 'active', reason: '');
 
                     if (result) {
                            CustomSnackbar.showSnackbar(context, 'Approved!');
