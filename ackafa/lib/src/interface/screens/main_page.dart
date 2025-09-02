@@ -67,6 +67,15 @@ class MainPage extends ConsumerStatefulWidget {
 class _MainPageState extends ConsumerState<MainPage> {
   late final webSocketClient;
 
+  String _resolveUserStatus(UserModel user) {
+    String status = user.status?.toLowerCase() ?? 'inactive';
+    if (!isPaymentEnabled &&
+        (status == 'awaiting_payment' || status == 'subscription_expired')) {
+      return 'active';
+    }
+    return status;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -137,14 +146,8 @@ class _MainPageState extends ConsumerState<MainPage> {
           return LoginPage();
         },
         data: (user) {
-          // If payments are disabled, treat payment-related statuses as active
-          String adjustedStatus = user.status?.toLowerCase() ?? 'inactive';
-          if (!isPaymentEnabled &&
-              (adjustedStatus == 'awaiting_payment' ||
-                  adjustedStatus == 'subscription_expired')) {
-            adjustedStatus = 'active';
-          }
-          switch (adjustedStatus) {
+          String resolvedStatus = _resolveUserStatus(user);
+          switch (resolvedStatus) {
             case 'inactive':
                         return UserInactivePage();
             case 'awaiting_payment':

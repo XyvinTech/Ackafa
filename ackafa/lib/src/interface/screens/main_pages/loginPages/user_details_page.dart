@@ -267,13 +267,13 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
 
     final Map<String, dynamic> profileData = {
       "fullName": user.fullName,
-      "emiratesID": user.emiratesID,
+      // "emiratesID": user.emiratesID,
       "email": user.email,
       if (user.image != null && user.image != '') "image": user.image,
       "college": user.college?.id,
       if (user.address != null) "address": user.address ?? '',
       if (user.bio != null) "bio": user.bio ?? '',
-      if (user.emiratesID != null) "emiratesID": user.emiratesID ?? '',
+      // if (user.emiratesID != null) "emiratesID": user.emiratesID ?? '',
       "company": {
         if (user.company?.name != null) "name": user.company?.name ?? '',
         if (user.company?.designation != null)
@@ -412,9 +412,9 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
               if (firstNameController.text.isEmpty) {
                 firstNameController.text = user.fullName!;
               }
-              if (emiratesIdController.text.isEmpty) {
-                emiratesIdController.text = user.emiratesID ?? '';
-              }
+              // if (emiratesIdController.text.isEmpty) {
+              //   emiratesIdController.text = user.emiratesID ?? '';
+              // }
 
               if (collegeController.text.isEmpty) {
                 collegeController.text = user.college?.collegeName ?? '';

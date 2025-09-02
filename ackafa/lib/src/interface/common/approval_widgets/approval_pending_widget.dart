@@ -84,7 +84,7 @@ class ApprovalPendingWidget extends StatelessWidget {
                 onChanged: (value) async {
                   if (value == 'approve') {
                     bool result = await userApi.updateUserStatus(
-                        userId: userId, status: 'awaiting_payment', reason: '');
+                        userId: userId, status: 'active', reason: '');
 
                     if (result) {
                            CustomSnackbar.showSnackbar(context, 'Approved!');

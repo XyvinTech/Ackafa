@@ -21,7 +21,7 @@ class ApiRoutes {
       {required String token,
       required String? profileUrl,
       required String? name,
-      required String? emiratesID,
+      // required String? emiratesID,
       required String? emailId,
       required String? college,
       required String? batch,
@@ -41,7 +41,7 @@ class ApiRoutes {
         "email": emailId,
         "college": college,
         "batch": batch,
-        "emiratesID": emiratesID,
+        // "emiratesID": emiratesID,
       }),
     );
 
@@ -300,6 +300,7 @@ class ApiRoutes {
 
   Future<String> editUser(Map<String, dynamic> profileData) async {
     final url = Uri.parse('$baseUrl/user/update');
+    log('HITTING UPDATE profile data:$baseUrl/user/update');
     log('updated profile data:$profileData');
     final response = await http.patch(
       url,
@@ -552,30 +553,29 @@ class ApiRoutes {
       return false;
     }
   }
-  
-Future<UserModel> fetchUserDetails(userId) async {
-  final url = Uri.parse('$baseUrl/user/single/$userId');
-  print('Requesting URL: $url');
-  final response = await http.get(
-    url,
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer $token"
-    },
-  );
-  print('hello');
-  log(response.body);
-  if (response.statusCode == 200) {
-    final dynamic data = json.decode(response.body)['data'];
 
-    return UserModel.fromJson(data);
-  } else {
-    print(json.decode(response.body)['message']);
+  Future<UserModel> fetchUserDetails(userId) async {
+    final url = Uri.parse('$baseUrl/user/single/$userId');
+    print('Requesting URL: $url');
+    final response = await http.get(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      },
+    );
+    print('hello');
+    log(response.body);
+    if (response.statusCode == 200) {
+      final dynamic data = json.decode(response.body)['data'];
 
-    throw Exception(json.decode(response.body)['message']);
+      return UserModel.fromJson(data);
+    } else {
+      print(json.decode(response.body)['message']);
+
+      throw Exception(json.decode(response.body)['message']);
+    }
   }
-}
-
 }
 
 @riverpod

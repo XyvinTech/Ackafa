@@ -434,9 +434,9 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
 
                                                   final response = await userApi
                                                       .registerUser(
-                                                          emiratesID:
-                                                              emirateIDController
-                                                                  .text,
+                                                          // emiratesID:
+                                                          //     emirateIDController
+                                                          //         .text,
                                                           token: token,
                                                           profileUrl:
                                                               profileImageUrl,

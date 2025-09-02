@@ -140,7 +140,7 @@ class PaymentConfirmationPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       const Text(
-                        'You Will Receive Payment Link SOon',
+                        'You Will Receive Payment Link Soon',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
