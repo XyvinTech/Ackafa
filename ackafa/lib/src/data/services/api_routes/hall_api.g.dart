@@ -155,8 +155,6 @@ class FetchHallBookingsProvider
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
 mixin FetchHallBookingsRef on AutoDisposeFutureProviderRef<List<HallBooking>> {
   /// The parameter `date` of this provider.
   String get date;
@@ -292,8 +290,6 @@ class FetchBookedDatesProvider
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
 mixin FetchBookedDatesRef on AutoDisposeFutureProviderRef<List<DateTime?>> {
   /// The parameter `month` of this provider.
   String get month;
@@ -321,8 +317,6 @@ final fetchHallsProvider = AutoDisposeFutureProvider<List<Hall>>.internal(
   allTransitiveDependencies: null,
 );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
 typedef FetchHallsRef = AutoDisposeFutureProviderRef<List<Hall>>;
 String _$fetchMyHallBookingsHash() =>
     r'0056f213824e9775326fb3935f2233f0c420d343';
@@ -454,8 +448,6 @@ class FetchMyHallBookingsProvider
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
 mixin FetchMyHallBookingsRef
     on AutoDisposeFutureProviderRef<List<HallBooking>> {
   /// The parameter `pageNo` of this provider.
@@ -491,9 +483,7 @@ final fetchHallTimesProvider =
   allTransitiveDependencies: null,
 );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
 typedef FetchHallTimesRef
     = AutoDisposeFutureProviderRef<List<AvailableTimeModel>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

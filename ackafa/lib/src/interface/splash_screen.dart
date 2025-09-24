@@ -103,7 +103,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 Navigator.pushReplacementNamed(context, '/mainpage').then((_) {
                   _deepLinkService.handleDeepLink(pendingDeepLink);
                   _deepLinkService.clearPendingDeepLink();
-                });
+                }
+                );
               } else {
                 Navigator.pushReplacementNamed(context, '/mainpage');
               }

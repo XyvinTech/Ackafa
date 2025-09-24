@@ -229,10 +229,11 @@ class MenuPage extends StatelessWidget {
         return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
+              toolbarHeight: 80,
               backgroundColor: Colors.white,
               scrolledUnderElevation: 0,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
+                icon: const Icon(Icons.close),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -248,343 +249,355 @@ class MenuPage extends StatelessWidget {
               },
               data: (user) {
                 print(user);
-                return SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Profile and Edit Section
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Profile Image
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(9),
-                              child: Image.network(
-                                user.image ?? '',
-                                height: 70,
-                                width: 75,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Image.asset(
-                                      'assets/icons/dummy_person_small.png');
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-
-                            // User Info (Name and Phone)
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${user.fullName ?? ''}',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    overflow: TextOverflow
-                                        .ellipsis, // Truncate text if too long
-                                  ),
-                                  Text(
-                                    user.phone!,
-                                    style: const TextStyle(
-                                        fontSize: 16, color: Colors.grey),
-                                    overflow: TextOverflow
-                                        .ellipsis, // Truncate phone number if necessary
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            // "Edit" Button
-                            TextButton(
-                              onPressed: () {
+                            
+                            // Account Section Label
+                      
+                            const SizedBox(height: 13),
+                      
+                            // Container(
+                            //   height: 50,
+                            //   width: double.infinity,
+                            //   color: const Color(0xFFF2F2F2),
+                            //   child: const Padding(
+                            //     padding: EdgeInsets.only(left: 16.0),
+                            //     child: Row(
+                            //       children: [
+                            //         Text(
+                            //           'ACCOUNT',
+                            //           style: TextStyle(
+                            //             fontWeight: FontWeight.bold,
+                            //             color: Colors.grey,
+                            //           ),
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+                      
+                            _buildListTile(
+                              context,
+                              Icons.credit_card,
+                              'Request NFC',
+                              onTap: () {
                                 Navigator.push(
                                   context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) =>
-                                        const DetailsPage(),
-                                    transitionDuration:
-                                        const Duration(milliseconds: 500),
-                                    transitionsBuilder: (_, a, __, c) =>
-                                        FadeTransition(opacity: a, child: c),
-                                  ),
+                                  MaterialPageRoute(
+                                      builder: (context) => RequestNFCPage()),
                                 );
                               },
-                              child: const Text(
-                                'Edit',
-                                style: TextStyle(color: Colors.red),
-                              ),
                             ),
+                            if (user.phone != '+919645398555' && isPaymentEnabled)
+                              // const Divider(),
+                            if (user.phone != '+919645398555' && isPaymentEnabled)
+                              _buildListTile(
+                                context,
+                                Icons.loyalty_outlined,
+                                'My Subscriptions',
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const MySubscriptionPage()),
+                                  );
+                                },
+                              ),
+                            if (user.role != 'member') 
+                            // const Divider(),
+                            if (user.role != 'member')
+                              _buildListTile(
+                                context,
+                                Icons.edit_calendar_outlined,
+                                'Hall Booking',
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HallBookingPage()),
+                                  );
+                                },
+                              ),
+                            // const Divider(),
+                            _buildListTile(
+                              context,
+                              Icons.event,
+                              'My Events',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const MyEventsPage()),
+                                );
+                              },
+                            ),
+                            // const Divider(),
+                      
+                            _buildListTile(
+                              context,
+                              Icons.notifications_none,
+                              'My Posts',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyPostsPage()),
+                                );
+                              },
+                            ),
+                      
+                            // const Divider(),
+                            _buildListTile(
+                              context,
+                              Icons.info_outline,
+                              'About us',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AboutPage()),
+                                );
+                              },
+                            ),
+                            // const Divider(),
+                            _buildListTile(
+                              context,
+                              Icons.article_outlined,
+                              'Privacy policy',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PrivacyPolicyPage()),
+                                );
+                              },
+                            ),
+                            // const Divider(),
+                            _buildListTile(
+                              context,
+                              Icons.description_outlined,
+                              'Terms & condition',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TermsAndConditionsPage()),
+                                );
+                              },
+                            ),
+                      
+                            // Spacing before Logout and Delete
+                            // Container(color: const Color(0xFFF2F2F2), height: 15),
+                      
+                            // Logout and Delete Account
+                            _buildListTile(
+                              context,
+                              Icons.logout,
+                              'Logout',
+                              textColor: Colors.black,
+                              onTap: () => showLogoutDialog(context),
+                            ),
+                            // Container(color: const Color(0xFFF2F2F2), height: 15),
+                      
+                            // Column(
+                            //   children: [
+                            //     Padding(
+                            //       padding: const EdgeInsets.symmetric(),
+                            //       child: _buildListTile(
+                            //           context, Icons.delete, 'Delete account',
+                            //           onTap: () => showDeleteAccountDialog(context),
+                            //           IconColor: Colors.red),
+                            //     ),
+                            //   ],
+                            // ),
+                      
+                           
+                            
+                      
+                      
+                            //company profile
+                            // Padding(
+                            //   padding: const EdgeInsets.all(15.0),
+                            //   child: Center(
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       children: [
+                            //         GestureDetector(
+                            //           onTap: () {
+                            //             Navigator.push(
+                            //               context,
+                            //               MaterialPageRoute(
+                            //                 builder: (context) => const WebViewScreen(
+                            //                   color: Colors.blue,
+                            //                   url: 'https://www.skybertech.com/',
+                            //                   title: 'Skybertech',
+                            //                 ),
+                            //               ),
+                            //             );
+                            //           },
+                            //           child: Container(
+                            //             decoration: BoxDecoration(
+                            //                 borderRadius: BorderRadius.circular(10),
+                            //                 border: Border.all(color: Colors.grey),
+                            //                 color: const Color.fromARGB(
+                            //                     255, 246, 246, 246)),
+                            //             child: Column(
+                            //               children: [
+                            //                 Padding(
+                            //                   padding: const EdgeInsets.only(
+                            //                       top: 10, left: 22, right: 22),
+                            //                   child: Text(
+                            //                     'Powered by',
+                            //                     style: TextStyle(
+                            //                         fontSize: 12, color: Colors.grey),
+                            //                   ),
+                            //                 ),
+                            //                 Image.asset(
+                            //                   scale: 15,
+                            //                   'assets/skybertechlogo.png',
+                            //                 ),
+                            //               ],
+                            //             ),
+                            //           ),
+                            //         ),
+                            //         SizedBox(
+                            //           width: 10,
+                            //         ),
+                            //         GestureDetector(
+                            //           onTap: () {
+                            //             Navigator.push(
+                            //               context,
+                            //               MaterialPageRoute(
+                            //                 builder: (context) => const WebViewScreen(
+                            //                   color: Colors.deepPurpleAccent,
+                            //                   url: 'https://www.acutendeavors.com/',
+                            //                   title: 'ACUTE ENDEAVORS',
+                            //                 ),
+                            //               ),
+                            //             );
+                            //           },
+                            //           child: Container(
+                            //             decoration: BoxDecoration(
+                            //                 borderRadius: BorderRadius.circular(10),
+                            //                 border: Border.all(color: Colors.grey),
+                            //                 color: const Color.fromARGB(
+                            //                     255, 246, 246, 246)),
+                            //             child: Padding(
+                            //               padding: const EdgeInsets.symmetric(
+                            //                   horizontal: 15, vertical: 8),
+                            //               child: Column(
+                            //                 children: [
+                            //                   Padding(
+                            //                     padding: const EdgeInsets.only(
+                            //                         top: 2, bottom: 3),
+                            //                     child: Text(
+                            //                       'Developed by',
+                            //                       style: TextStyle(
+                            //                           fontSize: 12,
+                            //                           color: Colors.grey),
+                            //                     ),
+                            //                   ),
+                            //                   SizedBox(
+                            //                     height: 10,
+                            //                   ),
+                            //                   Padding(
+                            //                     padding:
+                            //                         const EdgeInsets.only(bottom: 7),
+                            //                     child: Image.asset(
+                            //                       scale: 25,
+                            //                       'assets/acutelogo.png',
+                            //                     ),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+                            // Container(color: const Color(0xFFF2F2F2), height: 20),
                           ],
                         ),
                       ),
-
-                      // Account Section Label
-
-                      const SizedBox(height: 13),
-
-                      Container(
-                        height: 50,
-                        width: double.infinity,
-                        color: const Color(0xFFF2F2F2),
-                        child: const Padding(
-                          padding: EdgeInsets.only(left: 16.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                'ACCOUNT',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      _buildListTile(
-                        context,
-                        Icons.credit_card,
-                        'Request NFC',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => RequestNFCPage()),
-                          );
-                        },
-                      ),
-                      if (user.phone != '+919645398555' && isPaymentEnabled)
-                        const Divider(),
-                      if (user.phone != '+919645398555' && isPaymentEnabled)
-                        _buildListTile(
-                          context,
-                          Icons.loyalty_outlined,
-                          'My Subscriptions',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const MySubscriptionPage()),
-                            );
-                          },
-                        ),
-                      if (user.role != 'member') const Divider(),
-                      if (user.role != 'member')
-                        _buildListTile(
-                          context,
-                          Icons.edit_calendar_outlined,
-                          'Hall Booking',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HallBookingPage()),
-                            );
-                          },
-                        ),
-                      const Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.event,
-                        'My Events',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MyEventsPage()),
-                          );
-                        },
-                      ),
-                      const Divider(),
-
-                      _buildListTile(
-                        context,
-                        Icons.notifications_none,
-                        'My Posts',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MyPostsPage()),
-                          );
-                        },
-                      ),
-
-                      const Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.info_outline,
-                        'About us',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AboutPage()),
-                          );
-                        },
-                      ),
-                      const Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.article_outlined,
-                        'Privacy policy',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PrivacyPolicyPage()),
-                          );
-                        },
-                      ),
-                      const Divider(),
-                      _buildListTile(
-                        context,
-                        Icons.description_outlined,
-                        'Terms & condition',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TermsAndConditionsPage()),
-                          );
-                        },
-                      ),
-
-                      // Spacing before Logout and Delete
-                      Container(color: const Color(0xFFF2F2F2), height: 15),
-
-                      // Logout and Delete Account
-                      _buildListTile(
-                        context,
-                        Icons.logout,
-                        'Logout',
-                        textColor: Colors.black,
-                        onTap: () => showLogoutDialog(context),
-                      ),
-                      Container(color: const Color(0xFFF2F2F2), height: 15),
-
-                      // Column(
-                      //   children: [
-                      //     Padding(
-                      //       padding: const EdgeInsets.symmetric(),
-                      //       child: _buildListTile(
-                      //           context, Icons.delete, 'Delete account',
-                      //           onTap: () => showDeleteAccountDialog(context),
-                      //           IconColor: Colors.red),
-                      //     ),
-                      //   ],
-                      // ),
-
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const WebViewScreen(
-                                        color: Colors.blue,
-                                        url: 'https://www.skybertech.com/',
-                                        title: 'Skybertech',
-                                      ),
+                    ),
+                    Divider(height: 1,),
+                    // Profile and Edit Section
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                children: [
+                                  // Profile Image
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(9),
+                                    child: Image.network(
+                                      user.image ?? '',
+                                      height: 70,
+                                      width: 75,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Image.asset(
+                                            'assets/icons/dummy_person_small.png');
+                                      },
                                     ),
-                                  );
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: Colors.grey),
-                                      color: const Color.fromARGB(
-                                          255, 246, 246, 246)),
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 10, left: 22, right: 22),
-                                        child: Text(
-                                          'Powered by',
-                                          style: TextStyle(
-                                              fontSize: 12, color: Colors.grey),
-                                        ),
-                                      ),
-                                      Image.asset(
-                                        scale: 15,
-                                        'assets/skybertechlogo.png',
-                                      ),
-                                    ],
                                   ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const WebViewScreen(
-                                        color: Colors.deepPurpleAccent,
-                                        url: 'https://www.acutendeavors.com/',
-                                        title: 'ACUTE ENDEAVORS',
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: Colors.grey),
-                                      color: const Color.fromARGB(
-                                          255, 246, 246, 246)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 8),
+                                  const SizedBox(width: 16),
+                      
+                                  // User Info (Name and Phone)
+                                  Expanded(
                                     child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 2, bottom: 3),
-                                          child: Text(
-                                            'Developed by',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.grey),
+                                        Text(
+                                          '${user.fullName ?? ''}',
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
                                           ),
+                                          overflow: TextOverflow
+                                              .ellipsis, // Truncate text if too long
                                         ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 7),
-                                          child: Image.asset(
-                                            scale: 25,
-                                            'assets/acutelogo.png',
-                                          ),
+                                        Text(
+                                          user.phone!,
+                                          style: const TextStyle(
+                                              fontSize: 16, color: Colors.grey),
+                                          overflow: TextOverflow
+                                              .ellipsis, // Truncate phone number if necessary
                                         ),
                                       ],
                                     ),
                                   ),
-                                ),
+                      
+                                  // "Edit" Button
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (_, __, ___) =>
+                                              const DetailsPage(),
+                                          transitionDuration:
+                                              const Duration(milliseconds: 500),
+                                          transitionsBuilder: (_, a, __, c) =>
+                                              FadeTransition(opacity: a, child: c),
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(Icons.arrow_right_outlined)
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(color: const Color(0xFFF2F2F2), height: 20),
-                    ],
-                  ),
+                            ),
+                      
+                  ],
                 );
               },
             ));
@@ -605,17 +618,22 @@ class MenuPage extends StatelessWidget {
       Function()? onTap,
       Color IconColor = const Color(0xFF585858)}) {
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.white,
-        child: Icon(icon, color: IconColor),
-      ),
-      title: Text(title, style: TextStyle(color: textColor)),
-      trailing: SvgPicture.asset(
-        'assets/icons/polygon.svg',
-        height: 16,
-        width: 16,
-        color: const Color(0xFFC4C4C4),
-      ),
+      // leading: CircleAvatar(
+      //   backgroundColor: Colors.white,
+      //   child: Icon(icon, color: IconColor),
+      // ),
+      title: Text(title, style: TextStyle(
+        fontFamily: 'helvetica-neue',
+        fontWeight: FontWeight.w500,
+        
+        fontSize: 23,
+        color: textColor)),
+      // trailing: SvgPicture.asset(
+      //   'assets/icons/polygon.svg',
+      //   height: 16,
+      //   width: 16,
+      //   color: const Color(0xFFC4C4C4),
+      // ),
       onTap: onTap ??
           () {
             // Handle list item tap

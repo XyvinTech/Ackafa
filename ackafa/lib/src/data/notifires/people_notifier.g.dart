@@ -6,7 +6,7 @@ part of 'people_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$peopleNotifierHash() => r'2319ad46b604ab8f79e1d75fc2bcea163d115b50';
+String _$peopleNotifierHash() => r'484520abfc42dd6e0c28e5ab9e4808cec3cad5bd';
 
 /// See also [PeopleNotifier].
 @ProviderFor(PeopleNotifier)
@@ -39,4 +39,4 @@ final usersNotifierProvider =
 
 typedef _$UsersNotifier = AutoDisposeNotifier<List<UserModel>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

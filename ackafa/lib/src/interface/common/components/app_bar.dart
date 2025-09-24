@@ -48,7 +48,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool iselevationNeeded;
   final bool isThreeDashNeeded;
   const CustomAppBar(
-      {Key? key, this.iselevationNeeded = true, this.isThreeDashNeeded = false})
+      {Key? key, this.iselevationNeeded = false, this.isThreeDashNeeded = false})
       : super(key: key);
 
   @override
@@ -65,12 +65,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       child: AppBar(
-        toolbarHeight: 45.0,
+        toolbarHeight: 50,
         scrolledUnderElevation: 0,
         backgroundColor: Colors.white,
         elevation: 0,
-        leadingWidth: 100,
-        leading: Padding(
+        leadingWidth: 80,
+        title: Padding(
           padding: const EdgeInsets.only(left: 10),
           child: SizedBox(
             width: 100,
@@ -81,6 +81,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
         ),
+        centerTitle: true,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MenuPage()),
+            );
+          },
+          child: const Icon(Icons.menu, size: 20)
+        ),
+
+        
         actions: [
           Consumer(
             builder: (context, ref, child) {
@@ -203,17 +215,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               );
             },
           ),
-          if (isThreeDashNeeded)
-            IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MenuPage()), // Hardcoded action
-                );
-              },
-            ),
+          // if (isThreeDashNeeded)
+          //   IconButton(
+          //     icon: const Icon(Icons.menu),
+          //     onPressed: () {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //             builder: (context) => MenuPage()), // Hardcoded action
+          //       );
+          //     },
+          //   ),
         ],
       ),
     );

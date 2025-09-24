@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+
+class CustomIconContainer extends StatelessWidget {
+  final Widget icon;
+  // final String label;
+  final double size;
+  final VoidCallback? onTap;
+
+  const CustomIconContainer({
+    super.key,
+    required this.icon,
+    // required this.label,
+    this.size = 80.0,
+    this.onTap,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: size - 5,
+        height: size + 10,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.0),
+          // gradient: const LinearGradient(
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.bottomRight,
+          //   colors: [
+          //     // Color(0x802EA7FF),
+          //     Color(0xFF275E82),
+          //     // Color(0x331C1B33),
+          //     Color(0xFF12284F),  
+          //   ],
+          //   stops: [0.0, .7],
+          // ),
+          border: Border.all(
+            color: 
+            // Color(0x1A17B9FF),
+            Color(0x33FFFFFF),
+            width: 1,
+          ),
+          // boxShadow: const [
+          //   BoxShadow(
+          //     color: Color(0x6617B9FF), 
+          //     blurRadius: 1,
+          //     // offset: Offset(2, 2),
+          //   ),
+          // ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            icon,
+            
+              
+          ],
+        ),
+      ),
+    );
+  }
+}

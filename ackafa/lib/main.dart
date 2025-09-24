@@ -4,6 +4,7 @@ import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:ackaf/src/data/services/deep_link_service.dart';
 import 'package:ackaf/src/data/services/notification_service.dart';
+import 'package:ackaf/src/interface/screens/event_news/events_page.dart';
 import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_completetion_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
@@ -51,27 +52,27 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Inter',
+        fontFamily: 'helvetica-neue',
         textTheme: const TextTheme(
-          bodyLarge: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-          bodyMedium: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+          bodyLarge: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+          bodyMedium: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
           displayLarge:
-              TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
           displayMedium:
-              TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
           displaySmall:
-              TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
           headlineMedium:
-              TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
           headlineSmall:
-              TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-          titleLarge: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-          titleMedium: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-          titleSmall: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-          labelLarge: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-          labelMedium: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-          labelSmall: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
-          bodySmall: TextStyle(fontFamily: 'Inter', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+          titleLarge: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+          titleMedium: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+          titleSmall: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+          labelLarge: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+          labelMedium: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+          labelSmall: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+          bodySmall: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
         ),
         primarySwatch: Colors.blue,
         secondaryHeaderColor: Colors.blue,

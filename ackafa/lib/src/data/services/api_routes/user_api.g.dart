@@ -20,10 +20,8 @@ final fetchUserDetailsProvider = AutoDisposeFutureProvider<UserModel>.internal(
   allTransitiveDependencies: null,
 );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
 typedef FetchUserDetailsRef = AutoDisposeFutureProviderRef<UserModel>;
-String _$fetchActiveUsersHash() => r'15672480f38f10d5e7a6e969f9626af09d6d4741';
+String _$fetchActiveUsersHash() => r'1cfba2e62d4c027923eba3414f3608ff6dbf36f5';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -183,8 +181,6 @@ class FetchActiveUsersProvider
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
 mixin FetchActiveUsersRef on AutoDisposeFutureProviderRef<List<UserModel>> {
   /// The parameter `pageNo` of this provider.
   int get pageNo;
@@ -336,8 +332,6 @@ class FetchAllUsersProvider extends AutoDisposeFutureProvider<List<UserModel>> {
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
 mixin FetchAllUsersRef on AutoDisposeFutureProviderRef<List<UserModel>> {
   /// The parameter `pageNo` of this provider.
   int get pageNo;
@@ -472,8 +466,6 @@ class FetchUserByIdProvider extends AutoDisposeFutureProvider<UserModel> {
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
 mixin FetchUserByIdRef on AutoDisposeFutureProviderRef<UserModel> {
   /// The parameter `id` of this provider.
   String get id;
@@ -487,4 +479,4 @@ class _FetchUserByIdProviderElement
   String get id => (origin as FetchUserByIdProvider).id;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

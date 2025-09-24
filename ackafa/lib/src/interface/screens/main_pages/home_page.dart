@@ -13,15 +13,20 @@ import 'package:ackaf/src/data/services/dynamic_links.dart';
 import 'package:ackaf/src/data/services/launch_url.dart';
 import 'package:ackaf/src/interface/common/components/app_bar.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/interface/common/custom_icon_container.dart';
 import 'package:ackaf/src/interface/common/custom_video.dart';
 import 'package:ackaf/src/interface/common/event_widget.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/screens/event_news/event.dart';
 import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart';
 import 'package:ackaf/src/interface/screens/main_pages/approvalPages/approval_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/menuPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/people_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/profilePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -127,6 +132,78 @@ class _HomePageState extends ConsumerState<HomePage> {
                     children: [
                       CustomAppBar(),
                       const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Row(
+                          children: [
+                            Text('Hi,  ${widget.user.fullName}!',
+                                                style: const TextStyle(
+                                                  fontFamily: 'helvetica-neue',
+                                                  fontSize: 19,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.black
+                                                )),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: Row(
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                style: TextStyle(
+                                                    fontFamily: 'helvetica-neue',
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.normal,
+                                                    color: Colors.grey
+                                                  ),
+                                                'Here\'s to growing your family story, one branch at a time.',
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                      ),
+                      const SizedBox(height: 10),
+
+                      Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 16, right: 16, top: 10),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => ProfilePage(user: widget.user)),
+                                            );
+                                            },
+                                            child: Image.asset('assets/digitalcard.png')),
+                                            //event
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => const EventPage()),
+                                                );
+                                              
+                                            },
+                                            child: Image.asset('assets/eventcard.png')),
+                                            //chat
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => const PeoplePage()),
+                                                );
+                                              },
+                                              child: Image.asset('assets/chatcard.png'))     
+                                        ],
+                                      )
+                                    ),
+                      const SizedBox(height: 10,),
 
                       // Banner Carousel
                       if (banners.isNotEmpty)

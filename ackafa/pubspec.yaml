@@ -91,6 +91,11 @@ flutter:
         - asset: assets/fonts/Inter_Regular.ttf
         - asset: assets/fonts/Inter_Bold.ttf
           weight: 700
+    - family: HelveticaNeue
+      fonts:
+        - asset: assets/fonts/helvetica-neue-bold.ttf
+        - asset: assets/fonts/helvetica-neue-regular.ttf
+          weight: 700
   assets:
 
     - assets/

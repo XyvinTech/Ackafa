@@ -1,3 +1,4 @@
+import 'package:ackaf/src/interface/common/components/app_bar.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,39 +14,43 @@ class EventPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, child) {
-        final asyncEvents = ref.watch(fetchEventsProvider);
-        return asyncEvents.when(
-          data: (events) {
-            return ListView(
-              padding: const EdgeInsets.all(16.0),
-              children: [
-                SizedBox(height: 16),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: events.length,
-                  itemBuilder: (context, index) {
-                    return _buildPost(
-                      withImage: true,
-                      context: context,
-                      event: events[
-                          index], // Assuming your _buildPost takes an event parameter
-                    );
-                  },
-                ),
-              ],
-            );
-          },
-          loading: () => Center(child: LoadingAnimation()),
-          error: (error, stackTrace) {
-            return Center(
-              child: Text('NO EVENTS'),
-            );
-          },
-        );
-      },
+    return Scaffold(
+      appBar:CustomAppBar(),
+      backgroundColor: Colors.white,
+      body: Consumer(
+        builder: (context, ref, child) {
+          final asyncEvents = ref.watch(fetchEventsProvider);
+          return asyncEvents.when(
+            data: (events) {
+              return ListView(
+                padding: const EdgeInsets.all(16.0),
+                children: [
+                  SizedBox(height: 16),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: events.length,
+                    itemBuilder: (context, index) {
+                      return _buildPost(
+                        withImage: true,
+                        context: context,
+                        event: events[
+                            index], // Assuming your _buildPost takes an event parameter
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
+            loading: () => Center(child: LoadingAnimation()),
+            error: (error, stackTrace) {
+              return Center(
+                child: Text('NO EVENTS'),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -186,7 +191,7 @@ class EventPage extends StatelessWidget {
                                 const SizedBox(width: 5),
                                 Text(
                                   date,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     color: Color.fromARGB(255, 109, 84, 84),
                                   ),
