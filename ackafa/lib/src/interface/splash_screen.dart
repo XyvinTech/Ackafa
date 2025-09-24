@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/services/deep_link_service.dart';
 import 'package:ackaf/src/data/services/launch_url.dart';
+import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:ackaf/src/data/models/appversion_model.dart';
@@ -100,25 +101,25 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             if (user.batch != null && user.batch != '') {
               final pendingDeepLink = _deepLinkService.pendingDeepLink;
               if (pendingDeepLink != null) {
-                Navigator.pushReplacementNamed(context, '/mainpage').then((_) {
-                  _deepLinkService.handleDeepLink(pendingDeepLink);
-                  _deepLinkService.clearPendingDeepLink();
-                }
-                );
+                // Navigator.pushReplacementNamed(context, '/mainpage').then((_) {
+                //   _deepLinkService.handleDeepLink(pendingDeepLink);
+                //   _deepLinkService.clearPendingDeepLink();
+                // }
+                // );
               } else {
-                Navigator.pushReplacementNamed(context, '/mainpage');
+                // Navigator.pushReplacementNamed(context, '/mainpage');
               }
             } else {
-              Navigator.pushReplacementNamed(context, '/userReg');
+              // Navigator.pushReplacementNamed(context, '/userReg');
             }
           } else {
-            Navigator.pushReplacementNamed(context, '/login_screen');
+            // Navigator.pushReplacementNamed(context, '/login_screen');
           }
         },
         loading: () {},
         error: (err, stack) {
           if (!mounted) return;
-          Navigator.pushReplacementNamed(context, '/login_screen');
+          // Navigator.pushReplacementNamed(context, '/login_screen');
         },
       );
     });
@@ -174,27 +175,110 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       body: Stack(
         children: [
           Positioned(
-            top: 0,
+            top: 20,
             right: 0,
-            child: Image.asset(
-              'assets/splash2.png',
-              scale: 1,
-            ),
-          ),
-          Center(
+            left: 0,
             child: Image.asset(
               'assets/splashAkcaf.png',
-              scale: 1.2,
+              scale: 1.3,
             ),
           ),
           Positioned(
-            bottom: 0,
+            top: 280,
+            right: 0,
             left: 0,
             child: Image.asset(
-              'assets/splash1.png',
+              'assets/worldmap.png',
               scale: 1,
             ),
           ),
+          Positioned(
+            top: 530,
+            right: 0,
+            left: 0,
+            child: Image.asset(
+              'assets/splashscreenasset.png',
+              scale: 1,
+            ),
+          ),
+          const Positioned(
+            top: 610,
+            right: 0,
+            left: 0,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child:  Column(
+                children: [
+                 Text('Register and join a ',
+                 style: TextStyle(
+                fontFamily: 'helvetica-neue',
+                fontWeight: FontWeight.w700,
+                fontSize: 28,
+              ),),
+              Text('community of 10,000+',
+                 style: TextStyle(
+                fontFamily: 'helvetica-neue',
+                fontWeight: FontWeight.w700,
+                fontSize: 28,
+              ),),
+              Text('Keralites across the',
+                 style: TextStyle(
+                fontFamily: 'helvetica-neue',
+                fontWeight: FontWeight.w700,
+                fontSize: 28,
+              ),),
+              Text(' world',
+                 style: TextStyle(
+                fontFamily: 'helvetica-neue',
+                fontWeight: FontWeight.w700,
+                fontSize: 28,
+              ),),
+                   
+                ],
+              ) 
+            )
+          ),
+
+          /// 👇 Place your button at the bottom
+        if(LoggedIn == false)
+        Positioned(
+          bottom: 30,
+          left: 20,
+          right: 20,
+          child: customButton(
+            label: "LET'S GET STARTED",
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/login_screen');
+            },
+          ),
+        ),
+          
+
+          
+          
+          
+          // Positioned(
+          //   top: 0,
+          //   right: 0,
+          //   child: Image.asset(
+          //     'assets/splash2.png',
+          //     scale: 1,
+          //   ),
+          // ),
+          // Center(
+          //   child: Image.asset(
+          //     'assets/splashAkcaf.png',
+          //     scale: 1.2,
+          //   ),
+          // ),
+          // Positioned(
+          //   bottom: 0,
+          //   left: 0,
+          //   child: Image.asset(
+          //     'assets/splash1.png',
+          //     scale: 1,
+          //   ),
+          // ),
         ],
       ),
     );

@@ -4,7 +4,6 @@ import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:ackaf/src/data/services/deep_link_service.dart';
 import 'package:ackaf/src/data/services/notification_service.dart';
-import 'package:ackaf/src/interface/screens/event_news/events_page.dart';
 import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_completetion_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';

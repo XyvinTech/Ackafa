@@ -41,6 +41,7 @@ class RequestNFCPage extends StatelessWidget {
             Text(
               'Connect\nwith Ease',
               style: TextStyle(
+                fontFamily: 'helvetica-neue',
                 fontSize: 35,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFFE30613),
@@ -48,14 +49,26 @@ class RequestNFCPage extends StatelessWidget {
             ),
             Flexible(
               child: Text(
-                  'Tired of carrying bulky business cards or typing out contact details? Upgrade to the future with our sleek NFC card! Just a simple tap, and your contact information, website, or social media instantly appears on any smartphone.'),
+                  'Tired of carrying bulky business cards or typing out contact details? Upgrade to the future with our sleek NFC card! Just a simple tap, and your contact information, website, or social media instantly appears on any smartphone.',
+                  style: TextStyle(
+                    fontFamily: 'helvetica-neue',
+                    color: Colors.grey
+                  ),),
+                  
             ),
             SizedBox(height: 16),
             SizedBox(height: 24),
             Center(
-              child: Image.asset(
-                scale: 2.5,
-                'assets/NFC.png', // Replace with your image URL
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                color: Color(0xFFFFF4B3),          // yellow background
+                shape: BoxShape.circle,          // circular shape
+              ),
+                child: Image.asset(
+                  scale: 2.5,
+                  'assets/NFC.png', // Replace with your image URL
+                ),
               ),
             ),
             customButton(

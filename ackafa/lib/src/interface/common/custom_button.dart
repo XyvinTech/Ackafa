@@ -6,7 +6,8 @@ Widget customButton({
   Color sideColor = const Color(0xFFE30613),
   Color labelColor = Colors.white,
   int fontSize = 16,
-  int buttonHeight = 45,
+  int buttonHeight = 47,
+  double size = 50,
   Color buttonColor = const Color(0xFFE30613),
 }) {
   return SizedBox(
@@ -19,7 +20,7 @@ Widget customButton({
           backgroundColor: WidgetStateProperty.all<Color>(buttonColor),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(25),
               side: BorderSide(color: sideColor),
             ),
           ),
@@ -27,6 +28,7 @@ Widget customButton({
         child: Text(
           label,
           style: TextStyle(
+            fontFamily: 'helvetica-neue',
               color: labelColor, fontSize: double.parse(fontSize.toString())),
         )),
   );
