@@ -623,7 +623,7 @@ class MenuPage extends StatelessWidget {
       //   child: Icon(icon, color: IconColor),
       // ),
       title: Text(title, style: TextStyle(
-        fontFamily: 'helvetica-neue',
+        fontFamily: 'HelveticaNeue',
         fontWeight: FontWeight.w500,
         
         fontSize: 23,

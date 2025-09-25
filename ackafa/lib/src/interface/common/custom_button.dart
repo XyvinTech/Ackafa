@@ -28,7 +28,7 @@ Widget customButton({
         child: Text(
           label,
           style: TextStyle(
-            fontFamily: 'helvetica-neue',
+            fontFamily: 'HelveticaNeue',
               color: labelColor, fontSize: double.parse(fontSize.toString())),
         )),
   );

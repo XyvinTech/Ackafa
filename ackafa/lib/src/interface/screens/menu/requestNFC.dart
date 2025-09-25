@@ -41,7 +41,7 @@ class RequestNFCPage extends StatelessWidget {
             Text(
               'Connect\nwith Ease',
               style: TextStyle(
-                fontFamily: 'helvetica-neue',
+                fontFamily: 'HelveticaNeue',
                 fontSize: 35,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFFE30613),
@@ -51,7 +51,7 @@ class RequestNFCPage extends StatelessWidget {
               child: Text(
                   'Tired of carrying bulky business cards or typing out contact details? Upgrade to the future with our sleek NFC card! Just a simple tap, and your contact information, website, or social media instantly appears on any smartphone.',
                   style: TextStyle(
-                    fontFamily: 'helvetica-neue',
+                    fontFamily: 'HelveticaNeue',
                     color: Colors.grey
                   ),),
                   

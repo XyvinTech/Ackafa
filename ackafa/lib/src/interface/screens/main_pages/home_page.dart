@@ -138,7 +138,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           children: [
                             Text('Hi,  ${widget.user.fullName}!',
                                                 style: const TextStyle(
-                                                  fontFamily: 'helvetica-neue',
+                                                  fontFamily: 'HelveticaNeue',
                                                   fontSize: 19,
                                                   fontWeight: FontWeight.normal,
                                                   color: Colors.black
@@ -154,7 +154,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                             Flexible(
                                               child: Text(
                                                 style: TextStyle(
-                                                    fontFamily: 'helvetica-neue',
+                                                    fontFamily: 'HelveticaNeue',
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.normal,
                                                     color: Colors.grey

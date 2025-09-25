@@ -74,46 +74,67 @@ class PhoneNumberScreen extends ConsumerWidget {
         backgroundColor: Colors.white,
         body: Stack(
           children: [
-            SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    'assets/loginAkcafLogo.png',
-                    scale: 1.1,
-                  ),
-                  const SizedBox(height: 20),
-                  Center(
-                    child: Image.asset(
-                      'assets/loginAkcafPeople.png',
-                      scale: 1.1,
+            Positioned(
+            top: 20,
+            right: 0,
+            left: 0,
+            child: Image.asset(
+              'assets/splashAkcaf.png',
+              scale: 1.3,
+            ),
+          ),
+          Positioned(
+            top: 280,
+            right: 0,
+            left: 0,
+            child: Image.asset(
+              'assets/worldmap.png',
+              scale: 1,
+            ),
+          ),
+          const Positioned(
+            top: 300,
+            left: 0,
+            right: 0,
+            
+                    
+                    child: Center(
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                            color: Color(0xFFE30613),
+                            fontFamily: 'HelveticaNeue',
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 25),
+                      ),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 16),
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                          color: Color(0xFFE30613),
-                          letterSpacing: 1,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 25),
+                  
+
+                  
+          ),
+          const Positioned(
+            top: 340,
+            left: 0,
+            right: 0,
+            child:
+                    
+                    Center(
+                      child: Text(
+                        'Please enter your mobile number',
+                        style: TextStyle(
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 16),
-                    child: Text(
-                      'Please enter your mobile number',
-                      style: TextStyle(
-                          letterSpacing: 1,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Padding(
+                 
+            ),
+            Positioned(
+              top: 380,
+              right: 0,
+              left: 0,
+              child:Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
                     child: IntlPhoneField(
                       validator: (phone) {
@@ -137,6 +158,8 @@ class PhoneNumberScreen extends ConsumerWidget {
                       disableLengthCheck: true,
                       showCountryFlag: true, // Shows the country flag
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
                         hintText: 'Enter your phone number',
                         hintStyle: const TextStyle(
                           letterSpacing: 2,
@@ -145,20 +168,20 @@ class PhoneNumberScreen extends ConsumerWidget {
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(
-                              8.0), // Rectangular border with slight rounding
+                              20.0), // Rectangular border with slight rounding
                           borderSide: BorderSide(
                             color: Colors.grey.shade400, // Light grey border
                           ),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(20.0),
                           borderSide: BorderSide(
                             color: Colors.grey
                                 .shade400, // Ensure the enabled border matches
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(2.0),
+                          borderRadius: BorderRadius.circular(20.0),
                           borderSide: const BorderSide(
                             color:
                                 Colors.grey, // Color when the input is focused
@@ -190,35 +213,43 @@ class PhoneNumberScreen extends ConsumerWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    child: Text(
-                      'A 6 digit verification code will be sent ',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: SizedBox(
-                      height: 47,
-                      width: double.infinity,
-                      child: customButton(
-                        label: 'GENERATE OTP',
-                        onPressed: isLoading
-                            ? () {}
-                            : () {
-                                _handleOtpGeneration(context, ref);
-                              },
-                        fontSize: 16,
+                  ), ),
+                  const Positioned(
+                    top: 450,
+                    left: 0,
+                    right: 0,
+                    
+                    child: Center(
+                      child: Text(
+                        'A 6 digit verification code will be sent ',
+                        style:
+                            TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
+                 
+                     ),
+                     Positioned(
+                      top: 480,
+                      right: 0,
+                      left: 0,
+                      child:  Padding(
+                        padding: const EdgeInsets.only(left: 20,right: 20,),
+                        child: SizedBox(
+                        height: 47,
+                        width: double.infinity,
+                        child: customButton(
+                          label: 'GENERATE OTP',
+                          onPressed: isLoading
+                              ? () {}
+                              : () {
+                                  _handleOtpGeneration(context, ref);
+                                },
+                          fontSize: 16,
+                        ),
+                                            ),
+                      ), ),
+          
+            
             if (isLoading)
               Container(
                 color: Colors.black54,
@@ -310,7 +341,7 @@ class OTPScreen extends ConsumerStatefulWidget {
   final String resendToken;
   final String phone;
   const OTPScreen({
-    required this.phone,
+     required this.phone,
     required this.resendToken,
     super.key,
     required this.verificationId,
@@ -372,51 +403,68 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height,
-              ),
-              child: IntrinsicHeight(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Image.asset(
-                      'assets/loginAkcafLogo.png',
-                      scale: 1.1,
-                    ),
-                    const SizedBox(height: 20),
-                    Image.asset(
-                      'assets/loginAkcafPeople.png',
-                      scale: 1.1,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 16),
+
+          Positioned(
+            top: 20,
+            right: 0,
+            left: 0,
+            child: Image.asset(
+              'assets/splashAkcaf.png',
+              scale: 1.3,
+            ),
+          ),
+          Positioned(
+            top: 280,
+            right: 0,
+            left: 0,
+            child: Image.asset(
+              'assets/worldmap.png',
+              scale: 1,
+            ),
+          ),
+          const Positioned(
+            top: 300,
+            left: 0,
+            right: 0,
+            
+                    
+                    child: Center(
                       child: Text(
-                        'Login',
+                        'OTP Verification',
                         style: TextStyle(
                             color: Color(0xFFE30613),
+                            fontFamily: 'HelveticaNeue',
                             letterSpacing: 1,
                             fontWeight: FontWeight.w600,
                             fontSize: 25),
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10, top: 20),
+                  
+
+                  
+          ),
+          const Positioned(
+            top: 340,
+            left: 0,
+            right: 0,
+            child:
+                    
+                    Center(
                       child: Text(
-                        'Please enter your OTP',
+                        'Please enter the OTP',
                         style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 18),
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
+                 
+            ),
+            Positioned(
+              top: 380,
+              right: 0,
+              left: 0,
+              child: Padding(
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: PinCodeTextField(
                         appContext: context,
@@ -432,7 +480,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                         ),
                         pinTheme: PinTheme(
                           shape: PinCodeFieldShape.box,
-                          borderRadius: BorderRadius.circular(5),
+                          borderRadius: BorderRadius.circular(20),
                           fieldHeight: 55,
                           fieldWidth: 50, selectedColor: Colors.red,
                           activeColor: const Color.fromARGB(255, 232, 226, 226),
@@ -453,13 +501,16 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                           // Handle input change
                         },
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
+                    ), ),
+                    Positioned(
+                      top: 450,
+                      left: 0,
+                      right: 0,
+                      child:Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          padding: const EdgeInsets.only(left: 20, right: 20),
                           child: Text(
                             _isButtonDisabled
                                 ? 'Resend OTP in $_start seconds'
@@ -475,7 +526,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                         GestureDetector(
                           onTap: _isButtonDisabled ? null : resendCode,
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            padding: const EdgeInsets.only(left: 20, right: 20),
                             child: Text(
                               _isButtonDisabled ? '' : 'Resend Code',
                               style: TextStyle(
@@ -488,8 +539,12 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                           ),
                         ),
                       ],
-                    ),
-                    Padding(
+                    ), ),
+                    Positioned(
+                      top: 480,
+                      left: 0,
+                      right: 0,
+                      child:Padding(
                       padding: const EdgeInsets.all(14.0),
                       child: SizedBox(
                         width: double.infinity,
@@ -503,12 +558,11 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                           fontSize: 16,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+                    ), ),
+
+
+            
+          
           if (isLoading)
             Container(
               color: Colors.black54,

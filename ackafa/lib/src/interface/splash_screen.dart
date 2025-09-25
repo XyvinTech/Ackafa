@@ -5,6 +5,8 @@ import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/services/deep_link_service.dart';
 import 'package:ackaf/src/data/services/launch_url.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:ackaf/src/data/models/appversion_model.dart';
@@ -202,61 +204,67 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             ),
           ),
           const Positioned(
-            top: 610,
-            right: 0,
-            left: 0,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child:  Column(
-                children: [
-                 Text('Register and join a ',
-                 style: TextStyle(
-                fontFamily: 'helvetica-neue',
-                fontWeight: FontWeight.w700,
-                fontSize: 28,
-              ),),
-              Text('community of 10,000+',
-                 style: TextStyle(
-                fontFamily: 'helvetica-neue',
-                fontWeight: FontWeight.w700,
-                fontSize: 28,
-              ),),
-              Text('Keralites across the',
-                 style: TextStyle(
-                fontFamily: 'helvetica-neue',
-                fontWeight: FontWeight.w700,
-                fontSize: 28,
-              ),),
-              Text(' world',
-                 style: TextStyle(
-                fontFamily: 'helvetica-neue',
-                fontWeight: FontWeight.w700,
-                fontSize: 28,
-              ),),
-                   
-                ],
-              ) 
-            )
-          ),
+              top: 610,
+              right: 0,
+              left: 0,
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Register and join a ',
+                        style: TextStyle(
+                          fontFamily: 'HelveticaNeue',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 28,
+                        ),
+                      ),
+                      Text(
+                        'community of 10,000+',
+                        style: TextStyle(
+                          fontFamily: 'HelveticaNeue',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 28,
+                        ),
+                      ),
+                      Text(
+                        'Keralites across the',
+                        style: TextStyle(
+                          fontFamily: 'HelveticaNeue',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 28,
+                        ),
+                      ),
+                      Text(
+                        ' world',
+                        style: TextStyle(
+                          fontFamily: 'HelveticaNeue',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 28,
+                        ),
+                      ),
+                    ],
+                  ))),
 
           /// 👇 Place your button at the bottom
-        if(LoggedIn == false)
-        Positioned(
-          bottom: 30,
-          left: 20,
-          right: 20,
-          child: customButton(
-            label: "LET'S GET STARTED",
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/login_screen');
-            },
-          ),
-        ),
-          
+          if (LoggedIn == false)
+            Positioned(
+              bottom: 30,
+              left: 20,
+              right: 20,
+              child: customButton(
+                label: "LET'S GET STARTED",
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/login_screen');
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => UserRegistrationScreen(),
+                  //     ));
+                },
+              ),
+            ),
 
-          
-          
-          
           // Positioned(
           //   top: 0,
           //   right: 0,

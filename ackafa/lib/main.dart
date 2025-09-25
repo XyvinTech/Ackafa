@@ -51,27 +51,27 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'helvetica-neue',
+        fontFamily: 'HelveticaNeue',
         textTheme: const TextTheme(
-          bodyLarge: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
-          bodyMedium: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+          bodyLarge: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          bodyMedium: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
           displayLarge:
-              TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
           displayMedium:
-              TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
           displaySmall:
-              TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
           headlineMedium:
-              TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
           headlineSmall:
-              TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
-          titleLarge: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
-          titleMedium: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
-          titleSmall: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
-          labelLarge: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
-          labelMedium: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
-          labelSmall: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
-          bodySmall: TextStyle(fontFamily: 'helvetica-neue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          titleLarge: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          titleMedium: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          titleSmall: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          labelLarge: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          labelMedium: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          labelSmall: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          bodySmall: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
         ),
         primarySwatch: Colors.blue,
         secondaryHeaderColor: Colors.blue,
