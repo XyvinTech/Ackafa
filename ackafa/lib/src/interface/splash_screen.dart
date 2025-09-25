@@ -5,7 +5,10 @@ import 'package:ackaf/src/data/models/user_model.dart';
 import 'package:ackaf/src/data/services/deep_link_service.dart';
 import 'package:ackaf/src/data/services/launch_url.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/interface/screens/main_pages/approvalPages/approval_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/approvalPages/member_approval.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/paymentpage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
@@ -103,25 +106,25 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             if (user.batch != null && user.batch != '') {
               final pendingDeepLink = _deepLinkService.pendingDeepLink;
               if (pendingDeepLink != null) {
-                // Navigator.pushReplacementNamed(context, '/mainpage').then((_) {
-                //   _deepLinkService.handleDeepLink(pendingDeepLink);
-                //   _deepLinkService.clearPendingDeepLink();
-                // }
-                // );
+                Navigator.pushReplacementNamed(context, '/mainpage').then((_) {
+                  _deepLinkService.handleDeepLink(pendingDeepLink);
+                  _deepLinkService.clearPendingDeepLink();
+                }
+                );
               } else {
-                // Navigator.pushReplacementNamed(context, '/mainpage');
+                Navigator.pushReplacementNamed(context, '/mainpage');
               }
             } else {
-              // Navigator.pushReplacementNamed(context, '/userReg');
+              Navigator.pushReplacementNamed(context, '/userReg');
             }
           } else {
-            // Navigator.pushReplacementNamed(context, '/login_screen');
+            Navigator.pushReplacementNamed(context, '/login_screen');
           }
         },
         loading: () {},
         error: (err, stack) {
           if (!mounted) return;
-          // Navigator.pushReplacementNamed(context, '/login_screen');
+          Navigator.pushReplacementNamed(context, '/login_screen');
         },
       );
     });
@@ -246,7 +249,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                     ],
                   ))),
 
-          /// 👇 Place your button at the bottom
           if (LoggedIn == false)
             Positioned(
               bottom: 30,
@@ -259,7 +261,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                   // Navigator.push(
                   //     context,
                   //     MaterialPageRoute(
-                  //       builder: (context) => UserRegistrationScreen(),
+                  //       builder: (context) => PaymentConfirmationPage(),
                   //     ));
                 },
               ),

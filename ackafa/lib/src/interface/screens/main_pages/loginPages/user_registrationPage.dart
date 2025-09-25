@@ -36,7 +36,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emirateIDController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  
+
   String _resolveUserStatus(String? status) {
     final s = status?.toLowerCase() ?? 'inactive';
     if (!isPaymentEnabled &&
@@ -45,6 +45,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
     }
     return s;
   }
+
   Future<void> _pickImage(ImageSource source, context) async {
     _pickFile(source);
   }
@@ -68,6 +69,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
   String? profileImageUrl;
   College? selectedCollege;
   String? selectedBatch;
+  String? selectedGender;
   Course? selectedCourse;
   String? selectedCollegeId;
   String? selectedCourseId;
@@ -340,6 +342,56 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                   );
                                                 },
                                               ),
+
+
+
+
+                                              // gender
+                                              _createLabel('Gender', true),
+                                              FormField<String>(
+                                                validator: (value) {
+                                                  if (selectedGender == null) {
+                                                    return 'Please select your gender';
+                                                  }
+                                                  return null;
+                                                },
+                                                builder: (FormFieldState<String> state) {
+                                                  return Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      CustomDropdownButton<String>(
+                                                        labelText: 'Select Gender',
+                                                        items: const [
+                                                          DropdownMenuItem(value: 'Male', child: Text('Male')),
+                                                          DropdownMenuItem(value: 'Female', child: Text('Female')),
+                                                          DropdownMenuItem(value: 'Other', child: Text('Other')),
+                                                        ],
+                                                        value: selectedGender,
+                                                        onChanged: (String? value) {
+                                                          setState(() {
+                                                            selectedGender = value;
+                                                            state.didChange(value);
+                                                          });
+                                                        },
+                                                      ),
+                                                      if (state.hasError)
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(top: 8.0),
+                                                          child: Text(
+                                                            state.errorText!,
+                                                            style: const TextStyle(color: Colors.red),
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+
+                                              const SizedBox(height: 20.0),
+
+
+                                              ///
+
                                               const SizedBox(height: 20.0),
                                               _createLabel('Batch', true),
                                               FormField<String>(
@@ -420,7 +472,9 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                         height: 50,
                                         child: customButton(
                                             fontSize: 16,
-                                            label: _resolveUserStatus(user.status) == 'inactive'
+                                            label: _resolveUserStatus(
+                                                        user.status) ==
+                                                    'inactive'
                                                 ? 'Send Request'
                                                 : 'Next',
                                             onPressed: () async {
@@ -447,9 +501,8 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                           token: token,
                                                           profileUrl:
                                                               profileImageUrl,
-                                                          name:
-                                                              nameController
-                                                                  .text,
+                                                          name: nameController
+                                                              .text,
                                                           emailId:
                                                               emailController
                                                                   .text,
@@ -459,7 +512,9 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                           context: context);
 
                                                   if (response) {
-                                                    final resolved = _resolveUserStatus(user.status);
+                                                    final resolved =
+                                                        _resolveUserStatus(
+                                                            user.status);
                                                     log('user status: ${user.status} -> $resolved');
                                                     if (resolved == 'active') {
                                                       Navigator.of(context)
@@ -468,7 +523,8 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                                   builder:
                                                                       (context) =>
                                                                           ProfileCompletionScreen()));
-                                                    } else if (resolved == 'awaiting_payment') {
+                                                    } else if (resolved ==
+                                                        'awaiting_payment') {
                                                       log('im in payment condition ok');
                                                       Navigator.of(context)
                                                           .pushReplacement(
@@ -513,7 +569,8 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
             } else if (_resolveUserStatus(user.status) == 'inactive') {
               log('im in inactive condition');
               return const UserInactivePage();
-            } else if (_resolveUserStatus(user.status) == 'subscription_expired') {
+            } else if (_resolveUserStatus(user.status) ==
+                'subscription_expired') {
               log('im in subscription expired condition');
               return const SubcriptionExpiredPage();
             } else {

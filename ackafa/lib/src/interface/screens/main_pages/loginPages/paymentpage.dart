@@ -97,88 +97,129 @@ class PaymentConfirmationPage extends StatelessWidget {
           backgroundColor: Colors.white,
           body: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 40),
-                  Column(
-                    children: [
-                      Image.asset('assets/success.png'),
-                      const SizedBox(height: 20),
-                      const Text(
-                        'Congratulations!',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF6D6D6D),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Stack(
+                  children: [
+                    
+                    Positioned(
+                        top: 130,
+                        left: 0,
+                        right: 0,
+                        child: Center(
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                width: 210,  // adjust size as needed
+                                height: 210,
+                                decoration:  const BoxDecoration(
+                                  color: Color(0xFFFFFEEF),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              Container(
+                                width: 180,  // adjust size as needed
+                                height: 180,
+                                decoration:  const BoxDecoration(
+                                  color: Color(0xFFFFF8EF),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              Image.asset(
+                                'assets/success.png',
+                                scale: .7,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      const Text(
-                        'Your request has been approved',
-                        style: TextStyle(
-                          fontSize: 19,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 40), // Space between sections
-                  // Next Steps
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Coming Soon!',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
+                                          const Positioned(
+                      top: 400,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: Text(
+                          'Coming Soon!',
+                          style: TextStyle(
+                            fontFamily: 'HelveticaNeue',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        'You Will Receive Payment Link Soon',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                        ),
-                        textAlign: TextAlign.center,
+                    ),
+                    const Positioned(
+                        top: 440,
+                        left: 0,
+                        right: 0,
+                        child: Column(
+                          children: [
+                            Text(
+                              'You Will Receive Payment Link Soon',
+                              style: TextStyle(
+                                fontFamily: 'HelveticaNeue',
+                                fontSize: 18,
+                                color: Colors.grey,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              'Do not delete the App',
+                              style: TextStyle(
+                                fontFamily: 'HelveticaNeue',
+                                fontSize: 18,
+                                color: Colors.grey,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        )),
+                    Positioned(
+                        top: 500,
+                        left: 0,
+                        right: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 50.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // Checklist
+                              _buildCheckListItem(
+                                  'Get your request approved', true), // Checked
+                              _buildCheckListItem(
+                                  'Make payment of 10 AED', false), // Unchecked
+                              _buildCheckListItem(
+                                  'Receive payment confirmation',
+                                  false), // Unchecked
+                              _buildCheckListItem(
+                                  'You are all in!', false), // Unchecked
+                            ],
+                          ),
+                        )),
+                    Positioned(
+                      bottom: 30,
+                      left: 20,
+                      right: 20,
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          return customButton(
+                              label: 'Done',
+                              onPressed: () async {
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProfileCompletionScreen()));
+                              },
+                              fontSize: 16,
+                              buttonColor: Colors.white,
+                              labelColor: Colors.black,
+                              sideColor: Colors.white);
+                        },
                       ),
-
-                      const SizedBox(height: 30),
-                      // Checklist
-                      _buildCheckListItem(
-                          'Get your request approved', true), // Checked
-                      _buildCheckListItem(
-                          'Make payment of 10 AED', false), // Unchecked
-                      _buildCheckListItem(
-                          'Receive payment confirmation', false), // Unchecked
-                      _buildCheckListItem(
-                          'You are all in!', false), // Unchecked
-                    ],
-                  ),
-                  const Spacer(),
-                  // Continue to Payment Button
-                  Consumer(
-                    builder: (context, ref, child) {
-                      return customButton(
-                          label: 'CONTINUE TO APP',
-                          onPressed: () async {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ProfileCompletionScreen()));
-                          },
-                          fontSize: 16);
-                    },
-                  ),
-                  const SizedBox(height: 30), // Bottom padding
-                ],
-              ),
-            ),
+                    ),
+                  ],
+                )),
           ),
         );
       } else {
@@ -192,16 +233,17 @@ class PaymentConfirmationPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Icon(
-            isChecked ? Icons.check : Icons.check,
-            color: isChecked ? Colors.red : Colors.grey,
+          Image.asset(
+            isChecked ? 'assets/tic.png' : 'assets/untic.png',
+            // color: isChecked ? Colors.green : Colors.grey,
           ),
           const SizedBox(width: 10),
           Text(
             text,
             style: TextStyle(
+              fontFamily: 'HelveticaNeue',
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: isChecked ? Colors.black : Colors.grey,
