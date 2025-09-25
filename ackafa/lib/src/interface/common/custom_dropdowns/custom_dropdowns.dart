@@ -24,13 +24,13 @@ class CustomDropdownButton<T> extends StatelessWidget {
     return DropdownButtonFormField2<T>(
       isExpanded: true,
       value: value,
-      hint: Text(labelText),
+      hint: Text(labelText,style: TextStyle(color: Colors.grey),),
       items: items,
       validator: validator,
       onChanged: onChanged,
       dropdownStyleData: DropdownStyleData(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(30),
           color: Colors.white,
         ),
         elevation: 8,
@@ -40,7 +40,7 @@ class CustomDropdownButton<T> extends StatelessWidget {
         selectedMenuItemBuilder: (context, child) => Container(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(30),
             color: Colors.red.withOpacity(0.1),
           ),
           child: child,
@@ -48,28 +48,28 @@ class CustomDropdownButton<T> extends StatelessWidget {
       ),
       decoration: InputDecoration(
         alignLabelWithHint: true,
-        labelText: labelText,
+        // labelText: labelText,
         labelStyle: const TextStyle(color: Colors.grey),
         floatingLabelBehavior: FloatingLabelBehavior.auto,
-        fillColor: const Color(0xFFF2F2F2),
+        fillColor: Colors.white,
         filled: true,
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(30.0),
           borderSide:
               const BorderSide(color: Color.fromARGB(255, 212, 209, 209)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(30.0),
           borderSide:
               const BorderSide(color: Color.fromARGB(255, 223, 220, 220)),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(30.0),
           borderSide:
               const BorderSide(color: Color.fromARGB(255, 212, 209, 209)),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(30.0),
           borderSide:
               const BorderSide(color: Color.fromARGB(255, 223, 220, 220)),
         ),

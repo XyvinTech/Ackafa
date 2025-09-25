@@ -1,9 +1,11 @@
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
+import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/paymentpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class UserInactivePage extends ConsumerWidget {
   const UserInactivePage({super.key});
@@ -13,32 +15,32 @@ class UserInactivePage extends ConsumerWidget {
     final user = ref.watch(userProvider).value;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.red),
-            onPressed: () async {
-               LoggedIn = false;
-                        final SharedPreferences preferences =
-                            await SharedPreferences.getInstance();
+      // appBar: AppBar(
+      //   backgroundColor: Colors.white,
+      //   elevation: 0,
+      //   actions: [
+      //     // IconButton(
+      //     //   icon: const Icon(Icons.logout, color: Colors.red),
+      //     //   onPressed: () async {
+      //     //      LoggedIn = false;
+      //     //               final SharedPreferences preferences =
+      //     //                   await SharedPreferences.getInstance();
 
-                        preferences.setString('token', '');
-                        preferences.setString('id', '');
+      //     //               preferences.setString('token', '');
+      //     //               preferences.setString('id', '');
 
-                        // Clear the entire stack and push the login screen
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          '/login_screen',
-                          (Route<dynamic> route) =>
-                              false, // This removes all the previous routes
-                        );
-              Navigator.popUntil(context, (route) => route.isFirst); // Go back to first page (login)
-            },
-          ),
-        ],
-      ),
+      //     //               // Clear the entire stack and push the login screen
+      //     //               Navigator.pushNamedAndRemoveUntil(
+      //     //                 context,
+      //     //                 '/login_screen',
+      //     //                 (Route<dynamic> route) =>
+      //     //                     false, // This removes all the previous routes
+      //     //               );
+      //     //     Navigator.popUntil(context, (route) => route.isFirst); // Go back to first page (login)
+      //     //   },
+      //     // ),
+      //   ],
+      // ),
       backgroundColor: Colors.white,
       body: RefreshIndicator(
         backgroundColor: Colors.white,
@@ -61,14 +63,14 @@ class UserInactivePage extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/approval_waiting.png'),
+                  Image.asset('assets/membershipreq.png'),
                   const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
                       user?.status == 'rejected'
                           ? 'Your membership request has been rejected'
-                          : 'Your membership is under approval',
+                          : 'Your Join Request Has Been Sent.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20,
@@ -84,17 +86,45 @@ class UserInactivePage extends ConsumerWidget {
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        'Kindly contact your college alumni officials for approval',
+                        'App access will be available soon. Thanks for your patience!',
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 15, color: Colors.grey),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    
                 ],
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(20),
+        child: customButton(
+          buttonColor: Colors.white,
+          labelColor: Colors.black,
+          sideColor: Colors.white,
+          label: "Done",
+          onPressed: () async {
+            LoggedIn = false;
+            final SharedPreferences preferences =
+                await SharedPreferences.getInstance();
+
+            preferences.setString('token', '');
+            preferences.setString('id', '');
+
+            // Clear the entire stack and push the login screen
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/login_screen',
+              (Route<dynamic> route) => false,
+            );
+
+            // Ensures we are back to first page (login)
+            Navigator.popUntil(context, (route) => route.isFirst);
+          },
         ),
       ),
     );

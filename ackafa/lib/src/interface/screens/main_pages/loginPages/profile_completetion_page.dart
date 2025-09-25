@@ -31,7 +31,7 @@ class ProfileCompletionScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // Replace SvgPicture.asset with any image you are using
-                      Image.asset('assets/letsgetstarted.png',
+                      Image.asset('assets/success.png',
                           color: Colors.red, width: 150),
 
                       const Text(

@@ -1,6 +1,7 @@
 import 'package:ackaf/src/data/models/hall_models.dart';
 import 'package:ackaf/src/data/services/api_routes/hall_api.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/constants/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -163,10 +164,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                             onTap: _selectMonth,
                             child: Text(
                               _months[_focusedDay.month - 1],
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: AppTextStyles.heading20,
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -174,10 +172,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                             onTap: _selectYear,
                             child: Text(
                               _focusedDay.year.toString(),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: AppTextStyles.heading20,
                             ),
                           ),
                         ],

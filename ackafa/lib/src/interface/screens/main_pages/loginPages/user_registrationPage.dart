@@ -34,6 +34,12 @@ class UserRegistrationScreen extends StatefulWidget {
 class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
   File? _profileImageFile;
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController firstController = TextEditingController();
+  final TextEditingController middleController = TextEditingController();
+  final TextEditingController lastController = TextEditingController();
+
+
+
   final TextEditingController emirateIDController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
@@ -95,6 +101,8 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                             backgroundColor: Colors.white,
                             body: Stack(
                               children: [
+                                
+                                
                                 SingleChildScrollView(
                                   child: Form(
                                     key: _formKey,
@@ -127,12 +135,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                           child: Container(
                                                               width: 120,
                                                               height: 120,
-                                                              color: const Color
-                                                                  .fromARGB(
-                                                                  255,
-                                                                  255,
-                                                                  255,
-                                                                  255),
+                                                              color: const Color.fromARGB(255, 243, 241, 241),
                                                               child: _profileImageFile !=
                                                                       null
                                                                   ? Image.file(
@@ -143,6 +146,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                                   : const Icon(
                                                                       Icons
                                                                           .person,
+                                                                          color: Colors.white,
                                                                       size: 50,
                                                                     )),
                                                         ),
@@ -236,21 +240,51 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                               bottom: 10),
                                           child: Column(
                                             children: [
-                                              _createLabel('Full Name', true),
+                                              // _createLabel('Full Name', true),
                                               CustomTextFormField(
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty) {
-                                                    return 'Please Enter your Full Name';
+                                                    return 'Please Enter your First Name';
                                                   }
                                                   return null;
                                                 },
                                                 textController: nameController,
                                                 labelText:
-                                                    'Enter Your Full name',
+                                                    'Enter Your First name',
                                               ),
                                               const SizedBox(height: 20.0),
-                                              _createLabel('Email ID', true),
+
+                                              /////middle
+                                              CustomTextFormField(
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty) {
+                                                    return 'Please Enter your Middle Name';
+                                                  }
+                                                  return null;
+                                                },
+                                                textController: middleController,
+                                                labelText:
+                                                    'Enter Your Middle name',
+                                              ),
+                                              const SizedBox(height: 20.0),
+                                              /////last name
+                                              CustomTextFormField(
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty) {
+                                                    return 'Please Enter your Last name';
+                                                  }
+                                                  return null;
+                                                },
+                                                textController: lastController,
+                                                labelText:
+                                                    'Enter Your Last name',
+                                              ),
+                                              const SizedBox(height: 20.0),
+
+                                              // _createLabel('Email ID', true),
                                               CustomTextFormField(
                                                   validator: (value) {
                                                     if (value == null ||
@@ -274,8 +308,8 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                               //         emirateIDController,
                                               //     labelText:
                                               //         'Enter your  Emirates ID'),
-                                              const SizedBox(height: 20.0),
-                                              _createLabel('College', true),
+                                              // const SizedBox(height: 20.0),
+                                              // _createLabel('College', true),
                                               FormField<College>(
                                                 validator: (value) {
                                                   if (selectedCollege == null) {
@@ -342,19 +376,21 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                   );
                                                 },
                                               ),
+                                              const SizedBox(height: 20.0),
+
 
 
 
 
                                               // gender
-                                              _createLabel('Gender', true),
+                                              // _createLabel('Gender', true),
                                               FormField<String>(
-                                                validator: (value) {
-                                                  if (selectedGender == null) {
-                                                    return 'Please select your gender';
-                                                  }
-                                                  return null;
-                                                },
+                                                // validator: (value) {
+                                                //   if (selectedGender == null) {
+                                                //     return 'Please select your gender';
+                                                //   }
+                                                //   return null;
+                                                // },
                                                 builder: (FormFieldState<String> state) {
                                                   return Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -386,14 +422,53 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                   );
                                                 },
                                               ),
+                                              ////isssue with coursesss
 
                                               const SizedBox(height: 20.0),
+                                              FormField<String>(
+                                                // validator: (value) {
+                                                //   if (selectedCourse == null) {
+                                                //     return 'Please select your couse';
+                                                //   }
+                                                //   return null;
+                                                // },
+                                                builder: (FormFieldState<String> state) {
+                                                  return Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      CustomDropdownButton<String>(
+                                                        labelText: 'Course',
+                                                        items: const [
+                                                          DropdownMenuItem(value: 'Course1', child: Text('Course1')),
+                                                          DropdownMenuItem(value: 'Course2', child: Text('Course2')),
+                                                          DropdownMenuItem(value: 'Course3', child: Text('Course3')),
+                                                        ],
+                                                        value: selectedGender,
+                                                        onChanged: (String? value) {
+                                                          setState(() {
+                                                            selectedGender = value;
+                                                            state.didChange(value);
+                                                          });
+                                                        },
+                                                      ),
+                                                      if (state.hasError)
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(top: 8.0),
+                                                          child: Text(
+                                                            state.errorText!,
+                                                            style: const TextStyle(color: Colors.red),
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  );
+                                                },
+                                              ),
 
 
                                               ///
 
                                               const SizedBox(height: 20.0),
-                                              _createLabel('Batch', true),
+                                              // _createLabel('Batch', true),
                                               FormField<String>(
                                                 validator: (value) {
                                                   if (selectedBatch == null) {
@@ -411,7 +486,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                       CustomDropdownButton<
                                                           String>(
                                                         labelText:
-                                                            'Select Batch',
+                                                            'Batch',
                                                         items: selectedCollegeIndex !=
                                                                 -1
                                                             ? colleges[

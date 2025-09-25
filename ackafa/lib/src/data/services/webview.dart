@@ -1,4 +1,5 @@
 import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/constants/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -50,7 +51,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
       appBar: AppBar(
         title: Text(
           widget.title,
-          style: TextStyle(fontSize: 12),
+          style: AppTextStyles.subHeading12
         ),
         backgroundColor: widget.color,
         foregroundColor: Colors.white,

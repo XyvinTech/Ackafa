@@ -94,86 +94,86 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
         
         actions: [
-          Consumer(
-            builder: (context, ref, child) {
-              final asyncUser = ref.watch(userProvider);
-              final nonApprovedUsers = ref.watch(approvalNotifierProvider);
-              return asyncUser.when(
-                data: (user) {
-                  return Stack(
-                    children: <Widget>[
-                      if (user.role != 'member')
-                        IconButton(
-                            iconSize: 17,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation,
-                                          secondaryAnimation) =>
-                                      ApprovalPage(),
-                                  transitionsBuilder: (context, animation,
-                                      secondaryAnimation, child) {
-                                    const begin = Offset(
-                                        1.0, 0.0); // Slide from right to left
-                                    const end = Offset.zero;
-                                    const curve =
-                                        Curves.fastEaseInToSlowEaseOut;
+          // Consumer(
+          //   builder: (context, ref, child) {
+          //     final asyncUser = ref.watch(userProvider);
+          //     final nonApprovedUsers = ref.watch(approvalNotifierProvider);
+          //     return asyncUser.when(
+          //       data: (user) {
+          //         return Stack(
+          //           children: <Widget>[
+          //             if (user.role != 'member')
+          //               IconButton(
+          //                   iconSize: 17,
+          //                   onPressed: () {
+          //                     Navigator.push(
+          //                       context,
+          //                       PageRouteBuilder(
+          //                         pageBuilder: (context, animation,
+          //                                 secondaryAnimation) =>
+          //                             ApprovalPage(),
+          //                         transitionsBuilder: (context, animation,
+          //                             secondaryAnimation, child) {
+          //                           const begin = Offset(
+          //                               1.0, 0.0); // Slide from right to left
+          //                           const end = Offset.zero;
+          //                           const curve =
+          //                               Curves.fastEaseInToSlowEaseOut;
 
-                                    var tween = Tween(begin: begin, end: end)
-                                        .chain(CurveTween(curve: curve));
-                                    var offsetAnimation =
-                                        animation.drive(tween);
+          //                           var tween = Tween(begin: begin, end: end)
+          //                               .chain(CurveTween(curve: curve));
+          //                           var offsetAnimation =
+          //                               animation.drive(tween);
 
-                                    return SlideTransition(
-                                      position: offsetAnimation,
-                                      child: child,
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                            icon: Icon(
-                              FontAwesomeIcons.userGroup,
-                              color: Colors.grey,
-                            )),
-                      if (nonApprovedUsers.isNotEmpty && user.role != 'member')
-                        Positioned(
-                          right: 4,
-                          bottom: 2,
-                          child: Container(
-                            padding: EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Text(
-                              '${nonApprovedUsers.length}',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  );
-                },
-                loading: () => Center(
-                  child: IconButton(
-                      iconSize: 17,
-                      onPressed: () {},
-                      icon: Icon(
-                        FontAwesomeIcons.userGroup,
-                        color: Colors.grey,
-                      )),
-                ),
-                error: (error, stackTrace) {
-                  return SizedBox();
-                },
-              );
-            },
-          ),
+          //                           return SlideTransition(
+          //                             position: offsetAnimation,
+          //                             child: child,
+          //                           );
+          //                         },
+          //                       ),
+          //                     );
+          //                   },
+          //                   icon: Icon(
+          //                     FontAwesomeIcons.userGroup,
+          //                     color: Colors.grey,
+          //                   )),
+          //             if (nonApprovedUsers.isNotEmpty && user.role != 'member')
+          //               Positioned(
+          //                 right: 4,
+          //                 bottom: 2,
+          //                 child: Container(
+          //                   padding: EdgeInsets.all(4),
+          //                   decoration: BoxDecoration(
+          //                     color: Colors.red,
+          //                     shape: BoxShape.circle,
+          //                   ),
+          //                   child: Text(
+          //                     '${nonApprovedUsers.length}',
+          //                     style: TextStyle(
+          //                       color: Colors.white,
+          //                       fontSize: 12,
+          //                     ),
+          //                   ),
+          //                 ),
+          //               ),
+          //           ],
+          //         );
+          //       },
+          //       loading: () => Center(
+          //         child: IconButton(
+          //             iconSize: 17,
+          //             onPressed: () {},
+          //             icon: Icon(
+          //               FontAwesomeIcons.userGroup,
+          //               color: Colors.grey,
+          //             )),
+          //       ),
+          //       error: (error, stackTrace) {
+          //         return SizedBox();
+          //       },
+          //     );
+          //   },
+          // ),
           Consumer(
             builder: (context, ref, child) {
               final asyncNotifications = ref.watch(fetchNotificationsProvider);

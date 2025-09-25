@@ -84,7 +84,7 @@ class CustomTextFormField extends StatelessWidget {
     this.onChanged,
     this.enabled,
     this.isAward,
-    this.fillColor = const Color(0xFFF2F2F2),
+    this.fillColor = Colors.white,
   }) : super(key: key);
 
   @override
@@ -192,7 +192,7 @@ class CustomTextFormField extends StatelessWidget {
                       heightFactor: maxLines > 1 ? null : 1.0,
                       child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(30),
                             color: Colors.white,
                           ),
                           width: 42,
@@ -210,7 +210,7 @@ class CustomTextFormField extends StatelessWidget {
                           heightFactor: maxLines > 1 ? null : 1.0,
                           child: Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(30),
                                 color: Colors.white,
                               ),
                               width: 42,
@@ -227,7 +227,7 @@ class CustomTextFormField extends StatelessWidget {
                       onTap: onTap,
                       child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(30),
                             color: Colors.white,
                           ),
                           width: 42,
@@ -237,25 +237,25 @@ class CustomTextFormField extends StatelessWidget {
                   )
                 : null,
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(30.0),
               borderSide: const BorderSide(
                   color: Color.fromARGB(
                       255, 212, 209, 209)), // Unfocused border color
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(30.0),
               borderSide: const BorderSide(
                   color: Color.fromARGB(
                       255, 223, 220, 220)), // Focused border color
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(30.0),
               borderSide: const BorderSide(
                   color: Color.fromARGB(
                       255, 212, 209, 209)), // Same as enabled border
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(30.0),
               borderSide: const BorderSide(
                   color: Color.fromARGB(
                       255, 223, 220, 220)), // Same as focused border

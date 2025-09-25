@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
+import 'package:ackaf/src/interface/constants/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -97,11 +98,8 @@ class _BlockPersonDialogState extends ConsumerState<BlockPersonDialog> {
                   ? 'Are you sure you want to unblock this person?'
                   : 'Are you sure you want to block this person?',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.w600,
-                color: Colors.blueGrey[900],
-              ),
+              style: AppTextStyles.subHeading18.copyWith(fontWeight:FontWeight.w600, color: Colors.blueGrey[900],)
+              
             ),
             const SizedBox(height: 30.0),
             if (!isBlocked)
@@ -109,11 +107,8 @@ class _BlockPersonDialogState extends ConsumerState<BlockPersonDialog> {
                 controller: reasonController,
                 decoration: InputDecoration(
                   labelText: 'Reason',
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  labelStyle: AppTextStyles.subHeading16.copyWith(fontWeight:FontWeight.w500,),
+                  
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
@@ -133,10 +128,8 @@ class _BlockPersonDialogState extends ConsumerState<BlockPersonDialog> {
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
                 ),
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: AppTextStyles.subHeading16.copyWith(fontWeight:FontWeight.w400,),
+                
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Reason is required'; // Error message when the field is empty
@@ -171,6 +164,7 @@ class _BlockPersonDialogState extends ConsumerState<BlockPersonDialog> {
           child: const Text(
             'Cancel',
             style: TextStyle(
+              fontFamily: 'HelveticaNeue',
               color: Color(0xFFE30613),
               fontWeight: FontWeight.w600,
             ),
@@ -195,11 +189,7 @@ class _BlockPersonDialogState extends ConsumerState<BlockPersonDialog> {
           ),
           child: Text(
             isBlocked ? 'Unblock' : 'Block',
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16.0,
-            ),
+            style: AppTextStyles.subHeading16.copyWith(color: Colors.white,fontWeight: FontWeight.bold),
           ),
         ),
       ],

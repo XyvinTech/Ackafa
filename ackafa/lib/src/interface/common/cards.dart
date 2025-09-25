@@ -1,5 +1,6 @@
 import 'package:ackaf/src/interface/common/components/svg_icon.dart';
 import 'package:ackaf/src/interface/common/custom_drop_down_block_report.dart';
+import 'package:ackaf/src/interface/constants/text_style.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
@@ -87,17 +88,14 @@ class AwardCard extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
                               award.name ?? '',
-                              style: const TextStyle(
-                                  fontSize: 14.0, fontWeight: FontWeight.bold),
+                              style: AppTextStyles.subHeading14.copyWith(fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
                         Text(
                           award.authority ?? '',
-                          style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w400),
+                          style:AppTextStyles.subHeading14.copyWith(fontWeight: FontWeight.w400)
+                           
                         ),
                       ],
                     ),
@@ -167,10 +165,7 @@ class CertificateCard extends StatelessWidget {
                       Flexible(
                         child: Text(
                           certificate?.name ?? '',
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: AppTextStyles.heading20.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ),
                       if (onRemove != null)
@@ -222,24 +217,18 @@ class DropDownMenu extends StatelessWidget {
           size: 22,
         ),
         items: [
-          const DropdownMenuItem<String>(
+           DropdownMenuItem<String>(
             value: 'remove',
             child: Text(
               'Remove',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.red,
-              ),
+              style: AppTextStyles.subHeading14.copyWith(color: Colors.red),
             ),
           ),
-          const DropdownMenuItem<String>(
+           DropdownMenuItem<String>(
             value: 'edit',
             child: Text(
               'Edit',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.blue,
-              ),
+              style: AppTextStyles.subHeading14.copyWith(color: Colors.blue),
             ),
           ),
         ],

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/constants/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,10 +23,7 @@ Future<void> captureAndShareWidgetScreenshot(BuildContext context) async {
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black87,
-            ),
+            style: AppTextStyles.subHeading16.copyWith(color: Colors.black87)
           ),
         ),
       ],
@@ -110,26 +108,17 @@ Future<void> captureAndShareWidgetScreenshot(BuildContext context) async {
                                           const SizedBox(height: 15),
                                           Text(
                                             user.fullName ?? '',
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                            style: AppTextStyles.heading21.copyWith(color: Colors.grey[600])
                                           ),
                                           const SizedBox(height: 5),
                                           Text(
                                             user.company?.designation ?? '',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey[600],
-                                            ),
+                                            style: AppTextStyles.subHeading16.copyWith(color: Colors.grey[600])
                                           ),
                                           const SizedBox(height: 5),
                                           Text(
                                             user.company?.name ?? '',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey[600],
-                                            ),
+                                            style: AppTextStyles.subHeading14.copyWith(color: Colors.grey[600])
                                           ),
                                         ],
                                       ),
