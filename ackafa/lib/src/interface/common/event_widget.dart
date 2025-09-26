@@ -152,99 +152,72 @@ Widget eventWidget({
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 160),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              color: Colors.yellow,
-                              child: Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.calendar_today,
-                                        size: 13, color: Color(0xFF700F0F)),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      formattedDate,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFF700F0F),
-                                      ),
-                                    ),
-                                  ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Flexible(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.yellow,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 3),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.calendar_today,
+                                  size: 13, color: Color(0xFF700F0F)),
+                              const SizedBox(width: 4),
+                              Flexible(
+                                child: Text(
+                                  formattedDate,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFF700F0F),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 4),
-                            Container(
-                              width: 1,
-                              height: 14,
-                              color: Colors.white,
-                            ),
-                            const SizedBox(width: 6),
-                            Container(
-                              color: Colors.blue[200],
-                              child: Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.access_time,
-                                        size: 13, color: Color(0xFF0E1877)),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      formattedTime,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFF0E1877),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 3),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.access_time,
+                                  size: 13, color: Color(0xFF0E1877)),
+                              const SizedBox(width: 4),
+                              Flexible(
+                                child: Text(
+                                  formattedTime,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFF0E1877),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
             Spacer(),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 8.0,bottom: 10),
-            //   child: EventCountdownButton(
-            //       event: event,
-            //       onPressed: () {
-            //         Navigator.push(
-            //           context,
-            //           PageRouteBuilder(
-            //             pageBuilder: (context, animation, secondaryAnimation) =>
-            //                 ViewMoreEventPage(event: event),
-            //             transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            //               const begin = Offset(1.0, 0.0);
-            //               const end = Offset.zero;
-            //               const curve = Curves.fastEaseInToSlowEaseOut;
-              
-            //               var tween =
-            //                   Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-            //               var offsetAnimation = animation.drive(tween);
-              
-            //               return SlideTransition(
-            //                 position: offsetAnimation,
-            //                 child: child,
-            //               );
-            //             },
-            //           ),
-            //         );
-            //       },
-            //     ),
-            // ),
-
             Padding(
               padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
               child: customButton(

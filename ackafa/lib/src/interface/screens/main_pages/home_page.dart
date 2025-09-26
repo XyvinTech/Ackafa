@@ -167,45 +167,57 @@ class _HomePageState extends ConsumerState<HomePage> {
                       const SizedBox(height: 10),
 
                       Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, right: 16, top: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProfilePage(user: widget.user)),
-                                    );
-                                  },
-                                  child: Image.asset('assets/digitalcard.png')),
-                              //event
-                              GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const EventPage()),
-                                    );
-                                  },
-                                  child: Image.asset('assets/eventcard.png')),
-                              //chat
-                              GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const PeoplePage()),
-                                    );
-                                  },
-                                  child: Image.asset('assets/chatcard.png'))
-                            ],
-                          )),
+                        padding:
+                            const EdgeInsets.only(left: 16, right: 16, top: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProfilePage(user: widget.user),
+                                  ),
+                                );
+                              },
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.28,
+                                child: Image.asset('assets/digitalcard.png'),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const EventPage(),
+                                  ),
+                                );
+                              },
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.28,
+                                child: Image.asset('assets/eventcard.png'),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const PeoplePage(),
+                                  ),
+                                );
+                              },
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.28,
+                                child: Image.asset('assets/chatcard.png'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -545,7 +557,6 @@ Widget customPoster({
     child: Transform.translate(
       offset: const Offset(0, 6),
       child: Container(
-        
         // height: MediaQuery.of(context).size.height*0.20,
         margin: const EdgeInsets.only(bottom: 10.0),
         decoration: BoxDecoration(
