@@ -215,60 +215,25 @@ Widget eventWidget({
               ),
             ),
             Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0,bottom: 10),
-              child: EventCountdownButton(
-                  event: event,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            ViewMoreEventPage(event: event),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          const begin = Offset(1.0, 0.0);
-                          const end = Offset.zero;
-                          const curve = Curves.fastEaseInToSlowEaseOut;
-              
-                          var tween =
-                              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                          var offsetAnimation = animation.drive(tween);
-              
-                          return SlideTransition(
-                            position: offsetAnimation,
-                            child: child,
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-            ),
-
             // Padding(
-            //   padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
-            //   child: customButton(
-            //       buttonHeight: 40,
-            //       buttonWidth: 180,
-            //       label: 'Know More',
+            //   padding: const EdgeInsets.only(left: 8.0,bottom: 10),
+            //   child: EventCountdownButton(
+            //       event: event,
             //       onPressed: () {
             //         Navigator.push(
             //           context,
             //           PageRouteBuilder(
             //             pageBuilder: (context, animation, secondaryAnimation) =>
-            //                 ViewMoreEventPage(
-            //               event: event,
-            //             ),
-            //             transitionsBuilder:
-            //                 (context, animation, secondaryAnimation, child) {
+            //                 ViewMoreEventPage(event: event),
+            //             transitionsBuilder: (context, animation, secondaryAnimation, child) {
             //               const begin = Offset(1.0, 0.0);
             //               const end = Offset.zero;
             //               const curve = Curves.fastEaseInToSlowEaseOut;
-
-            //               var tween = Tween(begin: begin, end: end)
-            //                   .chain(CurveTween(curve: curve));
+              
+            //               var tween =
+            //                   Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
             //               var offsetAnimation = animation.drive(tween);
-
+              
             //               return SlideTransition(
             //                 position: offsetAnimation,
             //                 child: child,
@@ -276,8 +241,43 @@ Widget eventWidget({
             //             },
             //           ),
             //         );
-            //       }),
+            //       },
+            //     ),
             // ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
+              child: customButton(
+                  buttonHeight: 40,
+                  buttonWidth: 180,
+                  label: 'Know More',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            ViewMoreEventPage(
+                          event: event,
+                        ),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          const begin = Offset(1.0, 0.0);
+                          const end = Offset.zero;
+                          const curve = Curves.fastEaseInToSlowEaseOut;
+
+                          var tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
+                          var offsetAnimation = animation.drive(tween);
+
+                          return SlideTransition(
+                            position: offsetAnimation,
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  }),
+            ),
           ],
         ),
       ),

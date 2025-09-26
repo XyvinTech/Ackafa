@@ -170,7 +170,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           padding: const EdgeInsets.only(
                               left: 16, right: 16, top: 10),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               GestureDetector(
                                   onTap: () {
@@ -358,7 +358,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 }).toList(),
                                 options: CarouselOptions(
                                   enableInfiniteScroll: false,
-                                  height: 440,
+                                  height: 400,
                                   scrollPhysics: posters.length > 1
                                       ? null
                                       : NeverScrollableScrollPhysics(),
@@ -545,7 +545,7 @@ Widget customPoster({
     child: Transform.translate(
       offset: const Offset(0, 6),
       child: Container(
-        height: 200,
+        
         // height: MediaQuery.of(context).size.height*0.20,
         margin: const EdgeInsets.only(bottom: 10.0),
         decoration: BoxDecoration(

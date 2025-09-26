@@ -47,8 +47,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool iselevationNeeded;
   final bool isThreeDashNeeded;
+
+  
+  final bool showBackButton;
   const CustomAppBar(
-      {Key? key, this.iselevationNeeded = false, this.isThreeDashNeeded = false})
+      {Key? key, this.iselevationNeeded = false, this.isThreeDashNeeded = false,this.showBackButton = false})
       : super(key: key);
 
   @override
@@ -84,12 +87,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         centerTitle: true,
         leading: GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MenuPage()),
-            );
+            if (showBackButton) {
+              Navigator.pop(context); // Go back
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MenuPage()),
+              );
+            }
           },
-          child: const Icon(Icons.menu, size: 20)
+          child: Icon(
+            showBackButton ? Icons.arrow_back_ios : Icons.menu,
+            size: 20,
+          ),
         ),
 
         

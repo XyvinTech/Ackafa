@@ -15,7 +15,7 @@ class EventPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:CustomAppBar(),
+      appBar:CustomAppBar(showBackButton: true,),
       backgroundColor: Colors.white,
       body: Consumer(
         builder: (context, ref, child) {
