@@ -1,5 +1,6 @@
 import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
+import 'package:ackaf/src/interface/common/event_countbutton.dart';
 import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,7 +17,7 @@ Widget eventWidget({
   String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
 
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 12),
+    padding: const EdgeInsets.symmetric(horizontal: 8),
     child: Transform.translate(
       offset: const Offset(0, 6),
       child: Container(
@@ -151,77 +152,88 @@ Widget eventWidget({
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.calendar_today,
-                                  size: 13, color: Color(0xFF700F0F)),
-                              const SizedBox(width: 4),
-                              Text(
-                                formattedDate,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Color(0xFF700F0F),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 160),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              color: Colors.yellow,
+                              child: Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.calendar_today,
+                                        size: 13, color: Color(0xFF700F0F)),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      formattedDate,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFF700F0F),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                          const SizedBox(width: 4),
-                          Container(
-                            width: 1,
-                            height: 14,
-                            color: const Color.fromARGB(255, 210, 205, 205),
-                          ),
-                          const SizedBox(width: 6),
-                          Row(
-                            children: [
-                              const Icon(Icons.access_time,
-                                  size: 13, color: Color(0xFF0E1877)),
-                              const SizedBox(width: 4),
-                              Text(
-                                formattedTime,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Color(0xFF0E1877),
+                            ),
+                            const SizedBox(width: 4),
+                            Container(
+                              width: 1,
+                              height: 14,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(width: 6),
+                            Container(
+                              color: Colors.blue[200],
+                              child: Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.access_time,
+                                        size: 13, color: Color(0xFF0E1877)),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      formattedTime,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFF0E1877),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
             Spacer(),
             Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
-              child: customButton(
-                  buttonHeight: 40,
-                  label: 'Know More',
+              padding: const EdgeInsets.only(left: 8.0,bottom: 10),
+              child: EventCountdownButton(
+                  event: event,
                   onPressed: () {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
-                            ViewMoreEventPage(
-                          event: event,
-                        ),
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
+                            ViewMoreEventPage(event: event),
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
                           const begin = Offset(1.0, 0.0);
                           const end = Offset.zero;
                           const curve = Curves.fastEaseInToSlowEaseOut;
-
-                          var tween = Tween(begin: begin, end: end)
-                              .chain(CurveTween(curve: curve));
+              
+                          var tween =
+                              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
                           var offsetAnimation = animation.drive(tween);
-
+              
                           return SlideTransition(
                             position: offsetAnimation,
                             child: child,
@@ -229,8 +241,43 @@ Widget eventWidget({
                         },
                       ),
                     );
-                  }),
+                  },
+                ),
             ),
+
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
+            //   child: customButton(
+            //       buttonHeight: 40,
+            //       buttonWidth: 180,
+            //       label: 'Know More',
+            //       onPressed: () {
+            //         Navigator.push(
+            //           context,
+            //           PageRouteBuilder(
+            //             pageBuilder: (context, animation, secondaryAnimation) =>
+            //                 ViewMoreEventPage(
+            //               event: event,
+            //             ),
+            //             transitionsBuilder:
+            //                 (context, animation, secondaryAnimation, child) {
+            //               const begin = Offset(1.0, 0.0);
+            //               const end = Offset.zero;
+            //               const curve = Curves.fastEaseInToSlowEaseOut;
+
+            //               var tween = Tween(begin: begin, end: end)
+            //                   .chain(CurveTween(curve: curve));
+            //               var offsetAnimation = animation.drive(tween);
+
+            //               return SlideTransition(
+            //                 position: offsetAnimation,
+            //                 child: child,
+            //               );
+            //             },
+            //           ),
+            //         );
+            //       }),
+            // ),
           ],
         ),
       ),

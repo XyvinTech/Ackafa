@@ -7,12 +7,13 @@ Widget customButton({
   Color labelColor = Colors.white,
   int fontSize = 16,
   int buttonHeight = 47,
+  double buttonWidth = double.infinity ,
   double size = 50,
   Color buttonColor = const Color(0xFFE30613),
 }) {
   return SizedBox(
     height: buttonHeight.toDouble(),
-    width: double.infinity,
+    width: buttonWidth,
     child: ElevatedButton(
         onPressed: onPressed,
         style: ButtonStyle(

@@ -30,10 +30,35 @@ class ProfileCompletionScreen extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Replace SvgPicture.asset with any image you are using
-                      Image.asset('assets/success.png',
-                          color: Colors.red, width: 150),
 
+                      //  Circle background with image
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              width: 210,
+                              height: 210,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFFFFEEF),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            Container(
+                              width: 180,
+                              height: 180,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFFFF8EF),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            Image.asset(
+                              'assets/success.png',
+                              scale: 0.7,
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 30,),
+                      
                       const Text(
                         "Let's Get Started,\nComplete your profile",
                         textAlign: TextAlign.center,
@@ -44,6 +69,17 @@ class ProfileCompletionScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 20),
+                      const Text(
+                        "Get ready to dive in! Just finish\n setting up your profile.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 118, 121, 124),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
                       Padding(
                         padding:
                             const EdgeInsets.only(left: 25, right: 25, top: 10),

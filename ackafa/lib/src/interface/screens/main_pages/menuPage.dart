@@ -420,117 +420,107 @@ class MenuPage extends StatelessWidget {
                       
                            
                             
+                            
                       
-                      
-                            //company profile
-                            // Padding(
-                            //   padding: const EdgeInsets.all(15.0),
-                            //   child: Center(
-                            //     child: Row(
-                            //       mainAxisAlignment: MainAxisAlignment.center,
-                            //       children: [
-                            //         GestureDetector(
-                            //           onTap: () {
-                            //             Navigator.push(
-                            //               context,
-                            //               MaterialPageRoute(
-                            //                 builder: (context) => const WebViewScreen(
-                            //                   color: Colors.blue,
-                            //                   url: 'https://www.skybertech.com/',
-                            //                   title: 'Skybertech',
-                            //                 ),
-                            //               ),
-                            //             );
-                            //           },
-                            //           child: Container(
-                            //             decoration: BoxDecoration(
-                            //                 borderRadius: BorderRadius.circular(10),
-                            //                 border: Border.all(color: Colors.grey),
-                            //                 color: const Color.fromARGB(
-                            //                     255, 246, 246, 246)),
-                            //             child: Column(
-                            //               children: [
-                            //                 Padding(
-                            //                   padding: const EdgeInsets.only(
-                            //                       top: 10, left: 22, right: 22),
-                            //                   child: Text(
-                            //                     'Powered by',
-                            //                     style: TextStyle(
-                            //                         fontSize: 12, color: Colors.grey),
-                            //                   ),
-                            //                 ),
-                            //                 Image.asset(
-                            //                   scale: 15,
-                            //                   'assets/skybertechlogo.png',
-                            //                 ),
-                            //               ],
-                            //             ),
-                            //           ),
-                            //         ),
-                            //         SizedBox(
-                            //           width: 10,
-                            //         ),
-                            //         GestureDetector(
-                            //           onTap: () {
-                            //             Navigator.push(
-                            //               context,
-                            //               MaterialPageRoute(
-                            //                 builder: (context) => const WebViewScreen(
-                            //                   color: Colors.deepPurpleAccent,
-                            //                   url: 'https://www.acutendeavors.com/',
-                            //                   title: 'ACUTE ENDEAVORS',
-                            //                 ),
-                            //               ),
-                            //             );
-                            //           },
-                            //           child: Container(
-                            //             decoration: BoxDecoration(
-                            //                 borderRadius: BorderRadius.circular(10),
-                            //                 border: Border.all(color: Colors.grey),
-                            //                 color: const Color.fromARGB(
-                            //                     255, 246, 246, 246)),
-                            //             child: Padding(
-                            //               padding: const EdgeInsets.symmetric(
-                            //                   horizontal: 15, vertical: 8),
-                            //               child: Column(
-                            //                 children: [
-                            //                   Padding(
-                            //                     padding: const EdgeInsets.only(
-                            //                         top: 2, bottom: 3),
-                            //                     child: Text(
-                            //                       'Developed by',
-                            //                       style: TextStyle(
-                            //                           fontSize: 12,
-                            //                           color: Colors.grey),
-                            //                     ),
-                            //                   ),
-                            //                   SizedBox(
-                            //                     height: 10,
-                            //                   ),
-                            //                   Padding(
-                            //                     padding:
-                            //                         const EdgeInsets.only(bottom: 7),
-                            //                     child: Image.asset(
-                            //                       scale: 25,
-                            //                       'assets/acutelogo.png',
-                            //                     ),
-                            //                   ),
-                            //                 ],
-                            //               ),
-                            //             ),
-                            //           ),
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
+                            
                             // Container(color: const Color(0xFFF2F2F2), height: 20),
                           ],
                         ),
                       ),
+                      
                     ),
-                    Divider(height: 1,),
-                    // Profile and Edit Section
+                    //company profile
+                            Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const WebViewScreen(
+                                              color: Colors.blue,
+                                              url: 'https://www.skybertech.com/',
+                                              title: 'Skybertech',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(color: const Color.fromARGB(255, 234, 230, 230)),
+                                            color: Colors.white),
+                                        child: Column(
+                                          children: [
+                                            
+                                            Image.asset(
+                                              scale: 15,
+                                              'assets/skybertechlogo.png',
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const WebViewScreen(
+                                              color: Colors.deepPurpleAccent,
+                                              url: 'https://www.xyvin.com/',
+                                              title: 'XYVIN',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        width: 120,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(color: const Color.fromARGB(255, 234, 230, 230)),
+                                            color: Colors.white),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 15, vertical: 8),
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.only(),
+                                                child: Center(
+                                                  child: SizedBox(
+                                                    
+                                                   
+                                                    child: Image.asset(
+                                                      fit: BoxFit.cover,
+                                                      scale: 2,
+                                                      
+                                                      'assets/xyvinlogo.png',
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Divider(height: 1,),
+                            // Profile and Edit Section
                             Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Row(
@@ -545,7 +535,10 @@ class MenuPage extends StatelessWidget {
                                       fit: BoxFit.cover,
                                       errorBuilder: (context, error, stackTrace) {
                                         return Image.asset(
-                                            'assets/icons/dummy_person_small.png');
+                                          user.gender == 'Male'
+                                              ? 'assets/male.png'
+                                              : 'assets/female.png',
+                                            );
                                       },
                                     ),
                                   ),
@@ -624,9 +617,9 @@ class MenuPage extends StatelessWidget {
       // ),
       title: Text(title, style: TextStyle(
         fontFamily: 'HelveticaNeue',
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
         
-        fontSize: 23,
+        fontSize: 27,
         color: textColor)),
       // trailing: SvgPicture.asset(
       //   'assets/icons/polygon.svg',

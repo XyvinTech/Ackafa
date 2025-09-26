@@ -12,6 +12,7 @@ class UserModel {
   final String? phone;
   final String? bio;
   final String? status;
+  final String? gender;
   final int? otp;
   final String? address;
   final Company? company;
@@ -25,37 +26,38 @@ class UserModel {
   final String? memberId;
   final List<String>? blockedUsers;
 
-  UserModel({
-    this.fullName,
-    this.emiratesID,
-    this.id,
-    this.uid,
-    this.college,
-    this.course,
-    this.batch,
-    this.role,
-    this.image,
-    this.email,
-    this.phone,
-    this.bio,
-    this.status,
-    this.otp,
-    this.address,
-    this.company,
-    this.social,
-    this.websites,
-    this.awards,
-    this.videos,
-    this.certificates,
-    this.reason,
-    this.profileCompletion,
+  UserModel(
+      {this.fullName,
+      this.emiratesID,
+      this.id,
+      this.uid,
+      this.college,
+      this.course,
+      this.batch,
+      this.role,
+      this.image,
+      this.email,
+      this.phone,
+      this.bio,
+      this.status,
+      this.otp,
+      this.address,
+      this.company,
+      this.social,
+      this.websites,
+      this.awards,
+      this.videos,
+      this.certificates,
+      this.reason,
+      this.profileCompletion,
       this.memberId,
-      this.blockedUsers
-  });
+      this.blockedUsers,
+      this.gender
+      });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      fullName: json['fullName'] ,
+      fullName: json['fullName'],
       id: json['_id'],
       emiratesID: json['emiratesID'],
       uid: json['uid'],
@@ -98,8 +100,10 @@ class UserModel {
           : null,
       reason: json['reason'],
       profileCompletion: json['profileCompletion'] as String?,
-         memberId: json['memberId'],  
-            blockedUsers: (json['blockedUsers'] as List?)?.map((item) => item as String).toList(),
+      memberId: json['memberId'],
+      blockedUsers: (json['blockedUsers'] as List?)
+          ?.map((item) => item as String)
+          .toList(),
     );
   }
 
@@ -127,42 +131,42 @@ class UserModel {
       'certificates': certificates?.map((item) => item.toJson()).toList(),
       'reason': reason,
       'profileCompletion': profileCompletion,
-       'memberId': memberId,
-       'blockedUsers': blockedUsers
+      'memberId': memberId,
+      'blockedUsers': blockedUsers,
+      'gender' : gender
     };
   }
 
-  UserModel copyWith({
-    String? fullName,
-    String? emiratesID,
-    String? id,
-    String? uid,
-    UserCollege? college,
-    UserCourse? course,
-    int? batch,
-    String? role,
-    String? image,
-    String? email,
-    String? phone,
-    String? bio,
-    String? status,
-    int? otp,
-    String? address,
-    Company? company,
-    List<Link>? social,
-    List<Link>? websites,
-    List<Award>? awards,
-    List<Link>? videos,
-    List<Link>? certificates,
-    String? reason,
-    String? profileCompletion,
-     String? memberId,
-     List<String>? blockedUsers
-  }) {
+  UserModel copyWith(
+      {String? fullName,
+      String? emiratesID,
+      String? id,
+      String? uid,
+      UserCollege? college,
+      UserCourse? course,
+      int? batch,
+      String? role,
+      String? image,
+      String? email,
+      String? phone,
+      String? bio,
+      String? status,
+      String? gender,
+      int? otp,
+      String? address,
+      Company? company,
+      List<Link>? social,
+      List<Link>? websites,
+      List<Award>? awards,
+      List<Link>? videos,
+      List<Link>? certificates,
+      String? reason,
+      String? profileCompletion,
+      String? memberId,
+      List<String>? blockedUsers}) {
     return UserModel(
       fullName: fullName ?? this.fullName,
       emiratesID: emiratesID ?? this.emiratesID,
-      
       id: id ?? this.id,
       uid: uid ?? this.uid,
       college: college ?? this.college,
@@ -184,15 +188,12 @@ class UserModel {
       certificates: certificates ?? this.certificates,
       reason: reason ?? this.reason,
       profileCompletion: profileCompletion ?? this.profileCompletion,
-         memberId: memberId ?? this.memberId,
-         blockedUsers: blockedUsers?? this.blockedUsers,
+      memberId: memberId ?? this.memberId,
+      blockedUsers: blockedUsers ?? this.blockedUsers,
+      gender: gender ?? this.gender,
     );
   }
 }
-
-
-
-
 
 class Company {
   final String? name;

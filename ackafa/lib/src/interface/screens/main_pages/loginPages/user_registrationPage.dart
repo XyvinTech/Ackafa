@@ -245,43 +245,43 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty) {
-                                                    return 'Please Enter your First Name';
+                                                    return 'Please Enter your Full Name';
                                                   }
                                                   return null;
                                                 },
                                                 textController: nameController,
                                                 labelText:
-                                                    'Enter Your First name',
+                                                    'Enter Your Full name',
                                               ),
-                                              const SizedBox(height: 20.0),
+                                              // const SizedBox(height: 20.0),
 
                                               /////middle
-                                              CustomTextFormField(
-                                                validator: (value) {
-                                                  if (value == null ||
-                                                      value.isEmpty) {
-                                                    return 'Please Enter your Middle Name';
-                                                  }
-                                                  return null;
-                                                },
-                                                textController: middleController,
-                                                labelText:
-                                                    'Enter Your Middle name',
-                                              ),
-                                              const SizedBox(height: 20.0),
-                                              /////last name
-                                              CustomTextFormField(
-                                                validator: (value) {
-                                                  if (value == null ||
-                                                      value.isEmpty) {
-                                                    return 'Please Enter your Last name';
-                                                  }
-                                                  return null;
-                                                },
-                                                textController: lastController,
-                                                labelText:
-                                                    'Enter Your Last name',
-                                              ),
+                                              // CustomTextFormField(
+                                              //   validator: (value) {
+                                              //     if (value == null ||
+                                              //         value.isEmpty) {
+                                              //       return 'Please Enter your Middle Name';
+                                              //     }
+                                              //     return null;
+                                              //   },
+                                              //   textController: middleController,
+                                              //   labelText:
+                                              //       'Enter Your Middle name',
+                                              // ),
+                                              // const SizedBox(height: 20.0),
+                                              // /////last name
+                                              // CustomTextFormField(
+                                              //   validator: (value) {
+                                              //     if (value == null ||
+                                              //         value.isEmpty) {
+                                              //       return 'Please Enter your Last name';
+                                              //     }
+                                              //     return null;
+                                              //   },
+                                              //   textController: lastController,
+                                              //   labelText:
+                                              //       'Enter Your Last name',
+                                              // ),
                                               const SizedBox(height: 20.0),
 
                                               // _createLabel('Email ID', true),
@@ -425,28 +425,38 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                               ////isssue with coursesss
 
                                               const SizedBox(height: 20.0),
-                                              FormField<String>(
+                                              FormField<Course>(
                                                 // validator: (value) {
                                                 //   if (selectedCourse == null) {
                                                 //     return 'Please select your couse';
                                                 //   }
                                                 //   return null;
                                                 // },
-                                                builder: (FormFieldState<String> state) {
+                                                builder: (FormFieldState<Course> state) {
                                                   return Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      CustomDropdownButton<String>(
+                                                      CustomDropdownButton<Course>(
                                                         labelText: 'Course',
-                                                        items: const [
-                                                          DropdownMenuItem(value: 'Course1', child: Text('Course1')),
-                                                          DropdownMenuItem(value: 'Course2', child: Text('Course2')),
-                                                          DropdownMenuItem(value: 'Course3', child: Text('Course3')),
-                                                        ],
-                                                        value: selectedGender,
-                                                        onChanged: (String? value) {
+                                                        items: selectedCollegeIndex !=
+                                                                -1
+                                                            ? colleges[
+                                                                    selectedCollegeIndex!]
+                                                                .course!
+                                                                .map((course) {
+                                                                return DropdownMenuItem<
+                                                                    Course>(
+                                                                  value: course,
+                                                                      
+                                                                  child: Text(course
+                                                                      .toString()),
+                                                                );
+                                                              }).toList()
+                                                            : [],
+                                                        value: selectedCourse,
+                                                        onChanged: (Course? value) {
                                                           setState(() {
-                                                            selectedGender = value;
+                                                            selectedCourse = value;
                                                             state.didChange(value);
                                                           });
                                                         },
@@ -578,6 +588,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                               profileImageUrl,
                                                           name: nameController
                                                               .text,
+                                                          gender: selectedGender,
                                                           emailId:
                                                               emailController
                                                                   .text,

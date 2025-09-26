@@ -17,6 +17,7 @@ import 'package:ackaf/src/interface/common/custom_icon_container.dart';
 import 'package:ackaf/src/interface/common/custom_video.dart';
 import 'package:ackaf/src/interface/common/event_widget.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
+import 'package:ackaf/src/interface/constants/text_style.dart';
 import 'package:ackaf/src/interface/screens/event_news/event.dart';
 import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart';
 import 'package:ackaf/src/interface/screens/main_pages/approvalPages/approval_page.dart';
@@ -234,6 +235,68 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
 
                       const SizedBox(height: 16),
+                      // Events Carousel
+                      asyncEvents.when(
+                        data: (events) {
+                          return events.isNotEmpty
+                              ? Column(
+                                  children: [
+                                    // const Row(
+                                    //   children: [
+                                    //     Padding(
+                                    //       padding: EdgeInsets.only(
+                                    //           left: 25, top: 24),
+                                    //       child: Text(
+                                    //         'Events',
+                                    //         style: TextStyle(
+                                    //             fontSize: 17,
+                                    //             fontWeight: FontWeight.w600),
+                                    //       ),
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                    CarouselSlider(
+                                      items: events.map((event) {
+                                        return Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.95,
+                                          child: eventWidget(
+                                            withImage: true,
+                                            context: context,
+                                            event: event,
+                                          ),
+                                        );
+                                      }).toList(),
+                                      options: CarouselOptions(
+                                        enableInfiniteScroll: false,
+                                        height: 380,
+                                        scrollPhysics: events.length > 1
+                                            ? null
+                                            : NeverScrollableScrollPhysics(),
+                                        autoPlay:
+                                            events.length > 1 ? true : false,
+                                        viewportFraction: 1,
+                                        autoPlayInterval: Duration(seconds: 3),
+                                        onPageChanged: (index, reason) {
+                                          setState(() {
+                                            _currentEventIndex = index;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    if(events.length>1)
+                                    _buildDotIndicator(_currentEventIndex,
+                                        events.length, Colors.red),
+                                  ],
+                                )
+                              : SizedBox();
+                        },
+                        loading: () => Center(child: LoadingAnimation()),
+                        error: (error, stackTrace) => SizedBox(),
+                      ),
+                      SizedBox(height: 20,),
 
                       // Notices Carousel
                       if (notices.isNotEmpty)
@@ -263,6 +326,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             const SizedBox(
                               height: 10,
                             ),
+                            if(notices.length>1)
                             _buildDotIndicator(
                                 _currentNoticeIndex,
                                 notices.length,
@@ -305,67 +369,52 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ],
                           ),
                         ),
-
-                      // Events Carousel
-                      asyncEvents.when(
-                        data: (events) {
-                          return events.isNotEmpty
-                              ? Column(
+                        SizedBox(height: 20,),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Container(
+                          width: MediaQuery.of(context).size.width ,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.yellow[50], // Set the background color to white
+                            borderRadius: BorderRadius.circular(8.0),
+                            border: Border.all(
+                              color: const Color.fromARGB(
+                                  255, 225, 231, 236), // Set the border color to blue
+                              width: 1.0, // Adjust the width as needed
+                            ),
+                          ),
+                          child:  Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Row(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 25, top: 24),
-                                          child: Text(
-                                            'Events',
-                                            style: TextStyle(
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    CarouselSlider(
-                                      items: events.map((event) {
-                                        return Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.95,
-                                          child: eventWidget(
-                                            withImage: true,
-                                            context: context,
-                                            event: event,
-                                          ),
-                                        );
-                                      }).toList(),
-                                      options: CarouselOptions(
-                                        enableInfiniteScroll: false,
-                                        height: 380,
-                                        scrollPhysics: events.length > 1
-                                            ? null
-                                            : NeverScrollableScrollPhysics(),
-                                        autoPlay:
-                                            events.length > 1 ? true : false,
-                                        viewportFraction: 1,
-                                        autoPlayInterval: Duration(seconds: 3),
-                                        onPageChanged: (index, reason) {
-                                          setState(() {
-                                            _currentEventIndex = index;
-                                          });
-                                        },
+                                    
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 30,bottom: 10),
+                                      child: Text(
+                                        'VISION',
+                                        style: AppTextStyles.heading21.copyWith(color: Colors.black,fontWeight: FontWeight.w600)
                                       ),
                                     ),
-                                    _buildDotIndicator(_currentEventIndex,
-                                        events.length, Colors.red),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'In compliance with UAE laws, AKCAF’s aims \nto foster new connections between the two\ngreat nations with a deep commitment to\nsupport and serve the community in a \ndedicated and selfless manner.',
+                                      style: AppTextStyles.subHeading16
+                                    ),
+                                    
                                   ],
-                                )
-                              : SizedBox();
-                        },
-                        loading: () => Center(child: LoadingAnimation()),
-                        error: (error, stackTrace) => SizedBox(),
-                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                                                ),
+                        ),
+
+                      
 
                       const SizedBox(height: 16),
 
@@ -432,7 +481,7 @@ Widget _buildBanners(
   return Container(
     width: MediaQuery.sizeOf(context).width / 1.15,
     child: AspectRatio(
-      aspectRatio: 2 / 1, // Custom aspect ratio as 2:1
+      aspectRatio: 16 / 9, // Custom aspect ratio as 2:1
       child: Stack(
         clipBehavior: Clip.none, // This allows overflow
         children: [
@@ -490,8 +539,9 @@ Widget customPoster({
     child: Transform.translate(
       offset: const Offset(0, 6),
       child: Container(
-        height: MediaQuery.of(context).size.height*0.65,
-        margin: const EdgeInsets.only(bottom: 12.0),
+        height: 200,
+        // height: MediaQuery.of(context).size.height*0.20,
+        margin: const EdgeInsets.only(bottom: 10.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.0),
@@ -500,50 +550,89 @@ Widget customPoster({
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Poster Image
-            Container(
-              padding: const EdgeInsets.all(10),
-              width: MediaQuery.sizeOf(context).width * .95,
-              height: 370,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  poster.media ?? '',
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
+/////poster image
+            AspectRatio(
+            aspectRatio: 4 / 3, // width : height = 3:4
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                poster.media ?? '',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                    );
-                  },
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
+                    ),
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
+          ),
 
-            const Spacer(),
+            // Poster Image
+            // Container(
+            //   padding: const EdgeInsets.all(10),
+            //   width: MediaQuery.sizeOf(context).width * .95,
+            //   height: 370,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(10),
+            //     color: Colors.white,
+            //   ),
+            //   child: ClipRRect(
+            //     borderRadius: BorderRadius.circular(10),
+            //     child: Image.network(
+            //       poster.media ?? '',
+            //       fit: BoxFit.cover,
+            //       errorBuilder: (context, error, stackTrace) {
+            //         return Shimmer.fromColors(
+            //           baseColor: Colors.grey[300]!,
+            //           highlightColor: Colors.grey[100]!,
+            //           child: Container(
+            //             decoration: BoxDecoration(
+            //               color: Colors.grey[300],
+            //               borderRadius: BorderRadius.circular(8.0),
+            //             ),
+            //           ),
+            //         );
+            //       },
+            //       loadingBuilder: (context, child, loadingProgress) {
+            //         if (loadingProgress == null) return child;
+            //         return Shimmer.fromColors(
+            //           baseColor: Colors.grey[300]!,
+            //           highlightColor: Colors.grey[100]!,
+            //           child: Container(
+            //             decoration: BoxDecoration(
+            //               color: Colors.grey[300],
+            //               borderRadius: BorderRadius.circular(8.0),
+            //             ),
+            //           ),
+            //         );
+            //       },
+            //     ),
+            //   ),
+            // ),
+
+            // const Spacer(),
+            const SizedBox(height: 40), // <-- small gap between image & button
+
 
             // Button
             if (poster.link != null &&
@@ -633,12 +722,12 @@ Widget customNotice(
       width: MediaQuery.of(context).size.width - 32,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFFEDDCF3), // Set the background color to white
+        color: Colors.white, // Set the background color to white
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
           color: const Color.fromARGB(
               255, 225, 231, 236), // Set the border color to blue
-          width: 2.0, // Adjust the width as needed
+          width: 1.0, // Adjust the width as needed
         ),
       ),
       child: Row(

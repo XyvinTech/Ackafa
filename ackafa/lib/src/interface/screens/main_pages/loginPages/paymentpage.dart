@@ -5,6 +5,7 @@ import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/webview.dart';
+import 'package:ackaf/src/interface/constants/text_style.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_completetion_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -157,20 +158,12 @@ class PaymentConfirmationPage extends StatelessWidget {
                           children: [
                             Text(
                               'You Will Receive Payment Link Soon',
-                              style: TextStyle(
-                                fontFamily: 'HelveticaNeue',
-                                fontSize: 18,
-                                color: Colors.grey,
-                              ),
-                              textAlign: TextAlign.center,
+                              style: AppTextStyles.subHeading18,
+                              
                             ),
                             Text(
                               'Do not delete the App',
-                              style: TextStyle(
-                                fontFamily: 'HelveticaNeue',
-                                fontSize: 18,
-                                color: Colors.grey,
-                              ),
+                              style: AppTextStyles.subHeading18,
                               textAlign: TextAlign.center,
                             ),
                           ],
