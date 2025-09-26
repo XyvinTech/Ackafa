@@ -27,8 +27,7 @@ class College {
 
   factory College.fromJson(Map<String, dynamic> json) {
     return College(
-      id: json['_id'] as String?,
-      collegeName: json['collegeName'] as String?,
+    id: json['_id'] ?? json['id'],  collegeName: json['collegeName'] as String?,
       startYear: json['startYear'] as int?,
       batch: (json['batch'] as List<dynamic>?)?.map((e) => e as int).toList(),
       country: json['country'] as String?,
@@ -137,5 +136,10 @@ class Course {
       updatedAt: updatedAt ?? this.updatedAt,
       v: v ?? this.v,
     );
+  }
+
+  @override
+  String toString() {
+    return courseName ?? 'Unknown Course';
   }
 }

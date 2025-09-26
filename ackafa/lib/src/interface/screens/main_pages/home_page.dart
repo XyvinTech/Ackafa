@@ -138,12 +138,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                         child: Row(
                           children: [
                             Text('Hi,  ${widget.user.fullName}!',
-                                                style: const TextStyle(
-                                                  fontFamily: 'HelveticaNeue',
-                                                  fontSize: 19,
-                                                  fontWeight: FontWeight.normal,
-                                                  color: Colors.black
-                                                )),
+                                style: const TextStyle(
+                                    fontFamily: 'HelveticaNeue',
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black)),
                           ],
                         ),
                       ),
@@ -151,60 +150,65 @@ class _HomePageState extends ConsumerState<HomePage> {
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Row(
-                                          children: [
-                                            Flexible(
-                                              child: Text(
-                                                style: TextStyle(
-                                                    fontFamily: 'HelveticaNeue',
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.normal,
-                                                    color: Colors.grey
-                                                  ),
-                                                'Here\'s to growing your family story, one branch at a time.',
-                                              ),
-                                            )
-                                          ],
-                                        ),
+                          children: [
+                            Flexible(
+                              child: Text(
+                                style: TextStyle(
+                                    fontFamily: 'HelveticaNeue',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey),
+                                'Here\'s to growing your family story, one branch at a time.',
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 10),
 
                       Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 16, right: 16, top: 10),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => ProfilePage(user: widget.user)),
-                                            );
-                                            },
-                                            child: Image.asset('assets/digitalcard.png')),
-                                            //event
-                                          GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(builder: (context) => const EventPage()),
-                                                );
-                                              
-                                            },
-                                            child: Image.asset('assets/eventcard.png')),
-                                            //chat
-                                            GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(builder: (context) => const PeoplePage()),
-                                                );
-                                              },
-                                              child: Image.asset('assets/chatcard.png'))     
-                                        ],
-                                      )
-                                    ),
-                      const SizedBox(height: 10,),
+                          padding: const EdgeInsets.only(
+                              left: 16, right: 16, top: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProfilePage(user: widget.user)),
+                                    );
+                                  },
+                                  child: Image.asset('assets/digitalcard.png')),
+                              //event
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const EventPage()),
+                                    );
+                                  },
+                                  child: Image.asset('assets/eventcard.png')),
+                              //chat
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const PeoplePage()),
+                                    );
+                                  },
+                                  child: Image.asset('assets/chatcard.png'))
+                            ],
+                          )),
+                      const SizedBox(
+                        height: 10,
+                      ),
 
                       // Banner Carousel
                       if (banners.isNotEmpty)
@@ -286,9 +290,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                                         },
                                       ),
                                     ),
-                                    if(events.length>1)
-                                    _buildDotIndicator(_currentEventIndex,
-                                        events.length, Colors.red),
+                                    if (events.length > 1)
+                                      _buildDotIndicator(_currentEventIndex,
+                                          events.length, Colors.red),
                                   ],
                                 )
                               : SizedBox();
@@ -296,7 +300,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                         loading: () => Center(child: LoadingAnimation()),
                         error: (error, stackTrace) => SizedBox(),
                       ),
-                      SizedBox(height: 20,),
+                      SizedBox(
+                        height: 20,
+                      ),
 
                       // Notices Carousel
                       if (notices.isNotEmpty)
@@ -326,11 +332,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                             const SizedBox(
                               height: 10,
                             ),
-                            if(notices.length>1)
-                            _buildDotIndicator(
-                                _currentNoticeIndex,
-                                notices.length,
-                                const Color.fromARGB(255, 39, 38, 38)),
+                            if (notices.length > 1)
+                              _buildDotIndicator(
+                                  _currentNoticeIndex,
+                                  notices.length,
+                                  const Color.fromARGB(255, 39, 38, 38)),
                           ],
                         ),
 
@@ -369,22 +375,25 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ],
                           ),
                         ),
-                        SizedBox(height: 20,),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Container(
-                          width: MediaQuery.of(context).size.width ,
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.yellow[50], // Set the background color to white
+                            color: Colors.yellow[
+                                50], // Set the background color to white
                             borderRadius: BorderRadius.circular(8.0),
                             border: Border.all(
-                              color: const Color.fromARGB(
-                                  255, 225, 231, 236), // Set the border color to blue
+                              color: const Color.fromARGB(255, 225, 231,
+                                  236), // Set the border color to blue
                               width: 1.0, // Adjust the width as needed
                             ),
                           ),
-                          child:  Row(
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(width: 8),
@@ -392,29 +401,26 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    
                                     Padding(
-                                      padding: const EdgeInsets.only(top: 30,bottom: 10),
-                                      child: Text(
-                                        'VISION',
-                                        style: AppTextStyles.heading21.copyWith(color: Colors.black,fontWeight: FontWeight.w600)
-                                      ),
+                                      padding: const EdgeInsets.only(
+                                          top: 30, bottom: 10),
+                                      child: Text('VISION',
+                                          style: AppTextStyles.heading21
+                                              .copyWith(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600)),
                                     ),
                                     SizedBox(height: 8),
                                     Text(
-                                      'In compliance with UAE laws, AKCAF’s aims \nto foster new connections between the two\ngreat nations with a deep commitment to\nsupport and serve the community in a \ndedicated and selfless manner.',
-                                      style: AppTextStyles.subHeading16
-                                    ),
-                                    
+                                        'In compliance with UAE laws, AKCAF’s aims \nto foster new connections between the two\ngreat nations with a deep commitment to\nsupport and serve the community in a \ndedicated and selfless manner.',
+                                        style: AppTextStyles.subHeading16),
                                   ],
                                 ),
                               ),
                             ],
                           ),
-                                                ),
                         ),
-
-                      
+                      ),
 
                       const SizedBox(height: 16),
 
@@ -552,40 +558,40 @@ Widget customPoster({
           children: [
 /////poster image
             AspectRatio(
-            aspectRatio: 4 / 3, // width : height = 3:4
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                poster.media ?? '',
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8.0),
+              aspectRatio: 4 / 3, // width : height = 3:4
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  poster.media ?? '',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
-                    ),
-                  );
-                },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8.0),
+                    );
+                  },
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
-          ),
 
             // Poster Image
             // Container(
@@ -633,25 +639,23 @@ Widget customPoster({
             // const Spacer(),
             const SizedBox(height: 40), // <-- small gap between image & button
 
-
             // Button
             if (poster.link != null &&
                 poster.link != '' &&
                 poster.link != 'null')
               Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
-                  child: customButton(
-                    buttonHeight: 40,
-                    label: 'Know More',
-                    onPressed: () {
-                      // Add your navigation or action here
-                      log(poster.link ?? '');
-                      print(poster.link);
-                      launchURL(poster.link ?? '');
-                    },
-                  ),
+                padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
+                child: customButton(
+                  buttonHeight: 40,
+                  label: 'Know More',
+                  onPressed: () {
+                    // Add your navigation or action here
+                    log(poster.link ?? '');
+                    print(poster.link);
+                    launchURL(poster.link ?? '');
+                  },
                 ),
-              
+              ),
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:ackaf/src/data/globals.dart';
 import 'package:ackaf/src/data/models/college_model.dart';
+import 'package:ackaf/src/data/models/user_model.dart';
 // removed unused imports
 import 'package:ackaf/src/data/providers/user_provider.dart';
 import 'package:ackaf/src/data/services/api_routes/college_api.dart';
@@ -80,6 +81,65 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
   String? selectedCollegeId;
   String? selectedCourseId;
   final _formKey = GlobalKey<FormState>();
+  void _populateControllersWithUserData(UserModel user) {
+    if (nameController.text.isEmpty && user.fullName != null) {
+      nameController.text = user.fullName!;
+    }
+    if (emailController.text.isEmpty && user.email != null) {
+      emailController.text = user.email!;
+    }
+    if (emirateIDController.text.isEmpty && user.emiratesID != null) {
+      emirateIDController.text = user.emiratesID!;
+    }
+    if (selectedGender == null && user.gender != null) {
+      selectedGender = user.gender;
+    }
+    if (selectedBatch == null && user.batch != null) {
+      selectedBatch = user.batch.toString();
+    }
+  }
+
+  void _populateCollegeAndCourseData(UserModel user, List<College> colleges) {
+    if (selectedCollege == null && user.college != null) {
+      final userCollegeId = user.college!.id;
+      log('Looking for user college ID: $userCollegeId');
+      log('Available colleges: ${colleges.map((c) => '${c.id}: ${c.collegeName}').join(', ')}');
+      
+      final collegeIndex = colleges.indexWhere((college) => college.id == userCollegeId);
+      
+      if (collegeIndex != -1) {
+        log('Found college at index $collegeIndex: ${colleges[collegeIndex].collegeName}');
+        setState(() {
+          selectedCollege = colleges[collegeIndex];
+          selectedCollegeIndex = collegeIndex;
+          selectedCollegeId = userCollegeId;
+        });
+        _setCourseFromUserData(user, colleges[collegeIndex]);
+      } else {
+        log('User college not found in available colleges: $userCollegeId');
+      }
+    }
+  }
+
+  void _setCourseFromUserData(UserModel user, College selectedCollegeData) {
+    if (selectedCourse == null && user.course != null) {
+      final userCourseId = user.course!.id;
+      final availableCourses = selectedCollegeData.course ?? [];
+      
+      try {
+        final matchingCourse = availableCourses.firstWhere(
+          (course) => course.id == userCourseId,
+        );
+        
+        setState(() {
+          selectedCourse = matchingCourse;
+        });
+      } catch (e) {
+        log('User course not found in available courses: $userCourseId');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -87,12 +147,19 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
         final asyncUser = ref.watch(userProvider);
         return asyncUser.when(
           data: (user) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _populateControllersWithUserData(user);
+            });
             if (user.batch == null) {
               return Consumer(
                 builder: (context, ref, child) {
                   final asyncColleges = ref.watch(fetchCollegesProvider(token));
                   return asyncColleges.when(
                     data: (colleges) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        _populateCollegeAndCourseData(user, colleges);
+                      });
+                      
                       return RefreshIndicator(
                         backgroundColor: Colors.white,
                         color: Colors.red,
@@ -110,14 +177,6 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                       children: [
                                         const SizedBox(height: 105),
                                         FormField<File>(
-                                          // validator: (value) {
-                                          //   if (_profileImageFile == null) {
-                                          //     log(profileImageUrl ??
-                                          //         'No profile image selected');
-                                          //     return 'Please select a profile image';
-                                          //   }
-                                          //   return null;
-                                          // },
                                           builder:
                                               (FormFieldState<File> state) {
                                             return Center(
@@ -240,7 +299,6 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                               bottom: 10),
                                           child: Column(
                                             children: [
-                                              // _createLabel('Full Name', true),
                                               CustomTextFormField(
                                                 validator: (value) {
                                                   if (value == null ||
@@ -253,38 +311,9 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                 labelText:
                                                     'Enter Your Full name',
                                               ),
-                                              // const SizedBox(height: 20.0),
-
-                                              /////middle
-                                              // CustomTextFormField(
-                                              //   validator: (value) {
-                                              //     if (value == null ||
-                                              //         value.isEmpty) {
-                                              //       return 'Please Enter your Middle Name';
-                                              //     }
-                                              //     return null;
-                                              //   },
-                                              //   textController: middleController,
-                                              //   labelText:
-                                              //       'Enter Your Middle name',
-                                              // ),
-                                              // const SizedBox(height: 20.0),
-                                              // /////last name
-                                              // CustomTextFormField(
-                                              //   validator: (value) {
-                                              //     if (value == null ||
-                                              //         value.isEmpty) {
-                                              //       return 'Please Enter your Last name';
-                                              //     }
-                                              //     return null;
-                                              //   },
-                                              //   textController: lastController,
-                                              //   labelText:
-                                              //       'Enter Your Last name',
-                                              // ),
+   
                                               const SizedBox(height: 20.0),
 
-                                              // _createLabel('Email ID', true),
                                               CustomTextFormField(
                                                   validator: (value) {
                                                     if (value == null ||
@@ -298,18 +327,6 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                   labelText:
                                                       'Enter your  Email ID'),
                                               const SizedBox(height: 20.0),
-                                              // _createLabel('Emirates ID', true),
-                                              // CustomTextFormField(
-                                              //     validator: (value) =>
-                                              //         validateEmiratesId(value,
-                                              //             phoneNumber:
-                                              //                 user.phone ?? ''),
-                                              //     textController:
-                                              //         emirateIDController,
-                                              //     labelText:
-                                              //         'Enter your  Emirates ID'),
-                                              // const SizedBox(height: 20.0),
-                                              // _createLabel('College', true),
                                               FormField<College>(
                                                 validator: (value) {
                                                   if (selectedCollege == null) {
@@ -329,12 +346,13 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                           College>(
                                                         labelText:
                                                             'Select College',
+                                                        value: selectedCollege,
                                                         items: colleges
                                                             .map((college) {
                                                           return DropdownMenuItem<
                                                               College>(
                                                             value:
-                                                                college, // Store the entire College object as value
+                                                                college,
                                                             child: Text(college
                                                                 .collegeName!),
                                                           );
@@ -354,7 +372,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                             selectedCollegeId =
                                                                 value?.id;
                                                             state.didChange(
-                                                                value); // Notify the form field of the change
+                                                                value); 
                                                           });
                                                         },
                                                       ),
@@ -377,20 +395,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                 },
                                               ),
                                               const SizedBox(height: 20.0),
-
-
-
-
-
-                                              // gender
-                                              // _createLabel('Gender', true),
                                               FormField<String>(
-                                                // validator: (value) {
-                                                //   if (selectedGender == null) {
-                                                //     return 'Please select your gender';
-                                                //   }
-                                                //   return null;
-                                                // },
                                                 builder: (FormFieldState<String> state) {
                                                   return Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -422,16 +427,8 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                   );
                                                 },
                                               ),
-                                              ////isssue with coursesss
-
                                               const SizedBox(height: 20.0),
                                               FormField<Course>(
-                                                // validator: (value) {
-                                                //   if (selectedCourse == null) {
-                                                //     return 'Please select your couse';
-                                                //   }
-                                                //   return null;
-                                                // },
                                                 builder: (FormFieldState<Course> state) {
                                                   return Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,

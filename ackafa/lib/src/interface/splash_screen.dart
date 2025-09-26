@@ -47,7 +47,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   Future<void> checkAppVersion(context) async {
     log('Checking app version...');
     final response = await http.get(Uri.parse('$baseUrl/user/app-version'));
-
+    log(response.body.toString());
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       final appVersionResponse = AppVersionResponse.fromJson(jsonResponse);
@@ -109,8 +109,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 Navigator.pushReplacementNamed(context, '/mainpage').then((_) {
                   _deepLinkService.handleDeepLink(pendingDeepLink);
                   _deepLinkService.clearPendingDeepLink();
-                }
-                );
+                });
               } else {
                 Navigator.pushReplacementNamed(context, '/mainpage');
               }
