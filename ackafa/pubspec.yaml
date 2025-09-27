@@ -30,10 +30,10 @@ dependencies:
   web_socket_client: ^0.1.0
   font_awesome_flutter: ^10.1.0
   shared_preferences: ^2.3.2
-  firebase_messaging: ^15.1.0
-  firebase_core: ^3.4.0
+  firebase_messaging: ^16.0.2
+  firebase_core: ^4.1.1
   socket_io_client: ^3.0.0-beta.2
-  firebase_auth: ^5.1.4
+  firebase_auth: ^6.1.0
   flutter_dotenv: ^5.1.0
   minio_flutter: ^0.0.1
   flutter_upgrade_version: ^1.1.6
