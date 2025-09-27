@@ -82,7 +82,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       final double itemHeight =
           titleHeight + descriptionHeight; // Adding padding
       if (itemHeight > maxHeight) {
-        maxHeight = itemHeight + 30;
+        maxHeight = itemHeight + 50;
       }
     }
     return maxHeight;
@@ -177,8 +177,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        ProfilePage(user: widget.user,isback: true,),
+                                    builder: (context) => ProfilePage(
+                                      user: widget.user,
+                                      isback: true,
+                                    ),
                                   ),
                                 );
                               },
@@ -235,7 +237,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const PeoplePage(isback: true,),
+                                    builder: (context) => const PeoplePage(
+                                      isback: true,
+                                    ),
                                   ),
                                 );
                               },
@@ -413,8 +417,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 }).toList(),
                                 options: CarouselOptions(
                                   enableInfiniteScroll: false,
-                                  
-                                  height: 
+                                  height:
                                       MediaQuery.of(context).size.height * 0.67,
                                   scrollPhysics: posters.length > 1
                                       ? null
@@ -432,8 +435,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ],
                           ),
                         ),
-                        
-                      
+
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Container(
@@ -723,29 +725,30 @@ Widget customPoster({
             if (poster.link != null &&
                 poster.link != '' &&
                 poster.link != 'null')
-              
-                Center(
-                  child: GestureDetector(
-                    onTap: (){
+              Center(
+                child: GestureDetector(
+                    onTap: () {
                       // Add your navigation or action here
                       log(poster.link ?? '');
                       print(poster.link);
                       launchURL(poster.link ?? '');
-                   
                     },
-                    child: Text('Know more>',textAlign: TextAlign.center,style: TextStyle(color: Colors.red),)),
-                ),
-                // child: customButton(
-                //   buttonHeight: 40,
-                //   label: 'Know More',
-                //   onPressed: () {
-                //     // Add your navigation or action here
-                //     log(poster.link ?? '');
-                //     print(poster.link);
-                //     launchURL(poster.link ?? '');
-                //   },
-                // ),
-              
+                    child: Text(
+                      'Know more>',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.red),
+                    )),
+              ),
+            // child: customButton(
+            //   buttonHeight: 40,
+            //   label: 'Know More',
+            //   onPressed: () {
+            //     // Add your navigation or action here
+            //     log(poster.link ?? '');
+            //     print(poster.link);
+            //     launchURL(poster.link ?? '');
+            //   },
+            // ),
           ],
         ),
       ),
