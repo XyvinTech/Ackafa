@@ -178,7 +178,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        ProfilePage(user: widget.user),
+                                        ProfilePage(user: widget.user,isback: true,),
                                   ),
                                 );
                               },
@@ -235,7 +235,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const PeoplePage(),
+                                    builder: (context) => const PeoplePage(isback: true,),
                                   ),
                                 );
                               },

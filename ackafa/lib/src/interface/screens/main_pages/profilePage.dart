@@ -12,13 +12,15 @@ import 'package:share_plus/share_plus.dart'; // Import the XCard widget
 
 class ProfilePage extends StatelessWidget {
   final UserModel user;
-  const ProfilePage({super.key, required this.user});
+  // final bool isthredash;
+  final bool isback;
+  const ProfilePage({super.key, required this.user,this.isback=false});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        isThreeDashNeeded: true,
+        showBackButton: isback,
       ),
       body: SingleChildScrollView(
         child: Column(

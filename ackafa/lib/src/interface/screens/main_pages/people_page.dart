@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chat.dart';
 import 'package:ackaf/src/interface/screens/people/members.dart';
 
-
 class PeoplePage extends StatelessWidget {
-  const PeoplePage({super.key});
+  final bool isback;
+  const PeoplePage({super.key,this.isback=false});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,8 @@ class PeoplePage extends StatelessWidget {
 
         child: Scaffold(
             backgroundColor: Colors.white,
-            appBar: const CustomAppBar(
+            appBar:  CustomAppBar(
+              showBackButton: isback,
               iselevationNeeded: false,
             ),
             body: Column(
