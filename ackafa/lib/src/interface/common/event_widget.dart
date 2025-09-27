@@ -1,6 +1,7 @@
 import 'package:ackaf/src/data/models/events_model.dart';
 import 'package:ackaf/src/interface/common/custom_button.dart';
 import 'package:ackaf/src/interface/common/event_countbutton.dart';
+import 'package:ackaf/src/interface/constants/text_style.dart';
 import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -126,6 +127,78 @@ Widget eventWidget({
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: 7,
+                  ),
+                  //date and time
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                      // Text('TOPIC',style: AppTextStyles.subHeading12,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Flexible(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.yellow,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 3),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.calendar_today,
+                                      size: 13, color: Color(0xFF700F0F)),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: Text(
+                                      formattedDate,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFF700F0F),
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.blueAccent.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 3),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.access_time,
+                                      size: 13, color: Color(0xFF0E1877)),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: Text(
+                                      formattedTime,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFF0E1877),
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    // ],
+                  // ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
@@ -142,6 +215,7 @@ Widget eventWidget({
                     ],
                   ),
                   const SizedBox(height: 2),
+
                   Text(
                     event.description ?? '',
                     style: const TextStyle(
@@ -152,68 +226,6 @@ Widget eventWidget({
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Flexible(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.yellow,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 3),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.calendar_today,
-                                  size: 13, color: Color(0xFF700F0F)),
-                              const SizedBox(width: 4),
-                              Flexible(
-                                child: Text(
-                                  formattedDate,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xFF700F0F),
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Flexible(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.blueAccent.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 3),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.access_time,
-                                  size: 13, color: Color(0xFF0E1877)),
-                              const SizedBox(width: 4),
-                              Flexible(
-                                child: Text(
-                                  formattedTime,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xFF0E1877),
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -221,6 +233,7 @@ Widget eventWidget({
             Padding(
               padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
               child: customButton(
+                  radius: 8,
                   buttonHeight: 40,
                   buttonWidth: 180,
                   label: 'Know More',

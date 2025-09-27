@@ -415,7 +415,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   enableInfiniteScroll: false,
                                   
                                   height: 
-                                      MediaQuery.of(context).size.height * 0.7,
+                                      MediaQuery.of(context).size.height * 0.67,
                                   scrollPhysics: posters.length > 1
                                       ? null
                                       : NeverScrollableScrollPhysics(),
@@ -432,9 +432,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ],
                           ),
                         ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                        
+                      
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Container(
@@ -632,7 +631,7 @@ Widget customPoster({
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.0),
-          border: Border.all(color: const Color.fromARGB(255, 226, 221, 221)),
+          // border: Border.all(color: const Color.fromARGB(255, 226, 221, 221)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -724,19 +723,29 @@ Widget customPoster({
             if (poster.link != null &&
                 poster.link != '' &&
                 poster.link != 'null')
-              Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
-                child: customButton(
-                  buttonHeight: 40,
-                  label: 'Know More',
-                  onPressed: () {
-                    // Add your navigation or action here
-                    log(poster.link ?? '');
-                    print(poster.link);
-                    launchURL(poster.link ?? '');
-                  },
+              
+                Center(
+                  child: GestureDetector(
+                    onTap: (){
+                      // Add your navigation or action here
+                      log(poster.link ?? '');
+                      print(poster.link);
+                      launchURL(poster.link ?? '');
+                   
+                    },
+                    child: Text('Know more>',textAlign: TextAlign.center,style: TextStyle(color: Colors.red),)),
                 ),
-              ),
+                // child: customButton(
+                //   buttonHeight: 40,
+                //   label: 'Know More',
+                //   onPressed: () {
+                //     // Add your navigation or action here
+                //     log(poster.link ?? '');
+                //     print(poster.link);
+                //     launchURL(poster.link ?? '');
+                //   },
+                // ),
+              
           ],
         ),
       ),

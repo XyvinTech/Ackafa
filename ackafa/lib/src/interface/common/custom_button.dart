@@ -9,6 +9,7 @@ Widget customButton({
   int buttonHeight = 47,
   double buttonWidth = double.infinity ,
   double size = 50,
+  double radius=25,
   Color buttonColor = const Color(0xFFE30613),
 }) {
   return SizedBox(
@@ -21,7 +22,7 @@ Widget customButton({
           backgroundColor: WidgetStateProperty.all<Color>(buttonColor),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25),
+              borderRadius: BorderRadius.circular(radius),
               side: BorderSide(color: sideColor),
             ),
           ),
