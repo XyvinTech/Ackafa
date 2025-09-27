@@ -563,52 +563,55 @@ class _HomePageState extends ConsumerState<HomePage> {
 
 Widget _buildBanners(
     {required BuildContext context, required Promotion banner}) {
-  return Container(
-    width: double.infinity,
-    // width: MediaQuery.sizeOf(context).width / 1,
-    child: AspectRatio(
-      aspectRatio: 16 / 9, // Custom aspect ratio as 2:1
-      child: Stack(
-        clipBehavior: Clip.none, // This allows overflow
-        children: [
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: Image.network(
-                banner.media ?? '',
-                fit: BoxFit.fill,
-                errorBuilder: (context, error, stackTrace) {
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    child: Container(
+      width: double.infinity,
+      // width: MediaQuery.sizeOf(context).width / 1,
+      child: AspectRatio(
+        aspectRatio: 16 / 9, // Custom aspect ratio as 2:1
+        child: Stack(
+          clipBehavior: Clip.none, // This allows overflow
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20.0),
+                child: Image.network(
+                  banner.media ?? '',
+                  fit: BoxFit.fill,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                        ),
                       ),
-                    ),
-                  );
-                },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child; // Image loaded successfully
-                  }
-                  // While the image is loading, show shimmer effect
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8.0),
+                    );
+                  },
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child; // Image loaded successfully
+                    }
+                    // While the image is loading, show shimmer effect
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );
