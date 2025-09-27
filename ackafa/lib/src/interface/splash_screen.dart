@@ -248,23 +248,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                     ],
                   ))),
 
-          if (LoggedIn == false)
-            Positioned(
-              bottom: 30,
-              left: 20,
-              right: 20,
-              child: customButton(
-                label: "LET'S GET STARTED",
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/login_screen');
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => PaymentConfirmationPage(),
-                  //     ));
-                },
-              ),
-            ),
+          // if (LoggedIn == false)
+          //   Positioned(
+          //     bottom: 30,
+          //     left: 20,
+          //     right: 20,
+          //     child: customButton(
+          //       label: "LET'S GET STARTED",
+          //       onPressed: () {
+          //         Navigator.pushReplacementNamed(context, '/login_screen');
+          //         // Navigator.push(
+          //         //     context,
+          //         //     MaterialPageRoute(
+          //         //       builder: (context) => PaymentConfirmationPage(),
+          //         //     ));
+          //       },
+          //     ),
+          //   ),
 
           // Positioned(
           //   top: 0,

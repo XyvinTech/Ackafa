@@ -182,9 +182,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   ),
                                 );
                               },
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.28,
-                                child: Image.asset('assets/digitalcard.png'),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.28,
+                                    child:
+                                        Image.asset('assets/digitalcard1.png'),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Digital Card',
+                                    style: AppTextStyles.subHeading16.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w400),
+                                  )
+                                ],
                               ),
                             ),
                             GestureDetector(
@@ -196,9 +211,23 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   ),
                                 );
                               },
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.28,
-                                child: Image.asset('assets/eventcard.png'),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.28,
+                                    child: Image.asset('assets/eventcard1.png'),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Events',
+                                    style: AppTextStyles.subHeading16.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w400),
+                                  )
+                                ],
                               ),
                             ),
                             GestureDetector(
@@ -210,16 +239,30 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   ),
                                 );
                               },
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.28,
-                                child: Image.asset('assets/chatcard.png'),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.28,
+                                    child: Image.asset('assets/chatcard1.png'),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Chat',
+                                    style: AppTextStyles.subHeading16.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w400),
+                                  )
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 30,
                       ),
 
                       // Banner Carousel
@@ -233,7 +276,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               }).toList(),
                               options: CarouselOptions(
                                 enableInfiniteScroll: false,
-                                height: 175,
+                                height: 200,
                                 scrollPhysics: banners.length > 1
                                     ? null
                                     : NeverScrollableScrollPhysics(),
@@ -250,7 +293,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ],
                         ),
 
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
                       // Events Carousel
                       asyncEvents.when(
                         data: (events) {
@@ -370,7 +413,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 }).toList(),
                                 options: CarouselOptions(
                                   enableInfiniteScroll: false,
-                                  height: 400,
+                                  height: 600,
                                   scrollPhysics: posters.length > 1
                                       ? null
                                       : NeverScrollableScrollPhysics(),
@@ -391,13 +434,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                         height: 20,
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.yellow[
-                                50], // Set the background color to white
+                            gradient: LinearGradient(colors: [
+                              Color(0xFFFFFADA),
+                              Color(0xFFFCDCAD),
+                            ]), // Set the background color to white
                             borderRadius: BorderRadius.circular(8.0),
                             border: Border.all(
                               color: const Color.fromARGB(255, 225, 231,
@@ -413,19 +458,49 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Image.asset(
+                                      'assets/vision.png',
+                                      scale: 4,
+                                    ),
                                     Padding(
                                       padding: const EdgeInsets.only(
                                           top: 30, bottom: 10),
-                                      child: Text('VISION',
+                                      child: Text('Vision',
                                           style: AppTextStyles.heading21
                                               .copyWith(
                                                   color: Colors.black,
-                                                  fontWeight: FontWeight.w600)),
+                                                  fontWeight: FontWeight.w400)),
                                     ),
                                     SizedBox(height: 8),
-                                    Text(
-                                        'In compliance with UAE laws, AKCAF’s aims \nto foster new connections between the two\ngreat nations with a deep commitment to\nsupport and serve the community in a \ndedicated and selfless manner.',
-                                        style: AppTextStyles.subHeading16),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            'In compliance with UAE laws, AKCAF’s aims',
+                                            style: AppTextStyles.subHeading16
+                                                .copyWith(color: Colors.black)),
+                                                Text(
+                                            'to foster new connections between the two',
+                                            style: AppTextStyles.subHeading16
+                                                .copyWith(color: Colors.black)),
+                                        Text(
+                                            'great nations with a deep commitment to',
+                                            style: AppTextStyles.subHeading16
+                                                .copyWith(color: Colors.black)),
+                                                Text(
+                                            'support and serve the community in a',
+                                            style: AppTextStyles.subHeading16
+                                                .copyWith(color: Colors.black)),
+                                                Text(
+                                            'dedicated and selfless manner.',
+                                            style: AppTextStyles.subHeading16
+                                                .copyWith(color: Colors.black)),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),
@@ -497,7 +572,8 @@ class _HomePageState extends ConsumerState<HomePage> {
 Widget _buildBanners(
     {required BuildContext context, required Promotion banner}) {
   return Container(
-    width: MediaQuery.sizeOf(context).width / 1.15,
+    width: double.infinity,
+    // width: MediaQuery.sizeOf(context).width / 1,
     child: AspectRatio(
       aspectRatio: 16 / 9, // Custom aspect ratio as 2:1
       child: Stack(
@@ -505,10 +581,8 @@ Widget _buildBanners(
         children: [
           Align(
             alignment: Alignment.bottomCenter,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
               child: Image.network(
                 banner.media ?? '',
                 fit: BoxFit.fill,
@@ -553,7 +627,7 @@ Widget customPoster({
   required Promotion poster,
 }) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 12),
+    padding: const EdgeInsets.symmetric(horizontal: 16),
     child: Transform.translate(
       offset: const Offset(0, 6),
       child: Container(
@@ -562,14 +636,14 @@ Widget customPoster({
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.0),
-          border: Border.all(color: const Color.fromARGB(255, 226, 222, 222)),
+          border: Border.all(color:  const Color.fromARGB(255, 226, 221, 221)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 /////poster image
             AspectRatio(
-              aspectRatio: 4 / 3, // width : height = 3:4
+              aspectRatio: 3 / 4, // width : height = 3:4
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
@@ -581,7 +655,7 @@ Widget customPoster({
                       highlightColor: Colors.grey[100]!,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[300],
+                          // color: Colors.grey[300],
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
@@ -648,7 +722,7 @@ Widget customPoster({
             // ),
 
             // const Spacer(),
-            const SizedBox(height: 40), // <-- small gap between image & button
+            const SizedBox(height: 20), // <-- small gap between image & button
 
             // Button
             if (poster.link != null &&
@@ -657,7 +731,7 @@ Widget customPoster({
               Padding(
                 padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
                 child: customButton(
-                  buttonHeight: 40,
+                  buttonHeight: 50,
                   label: 'Know More',
                   onPressed: () {
                     // Add your navigation or action here
@@ -732,7 +806,7 @@ Widget customNotice(
     {required BuildContext context, required Promotion notice}) {
   return Padding(
     padding: const EdgeInsets.symmetric(
-        horizontal: 16), // Adjust spacing between posters
+        horizontal: 18), // Adjust spacing between posters
     child: Container(
       width: MediaQuery.of(context).size.width - 32,
       padding: const EdgeInsets.all(16),
@@ -753,15 +827,25 @@ Widget customNotice(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  notice.title!,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Color(0xFF661E92), // Set the font color to blue
-                  ),
+                Row(
+                  children: [
+                    Image.asset(
+                                      'assets/vision.png',
+                                      scale: 5,
+                                    ),
+                    
+                    SizedBox(width: 10,),
+                    Text(
+                      notice.title!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Color(0xFF661E92), // Set the font color to blue
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Text(
                   notice.description!,
                   style: const TextStyle(color: Color(0xFF6A6A6A)

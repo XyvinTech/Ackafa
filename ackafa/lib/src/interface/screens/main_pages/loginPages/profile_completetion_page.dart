@@ -26,6 +26,7 @@ class ProfileCompletionScreen extends StatelessWidget {
                 int.parse(percentageString.replaceAll('%', ''));
             if (profileCompletion < 70) {
               return Scaffold(
+                backgroundColor: Colors.white,
                 body: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -57,25 +58,25 @@ class ProfileCompletionScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 30,),
+                        SizedBox(height: 20,),
                       
                       const Text(
                         "Let's Get Started,\nComplete your profile",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Color.fromARGB(255, 118, 121, 124),
+                          color: Colors.black,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       const Text(
                         "Get ready to dive in! Just finish\n setting up your profile.",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color.fromARGB(255, 118, 121, 124),
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                       const SizedBox(height: 20),
