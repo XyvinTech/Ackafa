@@ -479,26 +479,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                            'In compliance with UAE laws, AKCAF’s aims',
-                                            style: AppTextStyles.subHeading16
-                                                .copyWith(color: Colors.black)),
-                                                Text(
-                                            'to foster new connections between the two',
-                                            style: AppTextStyles.subHeading16
-                                                .copyWith(color: Colors.black)),
-                                        Text(
-                                            'great nations with a deep commitment to',
-                                            style: AppTextStyles.subHeading16
-                                                .copyWith(color: Colors.black)),
-                                                Text(
-                                            'support and serve the community in a',
-                                            style: AppTextStyles.subHeading16
-                                                .copyWith(color: Colors.black)),
-                                                Text(
-                                            'dedicated and selfless manner.',
-                                            style: AppTextStyles.subHeading16
-                                                .copyWith(color: Colors.black)),
+                                      Text(
+                                      'In compliance with UAE laws, AKCAF’s aims to foster new connections '
+                                      'between the two great nations with a deep commitment to support '
+                                      'and serve the community in a dedicated and selfless manner.',
+                                      style: AppTextStyles.subHeading16.copyWith(
+                                        color: Colors.black,
+                                        // scale text
+                                        height: 1.4, // good line height
+                                      ),
+                                    ),
                                       ],
                                     ),
                                   ],
