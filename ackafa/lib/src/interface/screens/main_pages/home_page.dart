@@ -413,7 +413,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 }).toList(),
                                 options: CarouselOptions(
                                   enableInfiniteScroll: false,
-                                  height:
+                                  
+                                  height: 
                                       MediaQuery.of(context).size.height * 0.7,
                                   scrollPhysics: posters.length > 1
                                       ? null
@@ -726,7 +727,7 @@ Widget customPoster({
               Padding(
                 padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
                 child: customButton(
-                  buttonHeight: 50,
+                  buttonHeight: 40,
                   label: 'Know More',
                   onPressed: () {
                     // Add your navigation or action here
