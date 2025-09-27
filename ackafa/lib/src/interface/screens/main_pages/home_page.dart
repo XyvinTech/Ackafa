@@ -413,7 +413,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 }).toList(),
                                 options: CarouselOptions(
                                   enableInfiniteScroll: false,
-                                  height: 600,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.7,
                                   scrollPhysics: posters.length > 1
                                       ? null
                                       : NeverScrollableScrollPhysics(),
@@ -458,7 +459,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-
                                     SizedBox(
                                       height: 8,
                                     ),
@@ -477,18 +477,20 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     ),
                                     SizedBox(height: 8),
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                      Text(
-                                      'In compliance with UAE laws, AKCAF’s aims to foster new connections '
-                                      'between the two great nations with a deep commitment to support '
-                                      'and serve the community in a dedicated and selfless manner.',
-                                      style: AppTextStyles.subHeading16.copyWith(
-                                        color: Colors.black,
-                                        // scale text
-                                        height: 1.4, // good line height
-                                      ),
-                                    ),
+                                        Text(
+                                          'In compliance with UAE laws, AKCAF’s aims to foster new connections '
+                                          'between the two great nations with a deep commitment to support '
+                                          'and serve the community in a dedicated and selfless manner.',
+                                          style: AppTextStyles.subHeading16
+                                              .copyWith(
+                                            color: Colors.black,
+                                            // scale text
+                                            height: 1.4, // good line height
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ],
@@ -626,7 +628,7 @@ Widget customPoster({
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.0),
-          border: Border.all(color:  const Color.fromARGB(255, 226, 221, 221)),
+          border: Border.all(color: const Color.fromARGB(255, 226, 221, 221)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -820,11 +822,12 @@ Widget customNotice(
                 Row(
                   children: [
                     Image.asset(
-                                      'assets/vision.png',
-                                      scale: 5,
-                                    ),
-                    
-                    SizedBox(width: 10,),
+                      'assets/vision.png',
+                      scale: 5,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Text(
                       notice.title!,
                       style: const TextStyle(
