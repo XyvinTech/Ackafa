@@ -13,9 +13,12 @@ Widget eventWidget({
   required BuildContext context,
   required Event event,
 }) {
-  DateTime dateTime = DateTime.parse(event.startTime.toString()).toLocal();
-  String formattedTime = DateFormat('hh:mm a').format(dateTime);
-  String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+  // DateTime dateTime = DateTime.parse(event.startTime.toString()).toLocal();
+  // String formattedTime = DateFormat('hh:mm a').format(dateTime);
+  // String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+
+  String time = DateFormat('hh:mm a').format(event.startTime!);
+  String date = DateFormat('yyyy-MM-dd').format(event.startDate!);
 
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -135,70 +138,135 @@ Widget eventWidget({
                   //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   //   children: [
                       // Text('TOPIC',style: AppTextStyles.subHeading12,),
+
+
+
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     Flexible(
+                      //       child: Container(
+                      //         decoration: BoxDecoration(
+                      //           color: Colors.yellow,
+                      //           borderRadius: BorderRadius.circular(4),
+                      //         ),
+                      //         padding: const EdgeInsets.symmetric(
+                      //             horizontal: 6, vertical: 3),
+                      //         child: Row(
+                      //           mainAxisSize: MainAxisSize.min,
+                      //           children: [
+                      //             const Icon(Icons.calendar_today,
+                      //                 size: 13, color: Color(0xFF700F0F)),
+                      //             const SizedBox(width: 4),
+                      //             Flexible(
+                      //               child: Text(
+                      //                 formattedDate,
+                      //                 style: const TextStyle(
+                      //                   fontSize: 12,
+                      //                   color: Color(0xFF700F0F),
+                      //                 ),
+                      //                 overflow: TextOverflow.ellipsis,
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     const SizedBox(width: 8),
+                      //     Flexible(
+                      //       child: Container(
+                      //         decoration: BoxDecoration(
+                      //           color: Colors.blueAccent.withOpacity(0.2),
+                      //           borderRadius: BorderRadius.circular(4),
+                      //         ),
+                      //         padding: const EdgeInsets.symmetric(
+                      //             horizontal: 6, vertical: 3),
+                      //         child: Row(
+                      //           mainAxisSize: MainAxisSize.min,
+                      //           children: [
+                      //             const Icon(Icons.access_time,
+                      //                 size: 13, color: Color(0xFF0E1877)),
+                      //             const SizedBox(width: 4),
+                      //             Flexible(
+                      //               child: Text(
+                      //                 formattedTime,
+                      //                 style: const TextStyle(
+                      //                   fontSize: 12,
+                      //                   color: Color(0xFF0E1877),
+                      //                 ),
+                      //                 overflow: TextOverflow.ellipsis,
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+
+
+                    // ],
+                  // ),
+
+
+                  SizedBox(height: 3),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        event.type!,
+                        style: AppTextStyles.subHeading14,
+                      ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Flexible(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.yellow,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 3),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(Icons.calendar_today,
-                                      size: 13, color: Color(0xFF700F0F)),
-                                  const SizedBox(width: 4),
-                                  Flexible(
-                                    child: Text(
-                                      formattedDate,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFF700F0F),
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                  0xFFFF3F0A9), // Light red background color for date
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.all(4),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.calendar_today,
+                                    size: 13, color: Color(0xFF700F0F)),
+                                const SizedBox(width: 5),
+                                Text(
+                                  date,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Color.fromARGB(255, 109, 84, 84),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          Flexible(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.blueAccent.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 3),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(Icons.access_time,
-                                      size: 13, color: Color(0xFF0E1877)),
-                                  const SizedBox(width: 4),
-                                  Flexible(
-                                    child: Text(
-                                      formattedTime,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFF0E1877),
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                          const SizedBox(width: 10),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFAED0E9),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.all(4),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.access_time,
+                                    size: 13, color: Color(0xFF0E1877)),
+                                const SizedBox(width: 5),
+                                Text(
+                                  time,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFF0E1877),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                    // ],
-                  // ),
+                    ],
+                  ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
