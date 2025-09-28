@@ -33,7 +33,7 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
     DateTime dateTime =
         DateTime.parse(widget.event.startTime.toString()).toLocal();
     String formattedTime = DateFormat('hh:mm a').format(dateTime);
-    String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(widget.event.startDate!);
 
     log('rsvp : ${widget.event.rsvp}');
     log('my id : ${id}');

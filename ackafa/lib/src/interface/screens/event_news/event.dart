@@ -58,7 +58,13 @@ class EventPage extends StatelessWidget {
       {bool withImage = false,
       required BuildContext context,
       required Event event}) {
-    String time = DateFormat('hh:mm a').format(event.startTime!);
+
+    DateTime dateTime = DateTime.parse(event.startTime.toString()).toLocal();
+    String time = DateFormat('hh:mm a').format(dateTime);
+        
+
+
+    // String time = DateFormat('hh:mm a').format(event.startTime!);
     String date = DateFormat('yyyy-MM-dd').format(event.startDate!);
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),

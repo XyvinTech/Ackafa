@@ -13,11 +13,11 @@ Widget eventWidget({
   required BuildContext context,
   required Event event,
 }) {
-  // DateTime dateTime = DateTime.parse(event.startTime.toString()).toLocal();
-  // String formattedTime = DateFormat('hh:mm a').format(dateTime);
+  DateTime dateTime = DateTime.parse(event.startTime.toString()).toLocal();
+  String formattedTime = DateFormat('hh:mm a').format(dateTime);
   // String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
 
-  String time = DateFormat('hh:mm a').format(event.startTime!);
+  // String time = DateFormat('hh:mm a').format(event.startTime!);
   String date = DateFormat('yyyy-MM-dd').format(event.startDate!);
 
   return Padding(
@@ -254,7 +254,7 @@ Widget eventWidget({
                                     size: 13, color: Color(0xFF0E1877)),
                                 const SizedBox(width: 5),
                                 Text(
-                                  time,
+                                  formattedTime,
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Color(0xFF0E1877),
