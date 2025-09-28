@@ -41,7 +41,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         initialize();
       }
     });
-    getToken();
+    getToken(context);
   }
 
   Future<void> checkAppVersion(context) async {
@@ -299,14 +299,19 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 // Initialize in your main function
 void initializeNotifications() {
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-
-  final InitializationSettings initializationSettings =
-      InitializationSettings(android: initializationSettingsAndroid);
-
+      const AndroidInitializationSettings initializationSettingsAndroid =
+          AndroidInitializationSettings('@mipmap/ic_launcher');
+      const DarwinInitializationSettings iosInitializationSetting =
+          DarwinInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+      );
+      const InitializationSettings initSettings = InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: iosInitializationSetting);
   flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
+    initSettings,
     onDidReceiveNotificationResponse: (NotificationResponse response) async {
       String? payload = response.payload;
       log('payload = $payload');

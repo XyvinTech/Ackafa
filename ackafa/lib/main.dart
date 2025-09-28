@@ -31,7 +31,6 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   initializeNotifications();
-  await NotificationService().initialize();
   runApp(ProviderScope(child: MyApp()));
 }
 
@@ -47,7 +46,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await NotificationService().initialize();
+    });
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

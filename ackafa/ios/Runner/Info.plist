@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0.8</string>
+	<string>2.0.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -35,13 +35,6 @@
 	<string>2</string>
 	<key>FLTEnableImpeller</key>
 	<false/>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
-	<key>FirebaseDynamicLinksCustomDomains</key>
-	<array>
-		<string>https:/akcaf.page.link/notifications_page</string>
-		<string>https://akcaf.page.link/path2</string>
-	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>sms</string>
