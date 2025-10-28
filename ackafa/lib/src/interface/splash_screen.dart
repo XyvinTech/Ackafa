@@ -212,6 +212,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'Register and join a ',

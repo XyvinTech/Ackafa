@@ -1,10 +1,11 @@
 import 'package:ackaf/src/data/globals.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future<void> getToken(BuildContext context) async {
-   final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+   final isIOS = defaultTargetPlatform == TargetPlatform.iOS;
   final notificationStatus = await Permission.notification.status;
 
   if (isIOS || notificationStatus.isGranted) {
