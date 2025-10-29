@@ -179,7 +179,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       body: Stack(
         children: [
           Positioned(
-            top: 20,
+            top: 350,
             right: 0,
             left: 0,
             child: Image.asset(
@@ -188,7 +188,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             ),
           ),
           Positioned(
-            top: 280,
+            top: 200,
             right: 0,
             left: 0,
             child: Image.asset(
@@ -196,58 +196,58 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               scale: 1,
             ),
           ),
-          Positioned(
-            top: 530,
-            right: 0,
-            left: 0,
-            child: Image.asset(
-              'assets/splashscreenasset.png',
-              scale: 1,
-            ),
-          ),
-          const Positioned(
-              top: 610,
-              right: 0,
-              left: 0,
-              child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Register and join a ',
-                        style: TextStyle(
-                          fontFamily: 'HelveticaNeue',
-                          fontWeight: FontWeight.w700,
-                          fontSize: 28,
-                        ),
-                      ),
-                      Text(
-                        'community of 10,000+',
-                        style: TextStyle(
-                          fontFamily: 'HelveticaNeue',
-                          fontWeight: FontWeight.w700,
-                          fontSize: 28,
-                        ),
-                      ),
-                      Text(
-                        'Keralites across the',
-                        style: TextStyle(
-                          fontFamily: 'HelveticaNeue',
-                          fontWeight: FontWeight.w700,
-                          fontSize: 28,
-                        ),
-                      ),
-                      Text(
-                        ' world',
-                        style: TextStyle(
-                          fontFamily: 'HelveticaNeue',
-                          fontWeight: FontWeight.w700,
-                          fontSize: 28,
-                        ),
-                      ),
-                    ],
-                  ))),
+          // Positioned(
+          //   top: 530,
+          //   right: 0,
+          //   left: 0,
+          //   child: Image.asset(
+          //     'assets/splashscreenasset.png',
+          //     scale: 1,
+          //   ),
+          // ),
+          // const Positioned(
+          //     top: 610,
+          //     right: 0,
+          //     left: 0,
+          //     child: Padding(
+          //         padding: EdgeInsets.symmetric(horizontal: 20),
+          //         child: Column(
+          //           mainAxisAlignment: MainAxisAlignment.center,
+          //           children: [
+          //             Text(
+          //               'Register and join a ',
+          //               style: TextStyle(
+          //                 fontFamily: 'HelveticaNeue',
+          //                 fontWeight: FontWeight.w700,
+          //                 fontSize: 28,
+          //               ),
+          //             ),
+          //             Text(
+          //               'community of 10,000+',
+          //               style: TextStyle(
+          //                 fontFamily: 'HelveticaNeue',
+          //                 fontWeight: FontWeight.w700,
+          //                 fontSize: 28,
+          //               ),
+          //             ),
+          //             Text(
+          //               'Keralites across the',
+          //               style: TextStyle(
+          //                 fontFamily: 'HelveticaNeue',
+          //                 fontWeight: FontWeight.w700,
+          //                 fontSize: 28,
+          //               ),
+          //             ),
+          //             Text(
+          //               ' world',
+          //               style: TextStyle(
+          //                 fontFamily: 'HelveticaNeue',
+          //                 fontWeight: FontWeight.w700,
+          //                 fontSize: 28,
+          //               ),
+          //             ),
+          //           ],
+          //         ))),
 
           // if (LoggedIn == false)
           //   Positioned(

@@ -1,7 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:ackaf/src/data/models/promotions_model.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class AutoScrollText extends StatefulWidget {
   final String text;
@@ -113,15 +113,12 @@ class _AutoScrollTextState extends State<AutoScrollText> {
 Widget customVideo({required BuildContext context, required Promotion video}) {
   final videoUrl = video.link;
 
-  final ytController = YoutubePlayerController.fromVideoId(
-    videoId: YoutubePlayerController.convertUrlToId(videoUrl ?? '')!,
-    autoPlay: false,
-    params: const YoutubePlayerParams(
-      enableJavaScript: true,
+  final ytController = YoutubePlayerController(
+    initialVideoId: YoutubePlayer.convertUrlToId(videoUrl ?? '')!,
+    flags: const YoutubePlayerFlags(
+      autoPlay: false,
       loop: true,
       mute: false,
-      showControls: true,
-      showFullscreenButton: true,
     ),
   );
 

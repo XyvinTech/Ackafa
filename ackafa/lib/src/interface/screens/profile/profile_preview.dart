@@ -14,8 +14,8 @@ import 'package:ackaf/src/interface/common/components/svg_icon.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class ProfilePreview extends ConsumerWidget {
   final UserModel user;
@@ -603,16 +603,13 @@ class ProfilePreview extends ConsumerWidget {
   Widget profileVideo({required BuildContext context, required Link video}) {
     final videoUrl = video.link;
 
-    final ytController = YoutubePlayerController.fromVideoId(
-      videoId: YoutubePlayerController.convertUrlToId(videoUrl ?? '')!,
+    final ytController = YoutubePlayerController(
+      initialVideoId: YoutubePlayer.convertUrlToId(videoUrl ?? '')!,
+      flags: const YoutubePlayerFlags(
       autoPlay: false,
-      params: const YoutubePlayerParams(
-        enableJavaScript: true,
-        loop: true,
-        mute: false,
-        showControls: true,
-        showFullscreenButton: true,
-      ),
+      loop: true,
+      mute: false,
+    ),
     );
 
     return Padding(
