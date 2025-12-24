@@ -33,7 +33,8 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
     DateTime dateTime =
         DateTime.parse(widget.event.startTime.toString()).toLocal();
     String formattedTime = DateFormat('hh:mm a').format(dateTime);
-    String formattedDate = DateFormat('yyyy-MM-dd').format(widget.event.startDate!);
+    String formattedDate =
+        DateFormat('yyyy-MM-dd').format(widget.event.startDate!);
 
     log('rsvp : ${widget.event.rsvp}');
     log('my id : ${id}');
@@ -314,41 +315,34 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
               ],
             ),
           ),
-          Consumer(
-            builder: (context, ref, child) {
-              return Positioned(
-                bottom: 36,
-                left: 16,
-                right: 16,
-                child: customButton(
-                  sideColor:
-                      registered ? Colors.green : const Color(0xFFE30613),
-                  buttonColor:
-                      registered ? Colors.green : const Color(0xFFE30613),
-                  label: widget.event.status == 'cancelled'
-                      ? 'CANCELLED'
-                      : registered
-                          ? 'REGISTERED'
-                          : 'REGISTER EVENT',
-                  onPressed: () async {
-                    if (!registered && widget.event.status != 'cancelled') {
-                      ApiRoutes userApi = ApiRoutes();
-                      await userApi.markEventAsRSVP(widget.event.id!);
-
-                      setState(() {
-                        widget.event.rsvp?.add(id); // Add the user to RSVP
-                        registered = widget.event.rsvp?.contains(id) ?? false;
-                      });
-
-                      ref.invalidate(
-                          fetchEventsProvider); // Update your global state if needed
-                    }
-                  },
-                  fontSize: 16,
-                ),
-              );
-            },
-          ),
+          if (widget.event.link != null && widget.event.link!.isNotEmpty)
+            Consumer(
+              builder: (context, ref, child) {
+                return Positioned(
+                  bottom: 36,
+                  left: 16,
+                  right: 16,
+                  child: customButton(
+                    sideColor:
+                        registered ? Colors.green : const Color(0xFFE30613),
+                    buttonColor:
+                        registered ? Colors.green : const Color(0xFFE30613),
+                    label: widget.event.status == 'cancelled'
+                        ? 'CANCELLED'
+                        : registered
+                            ? 'KNOW MORE'
+                            : 'KNOW MORE',
+                    onPressed: () async {
+                      if (widget.event.link != null &&
+                          widget.event.link!.isNotEmpty) {
+                        launchURL(widget.event.link!);
+                      }
+                    },
+                    fontSize: 16,
+                  ),
+                );
+              },
+            ),
         ],
       ),
     );
