@@ -315,7 +315,6 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
               ],
             ),
           ),
-          if (widget.event.link != null && widget.event.link!.isNotEmpty)
             Consumer(
               builder: (context, ref, child) {
                 return Positioned(
@@ -333,10 +332,9 @@ class _ViewMoreEventPageState extends ConsumerState<ViewMoreEventPage> {
                             ? 'KNOW MORE'
                             : 'KNOW MORE',
                     onPressed: () async {
-                      if (widget.event.link != null &&
-                          widget.event.link!.isNotEmpty) {
-                        launchURL(widget.event.link!);
-                      }
+                      
+                        launchURL("https://programs.akcaf.org/");
+                      
                     },
                     fontSize: 16,
                   ),
