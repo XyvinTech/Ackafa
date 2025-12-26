@@ -1,7 +1,7 @@
 name: ackaf
 description: "A new Flutter project."
 publish_to: 'none'
-version: 1.2.05+89
+version: 1.2.05+90
 environment:
   sdk: '>=3.4.3 <4.0.0'
 
