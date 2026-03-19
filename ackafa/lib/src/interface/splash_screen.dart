@@ -92,17 +92,21 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     );
   }
 
+  bool _isNavigated = false;
+
   Future<void> initialize() async {
     await checktoken();
 
     if (isAppUpdateRequired) return;
 
     ref.listenManual<AsyncValue<UserModel>>(userProvider, (previous, next) {
+      if (_isNavigated) return; // Prevent infinite push loops during transition
       next.when(
         data: (user) {
           if (!mounted) return;
 
           if (LoggedIn) {
+            _isNavigated = true;
             if (user.batch != null && user.batch != '') {
               final pendingDeepLink = _deepLinkService.pendingDeepLink;
               if (pendingDeepLink != null) {
@@ -114,15 +118,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 Navigator.pushReplacementNamed(context, '/mainpage');
               }
             } else {
+              _isNavigated = true;
               Navigator.pushReplacementNamed(context, '/userReg');
             }
           } else {
+            _isNavigated = true;
             Navigator.pushReplacementNamed(context, '/login_screen');
           }
         },
         loading: () {},
         error: (err, stack) {
           if (!mounted) return;
+          _isNavigated = true;
           Navigator.pushReplacementNamed(context, '/login_screen');
         },
       );

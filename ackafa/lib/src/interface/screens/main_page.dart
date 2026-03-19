@@ -91,8 +91,6 @@ class _MainPageState extends ConsumerState<MainPage> {
 
   int _selectedIndex = 0;
 
-  static List<Widget> _widgetOptions = <Widget>[];
-
   void _onItemTapped(int index) {
     setState(() {
       ref.read(currentNewsIndexProvider.notifier).state = 0;
@@ -100,36 +98,7 @@ class _MainPageState extends ConsumerState<MainPage> {
     });
   }
 
-  List<String> _inactiveIcons = [];
-  List<String> _activeIcons = [];
   Future<void> _initialize({required UserModel user}) async {
-    _widgetOptions = <Widget>[
-      // HomePage(),
-      // FeedPage(),
-      HomePage(
-        user: user,
-      ),
-      FeedView(),
-      ProfilePage(user: user),
-      NewsPage(),
-      PeoplePage(),
-      // Event_News_Page(),
-      // PeoplePage(),
-    ];
-    _inactiveIcons = [
-      'assets/icons/home_inactive.svg',
-      'assets/icons/feed_inactive.svg',
-      user.image ?? '',
-      'assets/icons/inactive_news.svg',
-      'assets/icons/inactive_chat.svg',
-    ];
-    _activeIcons = [
-      'assets/icons/home_active.svg',
-      'assets/icons/feed_active.svg',
-      user.image ?? '',
-      'assets/icons/active_news.svg',
-      'assets/icons/active_chat.svg',
-    ];
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString('id', user.id!);
     id = preferences.getString('id') ?? '';
@@ -157,58 +126,77 @@ class _MainPageState extends ConsumerState<MainPage> {
 case 'active':
   log(user.image.toString());
           _initialize(user: user);
-          return Scaffold(
-            body: Center(
-              child: _widgetOptions.elementAt(_selectedIndex),
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              items: List.generate(5, (index) {
-                return BottomNavigationBarItem(
-                  backgroundColor: Colors.white,
-                  icon: index == 2 // Assuming profile is the third item
-                      ? user.image != null && user.image != ''
-                          ? CircleAvatar(
-                              backgroundImage: NetworkImage(
+              return Scaffold(
+                body: IndexedStack(
+                  index: _selectedIndex,
+                  children: [
+                    HomePage(user: user),
+                    FeedView(),
+                    ProfilePage(user: user),
+                    NewsPage(),
+                    PeoplePage(),
+                  ],
+                ),
+                bottomNavigationBar: BottomNavigationBar(
+                  items: List.generate(5, (index) {
+                    return BottomNavigationBarItem(
+                      backgroundColor: Colors.white,
+                      icon: index == 2 // Assuming profile is the third item
+                          ? user.image != null && user.image != ''
+                              ? CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                    user.image ?? '',
+                                  ),
+                                  radius: 15,
+                                )
+                              : Image.asset(
+                                  'assets/icons/dummy_person_small.png',
+                                  scale: 1.5,
+                                )
+                          : IconResolver(
+                              iconPath: [
+                                'assets/icons/home_inactive.svg',
+                                'assets/icons/feed_inactive.svg',
                                 user.image ?? '',
-                              ),
-                              radius: 15,
-                            )
-                          : Image.asset(
-                              'assets/icons/dummy_person_small.png',
-                              scale: 1.5,
-                            )
-                      : IconResolver(
-                          iconPath: _inactiveIcons[index],
-                          color: _selectedIndex == index
-                              ? Colors.blue
-                              : Colors.grey,
-                        ),
-                  activeIcon: index == 2
-                      ? user.image != null && user.image != ''
-                          ? CircleAvatar(
-                              backgroundImage: NetworkImage(
+                                'assets/icons/inactive_news.svg',
+                                'assets/icons/inactive_chat.svg',
+                              ][index],
+                              color: _selectedIndex == index
+                                  ? Colors.blue
+                                  : Colors.grey,
+                            ),
+                      activeIcon: index == 2
+                          ? user.image != null && user.image != ''
+                              ? CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                    user.image ?? '',
+                                  ),
+                                  radius: 15,
+                                )
+                              : Image.asset(
+                                  'assets/icons/dummy_person_small.png',
+                                  scale: 1.5,
+                                )
+                          : IconResolver(
+                              iconPath: [
+                                'assets/icons/home_active.svg',
+                                'assets/icons/feed_active.svg',
                                 user.image ?? '',
-                              ),
-                              radius: 15,
-                            )
-                          : Image.asset(
-                              'assets/icons/dummy_person_small.png',
-                              scale: 1.5,
-                            )
-                      : IconResolver(
-                          iconPath: _activeIcons[index],
-                          color: Color(0xFFE30613),
-                        ),
-                  label: ['Home', 'Feed', 'Profile', 'News', 'Chats'][index],
-                );
-              }),
-              currentIndex: _selectedIndex,
-              selectedItemColor: Color(0xFFE30613),
-              unselectedItemColor: Colors.grey,
-              onTap: _onItemTapped,
-              showUnselectedLabels: true,
-            ),
-          );
+                                'assets/icons/active_news.svg',
+                                'assets/icons/active_chat.svg',
+                              ][index],
+                              color: Color(0xFFE30613),
+                            ),
+                      label: ['Home', 'Feed', 'Profile', 'News', 'Chats'][index],
+                    );
+                  }),
+                  currentIndex: _selectedIndex,
+                  selectedItemColor: Color(0xFFE30613),
+                  unselectedItemColor: Colors.grey,
+                  onTap: _onItemTapped,
+                  showUnselectedLabels: true,
+                ),
+              );
             default:
                          return UserInactivePage();
 
