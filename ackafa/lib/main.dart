@@ -1,4 +1,3 @@
-
 import 'package:ackaf/firebase_options.dart';
 import 'package:ackaf/src/data/models/chat_model.dart';
 import 'package:ackaf/src/data/models/events_model.dart';
@@ -22,6 +21,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ackaf/src/interface/screens/main_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 import 'package:ackaf/src/interface/splash_screen.dart';
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
@@ -37,7 +37,7 @@ Future<void> main() async {
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
-} 
+}
 
 class _MyAppState extends State<MyApp> {
   @override
@@ -46,7 +46,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  Widget build(BuildContext context) {    WidgetsBinding.instance.addPostFrameCallback((_) async {
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       await NotificationService().initialize();
     });
 
@@ -55,8 +56,10 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         fontFamily: 'HelveticaNeue',
         textTheme: const TextTheme(
-          bodyLarge: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
-          bodyMedium: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          bodyLarge:
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          bodyMedium:
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
           displayLarge:
               TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
           displayMedium:
@@ -67,42 +70,44 @@ class _MyAppState extends State<MyApp> {
               TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
           headlineSmall:
               TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
-          titleLarge: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
-          titleMedium: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
-          titleSmall: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
-          labelLarge: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
-          labelMedium: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
-          labelSmall: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
-          bodySmall: TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          titleLarge:
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          titleMedium:
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          titleSmall:
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          labelLarge:
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          labelMedium:
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          labelSmall:
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+          bodySmall:
+              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
         ),
         primarySwatch: Colors.blue,
         secondaryHeaderColor: Colors.blue,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
-   
       navigatorKey: navigatorKey,
-   
-
-        initialRoute: '/',
+      initialRoute: '/',
       routes: {
         '/': (context) {
           // Initialize deep linking
           DeepLinkService().initialize(context);
           return SplashScreen();
         },
- 
+
         '/login_screen': (context) => LoginPage(),
- 
+
         '/mainpage': (context) => MainPage(),
         '/splash': (context) => SplashScreen(),
         '/profile_completion': (context) => ProfileCompletionScreen(),
         '/my_feeds': (context) => MyPostsPage(),
-'/userReg': (context) => const UserRegistrationScreen(),
+        '/userReg': (context) => const UserRegistrationScreen(),
         '/notification': (context) => NotificationPage(),
         '/my_subscription': (context) => MySubscriptionPage(),
-        '/chat': (context) => PeoplePage(
-        
-            ),
+        '/chat': (context) => PeoplePage(),
         // '/membership': (context) => MembershipSubscription(),
       },
       onGenerateRoute: (settings) {
@@ -118,7 +123,6 @@ class _MyAppState extends State<MyApp> {
             ),
           );
         } else if (settings.name == '/event_details') {
-      
           Event event = settings.arguments as Event;
 
           return MaterialPageRoute(
@@ -135,4 +139,3 @@ class _MyAppState extends State<MyApp> {
 }
 
 // Initialize in your main function
-
