@@ -1,7 +1,7 @@
 name: ackaf
 description: "A new Flutter project."
 publish_to: 'none'
-version: 1.2.06+91
+version: 1.2.07+92
 environment:
   sdk: '>=3.4.3 <4.0.0'
 
@@ -28,7 +28,7 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   pinput: ^5.0.0
   web_socket_client: ^0.1.0
-  font_awesome_flutter: ^10.1.0
+  font_awesome_flutter: ^11.0.0
   shared_preferences: ^2.3.2
   firebase_messaging: ^16.0.2
   firebase_core: ^4.1.1 

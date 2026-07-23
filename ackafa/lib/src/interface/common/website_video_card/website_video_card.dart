@@ -105,7 +105,7 @@ Padding customVideoCard({
                 ),
                 width: 42,
                 height: 42,
-                child: Icon(
+                child: FaIcon(
                   FontAwesomeIcons.youtube,
                   color: Color(0xFFE30613),
                 ),
