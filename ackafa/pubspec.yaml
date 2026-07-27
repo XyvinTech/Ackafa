@@ -1,7 +1,7 @@
 name: ackaf
 description: "A new Flutter project."
 publish_to: 'none'
-version: 1.2.07+92
+version: 1.2.10+95
 environment:
   sdk: '>=3.4.3 <4.0.0'
 
@@ -59,7 +59,6 @@ dependencies:
   flutter_image_compress: ^2.3.0
   table_calendar: ^3.0.9
   crop_your_image: ^2.0.0
-  hl_image_picker: ^1.2.16
   flutter_profile_picture: ^2.0.0
   syncfusion_flutter_pdfviewer: ^28.1.41
   app_links: ^6.4.0

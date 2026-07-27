@@ -106,8 +106,6 @@ class _DetailsPageState extends ConsumerState<DetailsPage> {
   String productUrl = '';
 
   Future<void> _pickImage(ImageSource source, String imageType) async {
-    PermissionStatus status;
-
     _pickFile(imageType: imageType);
   }
 
