@@ -31,6 +31,7 @@ class SplashScreen extends ConsumerStatefulWidget {
 class _SplashScreenState extends ConsumerState<SplashScreen> {
   bool isAppUpdateRequired = false;
   final DeepLinkService _deepLinkService = DeepLinkService();
+  bool _isInitialized = false;
 
   @override
   void initState() {
@@ -97,6 +98,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   Future<void> initialize() async {
     await checktoken();
 
+    if (mounted) {
+      setState(() {
+        _isInitialized = true;
+      });
+    }
+
     if (isAppUpdateRequired) return;
 
     ref.listenManual<AsyncValue<UserModel>>(userProvider, (previous, next) {
@@ -121,17 +128,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               _isNavigated = true;
               Navigator.pushReplacementNamed(context, '/userReg');
             }
-          } else {
-            _isNavigated = true;
-            Navigator.pushReplacementNamed(context, '/login_screen');
           }
         },
         loading: () {},
-        error: (err, stack) {
-          if (!mounted) return;
-          _isNavigated = true;
-          Navigator.pushReplacementNamed(context, '/login_screen');
-        },
+        error: (err, stack) {},
       );
     });
   }
@@ -181,122 +181,69 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final showOnboarding = _isInitialized && !LoggedIn;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Positioned(
-            top: 350,
-            right: 0,
-            left: 0,
-            child: Image.asset(
-              'assets/splashAkcaf.png',
-              scale: 1.3,
+      body: SafeArea(
+        child: SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+            child: Column(
+              crossAxisAlignment: showOnboarding
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.center,
+              mainAxisAlignment: showOnboarding
+                  ? MainAxisAlignment.start
+                  : MainAxisAlignment.center,
+              children: [
+                if (!showOnboarding) const Spacer(),
+                Image.asset(
+                  'assets/splashAkcaf.png',
+                  width: showOnboarding ? 120 : 180,
+                ),
+                if (!showOnboarding) ...[
+                  const SizedBox(height: 32),
+                  const CircularProgressIndicator(color: Color(0xFFE30613)),
+                  const Spacer(),
+                ],
+                if (showOnboarding) ...[
+                  const Spacer(),
+                  const Text(
+                    'Join 10,000+ Keralites,\nwherever you are',
+                    style: TextStyle(
+                      fontFamily: 'Times New Roman',
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                      height: 1.2,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Connect with your community, follow local events, and stay rooted -- whether you\'re in Kochi or Dubai.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  customButton(
+                    label: 'Get started',
+                    radius: 12,
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/login_screen');
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ],
             ),
           ),
-          Positioned(
-            top: 200,
-            right: 0,
-            left: 0,
-            child: Image.asset(
-              'assets/worldmap.png',
-              scale: 1,
-            ),
-          ),
-          // Positioned(
-          //   top: 530,
-          //   right: 0,
-          //   left: 0,
-          //   child: Image.asset(
-          //     'assets/splashscreenasset.png',
-          //     scale: 1,
-          //   ),
-          // ),
-          // const Positioned(
-          //     top: 610,
-          //     right: 0,
-          //     left: 0,
-          //     child: Padding(
-          //         padding: EdgeInsets.symmetric(horizontal: 20),
-          //         child: Column(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: [
-          //             Text(
-          //               'Register and join a ',
-          //               style: TextStyle(
-          //                 fontFamily: 'HelveticaNeue',
-          //                 fontWeight: FontWeight.w700,
-          //                 fontSize: 28,
-          //               ),
-          //             ),
-          //             Text(
-          //               'community of 10,000+',
-          //               style: TextStyle(
-          //                 fontFamily: 'HelveticaNeue',
-          //                 fontWeight: FontWeight.w700,
-          //                 fontSize: 28,
-          //               ),
-          //             ),
-          //             Text(
-          //               'Keralites across the',
-          //               style: TextStyle(
-          //                 fontFamily: 'HelveticaNeue',
-          //                 fontWeight: FontWeight.w700,
-          //                 fontSize: 28,
-          //               ),
-          //             ),
-          //             Text(
-          //               ' world',
-          //               style: TextStyle(
-          //                 fontFamily: 'HelveticaNeue',
-          //                 fontWeight: FontWeight.w700,
-          //                 fontSize: 28,
-          //               ),
-          //             ),
-          //           ],
-          //         ))),
-
-          // if (LoggedIn == false)
-          //   Positioned(
-          //     bottom: 30,
-          //     left: 20,
-          //     right: 20,
-          //     child: customButton(
-          //       label: "LET'S GET STARTED",
-          //       onPressed: () {
-          //         Navigator.pushReplacementNamed(context, '/login_screen');
-          //         // Navigator.push(
-          //         //     context,
-          //         //     MaterialPageRoute(
-          //         //       builder: (context) => PaymentConfirmationPage(),
-          //         //     ));
-          //       },
-          //     ),
-          //   ),
-
-          // Positioned(
-          //   top: 0,
-          //   right: 0,
-          //   child: Image.asset(
-          //     'assets/splash2.png',
-          //     scale: 1,
-          //   ),
-          // ),
-          // Center(
-          //   child: Image.asset(
-          //     'assets/splashAkcaf.png',
-          //     scale: 1.2,
-          //   ),
-          // ),
-          // Positioned(
-          //   bottom: 0,
-          //   left: 0,
-          //   child: Image.asset(
-          //     'assets/splash1.png',
-          //     scale: 1,
-          //   ),
-          // ),
-        ],
+        ),
       ),
     );
   }
@@ -307,17 +254,16 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 // Initialize in your main function
 void initializeNotifications() {
-      const AndroidInitializationSettings initializationSettingsAndroid =
-          AndroidInitializationSettings('@mipmap/ic_launcher');
-      const DarwinInitializationSettings iosInitializationSetting =
-          DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      );
-      const InitializationSettings initSettings = InitializationSettings(
-          android: initializationSettingsAndroid,
-          iOS: iosInitializationSetting);
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  const DarwinInitializationSettings iosInitializationSetting =
+      DarwinInitializationSettings(
+    requestAlertPermission: true,
+    requestBadgePermission: true,
+    requestSoundPermission: true,
+  );
+  const InitializationSettings initSettings = InitializationSettings(
+      android: initializationSettingsAndroid, iOS: iosInitializationSetting);
   flutterLocalNotificationsPlugin.initialize(
     initSettings,
     onDidReceiveNotificationResponse: (NotificationResponse response) async {

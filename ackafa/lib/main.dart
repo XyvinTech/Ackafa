@@ -98,16 +98,16 @@ class _MyAppState extends State<MyApp> {
           return SplashScreen();
         },
 
-        '/login_screen': (context) => LoginPage(),
+        // '/login_screen': (context) => LoginPage(),
 
-        '/mainpage': (context) => MainPage(),
+        // '/mainpage': (context) => MainPage(),
         '/splash': (context) => SplashScreen(),
-        '/profile_completion': (context) => ProfileCompletionScreen(),
-        '/my_feeds': (context) => MyPostsPage(),
-        '/userReg': (context) => const UserRegistrationScreen(),
-        '/notification': (context) => NotificationPage(),
-        '/my_subscription': (context) => MySubscriptionPage(),
-        '/chat': (context) => PeoplePage(),
+        // '/profile_completion': (context) => ProfileCompletionScreen(),
+        // '/my_feeds': (context) => MyPostsPage(),
+        // '/userReg': (context) => const UserRegistrationScreen(),
+        // '/notification': (context) => NotificationPage(),
+        // '/my_subscription': (context) => MySubscriptionPage(),
+        // '/chat': (context) => PeoplePage(),
         // '/membership': (context) => MembershipSubscription(),
       },
       onGenerateRoute: (settings) {
