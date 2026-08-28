@@ -164,7 +164,7 @@ class _BlockPersonDialogState extends ConsumerState<BlockPersonDialog> {
           child: const Text(
             'Cancel',
             style: TextStyle(
-              fontFamily: 'HelveticaNeue',
+              fontFamily: 'Fraunces',
               color: Color(0xFFE30613),
               fontWeight: FontWeight.w600,
             ),

@@ -142,7 +142,7 @@ class PaymentConfirmationPage extends StatelessWidget {
                         child: Text(
                           'Coming Soon!',
                           style: TextStyle(
-                            fontFamily: 'HelveticaNeue',
+                            fontFamily: 'Fraunces',
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: Colors.red,
@@ -236,7 +236,7 @@ class PaymentConfirmationPage extends StatelessWidget {
           Text(
             text,
             style: TextStyle(
-              fontFamily: 'HelveticaNeue',
+              fontFamily: 'Fraunces',
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: isChecked ? Colors.black : Colors.grey,

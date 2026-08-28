@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future<void> getToken(BuildContext context) async {
-   final isIOS = defaultTargetPlatform == TargetPlatform.iOS;
+  final isIOS = defaultTargetPlatform == TargetPlatform.iOS;
   final notificationStatus = await Permission.notification.status;
 
   if (isIOS || notificationStatus.isGranted) {

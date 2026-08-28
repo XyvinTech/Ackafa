@@ -30,7 +30,7 @@ Widget customButton({
         child: Text(
           label,
           style: TextStyle(
-            fontFamily: 'HelveticaNeue',
+            fontFamily: 'Fraunces',
               color: labelColor, fontSize: double.parse(fontSize.toString())),
         )),
   );

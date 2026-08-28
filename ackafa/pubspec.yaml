@@ -90,12 +90,11 @@ flutter:
         - asset: assets/fonts/Inter_Regular.ttf
         - asset: assets/fonts/Inter_Bold.ttf
           weight: 700
-    - family: HelveticaNeue
+    - family: Fraunces
       fonts:
-        # - asset: assets/fonts/helvetica-neue-bold.ttf
-        # - asset: assets/fonts/helvetica-neue-regular.ttf
-        - asset: assets/fonts/Helvetica Neue 53 Extended.ttf
-          weight: 700
+        - asset: assets/fonts/Fraunces.ttf
+        - asset: assets/fonts/Fraunces-Italic.ttf
+          style: italic
   assets:
 
     - assets/

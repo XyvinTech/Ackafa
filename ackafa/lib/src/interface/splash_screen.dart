@@ -214,9 +214,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                   const Text(
                     'Join 10,000+ Keralites,\nwherever you are',
                     style: TextStyle(
-                      fontFamily: 'Times New Roman',
+                      fontFamily: 'Fraunces',
                       fontSize: 32,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                       height: 1.2,
                       color: Colors.black,
                     ),

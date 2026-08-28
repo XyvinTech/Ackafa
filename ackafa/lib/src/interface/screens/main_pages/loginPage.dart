@@ -103,7 +103,7 @@ class PhoneNumberScreen extends ConsumerWidget {
                         'Login',
                         style: TextStyle(
                             color: Color(0xFFE30613),
-                            fontFamily: 'HelveticaNeue',
+                            fontFamily: 'Fraunces',
                             letterSpacing: 1,
                             fontWeight: FontWeight.w600,
                             fontSize: 25),
@@ -433,7 +433,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                         'OTP Verification',
                         style: TextStyle(
                             color: Color(0xFFE30613),
-                            fontFamily: 'HelveticaNeue',
+                            fontFamily: 'Fraunces',
                             letterSpacing: 1,
                             fontWeight: FontWeight.w600,
                             fontSize: 25),

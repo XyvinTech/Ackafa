@@ -616,7 +616,7 @@ class MenuPage extends StatelessWidget {
       //   child: Icon(icon, color: IconColor),
       // ),
       title: Text(title, style: TextStyle(
-        fontFamily: 'HelveticaNeue',
+        fontFamily: 'Fraunces',
         fontWeight: FontWeight.w600,
         
         fontSize: 27,

@@ -54,36 +54,36 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'HelveticaNeue',
+        fontFamily: 'Fraunces',
         textTheme: const TextTheme(
           bodyLarge:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
           bodyMedium:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
           displayLarge:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
           displayMedium:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
           displaySmall:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
           headlineMedium:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
           headlineSmall:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
           titleLarge:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
           titleMedium:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
           titleSmall:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
           labelLarge:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
           labelMedium:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
           labelSmall:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
           bodySmall:
-              TextStyle(fontFamily: 'HelveticaNeue', color: Color(0xFF4A4647)),
+              TextStyle(fontFamily: 'Fraunces', color: Color(0xFF4A4647)),
         ),
         primarySwatch: Colors.blue,
         secondaryHeaderColor: Colors.blue,
@@ -98,16 +98,16 @@ class _MyAppState extends State<MyApp> {
           return SplashScreen();
         },
 
-        // '/login_screen': (context) => LoginPage(),
+        '/login_screen': (context) => LoginPage(),
 
-        // '/mainpage': (context) => MainPage(),
+        '/mainpage': (context) => MainPage(),
         '/splash': (context) => SplashScreen(),
-        // '/profile_completion': (context) => ProfileCompletionScreen(),
-        // '/my_feeds': (context) => MyPostsPage(),
-        // '/userReg': (context) => const UserRegistrationScreen(),
-        // '/notification': (context) => NotificationPage(),
-        // '/my_subscription': (context) => MySubscriptionPage(),
-        // '/chat': (context) => PeoplePage(),
+        '/profile_completion': (context) => ProfileCompletionScreen(),
+        '/my_feeds': (context) => MyPostsPage(),
+        '/userReg': (context) => const UserRegistrationScreen(),
+        '/notification': (context) => NotificationPage(),
+        '/my_subscription': (context) => MySubscriptionPage(),
+        '/chat': (context) => PeoplePage(),
         // '/membership': (context) => MembershipSubscription(),
       },
       onGenerateRoute: (settings) {
