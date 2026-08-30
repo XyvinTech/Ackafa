@@ -16,8 +16,6 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 
-import 'package:ackaf/src/interface/common/custom_button.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -294,8 +292,7 @@ class PhoneNumberScreen extends ConsumerWidget {
     final expectedLength = countryCode == '971' ? 9 : 10;
 
     if (phone.length != expectedLength) {
-      CustomSnackbar.showSnackbar(
-          context, 'Please Enter Valid Phone number!');
+      CustomSnackbar.showSnackbar(context, 'Please Enter Valid Phone number!');
       return;
     }
 
@@ -400,167 +397,230 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
     super.dispose();
   }
 
+  String get _formattedTimer {
+    final minutes = (_start ~/ 60).toString().padLeft(2, '0');
+    final seconds = (_start % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
+  }
+
+  String _formattedPhone(String? countryCode) {
+    final dial = countryCode ?? '971';
+    final number = widget.phone.trim();
+    if (number.length == 10) {
+      return '+$dial ${number.substring(0, 5)} ${number.substring(5)}';
+    }
+    if (number.length == 9) {
+      return '+$dial ${number.substring(0, 3)} ${number.substring(3, 6)} ${number.substring(6)}';
+    }
+    return '+$dial $number';
+  }
+
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(loadingProvider);
     final countryCode = ref.watch(countryCodeProvider);
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Positioned(
-            top: 20,
-            right: 0,
-            left: 0,
-            child: Image.asset(
-              'assets/splashAkcaf.png',
-              scale: 1.3,
-            ),
-          ),
-          Positioned(
-            top: 280,
-            right: 0,
-            left: 0,
-            child: Image.asset(
-              'assets/worldmap.png',
-              scale: 1,
-            ),
-          ),
-          const Positioned(
-            top: 300,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Text(
-                'OTP Verification',
-                style: TextStyle(
-                    color: Color(0xFFE30613),
-                    fontFamily: 'Fraunces',
-                    letterSpacing: 1,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 25),
-              ),
-            ),
-          ),
-          const Positioned(
-            top: 340,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Text(
-                'Please enter the OTP',
-                style: TextStyle(
-                    letterSpacing: 1,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 380,
-            right: 0,
-            left: 0,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: PinCodeTextField(
-                appContext: context,
-                length: 6, // Number of OTP digits
-                obscureText: false,
-                keyboardType: TextInputType.number, // Number-only keyboard
-                animationType: AnimationType.fade,
-                textStyle: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: 5.0,
-                ),
-                pinTheme: PinTheme(
-                  shape: PinCodeFieldShape.box,
-                  borderRadius: BorderRadius.circular(20),
-                  fieldHeight: 55,
-                  fieldWidth: 50, selectedColor: Colors.red,
-                  activeColor: const Color.fromARGB(255, 232, 226, 226),
-                  inactiveColor: const Color.fromARGB(
-                      255, 232, 226, 226), // Box color when not focused
-                  activeFillColor: Colors.white, // Box color when focused
-                  selectedFillColor: Colors.white, // Box color when selected
-                  inactiveFillColor:
-                      Colors.white, // Box fill color when not selected
-                ),
-                animationDuration: const Duration(milliseconds: 300),
-                backgroundColor: Colors.transparent,
-                enableActiveFill: true,
-                controller: _otpController,
-                onChanged: (value) {
-                  // Handle input change
-                },
-              ),
-            ),
-          ),
-          Positioned(
-            top: 450,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    const background = Colors.white;
+    const subtitleColor = Color(0xFF757575);
+    const pinFill = Color(0xFFFDF6F6);
+    const pinBorder = Color(0xFFF3DADA);
+    const pinFocused = Color(0xFFC60E18);
+    const buttonColor = Color(0xFFC60E18);
+    const horizontalPadding = 24.0;
+    const fieldRadius = 12.0;
+    const buttonHeight = 56.0;
+
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: background,
+        body: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Text(
-                    _isButtonDisabled
-                        ? 'Resend OTP in $_start seconds'
-                        : 'Enter your OTP',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: _isButtonDisabled ? Colors.grey : Colors.black,
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(
+                      horizontalPadding,
+                      48,
+                      horizontalPadding,
+                      24 + bottomInset,
+                    ),
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Enter the code',
+                          style: TextStyle(
+                            fontFamily: 'Fraunces',
+                            fontSize: 30,
+                            fontWeight: FontWeight.w700,
+                            height: 1.2,
+                            color: Color(0xFF1A1A1A),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Send to ${_formattedPhone(countryCode)}',
+                          style: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            height: 1.4,
+                            color: subtitleColor,
+                          ),
+                        ),
+                        const SizedBox(height: 36),
+                        const Text(
+                          'OTP',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF1A1A1A),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            // Keep existing 6-digit OTP length; size boxes to fit width.
+                            const gap = 8.0;
+                            const length = 6;
+                            final available = constraints.maxWidth;
+                            final fieldWidth =
+                                ((available - (gap * (length - 1))) / length)
+                                    .clamp(40.0, 56.0);
+                            final fieldHeight = fieldWidth;
+
+                            return PinCodeTextField(
+                              appContext: context,
+                              length: length,
+                              obscureText: false,
+                              keyboardType: TextInputType.number,
+                              animationType: AnimationType.fade,
+                              autoDisposeControllers: false,
+                              textStyle: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF1A1A1A),
+                              ),
+                              pinTheme: PinTheme(
+                                shape: PinCodeFieldShape.box,
+                                borderRadius:
+                                    BorderRadius.circular(fieldRadius),
+                                fieldHeight: fieldHeight,
+                                fieldWidth: fieldWidth,
+                                borderWidth: 1,
+                                activeColor: pinBorder,
+                                selectedColor: pinFocused,
+                                inactiveColor: pinBorder,
+                                activeFillColor: pinFill,
+                                selectedFillColor: pinFill,
+                                inactiveFillColor: pinFill,
+                              ),
+                              animationDuration:
+                                  const Duration(milliseconds: 200),
+                              backgroundColor: Colors.transparent,
+                              enableActiveFill: true,
+                              controller: _otpController,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              onChanged: (value) {
+                                // Handle input change
+                              },
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        if (_isButtonDisabled)
+                          Text.rich(
+                            TextSpan(
+                              style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFF1A1A1A),
+                              ),
+                              children: [
+                                const TextSpan(text: 'Resend code in : '),
+                                TextSpan(
+                                  text: _formattedTimer,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        else
+                          GestureDetector(
+                            onTap: resendCode,
+                            child: const Text(
+                              'Resend Code',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                                color: buttonColor,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: _isButtonDisabled ? null : resendCode,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: Text(
-                      _isButtonDisabled ? '' : 'Resend Code',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: _isButtonDisabled ? Colors.grey : Colors.red,
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    horizontalPadding,
+                    8,
+                    horizontalPadding,
+                    24 + (bottomInset > 0 ? 8 : 0),
+                  ),
+                  child: SizedBox(
+                    height: buttonHeight,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: isLoading
+                          ? () {}
+                          : () {
+                              _handleOtpVerification(context, ref);
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: buttonColor,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(fieldRadius),
+                        ),
+                      ),
+                      child: const Text(
+                        'Verify Code',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-          ),
-          Positioned(
-            top: 480,
-            left: 0,
-            right: 0,
-            child: Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: customButton(
-                  label: 'NEXT',
-                  onPressed: isLoading
-                      ? () {}
-                      : () {
-                          _handleOtpVerification(context, ref);
-                        },
-                  fontSize: 16,
+            if (isLoading)
+              Container(
+                color: Colors.black54,
+                child: const Center(
+                  child: LoadingAnimation(),
                 ),
               ),
-            ),
-          ),
-          if (isLoading)
-            Container(
-              color: Colors.black54,
-              child: const Center(
-                child: LoadingAnimation(),
-              ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
