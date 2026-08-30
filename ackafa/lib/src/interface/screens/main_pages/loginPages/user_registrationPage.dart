@@ -10,9 +10,6 @@ import 'package:ackaf/src/data/services/api_routes/college_api.dart';
 import 'package:ackaf/src/data/services/api_routes/image_upload.dart';
 import 'package:ackaf/src/data/services/api_routes/user_api.dart';
 import 'package:ackaf/src/interface/common/components/custom_snackbar.dart';
-import 'package:ackaf/src/interface/common/customTextfields.dart';
-import 'package:ackaf/src/interface/common/custom_button.dart';
-import 'package:ackaf/src/interface/common/custom_dropdowns/custom_dropdowns.dart';
 import 'package:ackaf/src/interface/common/loading.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/paymentpage.dart';
@@ -20,7 +17,7 @@ import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_comple
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/subcription_expired_page.dart';
 
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
-import 'package:dotted_border/dotted_border.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,8 +35,6 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
   final TextEditingController firstController = TextEditingController();
   final TextEditingController middleController = TextEditingController();
   final TextEditingController lastController = TextEditingController();
-
-
 
   final TextEditingController emirateIDController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -104,9 +99,10 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
       final userCollegeId = user.college!.id;
       log('Looking for user college ID: $userCollegeId');
       log('Available colleges: ${colleges.map((c) => '${c.id}: ${c.collegeName}').join(', ')}');
-      
-      final collegeIndex = colleges.indexWhere((college) => college.id == userCollegeId);
-      
+
+      final collegeIndex =
+          colleges.indexWhere((college) => college.id == userCollegeId);
+
       if (collegeIndex != -1) {
         log('Found college at index $collegeIndex: ${colleges[collegeIndex].collegeName}');
         setState(() {
@@ -125,12 +121,12 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
     if (selectedCourse == null && user.course != null) {
       final userCourseId = user.course!.id;
       final availableCourses = selectedCollegeData.course ?? [];
-      
+
       try {
         final matchingCourse = availableCourses.firstWhere(
           (course) => course.id == userCourseId,
         );
-        
+
         setState(() {
           selectedCourse = matchingCourse;
         });
@@ -159,147 +155,63 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         _populateCollegeAndCourseData(user, colleges);
                       });
-                      
+
                       return RefreshIndicator(
                         backgroundColor: Colors.white,
                         color: Colors.red,
                         onRefresh: () async => ref.invalidate(userProvider),
                         child: Scaffold(
-                            backgroundColor: Colors.white,
-                            body: Stack(
+                          backgroundColor: Colors.white,
+                          body: SafeArea(
+                            child: Stack(
                               children: [
-                                
-                                
-                                SingleChildScrollView(
-                                  child: Form(
-                                    key: _formKey,
-                                    child: Column(
-                                      children: [
-                                        const SizedBox(height: 105),
-                                        FormField<File>(
-                                          builder:
-                                              (FormFieldState<File> state) {
-                                            return Center(
-                                              child: Column(
-                                                children: [
-                                                  Stack(
-                                                    children: [
-                                                      DottedBorder(
-                                                        borderType:
-                                                            BorderType.Circle,
-                                                        dashPattern: [6, 3],
-                                                        color: Colors.grey,
-                                                        strokeWidth: 2,
-                                                        child: ClipOval(
-                                                          child: Container(
-                                                              width: 120,
-                                                              height: 120,
-                                                              color: const Color.fromARGB(255, 243, 241, 241),
-                                                              child: _profileImageFile !=
-                                                                      null
-                                                                  ? Image.file(
-                                                                      _profileImageFile!,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    )
-                                                                  : const Icon(
-                                                                      Icons
-                                                                          .person,
-                                                                          color: Colors.white,
-                                                                      size: 50,
-                                                                    )),
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                        bottom: 4,
-                                                        right: 4,
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            showModalBottomSheet(
-                                                              context: context,
-                                                              builder: (context) =>
-                                                                  _buildImagePickerOptions(
-                                                                context,
-                                                              ),
-                                                            );
-                                                          },
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              boxShadow: [
-                                                                BoxShadow(
-                                                                  color: Colors
-                                                                      .black
-                                                                      .withOpacity(
-                                                                          0.2),
-                                                                  offset:
-                                                                      const Offset(
-                                                                          2, 2),
-                                                                  blurRadius: 4,
-                                                                ),
-                                                              ],
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                            ),
-                                                            child:
-                                                                const CircleAvatar(
-                                                              radius: 17,
-                                                              backgroundColor:
-                                                                  Colors.white,
-                                                              child: Icon(
-                                                                Icons.edit,
-                                                                color: Color(
-                                                                    0xFFE30613),
-                                                                size: 16,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  if (state.hasError)
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 15),
-                                                      child: Text(
-                                                        state.errorText ?? '',
-                                                        style: const TextStyle(
-                                                            color: Colors.red),
-                                                      ),
-                                                    ),
-                                                ],
-                                              ),
-                                            );
-                                          },
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                        physics:
+                                            const AlwaysScrollableScrollPhysics(),
+                                        padding: EdgeInsets.fromLTRB(
+                                          _RegistrationStyles.horizontalPadding,
+                                          48,
+                                          _RegistrationStyles.horizontalPadding,
+                                          24,
                                         ),
-                                        const Row(
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: 60,
-                                                  left: 16,
-                                                  bottom: 10),
-                                              child: Text(
-                                                'Personal Details',
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 20,
-                                              right: 20,
-                                              top: 10,
-                                              bottom: 10),
+                                        child: Form(
+                                          key: _formKey,
                                           child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              CustomTextFormField(
+                                              const Text(
+                                                'A little about you',
+                                                style: TextStyle(
+                                                  fontFamily: 'Fraunces',
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.w700,
+                                                  height: 1.2,
+                                                  color: Color(0xFF1A1A1A),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              const Text(
+                                                'This is how members will find and recognize you.',
+                                                style: TextStyle(
+                                                  fontFamily: 'Inter',
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                  height: 1.4,
+                                                  color: _RegistrationStyles
+                                                      .subtitleColor,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 36),
+                                              _RegistrationTextField(
+                                                label: 'Full name',
+                                                hint: 'Enter name',
+                                                controller: nameController,
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty) {
@@ -307,26 +219,93 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                   }
                                                   return null;
                                                 },
-                                                textController: nameController,
-                                                labelText:
-                                                    'Enter Your Full name',
+                                                onChanged: (value) {
+                                                  ref
+                                                      .read(
+                                                          userProvider.notifier)
+                                                      .updateName(name: value);
+                                                },
                                               ),
-   
-                                              const SizedBox(height: 20.0),
-
-                                              CustomTextFormField(
-                                                  validator: (value) {
-                                                    if (value == null ||
-                                                        value.isEmpty) {
-                                                      return 'Please Enter your Email ID';
-                                                    }
-                                                    return null;
-                                                  },
-                                                  textController:
-                                                      emailController,
-                                                  labelText:
-                                                      'Enter your  Email ID'),
-                                              const SizedBox(height: 20.0),
+                                              const SizedBox(height: 20),
+                                              _RegistrationTextField(
+                                                label: 'Email',
+                                                hint: 'Enter email',
+                                                controller: emailController,
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty) {
+                                                    return 'Please Enter your Email ID';
+                                                  }
+                                                  return null;
+                                                },
+                                                onChanged: (value) {
+                                                  ref
+                                                      .read(
+                                                          userProvider.notifier)
+                                                      .updateEmail(value);
+                                                },
+                                              ),
+                                              const SizedBox(height: 20),
+                                              FormField<String>(
+                                                builder: (FormFieldState<String>
+                                                    state) {
+                                                  return Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      _RegistrationDropdown<
+                                                          String>(
+                                                        label: 'Gender',
+                                                        hint: 'Select',
+                                                        value: selectedGender,
+                                                        items: const [
+                                                          DropdownMenuItem(
+                                                            value: 'Male',
+                                                            child: Text('Male'),
+                                                          ),
+                                                          DropdownMenuItem(
+                                                            value: 'Female',
+                                                            child:
+                                                                Text('Female'),
+                                                          ),
+                                                          DropdownMenuItem(
+                                                            value: 'Other',
+                                                            child:
+                                                                Text('Other'),
+                                                          ),
+                                                        ],
+                                                        onChanged:
+                                                            (String? value) {
+                                                          setState(() {
+                                                            selectedGender =
+                                                                value;
+                                                            state.didChange(
+                                                                value);
+                                                          });
+                                                        },
+                                                      ),
+                                                      if (state.hasError)
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(top: 8),
+                                                          child: Text(
+                                                            state.errorText!,
+                                                            style:
+                                                                const TextStyle(
+                                                              color: Colors.red,
+                                                              fontSize: 12,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+                                              const SizedBox(height: 20),
                                               FormField<College>(
                                                 validator: (value) {
                                                   if (selectedCollege == null) {
@@ -342,19 +321,20 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      CustomDropdownButton<
+                                                      _RegistrationDropdown<
                                                           College>(
-                                                        labelText:
-                                                            'Select College',
+                                                        label: 'College',
+                                                        hint: 'Select',
                                                         value: selectedCollege,
                                                         items: colleges
                                                             .map((college) {
                                                           return DropdownMenuItem<
                                                               College>(
-                                                            value:
-                                                                college,
-                                                            child: Text(college
-                                                                .collegeName!),
+                                                            value: college,
+                                                            child: Text(
+                                                              college
+                                                                  .collegeName!,
+                                                            ),
                                                           );
                                                         }).toList(),
                                                         onChanged:
@@ -363,16 +343,20 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                             selectedCollege =
                                                                 value;
                                                             selectedCollegeIndex =
-                                                                colleges.indexWhere(
-                                                                    (college) =>
-                                                                        college
-                                                                            .id ==
-                                                                        value
-                                                                            ?.id);
+                                                                colleges
+                                                                    .indexWhere(
+                                                              (college) =>
+                                                                  college.id ==
+                                                                  value?.id,
+                                                            );
                                                             selectedCollegeId =
                                                                 value?.id;
+                                                            selectedCourse =
+                                                                null;
+                                                            selectedBatch =
+                                                                null;
                                                             state.didChange(
-                                                                value); 
+                                                                value);
                                                           });
                                                         },
                                                       ),
@@ -380,61 +364,34 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .only(
-                                                                  top: 8.0),
+                                                                  .only(top: 8),
                                                           child: Text(
                                                             state.errorText!,
                                                             style:
                                                                 const TextStyle(
-                                                                    color: Colors
-                                                                        .red),
+                                                              color: Colors.red,
+                                                              fontSize: 12,
+                                                            ),
                                                           ),
                                                         ),
                                                     ],
                                                   );
                                                 },
                                               ),
-                                              const SizedBox(height: 20.0),
-                                              FormField<String>(
-                                                builder: (FormFieldState<String> state) {
-                                                  return Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      CustomDropdownButton<String>(
-                                                        labelText: 'Select Gender',
-                                                        items: const [
-                                                          DropdownMenuItem(value: 'Male', child: Text('Male')),
-                                                          DropdownMenuItem(value: 'Female', child: Text('Female')),
-                                                          DropdownMenuItem(value: 'Other', child: Text('Other')),
-                                                        ],
-                                                        value: selectedGender,
-                                                        onChanged: (String? value) {
-                                                          setState(() {
-                                                            selectedGender = value;
-                                                            state.didChange(value);
-                                                          });
-                                                        },
-                                                      ),
-                                                      if (state.hasError)
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(top: 8.0),
-                                                          child: Text(
-                                                            state.errorText!,
-                                                            style: const TextStyle(color: Colors.red),
-                                                          ),
-                                                        ),
-                                                    ],
-                                                  );
-                                                },
-                                              ),
-                                              const SizedBox(height: 20.0),
+                                              const SizedBox(height: 20),
                                               FormField<Course>(
-                                                builder: (FormFieldState<Course> state) {
+                                                builder: (FormFieldState<Course>
+                                                    state) {
                                                   return Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
-                                                      CustomDropdownButton<Course>(
-                                                        labelText: 'Course',
+                                                      _RegistrationDropdown<
+                                                          Course>(
+                                                        label: 'Course',
+                                                        hint: 'Select',
+                                                        value: selectedCourse,
                                                         items: selectedCollegeIndex !=
                                                                 -1
                                                             ? colleges[
@@ -444,38 +401,42 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                                 return DropdownMenuItem<
                                                                     Course>(
                                                                   value: course,
-                                                                      
-                                                                  child: Text(course
-                                                                      .toString()),
+                                                                  child: Text(
+                                                                    course
+                                                                        .toString(),
+                                                                  ),
                                                                 );
                                                               }).toList()
                                                             : [],
-                                                        value: selectedCourse,
-                                                        onChanged: (Course? value) {
+                                                        onChanged:
+                                                            (Course? value) {
                                                           setState(() {
-                                                            selectedCourse = value;
-                                                            state.didChange(value);
+                                                            selectedCourse =
+                                                                value;
+                                                            state.didChange(
+                                                                value);
                                                           });
                                                         },
                                                       ),
                                                       if (state.hasError)
                                                         Padding(
-                                                          padding: const EdgeInsets.only(top: 8.0),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(top: 8),
                                                           child: Text(
                                                             state.errorText!,
-                                                            style: const TextStyle(color: Colors.red),
+                                                            style:
+                                                                const TextStyle(
+                                                              color: Colors.red,
+                                                              fontSize: 12,
+                                                            ),
                                                           ),
                                                         ),
                                                     ],
                                                   );
                                                 },
                                               ),
-
-
-                                              ///
-
-                                              const SizedBox(height: 20.0),
-                                              // _createLabel('Batch', true),
+                                              const SizedBox(height: 20),
                                               FormField<String>(
                                                 validator: (value) {
                                                   if (selectedBatch == null) {
@@ -490,10 +451,11 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      CustomDropdownButton<
+                                                      _RegistrationDropdown<
                                                           String>(
-                                                        labelText:
-                                                            'Batch',
+                                                        label: 'Batch',
+                                                        hint: 'Select',
+                                                        value: selectedBatch,
                                                         items: selectedCollegeIndex !=
                                                                 -1
                                                             ? colleges[
@@ -504,19 +466,20 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                                     String>(
                                                                   value: batch
                                                                       .toString(),
-                                                                  child: Text(batch
-                                                                      .toString()),
+                                                                  child: Text(
+                                                                    batch
+                                                                        .toString(),
+                                                                  ),
                                                                 );
                                                               }).toList()
                                                             : [],
-                                                        value: selectedBatch,
                                                         onChanged:
                                                             (String? value) {
                                                           setState(() {
                                                             selectedBatch =
                                                                 value;
                                                             state.didChange(
-                                                                value); // Notify the form field of the change
+                                                                value);
                                                           });
                                                         },
                                                       ),
@@ -524,14 +487,14 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .only(
-                                                                  top: 8.0),
+                                                                  .only(top: 8),
                                                           child: Text(
                                                             state.errorText!,
                                                             style:
                                                                 const TextStyle(
-                                                                    color: Colors
-                                                                        .red),
+                                                              color: Colors.red,
+                                                              fontSize: 12,
+                                                            ),
                                                           ),
                                                         ),
                                                     ],
@@ -541,97 +504,117 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                             ],
                                           ),
                                         ),
-                                        const SizedBox(height: 90),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Positioned(
-                                    bottom: 20,
-                                    left: 20,
-                                    right: 20,
-                                    child: SizedBox(
-                                        height: 50,
-                                        child: customButton(
-                                            fontSize: 16,
-                                            label: _resolveUserStatus(
-                                                        user.status) ==
-                                                    'inactive'
-                                                ? 'Send Request'
-                                                : 'Next',
-                                            onPressed: () async {
-                                              if (_formKey.currentState!
-                                                  .validate()) {
-                                                try {
-                                                  if (_profileImageFile !=
-                                                          null &&
-                                                      _profileImageFile != '') {
-                                                    profileImageUrl =
-                                                        await imageUpload(
-                                                            _profileImageFile!
-                                                                .path);
-                                                  }
-
-                                                  print(profileImageUrl);
-                                                  log(token);
-
-                                                  final response = await userApi
-                                                      .registerUser(
-                                                          // emiratesID:
-                                                          //     emirateIDController
-                                                          //         .text,
-                                                          token: token,
-                                                          profileUrl:
-                                                              profileImageUrl,
-                                                          name: nameController
-                                                              .text,
-                                                          gender: selectedGender,
-                                                          emailId:
-                                                              emailController
-                                                                  .text,
-                                                          college:
-                                                              selectedCollegeId,
-                                                          batch: selectedBatch,
-                                                          context: context);
-
-                                                  if (response) {
-                                                    final resolved =
-                                                        _resolveUserStatus(
-                                                            user.status);
-                                                    log('user status: ${user.status} -> $resolved');
-                                                    if (resolved == 'active') {
-                                                      Navigator.of(context)
-                                                          .pushReplacement(
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          ProfileCompletionScreen()));
-                                                    } else if (resolved ==
-                                                        'awaiting_payment') {
-                                                      log('im in payment condition ok');
-                                                      Navigator.of(context)
-                                                          .pushReplacement(
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          const PaymentConfirmationPage()));
-                                                    } else {
-                                                      Navigator.of(context)
-                                                          .pushReplacement(
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          const UserInactivePage()));
-                                                    }
-                                                  }
-                                                } catch (e) {
-                                                  CustomSnackbar.showSnackbar(
-                                                      context, '$e');
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                        _RegistrationStyles.horizontalPadding,
+                                        8,
+                                        _RegistrationStyles.horizontalPadding,
+                                        24,
+                                      ),
+                                      child: SizedBox(
+                                        height:
+                                            _RegistrationStyles.buttonHeight,
+                                        width: double.infinity,
+                                        child: ElevatedButton(
+                                          onPressed: () async {
+                                            if (_formKey.currentState!
+                                                .validate()) {
+                                              try {
+                                                if (_profileImageFile != null &&
+                                                    _profileImageFile != '') {
+                                                  profileImageUrl =
+                                                      await imageUpload(
+                                                    _profileImageFile!.path,
+                                                  );
                                                 }
+
+                                                print(profileImageUrl);
+                                                log(token);
+
+                                                final response =
+                                                    await userApi.registerUser(
+                                                  token: token,
+                                                  profileUrl: profileImageUrl,
+                                                  name: nameController.text,
+                                                  gender: selectedGender,
+                                                  emailId: emailController.text,
+                                                  college: selectedCollegeId,
+                                                  batch: selectedBatch,
+                                                  context: context,
+                                                );
+
+                                                if (response) {
+                                                  final resolved =
+                                                      _resolveUserStatus(
+                                                          user.status);
+                                                  log('user status: ${user.status} -> $resolved');
+                                                  if (resolved == 'active') {
+                                                    Navigator.of(context)
+                                                        .pushReplacement(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ProfileCompletionScreen(),
+                                                      ),
+                                                    );
+                                                  } else if (resolved ==
+                                                      'awaiting_payment') {
+                                                    log('im in payment condition ok');
+                                                    Navigator.of(context)
+                                                        .pushReplacement(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const PaymentConfirmationPage(),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    Navigator.of(context)
+                                                        .pushReplacement(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const UserInactivePage(),
+                                                      ),
+                                                    );
+                                                  }
+                                                }
+                                              } catch (e) {
+                                                CustomSnackbar.showSnackbar(
+                                                    context, '$e');
                                               }
-                                            }))),
+                                            }
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                _RegistrationStyles.buttonColor,
+                                            foregroundColor: Colors.white,
+                                            elevation: 0,
+                                            shadowColor: Colors.transparent,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                _RegistrationStyles.fieldRadius,
+                                              ),
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            'Continue',
+                                            style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
-                            )),
+                            ),
+                          ),
+                        ),
                       );
                     },
                     loading: () =>
@@ -672,33 +655,6 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
     );
   }
 
-  Widget _createLabel(String label, bool isMandatory) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              label,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            if (isMandatory)
-              Text(
-                '*',
-                style: TextStyle(color: Colors.red),
-              )
-          ],
-        ),
-        SizedBox(
-          height: 10,
-        )
-      ],
-    );
-  }
-
   Widget _buildImagePickerOptions(
     BuildContext context,
   ) {
@@ -719,6 +675,214 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
             Navigator.pop(context);
             _pickImage(ImageSource.camera, context);
           },
+        ),
+      ],
+    );
+  }
+}
+
+class _RegistrationStyles {
+  static const Color subtitleColor = Color(0xFF757575);
+  static const Color inputFill = Color(0xFFF7F2F1);
+  static const Color hintColor = Color(0xFFB0A8A6);
+  static const Color buttonColor = Color(0xFFC60E18);
+  static const double horizontalPadding = 24.0;
+  static const double fieldRadius = 12.0;
+  static const double fieldHeight = 56.0;
+  static const double buttonHeight = 56.0;
+}
+
+class _RegistrationTextField extends StatelessWidget {
+  const _RegistrationTextField({
+    required this.label,
+    required this.hint,
+    required this.controller,
+    this.validator,
+    this.onChanged,
+    this.keyboardType,
+  });
+
+  final String label;
+  final String hint;
+  final TextEditingController controller;
+  final FormFieldValidator<String>? validator;
+  final ValueChanged<String>? onChanged;
+  final TextInputType? keyboardType;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF1A1A1A),
+          ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          height: _RegistrationStyles.fieldHeight,
+          child: TextFormField(
+            controller: controller,
+            validator: validator,
+            onChanged: onChanged,
+            keyboardType: keyboardType,
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
+              color: Color(0xFF1A1A1A),
+            ),
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: const TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: _RegistrationStyles.hintColor,
+              ),
+              filled: true,
+              fillColor: _RegistrationStyles.inputFill,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 18,
+              ),
+              border: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(_RegistrationStyles.fieldRadius),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(_RegistrationStyles.fieldRadius),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(_RegistrationStyles.fieldRadius),
+                borderSide: BorderSide.none,
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(_RegistrationStyles.fieldRadius),
+                borderSide: BorderSide.none,
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(_RegistrationStyles.fieldRadius),
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _RegistrationDropdown<T> extends StatelessWidget {
+  const _RegistrationDropdown({
+    required this.label,
+    required this.hint,
+    required this.items,
+    this.value,
+    this.onChanged,
+  });
+
+  final String label;
+  final String hint;
+  final List<DropdownMenuItem<T>> items;
+  final T? value;
+  final ValueChanged<T?>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF1A1A1A),
+          ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          height: _RegistrationStyles.fieldHeight,
+          child: DropdownButtonFormField2<T>(
+            isExpanded: true,
+            value: value,
+            hint: Text(
+              hint,
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: _RegistrationStyles.hintColor,
+              ),
+            ),
+            items: items,
+            onChanged: onChanged,
+            iconStyleData: const IconStyleData(
+              icon: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: Color(0xFF1A1A1A),
+                size: 20,
+              ),
+            ),
+            buttonStyleData: ButtonStyleData(
+              height: _RegistrationStyles.fieldHeight,
+              padding: const EdgeInsets.only(right: 12),
+            ),
+            dropdownStyleData: DropdownStyleData(
+              decoration: BoxDecoration(
+                borderRadius:
+                    BorderRadius.circular(_RegistrationStyles.fieldRadius),
+                color: Colors.white,
+              ),
+              elevation: 4,
+            ),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: _RegistrationStyles.inputFill,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
+              ),
+              border: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(_RegistrationStyles.fieldRadius),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(_RegistrationStyles.fieldRadius),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(_RegistrationStyles.fieldRadius),
+                borderSide: BorderSide.none,
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(_RegistrationStyles.fieldRadius),
+                borderSide: BorderSide.none,
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(_RegistrationStyles.fieldRadius),
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
         ),
       ],
     );
