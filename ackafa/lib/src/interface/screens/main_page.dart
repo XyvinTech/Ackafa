@@ -8,6 +8,7 @@ import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/paymentpage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/subcription_expired_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_under_review_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -118,7 +119,9 @@ class _MainPageState extends ConsumerState<MainPage> {
           String resolvedStatus = _resolveUserStatus(user);
           switch (resolvedStatus) {
             case 'inactive':
-                        return UserInactivePage();
+              return user.status == 'rejected'
+                  ? const UserInactivePage()
+                  : const UserUnderReviewPage();
             case 'awaiting_payment':
                         return PaymentConfirmationPage();
             case 'subscription_expired':
@@ -198,7 +201,7 @@ case 'active':
                 ),
               );
             default:
-                         return UserInactivePage();
+              return const UserUnderReviewPage();
 
           }
         

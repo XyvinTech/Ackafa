@@ -10,6 +10,7 @@ import 'package:ackaf/src/interface/screens/main_pages/approvalPages/member_appr
 import 'package:ackaf/src/interface/screens/main_pages/loginPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/paymentpage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_under_review_page.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:ackaf/src/data/models/appversion_model.dart';
@@ -95,6 +96,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   bool _isNavigated = false;
 
+  String _resolveUserStatus(UserModel user) {
+    final status = user.status?.toLowerCase() ?? 'inactive';
+    if (!isPaymentEnabled &&
+        (status == 'awaiting_payment' || status == 'subscription_expired')) {
+      return 'active';
+    }
+    return status;
+  }
+
   Future<void> initialize() async {
     await checktoken();
 
@@ -114,6 +124,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
           if (LoggedIn) {
             _isNavigated = true;
+            final resolvedStatus = _resolveUserStatus(user);
+
+            if (resolvedStatus == 'inactive' && user.status != 'rejected') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UserUnderReviewPage(),
+                ),
+              );
+              return;
+            }
+
             if (user.batch != null && user.batch != '') {
               final pendingDeepLink = _deepLinkService.pendingDeepLink;
               if (pendingDeepLink != null) {

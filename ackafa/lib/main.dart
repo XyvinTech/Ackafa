@@ -6,6 +6,7 @@ import 'package:ackaf/src/data/services/notification_service.dart';
 import 'package:ackaf/src/interface/screens/event_news/viewmore_event.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_completetion_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_registrationPage.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_under_review_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/notificationPage.dart';
 import 'package:ackaf/src/interface/screens/main_pages/people_page.dart';
 import 'package:ackaf/src/interface/screens/menu/my_events.dart';
@@ -131,6 +132,7 @@ class _MyAppState extends State<MyApp> {
         '/profile_completion': (context) => ProfileCompletionScreen(),
         '/my_feeds': (context) => MyPostsPage(),
         '/userReg': (context) => const UserRegistrationScreen(),
+        '/user_under_review': (context) => const UserUnderReviewPage(),
         '/notification': (context) => NotificationPage(),
         '/my_subscription': (context) => MySubscriptionPage(),
         '/chat': (context) => PeoplePage(),

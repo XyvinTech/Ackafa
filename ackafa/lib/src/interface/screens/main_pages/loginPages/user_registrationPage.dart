@@ -16,7 +16,7 @@ import 'package:ackaf/src/interface/screens/main_pages/loginPages/paymentpage.da
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/profile_completetion_page.dart';
 import 'package:ackaf/src/interface/screens/main_pages/loginPages/subcription_expired_page.dart';
 
-import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_inactive_page.dart';
+import 'package:ackaf/src/interface/screens/main_pages/loginPages/user_under_review_page.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -573,7 +573,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                                                         .pushReplacement(
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            const UserInactivePage(),
+                                                            const UserUnderReviewPage(),
                                                       ),
                                                     );
                                                   }
@@ -634,7 +634,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
               return ProfileCompletionScreen();
             } else if (_resolveUserStatus(user.status) == 'inactive') {
               log('im in inactive condition');
-              return const UserInactivePage();
+              return const UserUnderReviewPage();
             } else if (_resolveUserStatus(user.status) ==
                 'subscription_expired') {
               log('im in subscription expired condition');
