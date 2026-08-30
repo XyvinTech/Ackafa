@@ -41,7 +41,7 @@ class ApiRoutes {
         if (profileUrl != null && profileUrl != '') "image": profileUrl,
         "email": emailId,
         "college": college,
-        "gender" : gender,
+        "gender": gender,
         "batch": batch,
         // "emiratesID": emiratesID,
       }),
@@ -66,42 +66,66 @@ class ApiRoutes {
     FirebaseAuth auth = FirebaseAuth.instance;
     Completer<String> verificationIdcompleter = Completer<String>();
     Completer<String> resendTokencompleter = Completer<String>();
-    log('phone:+$countryCode$phone');
+    Completer<String> errorCompleter = Completer<String>();
+    final formattedPhone = '+$countryCode$phone';
+    log('phone:$formattedPhone');
     await auth.verifyPhoneNumber(
-      phoneNumber: '+$countryCode$phone',
+      phoneNumber: formattedPhone,
+      timeout: const Duration(seconds: 60),
       verificationCompleted: (PhoneAuthCredential credential) async {
         // Handle automatic verification completion if needed
       },
       verificationFailed: (FirebaseAuthException e) {
+        log('verificationFailed code=${e.code} message=${e.message}');
         print(e.message.toString());
-        verificationIdcompleter.complete(''); // Verification failed
-        resendTokencompleter.complete('');
+        if (!verificationIdcompleter.isCompleted) {
+          verificationIdcompleter.complete('');
+        }
+        if (!resendTokencompleter.isCompleted) {
+          resendTokencompleter.complete('');
+        }
+        if (!errorCompleter.isCompleted) {
+          errorCompleter.complete(e.message ?? e.code);
+        }
       },
       codeSent: (String verificationId, int? resendToken) {
         log(verificationId);
 
         verificationIdcompleter.complete(verificationId);
-        resendTokencompleter.complete(resendToken.toString());
+        resendTokencompleter.complete(resendToken?.toString() ?? '');
+        if (!errorCompleter.isCompleted) {
+          errorCompleter.complete('');
+        }
       },
       codeAutoRetrievalTimeout: (String verificationID) {
         if (!verificationIdcompleter.isCompleted) {
           verificationIdcompleter.complete(''); // Timeout without sending code
+        }
+        if (!resendTokencompleter.isCompleted) {
+          resendTokencompleter.complete('');
+        }
+        if (!errorCompleter.isCompleted) {
+          errorCompleter.complete('OTP request timed out. Please try again.');
         }
       },
     );
 
     return {
       "verificationId": await verificationIdcompleter.future,
-      "resendToken": await resendTokencompleter.future
+      "resendToken": await resendTokencompleter.future,
+      "error": await errorCompleter.future,
     };
   }
 
   void resendOTP(
       String phoneNumber, String verificationId, String resendToken) {
     FirebaseAuth auth = FirebaseAuth.instance;
+    // phoneNumber is expected as national number only; callers should pass full E.164 when possible.
+    // Keep existing +91 behavior for backward compatibility with OTPScreen callers.
     auth.verifyPhoneNumber(
-      phoneNumber: '+91$phoneNumber',
-      forceResendingToken: int.parse(resendToken),
+      phoneNumber:
+          phoneNumber.startsWith('+') ? phoneNumber : '+91$phoneNumber',
+      forceResendingToken: int.tryParse(resendToken),
       timeout: const Duration(seconds: 60),
       verificationCompleted: (PhoneAuthCredential credential) {
         // Auto-retrieval or instant verification

@@ -14,7 +14,9 @@ import 'package:ackaf/src/interface/screens/menu/my_subscriptions.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chat.dart';
 import 'package:ackaf/src/interface/screens/people/chat/chatscreen.dart';
 import 'package:ackaf/src/interface/screens/people/chat/groupchat.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +32,30 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Phone Auth has App Check enforcement enabled in Firebase Console.
+  // Register this debug token under App Check → Manage debug tokens:
+  // 4ba90736-150a-43e4-b162-060d39c88457
+  const debugAppCheckToken = '4ba90736-150a-43e4-b162-060d39c88457';
+  await FirebaseAppCheck.instance.activate(
+    providerAndroid: kDebugMode
+        ? const AndroidDebugProvider(debugToken: debugAppCheckToken)
+        : const AndroidPlayIntegrityProvider(),
+    providerApple: kDebugMode
+        ? const AppleDebugProvider(debugToken: debugAppCheckToken)
+        : const AppleDeviceCheckProvider(),
+  );
+
+  if (kDebugMode) {
+    // Force a token fetch so failures show up immediately in logs.
+    try {
+      final token = await FirebaseAppCheck.instance.getToken(true);
+      debugPrint('App Check token acquired: ${token != null}');
+    } catch (e) {
+      debugPrint('App Check getToken failed: $e');
+    }
+  }
+
   initializeNotifications();
   runApp(ProviderScope(child: MyApp()));
 }

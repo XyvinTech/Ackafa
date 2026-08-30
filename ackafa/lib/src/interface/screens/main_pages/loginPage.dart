@@ -289,72 +289,54 @@ class PhoneNumberScreen extends ConsumerWidget {
   }
 
   Future<void> _handleOtpGeneration(BuildContext context, WidgetRef ref) async {
-    final countryCode = ref.watch(countryCodeProvider);
+    final countryCode = ref.read(countryCodeProvider) ?? '971';
+    final phone = _mobileController.text.trim();
+    final expectedLength = countryCode == '971' ? 9 : 10;
+
+    if (phone.length != expectedLength) {
+      CustomSnackbar.showSnackbar(
+          context, 'Please Enter Valid Phone number!');
+      return;
+    }
+
     ref.read(loadingProvider.notifier).startLoading();
 
     try {
-      if (countryCode == '971') {
-        if (_mobileController.text.length != 9) {
-          CustomSnackbar.showSnackbar(
-              context, 'Please Enter Valid Phone numbe!');
-        } else {
-          ApiRoutes userApi = ApiRoutes();
+      ApiRoutes userApi = ApiRoutes();
+      final data = await userApi.submitPhoneNumber(
+        countryCode,
+        context,
+        phone,
+      );
+      final verificationId = data['verificationId'];
+      final resendToken = data['resendToken'];
+      final errorMessage = data['error'];
 
-          final data = await userApi.submitPhoneNumber(
-              countryCode == '971'
-                  ? 9710.toString()
-                  : countryCode ?? 971.toString(),
-              context,
-              _mobileController.text);
-          final verificationId = data['verificationId'];
-          final resendToken = data['resendToken'];
-          if (verificationId != null && verificationId.isNotEmpty) {
-            log('Otp Sent successfully');
-            onNext();
-            _mobileController.clear();
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => OTPScreen(
-                phone: _mobileController.text,
-                verificationId: verificationId,
-                resendToken: resendToken ?? '',
-              ),
-            ));
-          } else {
-            CustomSnackbar.showSnackbar(context, 'Failed!');
-          }
-        }
-      } else if (countryCode != '971') {
-        if (_mobileController.text.length != 10) {
-          CustomSnackbar.showSnackbar(
-              context, 'Please Enter Valid Phone number!');
-        } else {
-          ApiRoutes userApi = ApiRoutes();
-
-          final data = await userApi.submitPhoneNumber(
-              countryCode == '971'
-                  ? 9710.toString()
-                  : countryCode ?? 971.toString(),
-              context,
-              _mobileController.text);
-          final verificationId = data['verificationId'];
-          final resendToken = data['resendToken'];
-          if (verificationId != null && verificationId.isNotEmpty) {
-            log('Otp Sent successfully');
-            onNext();
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => OTPScreen(
-                phone: _mobileController.text,
-                verificationId: verificationId,
-                resendToken: resendToken ?? '',
-              ),
-            ));
-          } else {
-            CustomSnackbar.showSnackbar(context, 'Failed!');
-          }
-        }
+      if (verificationId != null && verificationId.isNotEmpty) {
+        log('Otp Sent successfully');
+        onNext();
+        if (!context.mounted) return;
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => OTPScreen(
+            phone: phone,
+            verificationId: verificationId,
+            resendToken: resendToken ?? '',
+          ),
+        ));
+      } else {
+        log('OTP send failed: ${errorMessage ?? 'unknown'}');
+        if (!context.mounted) return;
+        CustomSnackbar.showSnackbar(
+          context,
+          (errorMessage != null && errorMessage.isNotEmpty)
+              ? errorMessage
+              : 'Failed to send OTP',
+        );
       }
-    } catch (e) {
-      CustomSnackbar.showSnackbar(context, 'Failed');
+    } catch (e, st) {
+      log('OTP send exception: $e', stackTrace: st);
+      if (!context.mounted) return;
+      CustomSnackbar.showSnackbar(context, 'Failed to send OTP');
     } finally {
       ref.read(loadingProvider.notifier).stopLoading();
     }
