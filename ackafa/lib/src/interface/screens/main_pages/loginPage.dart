@@ -62,182 +62,218 @@ class PhoneNumberScreen extends ConsumerWidget {
 
   PhoneNumberScreen({super.key, required this.onNext});
 
+  static const Color _background = Colors.white;
+  static const Color _inputFill = Color(0xFFF7F2F1);
+  static const Color _subtitleColor = Color(0xFF757575);
+  static const Color _hintColor = Color(0xFFB0A8A6);
+  static const Color _dividerColor = Color(0xFFD9D2D0);
+  static const Color _buttonColor = Color(0xFFC60E18);
+  static const double _horizontalPadding = 24.0;
+  static const double _fieldRadius = 12.0;
+  static const double _fieldHeight = 56.0;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(loadingProvider);
     final countryCode =
         ref.watch(countryCodeProvider); // Watch the countryCodeProvider
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
 
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.white,
+        backgroundColor: _background,
         body: Stack(
           children: [
-            Positioned(
-              top: 20,
-              right: 0,
-              left: 0,
-              child: Image.asset(
-                'assets/splashAkcaf.png',
-                scale: 1.3,
-              ),
-            ),
-            Positioned(
-              top: 280,
-              right: 0,
-              left: 0,
-              child: Image.asset(
-                'assets/worldmap.png',
-                scale: 1,
-              ),
-            ),
-            const Positioned(
-              top: 300,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Text(
-                  'Login',
-                  style: TextStyle(
-                      color: Color(0xFFE30613),
-                      fontFamily: 'Fraunces',
-                      letterSpacing: 1,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 25),
-                ),
-              ),
-            ),
-            const Positioned(
-              top: 340,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Text(
-                  'Please enter your mobile number',
-                  style: TextStyle(
-                      letterSpacing: 1,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 380,
-              right: 0,
-              left: 0,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: IntlPhoneField(
-                  validator: (phone) {
-                    if (phone!.number.length > 9) {
-                      if (countryCode == '971') {
-                        return 'Phone number cannot exceed 9 digits';
-                      } else if (phone.number.length > 10) {
-                        return 'Phone number cannot exceed 10 digits';
-                      }
-                    }
-                    return null;
-                  },
-                  style: const TextStyle(
-                    letterSpacing: 8,
-                    fontSize: 18, // Adjusted for a more proportional text size
-                    fontWeight: FontWeight.w400,
-                  ),
-                  // Makes the phone field non-editable
-                  controller: _mobileController,
-                  disableLengthCheck: true,
-                  showCountryFlag: true, // Shows the country flag
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Enter your phone number',
-                    hintStyle: const TextStyle(
-                      letterSpacing: 2,
-                      color: Colors.grey,
-                      fontSize: 14, // Adjust the hint text size
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(
+                      _horizontalPadding,
+                      48,
+                      _horizontalPadding,
+                      24 + bottomInset,
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          20.0), // Rectangular border with slight rounding
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade400, // Light grey border
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide(
-                        color: Colors
-                            .grey.shade400, // Ensure the enabled border matches
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: const BorderSide(
-                        color: Colors.grey, // Color when the input is focused
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 16.0,
-                      horizontal: 10.0,
-                    ),
-                  ),
-                  onCountryChanged: (value) {
-                    // Update the provider with the new country code
-                    ref.read(countryCodeProvider.notifier).state =
-                        value.dialCode;
-                  },
-                  initialCountryCode:
-                      'AE', // India as the initial country code (adjust as needed)
-                  onChanged: (PhoneNumber phone) {
-                    print(phone.completeNumber);
-                  },
-                  flagsButtonPadding: const EdgeInsets.only(
-                      left: 10, right: 10.0), // Adjust padding around the flag
-                  showDropdownIcon: true, // Shows dropdown icon
-                  dropdownIconPosition:
-                      IconPosition.trailing, // Places the icon at the end
-                  dropdownTextStyle: const TextStyle(
-                    fontSize: 15, // Font size of the country code
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-            ),
-            const Positioned(
-              top: 455,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Text(
-                  'A 6 digit verification code will be sent ',
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 480,
-              right: 0,
-              left: 0,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                ),
-                child: SizedBox(
-                  height: 47,
-                  width: double.infinity,
-                  child: customButton(
-                    label: 'GENERATE OTP',
-                    onPressed: isLoading
-                        ? () {}
-                        : () {
-                            _handleOtpGeneration(context, ref);
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "What's your number?",
+                          style: TextStyle(
+                            fontFamily: 'Fraunces',
+                            fontSize: 30,
+                            fontWeight: FontWeight.w700,
+                            height: 1.2,
+                            color: Color(0xFF1A1A1A),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          "We'll text a 4 digit code to make sure its really you",
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            height: 1.4,
+                            color: _subtitleColor,
+                          ),
+                        ),
+                        const SizedBox(height: 36),
+                        const Text(
+                          'Phone Number',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF1A1A1A),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        IntlPhoneField(
+                          validator: (phone) {
+                            if (phone!.number.length > 9) {
+                              if (countryCode == '971') {
+                                return 'Phone number cannot exceed 9 digits';
+                              } else if (phone.number.length > 10) {
+                                return 'Phone number cannot exceed 10 digits';
+                              }
+                            }
+                            return null;
                           },
-                    fontSize: 16,
+                          style: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xFF1A1A1A),
+                            letterSpacing: 0.2,
+                          ),
+                          textAlignVertical: TextAlignVertical.center,
+                          controller: _mobileController,
+                          disableLengthCheck: true,
+                          showCountryFlag: false,
+                          autovalidateMode: AutovalidateMode.disabled,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: _inputFill,
+                            hintText: 'Enter phone number',
+                            hintStyle: const TextStyle(
+                              fontFamily: 'Inter',
+                              color: _hintColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              letterSpacing: 0,
+                            ),
+                            isDense: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(_fieldRadius),
+                              borderSide: BorderSide.none,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(_fieldRadius),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(_fieldRadius),
+                              borderSide: BorderSide.none,
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(_fieldRadius),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(_fieldRadius),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 18.0,
+                              horizontal: 12.0,
+                            ),
+                            counterText: '',
+                          ),
+                          onCountryChanged: (value) {
+                            // Update the provider with the new country code
+                            ref.read(countryCodeProvider.notifier).state =
+                                value.dialCode;
+                          },
+                          initialCountryCode: 'AE',
+                          onChanged: (PhoneNumber phone) {
+                            print(phone.completeNumber);
+                          },
+                          flagsButtonPadding: const EdgeInsets.only(
+                            left: 14,
+                            right: 8,
+                            top: 4,
+                            bottom: 4,
+                          ),
+                          flagsButtonMargin: const EdgeInsets.only(right: 4),
+                          showDropdownIcon: true,
+                          dropdownIconPosition: IconPosition.trailing,
+                          dropdownIcon: const Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            size: 20,
+                            color: Color(0xFF1A1A1A),
+                          ),
+                          dropdownTextStyle: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF1A1A1A),
+                          ),
+                          dropdownDecoration: const BoxDecoration(
+                            border: Border(
+                              right: BorderSide(
+                                color: _dividerColor,
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    _horizontalPadding,
+                    8,
+                    _horizontalPadding,
+                    24 + (bottomInset > 0 ? 8 : 0),
+                  ),
+                  child: SizedBox(
+                    height: _fieldHeight,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: isLoading
+                          ? () {}
+                          : () {
+                              _handleOtpGeneration(context, ref);
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _buttonColor,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(_fieldRadius),
+                        ),
+                      ),
+                      child: const Text(
+                        'Send Code',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             if (isLoading)
               Container(
